@@ -1,4 +1,0 @@
-# Article One
-
-Hello world...
-
