@@ -1,54 +1,16 @@
 [package]
 name = "subscript"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Colbyn Wadman <hello@colbyn.com>"]
 edition = "2018"
-repository = "https://github.com/subscript-publishing/subscript"
-homepage = "https://github.com/subscript-publishing/subscript"
+repository = "https://github.com/subscript-publishing"
+homepage = "https://github.com/subscript-publishing"
 license = "MPL-2.0"
-description = "Content Publishing using Web Technologies"
-keywords = ['site', 'static', 'generator', 'html', 'bundler']
+description = "reserved 👉 for the new compiler (and other infrastructure) see https://github.com/subscript-publishing 👉 We decided to move away from the old monolithic codebase and split everything into smaller sub-projects (for now)."
+keywords = ['site', 'static', 'generator', 'latex', 'tex']
 categories = [
-    'template-engine',
     'mathematics',
-    'web-programming',
+    'science',
 ]
 
 [dependencies]
-html5ever = "0.25.1"
-markup5ever = "0.10.0"
-markup5ever_rcdom = "0.1.0"
-serde = {version = "1.0", features = ["derive"]}
-serde_json = "1"
-lazy_static = "1.0.0"
-structopt = { version = "0.3"}
-glob = "0.3.0"
-rand = "0.7.3"
-hotwatch = "0.4.5"
-rayon = "1.5.0"
-toml = "0.5"
-rhai = {version = "0.19.7", features = ["serde", "unchecked"]}
-grass = "0.10.4"
-
-# Server
-tokio = { version = "0.2", features = ["rt-core", "macros"] }
-hyper = "0.13"
-headers = "0.3"
-mime_guess = "2.0"
-percent-encoding = "2.1"
-# pct-str = "1.1.0"
-# Compression
-brotli = "3"
-flate2 = "1.0"
-# Rendering
-tera = "1"
-ignore = "0.4" # Respect to .gitignore while listing directories.
-# Logging
-chrono = "0.4"
-# Directory Download
-qstring = "0.7"
-zip = { version = "0.5", default-features = false, features = ["deflate"] }
-futures-util = "0.3.8"
-
-# Markdown
-comrak = "0.9.0"
