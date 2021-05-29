@@ -1,6 +1,6 @@
 [package]
 name = "subscript"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Colbyn Wadman <hello@colbyn.com>"]
 edition = "2018"
 repository = "https://github.com/subscript-publishing"
@@ -12,5 +12,6 @@ categories = [
     'mathematics',
     'science',
 ]
+readme = "CARGO-README.md"
 
 [dependencies]
