@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "subscript-compiler",
+    "subscript-project",
+    "ss-language-server",
+]
+
