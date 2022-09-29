@@ -1,0 +1,41 @@
+{
+  "name": "subscript-markup-language",
+  "displayName": "subscript-markup-language",
+  "description": "Syntax highlighting for the Subscript Markup Language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "scripts": {
+    "build": "npx js-yaml syntaxes/subscript.tmLanguage.yaml > syntaxes/subscript.tmLanguage.json"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "subscript",
+        "aliases": [
+          "Subscript",
+          "subscript"
+        ],
+        "extensions": [
+          "ss"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "subscript",
+        "scopeName": "source.ss",
+        "path": "./syntaxes/subscript.tmLanguage.json"
+      }
+    ]
+  },
+  "devDependencies": {
+    "cson": "^7.20.0",
+    "js-yaml": "^4.1.0"
+  }
+}

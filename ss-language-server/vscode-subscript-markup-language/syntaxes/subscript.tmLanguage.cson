@@ -1,0 +1,54 @@
+$schema: 'https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json'
+name: 'Subscript'
+patterns: [
+    {include: '#keywords'}
+    {include: '#strings'}
+    {include: '#lineComment'}
+    {include: "#identifier"}
+    {include: "#tagWithAttr"}
+    {include: '#curlyBrace'}
+    {include: '#squareParen'}
+]
+repository:
+    keywords:
+        patterns: [
+            {
+                name: 'keyword.control.subscript'
+                match: '\\b(if|while|for|return)\\b'
+            }
+        ]
+    strings:
+        name: 'string.quoted.double.subscript'
+        begin: '"'
+        end: '"'
+        patterns: [
+            {
+                name: 'constant.character.escape.subscript'
+                match: '\\\\.'
+            }
+        ]
+    lineComment:
+        name: 'comment.line'
+        match: '//.*$'
+    identifier:
+        name: "entity.name.tag"
+        match: "\\\\[a-zA-Z0-9]+"
+    curlyBrace:
+        begin: '\\{'
+        beginCaptures:
+            0: name: 'punctuation.definition.begin.example'
+        end: '\\}'
+        endCaptures:
+            0: name: 'punctuation.definition.end.example'
+        patterns: [{ include: '$self' }]
+    squareParen:
+        name: 'punctuation.definition.parameters'
+        contentName: 'punctuation.definition.parameters'
+        begin: '\\['
+        beginCaptures:
+            0: name: 'punctuation.definition.parameters.begin'
+        end: '\\]'
+        endCaptures:
+            0: name: 'punctuation.definition.parameters.end'
+        patterns: [{ include: '$self' }]
+scopeName: 'source.ss'

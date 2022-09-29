@@ -1,0 +1,20 @@
+[package]
+name = "subscript_compiler"
+version = "0.18.0"
+edition = "2018"
+description = "A modern LaTeX rendition."
+license = "MPL-2.0"
+homepage = "https://github.com/subscript-publishing"
+repository = "https://github.com/subscript-publishing/subscript-compiler"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pct-str = "1.1.0"
+either = "1.6.1"
+structopt = "0.3.21"
+lazy_static = "1.4.0"
+itertools = "0.10.0"
+serde = { version = "1.0", features = ["derive"] }
+unicode-segmentation = "1.7.1"
+rand = "0.7.3"
