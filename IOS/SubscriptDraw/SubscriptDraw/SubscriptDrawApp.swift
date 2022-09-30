@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-@main
-struct SubscriptDrawApp: App {
-    let persistenceController = PersistenceController.shared
-
-    var body: some Scene {
-        WindowGroup {
-            Entrypoint()
-//            ContentView()
-//                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-        }
-    }
-}
+//@main
+//struct SubscriptDrawApp: App {
+//    let persistenceController = PersistenceController.shared
+//
+//    var body: some Scene {
+//        WindowGroup {
+//            Entrypoint()
+////            ContentView()
+////                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+//        }
+//    }
+//}

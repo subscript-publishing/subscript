@@ -7,6 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F430FC0F28E653C5006C211B /* LinearAlgebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBF828E653C5006C211B /* LinearAlgebra.swift */; };
+		F430FC1028E653C5006C211B /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFA28E653C5006C211B /* Array.swift */; };
+		F430FC1128E653C5006C211B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFB28E653C5006C211B /* UIColor.swift */; };
+		F430FC1228E653C5006C211B /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFC28E653C5006C211B /* Result.swift */; };
+		F430FC1328E653C5006C211B /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFD28E653C5006C211B /* Int.swift */; };
+		F430FC1428E653C5006C211B /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFE28E653C5006C211B /* URL.swift */; };
+		F430FC1528E653C5006C211B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFF28E653C5006C211B /* String.swift */; };
+		F430FC1628E653C5006C211B /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0028E653C5006C211B /* CGPoint.swift */; };
+		F430FC1728E653C5006C211B /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0128E653C5006C211B /* CGFloat.swift */; };
+		F430FC1828E653C5006C211B /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0228E653C5006C211B /* UIFont.swift */; };
+		F430FC1928E653C5006C211B /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0328E653C5006C211B /* Optional.swift */; };
+		F430FC1A28E653C5006C211B /* UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0428E653C5006C211B /* UITextView.swift */; };
+		F430FC1B28E653C5006C211B /* Scroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0628E653C5006C211B /* Scroller.swift */; };
+		F430FC1C28E653C5006C211B /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0728E653C5006C211B /* Bindings.swift */; };
+		F430FC1D28E653C5006C211B /* Basics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0828E653C5006C211B /* Basics.swift */; };
+		F430FC1E28E653C5006C211B /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0928E653C5006C211B /* Border.swift */; };
+		F430FC1F28E653C5006C211B /* UIFFI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0A28E653C5006C211B /* UIFFI.swift */; };
+		F430FC2028E653C5006C211B /* RefBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0C28E653C5006C211B /* RefBox.swift */; };
+		F430FC2128E653C5006C211B /* MathUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0D28E653C5006C211B /* MathUtil.swift */; };
+		F430FC2228E653C5006C211B /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0E28E653C5006C211B /* CodableColor.swift */; };
+		F430FC2E28E65427006C211B /* GetStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2528E65427006C211B /* GetStroke.swift */; };
+		F430FC2F28E65427006C211B /* DrawingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2628E65427006C211B /* DrawingData.swift */; };
+		F430FC3028E65427006C211B /* DrawingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2728E65427006C211B /* DrawingRenderer.swift */; };
+		F430FC3228E65427006C211B /* CanvasData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2A28E65427006C211B /* CanvasData.swift */; };
+		F430FC3328E65427006C211B /* CanvasUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2B28E65427006C211B /* CanvasUI.swift */; };
+		F430FC3428E65427006C211B /* CanvasToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2C28E65427006C211B /* CanvasToolBar.swift */; };
+		F430FC3528E65427006C211B /* RuntimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2D28E65427006C211B /* RuntimeData.swift */; };
+		F430FC3728E6542E006C211B /* SS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC3628E6542E006C211B /* SS.swift */; };
+		F430FC3B28E682CB006C211B /* FileTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC3A28E682CB006C211B /* FileTree.swift */; };
 		F485ECA328E57203006E69BD /* SubscriptDrawApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECA228E57203006E69BD /* SubscriptDrawApp.swift */; };
 		F485ECA528E57203006E69BD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECA428E57203006E69BD /* ContentView.swift */; };
 		F485ECA728E57205006E69BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F485ECA628E57205006E69BD /* Assets.xcassets */; };
@@ -37,6 +66,36 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F430FBF828E653C5006C211B /* LinearAlgebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearAlgebra.swift; sourceTree = "<group>"; };
+		F430FBFA28E653C5006C211B /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		F430FBFB28E653C5006C211B /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		F430FBFC28E653C5006C211B /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		F430FBFD28E653C5006C211B /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
+		F430FBFE28E653C5006C211B /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		F430FBFF28E653C5006C211B /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		F430FC0028E653C5006C211B /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
+		F430FC0128E653C5006C211B /* CGFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloat.swift; sourceTree = "<group>"; };
+		F430FC0228E653C5006C211B /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		F430FC0328E653C5006C211B /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
+		F430FC0428E653C5006C211B /* UITextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextView.swift; sourceTree = "<group>"; };
+		F430FC0628E653C5006C211B /* Scroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scroller.swift; sourceTree = "<group>"; };
+		F430FC0728E653C5006C211B /* Bindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
+		F430FC0828E653C5006C211B /* Basics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Basics.swift; sourceTree = "<group>"; };
+		F430FC0928E653C5006C211B /* Border.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
+		F430FC0A28E653C5006C211B /* UIFFI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFFI.swift; sourceTree = "<group>"; };
+		F430FC0C28E653C5006C211B /* RefBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefBox.swift; sourceTree = "<group>"; };
+		F430FC0D28E653C5006C211B /* MathUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathUtil.swift; sourceTree = "<group>"; };
+		F430FC0E28E653C5006C211B /* CodableColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableColor.swift; sourceTree = "<group>"; };
+		F430FC2528E65427006C211B /* GetStroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStroke.swift; sourceTree = "<group>"; };
+		F430FC2628E65427006C211B /* DrawingData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingData.swift; sourceTree = "<group>"; };
+		F430FC2728E65427006C211B /* DrawingRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingRenderer.swift; sourceTree = "<group>"; };
+		F430FC2A28E65427006C211B /* CanvasData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasData.swift; sourceTree = "<group>"; };
+		F430FC2B28E65427006C211B /* CanvasUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasUI.swift; sourceTree = "<group>"; };
+		F430FC2C28E65427006C211B /* CanvasToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasToolBar.swift; sourceTree = "<group>"; };
+		F430FC2D28E65427006C211B /* RuntimeData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuntimeData.swift; sourceTree = "<group>"; };
+		F430FC3628E6542E006C211B /* SS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SS.swift; sourceTree = "<group>"; };
+		F430FC3928E67BCD006C211B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F430FC3A28E682CB006C211B /* FileTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTree.swift; sourceTree = "<group>"; };
 		F485EC9F28E57203006E69BD /* SubscriptDraw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubscriptDraw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F485ECA228E57203006E69BD /* SubscriptDrawApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptDrawApp.swift; sourceTree = "<group>"; };
 		F485ECA428E57203006E69BD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -78,9 +137,99 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F430FBF628E653C5006C211B /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				F430FBF728E653C5006C211B /* Utils */,
+				F430FBF928E653C5006C211B /* Extensions */,
+				F430FC0B28E653C5006C211B /* Data */,
+			);
+			path = Lib;
+			sourceTree = "<group>";
+		};
+		F430FBF728E653C5006C211B /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F430FBF828E653C5006C211B /* LinearAlgebra.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		F430FBF928E653C5006C211B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F430FBFA28E653C5006C211B /* Array.swift */,
+				F430FBFB28E653C5006C211B /* UIColor.swift */,
+				F430FBFC28E653C5006C211B /* Result.swift */,
+				F430FBFD28E653C5006C211B /* Int.swift */,
+				F430FBFE28E653C5006C211B /* URL.swift */,
+				F430FBFF28E653C5006C211B /* String.swift */,
+				F430FC0028E653C5006C211B /* CGPoint.swift */,
+				F430FC0128E653C5006C211B /* CGFloat.swift */,
+				F430FC0228E653C5006C211B /* UIFont.swift */,
+				F430FC0328E653C5006C211B /* Optional.swift */,
+				F430FC0428E653C5006C211B /* UITextView.swift */,
+				F430FC0528E653C5006C211B /* SwiftUI */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F430FC0528E653C5006C211B /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				F430FC0628E653C5006C211B /* Scroller.swift */,
+				F430FC0728E653C5006C211B /* Bindings.swift */,
+				F430FC0828E653C5006C211B /* Basics.swift */,
+				F430FC0928E653C5006C211B /* Border.swift */,
+				F430FC0A28E653C5006C211B /* UIFFI.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		F430FC0B28E653C5006C211B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F430FC0C28E653C5006C211B /* RefBox.swift */,
+				F430FC0D28E653C5006C211B /* MathUtil.swift */,
+				F430FC0E28E653C5006C211B /* CodableColor.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		F430FC2328E65427006C211B /* Freehand */ = {
+			isa = PBXGroup;
+			children = (
+				F430FC2928E65427006C211B /* Canvas */,
+				F430FC2428E65427006C211B /* Drawing */,
+				F430FC2D28E65427006C211B /* RuntimeData.swift */,
+			);
+			path = Freehand;
+			sourceTree = "<group>";
+		};
+		F430FC2428E65427006C211B /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				F430FC2528E65427006C211B /* GetStroke.swift */,
+				F430FC2628E65427006C211B /* DrawingData.swift */,
+				F430FC2728E65427006C211B /* DrawingRenderer.swift */,
+			);
+			path = Drawing;
+			sourceTree = "<group>";
+		};
+		F430FC2928E65427006C211B /* Canvas */ = {
+			isa = PBXGroup;
+			children = (
+				F430FC2A28E65427006C211B /* CanvasData.swift */,
+				F430FC2B28E65427006C211B /* CanvasUI.swift */,
+				F430FC2C28E65427006C211B /* CanvasToolBar.swift */,
+			);
+			path = Canvas;
+			sourceTree = "<group>";
+		};
 		F485EC9628E57203006E69BD = {
 			isa = PBXGroup;
 			children = (
+				F430FBF628E653C5006C211B /* Lib */,
 				F485ECD228E5735B006E69BD /* Source */,
 				F485ECA128E57203006E69BD /* SubscriptDraw */,
 				F485ECB728E57205006E69BD /* SubscriptDrawTests */,
@@ -102,6 +251,7 @@
 		F485ECA128E57203006E69BD /* SubscriptDraw */ = {
 			isa = PBXGroup;
 			children = (
+				F430FC3928E67BCD006C211B /* Info.plist */,
 				F485ECD128E57219006E69BD /* SubscriptDraw.entitlements */,
 				F485ECA228E57203006E69BD /* SubscriptDrawApp.swift */,
 				F485ECA428E57203006E69BD /* ContentView.swift */,
@@ -141,7 +291,10 @@
 		F485ECD228E5735B006E69BD /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				F430FC2328E65427006C211B /* Freehand */,
+				F430FC3628E6542E006C211B /* SS.swift */,
 				F485ECD328E57375006E69BD /* Main.swift */,
+				F430FC3A28E682CB006C211B /* FileTree.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -276,11 +429,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F430FC1228E653C5006C211B /* Result.swift in Sources */,
+				F430FC1E28E653C5006C211B /* Border.swift in Sources */,
 				F485ECD428E57375006E69BD /* Main.swift in Sources */,
+				F430FC2028E653C5006C211B /* RefBox.swift in Sources */,
+				F430FC2E28E65427006C211B /* GetStroke.swift in Sources */,
+				F430FC3228E65427006C211B /* CanvasData.swift in Sources */,
+				F430FC1728E653C5006C211B /* CGFloat.swift in Sources */,
+				F430FC3328E65427006C211B /* CanvasUI.swift in Sources */,
+				F430FC0F28E653C5006C211B /* LinearAlgebra.swift in Sources */,
+				F430FC3B28E682CB006C211B /* FileTree.swift in Sources */,
+				F430FC1A28E653C5006C211B /* UITextView.swift in Sources */,
+				F430FC1428E653C5006C211B /* URL.swift in Sources */,
+				F430FC1028E653C5006C211B /* Array.swift in Sources */,
 				F485ECAC28E57205006E69BD /* Persistence.swift in Sources */,
+				F430FC2228E653C5006C211B /* CodableColor.swift in Sources */,
+				F430FC1528E653C5006C211B /* String.swift in Sources */,
+				F430FC1828E653C5006C211B /* UIFont.swift in Sources */,
+				F430FC1C28E653C5006C211B /* Bindings.swift in Sources */,
+				F430FC1628E653C5006C211B /* CGPoint.swift in Sources */,
+				F430FC1D28E653C5006C211B /* Basics.swift in Sources */,
 				F485ECA528E57203006E69BD /* ContentView.swift in Sources */,
+				F430FC2F28E65427006C211B /* DrawingData.swift in Sources */,
+				F430FC1F28E653C5006C211B /* UIFFI.swift in Sources */,
+				F430FC2128E653C5006C211B /* MathUtil.swift in Sources */,
+				F430FC1128E653C5006C211B /* UIColor.swift in Sources */,
+				F430FC1328E653C5006C211B /* Int.swift in Sources */,
 				F485ECA328E57203006E69BD /* SubscriptDrawApp.swift in Sources */,
+				F430FC1B28E653C5006C211B /* Scroller.swift in Sources */,
 				F485ECAF28E57205006E69BD /* SubscriptDraw.xcdatamodeld in Sources */,
+				F430FC3728E6542E006C211B /* SS.swift in Sources */,
+				F430FC3428E65427006C211B /* CanvasToolBar.swift in Sources */,
+				F430FC3528E65427006C211B /* RuntimeData.swift in Sources */,
+				F430FC1928E653C5006C211B /* Optional.swift in Sources */,
+				F430FC3028E65427006C211B /* DrawingRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,11 +627,13 @@
 				DEVELOPMENT_TEAM = CV5FXG5P92;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SubscriptDraw/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -477,11 +661,13 @@
 				DEVELOPMENT_TEAM = CV5FXG5P92;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SubscriptDraw/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
