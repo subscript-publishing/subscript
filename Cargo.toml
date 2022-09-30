@@ -3,5 +3,6 @@ members = [
     "subscript-compiler",
     "subscript-project",
     "ss-language-server",
+    "format-ss-drawing",
 ]
 
