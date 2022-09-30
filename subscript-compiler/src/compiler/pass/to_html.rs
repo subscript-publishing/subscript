@@ -17,10 +17,12 @@ impl Node {
             Open,
             Close,
         }
-        fn pretty_open_enclosure_token<'a>(mode: OpenCloseMode, value: String) -> String {
+        fn pretty_enclosure_token<'a>(mode: OpenCloseMode, value: String) -> String {
             match (value.as_ref(), mode) {
                 ("\"", OpenCloseMode::Open) => String::from("“"),
                 ("\"", OpenCloseMode::Close) => String::from("”"),
+                // ("{", _) => String::new(),
+                // ("}", _) => String::new(),
                 (tk, _) => tk.to_string()
             }
         }
@@ -63,11 +65,11 @@ impl Node {
             },
             Node::Enclosure(Ann{data: enclosure, ..}) => {
                 let open = enclosure.open
-                    .map(|x| pretty_open_enclosure_token(OpenCloseMode::Open, x.data))
+                    .map(|x| pretty_enclosure_token(OpenCloseMode::Open, x.data))
                     .map(|x| vec![html::Node::new_text(x)])
                     .unwrap_or(Vec::new());
                 let close = enclosure.close
-                    .map(|x| pretty_open_enclosure_token(OpenCloseMode::Close, x.data))
+                    .map(|x| pretty_enclosure_token(OpenCloseMode::Close, x.data))
                     .map(|x| vec![html::Node::new_text(x)])
                     .unwrap_or(Vec::new());
                 let children = enclosure.children
@@ -77,13 +79,20 @@ impl Node {
                 html::Node::Fragment(vec![open, children, close].concat())
             },
             Node::Ident(Ann{data, ..}) => {
-                html::Node::Text("\\".to_owned() + &data)
+                html::Node::Element(html::Element {
+                    name: data,
+                    attributes: Default::default(),
+                    children: Default::default(),
+                })
             },
             Node::Text(Ann{data, ..}) => {
                 html::Node::Text(data)
             },
             Node::InvalidToken(Ann{data, ..}) => {
                 html::Node::Text(data)
+            }
+            Node::HtmlCode(code) => {
+                html::Node::Text(code)
             }
         }
     }

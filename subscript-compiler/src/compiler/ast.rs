@@ -472,6 +472,7 @@ pub enum Node {
     /// must use such in their publications, then use the tag version. 
     InvalidToken(Ann<String>),
     // MacroDecl(Ann<MacroDecl>),
+    HtmlCode(String),
 }
 
 
@@ -604,7 +605,7 @@ impl Node {
     }
     pub fn is_named_block(&self, name: &str) -> bool {
         self.unwrap_tag()
-            .map(|x| *x.name.data == *name)
+            .map(|x| x.name.data == name)
             .unwrap_or(false)
     }
     pub fn get_text(&self) -> Option<Ann<String>> {
@@ -737,6 +738,9 @@ impl Node {
             node @ Node::InvalidToken(_) => {
                 f(env.clone(), node, acc)
             }
+            node @ Node::HtmlCode(_) => {
+                f(env.clone(), node, acc)
+            }
         }
     }
 
@@ -821,6 +825,9 @@ impl Node {
             node @ Node::InvalidToken(_) => {
                 f(env.clone(), node)
             }
+            node @ Node::HtmlCode(_) => {
+                f(env.clone(), node)
+            }
         }
     }
 
@@ -878,6 +885,9 @@ impl Node {
             node @ Node::InvalidToken(_) => {
                 f(env, scope.clone(), node)
             }
+            node @ Node::HtmlCode(_) => {
+                f(env, scope.clone(), node)
+            }
         }
     }
 
@@ -933,6 +943,9 @@ impl Node {
             node @ Node::InvalidToken(_) => {
                 (f.borrow_mut())(scope.clone(), node)
             }
+            node @ Node::HtmlCode(_) => {
+                (f.borrow_mut())(scope.clone(), node)
+            }
         }
     }
     /// Bottom up transformation of AST child nodes within the same enclosure.
@@ -984,6 +997,7 @@ impl Node {
             node @ Node::Ident(_) => node,
             node @ Node::Text(_) => node,
             node @ Node::InvalidToken(_) => node,
+            node @ Node::HtmlCode(_) => node,
         }
     }
     pub fn to_string(&self) -> String {
@@ -1053,6 +1067,7 @@ impl Node {
             Node::Ident(x) => ident(x.data.clone()),
             Node::Text(x) => x.data.clone(),
             Node::InvalidToken(x) => x.data.clone(),
+            Node::HtmlCode(_) => "HtmlCode(...)".to_owned()
         }
     }
     pub fn syntactically_equal(&self, other: &Self) -> bool {
@@ -1092,7 +1107,7 @@ impl Node {
             (Node::InvalidToken(x1), Node::InvalidToken(x2)) => {
                 &x1.data == &x2.data
             }
-            (_, _) => unimplemented!()
+            (_, _) => false
         }
     }
 }

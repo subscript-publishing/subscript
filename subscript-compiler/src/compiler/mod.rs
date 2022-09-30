@@ -37,12 +37,13 @@ impl CompilerEnv {
 
 pub mod low_level_api {
     use super::*;
-    pub fn parse(file_path: PathBuf) -> (CompilerEnv, Vec<Node>) {
-        let source = std::fs::read_to_string(&file_path).unwrap();
+    pub fn parse(file_path: PathBuf) -> Result<(CompilerEnv, Vec<Node>), String> {
+        let source = std::fs::read_to_string(&file_path)
+            .map_err(|x| format!("{:?}", x))?;
         let mut env = CompilerEnv::new(file_path);
         let body = crate::compiler::pass::pp_normalize::post_parser_normalize(&source);
         let body = crate::compiler::pass::core::core_passes(&mut env, body);
-        (env, body)
+        Ok((env, body))
     }
     pub fn to_html_doc(env: CompilerEnv, nodes: Vec<Node>) -> String {
         let all_pre_html_rewrites = crate::plugins::pre_html::all_tag_macros();
@@ -60,6 +61,7 @@ pub mod low_level_api {
                 node @ Node::Text(_) => node,
                 node @ Node::Ident(_) => node,
                 node @ Node::InvalidToken(_) => node,
+                node @ Node::HtmlCode(_) => node,
             }
         };
         let nodes = nodes
@@ -77,7 +79,8 @@ pub mod low_level_api {
 }
 
 pub fn compile(file_path: PathBuf) -> String {
-    let (env, nodes) = low_level_api::parse(file_path);
+    let (env, nodes) = low_level_api::parse(file_path.clone())
+        .expect(&format!("looking for file {:?}", file_path));
     low_level_api::to_html_doc(env, nodes)
 }
 
@@ -90,7 +93,7 @@ pub fn compile(file_path: PathBuf) -> String {
 
 pub fn get_subtopics<'a, T: Into<PathBuf>>(file_path: T) -> Vec<String> {
     let file_path = file_path.into();
-    let (env, body) = low_level_api::parse(file_path);
+    let (env, body) = low_level_api::parse(file_path).unwrap();
     // let source = std::fs::read_to_string(file_path).unwrap();
     // let body = crate::frontend::pass::pp_normalize::run_compiler_frontend(&source);
     // let body = crate::frontend::pass::html_normalize::html_canonicalization(body);

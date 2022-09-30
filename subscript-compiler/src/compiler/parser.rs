@@ -42,6 +42,7 @@ pub enum Mode {
     },
     OpenOrCloseEnclosureQuote,
     Ident(String),
+    Symbol(String),
     NoOP,
 }
 
@@ -269,6 +270,20 @@ impl ParseTree {
                     ));
                     parse_tree.add_child_node(new_node);
                 }
+                Mode::Symbol(sym) => {
+                    let start = current.range.start;
+                    let end = next
+                        .map(|x| x.1.range.end)
+                        .unwrap_or(current.range.end);
+                    let new_node = Node::Text(Ann::new(
+                        CharRange::new(
+                            start,
+                            end,
+                        ),
+                        sym.into()
+                    ));
+                    parse_tree.add_child_node(new_node);
+                }
                 Mode::NoOP => {
                     let new_node = Node::Text(Ann::new(
                         current.range,
@@ -474,6 +489,10 @@ fn match_word(current: &str, next: Option<&str>) -> (Mode, ZipperConsumed) {
         ),
         ("\\", Some(ident)) if !is_token(ident) && ident != " " => (
             Mode::Ident(ident.to_owned()),
+            ZipperConsumed::Right
+        ),
+        ("=", Some(">")) => (
+            Mode::Symbol("=>".to_owned()),
             ZipperConsumed::Right
         ),
         (tk @ "{", _) => (

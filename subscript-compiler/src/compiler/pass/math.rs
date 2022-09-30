@@ -162,6 +162,7 @@ pub fn latex_pass<'a>(env: &mut MathEnv, node: Node) -> Node {
         node @ Node::Ident(_) => node,
         node @ Node::Text(_) => node,
         node @ Node::InvalidToken(_) => node,
+        node @ Node::HtmlCode(_) => node,
     }
 }
 

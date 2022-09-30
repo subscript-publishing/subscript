@@ -127,29 +127,28 @@ pub fn annotate_heading_nodes<'a>(input: Node) -> Node {
 
 /// This is where we expand the patterns defined in `\!where` tags.
 fn match_and_apply_rewrite_rule<'a>(
-    pattern: Vec<Node>,
+    pattern: Node,
     target: Vec<Node>,
     children: Vec<Node>,
 ) -> Vec<Node> {
-    let mut left: Vec<Node> = Vec::<Node>::new();
-    let mut current = children;
-    while current.len() > 0 && current.len() >= pattern.len() {
-        let matches = current
-            .iter()
-            .zip(pattern.iter())
-            .all(|(x, y)| x.syntactically_equal(y));
-        if matches {
-            // ADD NEW PATTENR TO LEFT
-            left.extend(target.clone());
-            let _ = current
-                .drain(..pattern.len())
-                .collect::<Vec<_>>();
-            continue;
-        }
-        left.push(current.remove(0));
-    }
-    left.extend(current);
-    left
+    let f = |nodes: Vec<Node>| -> Vec<Node> {
+        nodes
+            .into_iter()
+            .flat_map(|x| {
+                if x.syntactically_equal(&pattern) {
+                    return target.clone()
+                }
+                vec![x]
+            })
+            .collect_vec()
+    };
+    children
+        .into_iter()
+        .map(|child| {
+            let scope = NodeScope::default();
+            child.transform_children(Rc::new(f))
+        })
+        .collect_vec()
 }
 
 
@@ -208,6 +207,7 @@ fn normalize_ref_headings(baseline: HeadingType, node: Node) -> Node {
             node @ Node::Text(_) => node,
             node @ Node::Ident(_) => node,
             node @ Node::InvalidToken(_) => node,
+            node @ Node::HtmlCode(_) => node,
         }
     };
     node.transform(NodeScope::default(), Rc::new(f))
@@ -218,13 +218,15 @@ fn normalize_ref_headings(baseline: HeadingType, node: Node) -> Node {
 fn apply_node_passes<'a>(env: &mut crate::compiler::CompilerEnv, node: Node) -> Vec<Node> {
     fn apply_rewrite_rules(tag: Tag) -> Tag {
         let mut children = tag.children;
+        let rewrite_rules = tag.rewrite_rules.clone();
+        // println!("apply_rewrite_rules: {:#?}", tag.rewrite_rules);
         for RewriteRule{from, to} in tag.rewrite_rules {
             let from = from.unwrap_curly_brace();
             let to = to.unwrap_curly_brace();
             match (from, to) {
-                (Some(from), Some(to)) => {
+                (Some(from), Some(to)) if from.len() == 1 => {
                     children = match_and_apply_rewrite_rule(
-                        from.clone(),
+                        from[0].clone(),
                         to.clone(),
                         children,
                     );
@@ -236,7 +238,7 @@ fn apply_node_passes<'a>(env: &mut crate::compiler::CompilerEnv, node: Node) -> 
             name: tag.name,
             attributes: tag.attributes,
             children,
-            rewrite_rules: Vec::new(),
+            rewrite_rules: rewrite_rules.clone(),
         }
     }
     let ref all_tag_macros = crate::plugins::normalize::all_tag_macros();
@@ -254,44 +256,109 @@ fn apply_node_passes<'a>(env: &mut crate::compiler::CompilerEnv, node: Node) -> 
             node @ Node::Text(_) => node,
             node @ Node::Ident(_) => node,
             node @ Node::InvalidToken(_) => node,
+            node @ Node::HtmlCode(_) => node,
         }
     };
     let g = |env: &mut crate::compiler::CompilerEnv, scope: NodeScope, node: Node| -> Vec<Node> {
+        fn process_ss_include(
+            env: &mut crate::compiler::CompilerEnv,
+            file_path: &str,
+            tag: Tag
+        ) -> Vec<Node> {
+            let baseline = tag.attributes
+                .get("baseline")
+                .and_then(|x| x.value)
+                .map(|x| x.data)
+                .and_then(|x| match x.as_str()  {
+                    "h1" => Some(HeadingType::H1),
+                    "h2" => Some(HeadingType::H2),
+                    "h3" => Some(HeadingType::H3),
+                    "h4" => Some(HeadingType::H4),
+                    "h5" => Some(HeadingType::H5),
+                    "h6" => Some(HeadingType::H6),
+                    _ => None
+                });
+            let file_path = PathBuf::from(file_path);
+            let file_path = env.normalize_file_path(file_path);
+            let (sub_env, nodes) = crate::compiler::low_level_api::parse(file_path).unwrap();
+            let nodes = nodes
+                .into_iter()
+                .map(|x| {
+                    if let Some(baseline) = baseline.clone() {
+                        return normalize_ref_headings(baseline, x)
+                    }
+                    x
+                })
+                .collect_vec();
+            env.append_math_env(sub_env.math_env);
+            return nodes
+        }
+        fn process_ssd1_include(
+            env: &mut crate::compiler::CompilerEnv,
+            file_path: &str,
+            tag: Tag
+        ) -> Vec<Node> {
+            let file_path = PathBuf::from(file_path);
+            let file_path = env.normalize_file_path(file_path);
+            if let Ok(svgs) = format_ss_drawing::api::compile(file_path) {
+                let rule = tag.rewrite_rules
+                    .first()
+                    .and_then(|rule| {
+                        rule.from.clone().unblock()
+                            .first()
+                            .map(|x| (x.clone(), rule.to.clone()))
+                    });
+                // println!("process_ssd1_include: {:?}", tag.rewrite_rules);
+                if let Some((from, to)) = rule {
+                    let children = svgs
+                        .clone()
+                        .into_iter()
+                        .flat_map(|svg| {
+                            let f = {
+                                let from = from.clone();
+                                let svg = svg.clone();
+                                move |scope: NodeScope, node: Node| -> Node {
+                                    if node.syntactically_equal(&from) {
+                                        return Node::HtmlCode(svg.clone())
+                                    }
+                                    node
+                                    // nodes
+                                    //     .into_iter()
+                                    //     .flat_map(|x| {
+                                    //         if x.syntactically_equal(&from) {
+                                    //             return vec![Node::HtmlCode(svg.clone())]
+                                    //         }
+                                    //         vec![x]
+                                    //     })
+                                    //     .collect_vec()
+                                }
+                            };
+                            let scope = NodeScope::default();
+                            to.clone().transform(scope, Rc::new(f)).unblock()
+                        })
+                        .collect_vec();
+                    return children
+                }
+                return svgs
+                    .into_iter()
+                    .map(|svg| {
+                        Node::HtmlCode(svg)
+                    })
+                    .collect_vec()
+            }
+            vec![]
+        }
         match node {
             Node::Tag(tag) if tag.has_name("include") => {
                 let file_path = tag.attributes
                     .get("src")
                     .and_then(|x| x.value)
-                    .map(|x| x.data)
-                    .filter(|x| x.ends_with(".ss"));
-                let baseline = tag.attributes
-                    .get("baseline")
-                    .and_then(|x| x.value)
-                    .map(|x| x.data)
-                    .and_then(|x| match x.as_str()  {
-                        "h1" => Some(HeadingType::H1),
-                        "h2" => Some(HeadingType::H2),
-                        "h3" => Some(HeadingType::H3),
-                        "h4" => Some(HeadingType::H4),
-                        "h5" => Some(HeadingType::H5),
-                        "h6" => Some(HeadingType::H6),
-                        _ => None
-                    });
-                if let Some(file_path) = file_path {
-                    let file_path = PathBuf::from(file_path);
-                    let file_path = env.normalize_file_path(file_path);
-                    let (sub_env, nodes) = crate::compiler::low_level_api::parse(file_path);
-                    let nodes = nodes
-                        .into_iter()
-                        .map(|x| {
-                            if let Some(baseline) = baseline.clone() {
-                                return normalize_ref_headings(baseline, x)
-                            }
-                            x
-                        })
-                        .collect_vec();
-                    env.append_math_env(sub_env.math_env);
-                    return nodes
+                    .map(|x| x.data);
+                if let Some(ssd1_file_path) = file_path.as_ref().filter(|x| x.ends_with(".ssd1")) {
+                    return process_ssd1_include(env, &ssd1_file_path, tag)
+                }
+                if let Some(ss_file_path) = file_path.as_ref().filter(|x| x.ends_with(".ss")) {
+                    return process_ss_include(env, &ss_file_path, tag)
                 }
                 vec![]
             }
@@ -300,6 +367,7 @@ fn apply_node_passes<'a>(env: &mut crate::compiler::CompilerEnv, node: Node) -> 
             node @ Node::Text(_) => vec![node],
             node @ Node::Ident(_) => vec![node],
             node @ Node::InvalidToken(_) => vec![node],
+            node @ Node::HtmlCode(_) => vec![node],
         }
     };
     node

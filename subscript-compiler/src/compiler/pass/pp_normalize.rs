@@ -42,6 +42,7 @@ fn to_unnormalized_backend_ir(children: Vec<Node>) -> Vec<Node> {
         // RETURN NONE IF CHILD IS ADDED TO SOME EXISTING NODE
         let new_child = match child {
             Node::Tag(..) => unimplemented!(),
+            Node::HtmlCode(..) => unimplemented!(),
             Node::Enclosure(node) if last_is_ident && node.data.is_square_parens() => {
                 fn to_text<'a>(node: Node) -> Option<String> {
                     match node {
@@ -214,13 +215,20 @@ fn block_level_normalize<'a>(children: Vec<Node>) -> Vec<Node> {
     let mut results = Vec::new();
     for child in children {
         if child.is_named_block("!where") {
-            let child = child.into_tag().unwrap();
+            let child = child
+                .trim_whitespace()
+                .into_tag()
+                .unwrap();
+            let children = child.children
+                .into_iter()
+                .flat_map(Node::unblock)
+                .collect_vec();
             let last = results
                 .last_mut()
                 .and_then(Node::unwrap_tag_mut);
             if let Some(last) = last {
                 let rewrite_rule = into_rewrite_rules(
-                    child.children,
+                    children,
                 );
                 last.rewrite_rules.extend(rewrite_rule);
                 continue;
@@ -268,8 +276,10 @@ pub fn post_parser_normalize<'a>(source: &'a str) -> Vec<Node> {
         // );
     // DONE
     // node.into_fragment()
-    children
+    let children = children
         .into_iter()
         .map(|node| node.transform_children(Rc::new(block_level_normalize)))
-        .collect_vec()
+        .collect_vec();
+    let children = block_level_normalize(children);
+    children
 }
