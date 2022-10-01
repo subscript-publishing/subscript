@@ -4,6 +4,7 @@
 
 - Based on HTML markup with LaTeX like syntax.
 
+The following code examples hereto uses tex based syntax highlighting (there is a vscode syntax extension for Subscript Markup) and I suppose you'll be able to see quite plainly where Subscript breaks LaTeX parsers.
 
 ### Math Support 
 
