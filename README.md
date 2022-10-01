@@ -105,7 +105,7 @@ Overall
 ```
 
 Each drawing can contain multiple drawing entries. By default
-```
+```tex
 \include[src="test/Untitled.ssd1"]
 ```
 will map to a div of SVG's (essentially a single image), but you can customize how each SVG is presented VIA the `\!where` macro like so
