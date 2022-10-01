@@ -74,7 +74,7 @@ The convention in Subscript is that macros that begin with an exclamation mark m
 
 ### Integration with hand drawn notes VIA your iPad and Apple Pencil
 
-![Preview Image](/assets/preview-images/subscript-draw-preview1.jpeg)
+![Preview Image](assets/preview-images/subscript-draw-preview1.jpeg)
 
 > `SubscriptDraw` is a freehand/freeform drawing app (iPad only and requires an Apple Pencil) for rapid note taking and freeform content creation such as diagrams and hand drawn visualizations. Which the Subscript Markup Language and compiler natively supports for seamless integration into your published content. 
 
