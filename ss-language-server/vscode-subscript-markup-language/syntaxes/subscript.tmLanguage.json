@@ -71,7 +71,7 @@
     },
     "identifier": {
       "name": "entity.name.tag",
-      "match": "\\\\\\w+"
+      "match": "\\\\[a-zA-Z0-9:_-]+"
     },
     "curlyBrace": {
       "begin": "\\{",

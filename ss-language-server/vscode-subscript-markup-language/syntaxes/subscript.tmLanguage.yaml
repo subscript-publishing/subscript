@@ -38,7 +38,7 @@ repository:
     match: \\\w+!
   identifier:
     name: entity.name.tag
-    match: \\\w+
+    match: \\[a-zA-Z0-9:_-]+
   # identifier:
   #   name: entity.name.tag
   #   match: \\(\w)+(?![a-zA-Z0-9!])+
