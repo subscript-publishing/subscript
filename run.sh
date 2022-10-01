@@ -1,1 +1,1 @@
-cargo run --bin dev
+cargo run --bin subscript-project
