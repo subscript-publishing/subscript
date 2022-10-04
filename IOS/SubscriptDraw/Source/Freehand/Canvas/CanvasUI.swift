@@ -310,8 +310,8 @@ fileprivate struct CanvasArtBoards: View {
 
 extension SS {
     struct Canvas: View {
-        @StateObject var runtimeModel = RuntimeDataModel()
         @ObservedObject var canvasModel: CanvasDataModel
+        @ObservedObject var runtimeModel: SS.RuntimeDataModel
         
         let goBack: () -> ()
         let onSave: () -> ()

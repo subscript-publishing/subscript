@@ -1,7 +1,7 @@
 [project]
-output_dir = "output"
-pages_dir = "pages"
 
-
-
+[project.locations]
+output = "output"
+pages = "pages"
+template = "template/page.html"
 

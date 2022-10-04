@@ -4,5 +4,7 @@ members = [
     "subscript-project",
     "ss-language-server",
     "format-ss-drawing",
+    "subscript-web-trinity",
+    "subscript-data",
 ]
 

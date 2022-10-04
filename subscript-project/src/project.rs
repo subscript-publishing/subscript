@@ -10,7 +10,8 @@ pub struct SubscriptManifest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptProject {
     pub output_dir: PathBuf,
-    pub pages_dir: PathBuf
+    pub pages_dir: PathBuf,
+    pub template: Option<PathBuf>,
 }
 
 impl SubscriptProject {

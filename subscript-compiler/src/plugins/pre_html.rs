@@ -15,13 +15,13 @@ use super::TagRewrite;
 
 macro_rules! register_tag_macros_impl {
     ($list:ident;) => {};
-    ($list:ident; $(#[$($attrss:tt)*])* fn $scope:ident::$tag_name:ident($env:ident, $tag:ident)$block:block $($rest:tt)*) => {{
+    ($list:ident; $(#[$($attrss:tt)*])* fn $namespace:ident::$tag_name:ident($env:ident, $tag:ident)$block:block $($rest:tt)*) => {{
         fn f($env: NodeScope, mut $tag: Tag) -> Node $block
-        let scope = stringify!($scope).to_string();
+        let namespace = stringify!($namespace).to_string();
         let tag_name = stringify!($tag_name).to_string();
         $list.insert(
             tag_name.clone(),
-            Box::new(TagRewrite{scope, tag: tag_name, apply: Box::new(f)})
+            Box::new(TagRewrite{namespace, tag: tag_name, apply: Box::new(f)})
         );
         register_tag_macros_impl!{$list; $($rest)*}
     }};
@@ -41,17 +41,30 @@ macro_rules! register_tag_macros {
 
 
 register_tag_macros!{
+    ///////////////////////////////////////////////////////////////////////////
+    // HTML TABLES
+    ///////////////////////////////////////////////////////////////////////////
+    /// To properly implement horizontally scrollable tables on Safari, we have
+    /// to wrap tables in a div with the appropriate CSS (until a better
+    /// workaround is discovered). 
+    fn global::table(env, table) {
+        let mut attrs = Attributes::default();
+        attrs.insert_key("data-table-wrapper");
+        let wrapper = Tag::new_with_param("div", attrs, vec![Node::Tag(table)]);
+        Node::Tag(wrapper)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Subscript Specific Semantic Layout and Content Tags
+    ///////////////////////////////////////////////////////////////////////////
     fn global::note(env, tag) {
-        tag.attributes.insert_key("data-note");
+        tag.attributes.insert("data-tag", "note");
         tag.name = "section".into();
         Node::Tag(tag)
     }
     fn global::layout(env, tag) {
-        tag.attributes.insert_key("data-layout");
+        tag.attributes.insert("data-tag", "layout");
         tag.name = "div".into();
         Node::Tag(tag)
-    }
-    fn global::equation(env, tag) {
-        unimplemented!()
     }
 }

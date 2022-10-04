@@ -3,21 +3,22 @@
 \include[src="2d-motion/index.ss", baseline="h2"]
 \include[src="forces-newtons-laws/index.ss", baseline="h2"]
 
-\h1{Hello world!} => !{}!
+\h1{Hello world!}
 
 \note{
-    ss
-} \!where {
-    {ss} => {a}
+    \h2{Hello \test world}
+    \p{\test}
+}\!where{
+    {\test} => {1}
 }
 
-\include[src="../../notebooks/sample.ss-notebook", baseline="h2", id="test.drawing"] \!apply {
-    (\set1, \set2) => {
-        
+\include[src="../../drawings/Untitled.ssd1", baseline="h2", id="test.drawing"] \!where {
+    {\svg} => {
+        \h2{Hello world}
+        \note{
+            \svg
+        }
     }
 }
 
-{{\arg1}{\arg2}}{
-    \drawing[id="test.drawing", set1]
-}
 

@@ -4,6 +4,10 @@ cd vscode-subscript-markup-language
 npm run build
 cd ..
 
+cd vscode-subscript-autocomplete
+npm run compile
+cd ..
+
 mkdir -p ~/.vscode/extensions/vscode-subscript-markup-language
 mkdir -p ~/.vscode/extensions/vscode-subscript-autocomplete
 

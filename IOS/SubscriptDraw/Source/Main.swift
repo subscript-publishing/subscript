@@ -53,6 +53,7 @@ class FileDataModel: ObservableObject, Codable {
 struct SubscriptDrawApp: App {
     @StateObject private var document = DrawingDocumentHandle()
     @StateObject private var notebookModel: OptionalBox<FileDataModel> = OptionalBox()
+    @StateObject private var runtimeModel: OptionalBox<SS.RuntimeDataModel> = OptionalBox()
     
     var body: some Scene {
         DocumentGroup(newDocument: document) { file in
@@ -63,7 +64,7 @@ struct SubscriptDrawApp: App {
         }
     }
     @ViewBuilder private var rootView: some View {
-        if notebookModel.ref != nil {
+        if notebookModel.ref != nil && self.runtimeModel.ref != nil {
             rootNotebookView()
         } else {
             Text("Loading...")
@@ -74,6 +75,7 @@ struct SubscriptDrawApp: App {
         NavigationView {
             let view = DrawingEntryPoint(
                 canvas: notebookModel.ref!.canvas,
+                runtimeModel: runtimeModel.ref!,
                 onSave: { canavs in
                     self.notebookModel.ref!.canvas = canavs
                     self.notebookModel.ref!.save(path: self.notebookModel.ref!.filePath!)
@@ -98,6 +100,7 @@ struct SubscriptDrawApp: App {
             let notebookFilePath = file.fileURL!
             self.notebookModel.ref = FileDataModel.load(path: file.fileURL!) ?? FileDataModel()
             self.notebookModel.ref!.filePath = notebookFilePath
+            self.runtimeModel.ref = SS.RuntimeDataModel.loadDefault()
             if SS.DEBUG_MODE {
                 print("[LOADED NOTEBOOK DATA FILE]")
             }
@@ -106,10 +109,12 @@ struct SubscriptDrawApp: App {
     
     struct DrawingEntryPoint: View {
         @StateObject var canvas: SS.CanvasDataModel
+        @StateObject var runtimeModel: SS.RuntimeDataModel
         let onSave: (SS.CanvasDataModel) -> ()
         var body: some View {
             SS.Canvas(
                 canvasModel: canvas,
+                runtimeModel: runtimeModel,
                 goBack: {
                     UIApplication.shared.windows
                         .first?

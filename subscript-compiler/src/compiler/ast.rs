@@ -408,19 +408,6 @@ pub struct NodeScope {
 }
 
 impl NodeScope {
-    // pub fn new<T: Into<PathBuf>>(file_path: T) -> Self {
-    //     NodeScope {
-    //         file_path: Some(file_path.into()),
-    //         parents: Vec::new(),
-    //     }
-    // }
-    // /// Don’t readily use - improver use of this function can break things… 
-    // pub fn empty() -> Self {
-    //     NodeScope {
-    //         file_path: None,
-    //         parents: Vec::new(),
-    //     }
-    // }
     pub fn push_parent(&mut self, name: String) {
         self.parents.push(name)
     }
@@ -463,6 +450,7 @@ pub enum Node {
     ///     * Curly braces
     ///     * Parentheses
     ///     * Square parentheses
+    ///     * Open-close symbols for beautification, which as mapping `"..."` → `“…”`.
     /// * Some error with it’s invalid start & end token (i.e. a opening `[` and closing `}`)
     Enclosure(Ann<Enclosure<Node>>),
     /// Some string of arbitrary characters or a single special token.
@@ -776,7 +764,8 @@ impl Node {
     /// Bottom up 'node to ndoe' transformation.
     pub fn transform<F: Fn(NodeScope, Node) -> Node>(
         self,
-        mut env: NodeScope, f: Rc<F>
+        mut env: NodeScope,
+        f: Rc<F>
     ) -> Self {
         match self {
             Node::Tag(node) => {

@@ -251,12 +251,14 @@ private struct FileTreeView: View {
         @Binding var item: FileTree
         @State private var navToggle: Bool = false
         @State private var canvasModel = SS.CanvasDataModel()
+        @StateObject private var runtimeModel = SS.RuntimeDataModel()
         var body: some View {
             NavigationLink(
                 isActive: $navToggle,
                 destination: {
                     SS.Canvas(
                         canvasModel: canvasModel,
+                        runtimeModel: runtimeModel,
                         goBack: {
                             navToggle.toggle()
                         },

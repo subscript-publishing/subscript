@@ -78,6 +78,12 @@ pub mod low_level_api {
     }
 }
 
+
+#[derive(Debug, Clone)]
+pub struct CompilerSettings {
+    
+}
+
 pub fn compile(file_path: PathBuf) -> String {
     let (env, nodes) = low_level_api::parse(file_path.clone())
         .expect(&format!("looking for file {:?}", file_path));
@@ -85,11 +91,6 @@ pub fn compile(file_path: PathBuf) -> String {
 }
 
 
-// pub fn run_highlighter<'a>(source: &'a str) -> Vec<ast::Highlight<'a>> {
-//     let children = parser::parse_source(source);
-//     let children = Node::new_fragment(children);
-//     children.into_highlight_ranges(Default::default(), None)
-// }
 
 pub fn get_subtopics<'a, T: Into<PathBuf>>(file_path: T) -> Vec<String> {
     let file_path = file_path.into();

@@ -1,3 +1,9 @@
+//! The different between `normalize.rs` and `pre_html.rs` is somewhat
+//! arbitrary. But generally speaking, `pre_html.rs` is for HTML specific
+//! rewrites that we apply before passing the AST onto the HTML codegen
+//! (for instance if it's shared between a possible PDF backend and the
+//! HTML backend alike, add it to `normalize.rs`). 
+
 use std::iter::FromIterator;
 use std::collections::{HashSet, HashMap};
 use std::rc::Rc;
@@ -13,7 +19,7 @@ pub mod normalize;
 
 #[derive(Debug, Clone)]
 pub struct TagRewrite {
-    pub scope: String,
+    pub namespace: String,
     pub tag: String,
     pub apply: Box<fn(NodeScope, Tag) -> Node>
 }
@@ -25,6 +31,7 @@ impl TagRewrite {
         (self.apply)(env, tag)
     }
 }
+
 
 // pub fn run() {
 //     let funs = normalize::all_tag_macros();

@@ -34,18 +34,11 @@ extension SS {
             )),
             Pen(options: Stroke.Options(
                 color: CodableColor(color: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)),
-                size: 10
+                size: Pen.defaultThickPenSize
             )),
-            Pen(
-                options: Stroke.Options(
-                    color: CodableColor(color: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)),
-                    size: Pen.defaultThickPenSize
-                ),
-                layer: .background
-            ),
             Pen(options: Stroke.Options(
                 color: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-                size: 10
+                size: Pen.defaultThickPenSize
             )),
             Pen(options: Stroke.Options(
                 color: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)),

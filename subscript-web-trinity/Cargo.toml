@@ -1,0 +1,17 @@
+[package]
+name = "subscript_web_trinity"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+html5ever = "0.25.1"
+markup5ever = "0.10.0"
+markup5ever_rcdom = "0.1.0"
+serde = {version = "1.0", features = ["derive"]}
+grass = "0.10.4"
+swc_css_parser = "0.123.4"
+swc_css_ast = "0.114.4"
+swc_css_visit = {version = "0.113.4", features = ['path']}
+swc_common = "0.29.3"
+swc_css_codegen = "0.124.4"
+# raffia = "0.1.0"
