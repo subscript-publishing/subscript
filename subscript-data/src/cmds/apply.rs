@@ -164,13 +164,6 @@ fn parse_where_block(nodes: &[Node]) -> Option<Vec<RewriteRule<Vec<Node>>>> {
                     .collect_vec();
                 RewriteRule{pattern, target}
             })
-            // .map(|(pattern, target)| {
-            //     // let pattern = Node::Fragment(pattern.into_iter().map(Clone::clone).collect_vec());
-            //     // let target = Node::Fragment(target.into_iter().map(Clone::clone).collect_vec());
-            //     let pattern = pattern.into_iter().map(Clone::clone).collect_vec();
-            //     let target = target.into_iter().map(Clone::clone).collect_vec();
-            //     RewriteRule{pattern, target}
-            // })
             .collect_vec();
         groups
     }
@@ -196,10 +189,6 @@ impl RewriteRule<Vec<Node>> {
         let mut index = 0;
         let mut arg_match_counter = 0;
         let border = "-".repeat(80);
-        // println!("{border}");
-        // println!("{:#?}", self.pattern);
-        // println!("____________________________________________________________");
-        // println!("{:#?}", self.target);
         let all_match = self.pattern
             .iter()
             .zip(nodes.into_iter())
@@ -207,12 +196,9 @@ impl RewriteRule<Vec<Node>> {
                 index = index + 1;
                 arg_match_counter = arg_match_counter + 1;
                 let result = pattern.syntactically_equal(node);
-                // println!("RES {} {pattern:#?} {node:#?}", result);
                 result
             });
         let all_patterns_matched = arg_match_counter == self.pattern.len();
-        // println!("REWRITE {} {}", all_match, all_patterns_matched);
-        // println!("{border}");
         if all_match {
             let target = self.target.clone();
             let rest_of_nodes = &nodes[index..];
@@ -318,8 +304,6 @@ impl CmdDeclaration {
                         let rewrites = parse_where_block(xs);
                         rewrites
                     });
-                // let cmd_call = self.processors
-                // println!("arguments_match {arguments_match}");
                 if arguments_match && arguments_fully_matched {
                     let cmd_nodes = &nodes[start_of_args..end_of_args];
                     let cmd_call = apply_cmd(scope, self, ident.clone(), parsed_attributes, cmd_nodes);
