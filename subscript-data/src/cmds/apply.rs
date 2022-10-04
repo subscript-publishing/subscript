@@ -188,7 +188,6 @@ impl RewriteRule<Vec<Node>> {
     fn rewrite_matches<'a>(&self, nodes: &'a [Node]) -> Option<(Vec<Node>, &'a [Node])> {
         let mut index = 0;
         let mut arg_match_counter = 0;
-        let border = "-".repeat(80);
         let all_match = self.pattern
             .iter()
             .zip(nodes.into_iter())
