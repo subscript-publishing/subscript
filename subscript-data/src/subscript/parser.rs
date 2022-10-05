@@ -77,6 +77,9 @@ impl Ident {
     pub fn unwrap_remove_slash(&self) -> &str {
         self.0.strip_prefix("\\").unwrap()
     }
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]

@@ -1,8 +1,189 @@
 use std::borrow::Cow;
+use std::collections::HashSet;
 use std::{collections::{HashMap, VecDeque}, path::PathBuf, fmt::Debug, rc::Rc};
 use either::{Either, Either::Left, Either::Right};
 use itertools::Itertools;
 use crate::subscript::ast::{self, BracketType, Node, Children, Ann, Ident, IdentInitError, ToNode, AsNodeRef, Quotation};
+
+
+// ////////////////////////////////////////////////////////////////////////////
+// COMMAND CALL
+// ////////////////////////////////////////////////////////////////////////////
+
+#[derive(Debug, Clone)]
+pub struct CmdCall {
+    pub identifier: Ann<Ident>,
+    pub attributes: Attributes,
+    pub arguments: Vec<Node>,
+}
+
+impl CmdCall {
+    fn has_name(&self, ident: &str) -> bool {
+        self.identifier.value == ident
+    }
+    fn has_attr(&self, key: impl AsNodeRef) -> bool {
+        self.attributes.has_attr(key)
+    }
+    pub fn is_heading_node(&self) -> bool {
+        self.has_name("\\h1") ||
+        self.has_name("\\h2") ||
+        self.has_name("\\h3") ||
+        self.has_name("\\h4") ||
+        self.has_name("\\h5") ||
+        self.has_name("\\h6")
+    }
+}
+
+
+// ////////////////////////////////////////////////////////////////////////////
+// COMMAND DECLARATION
+// ////////////////////////////////////////////////////////////////////////////
+
+#[derive(Debug, Clone)]
+pub struct CmdDeclaration {
+    pub identifier: Ident,
+    /// This is the environment namespace where this command declaration is made available. 
+    pub parent_env: ParentEnvNamespaceDecl,
+    /// This is the child environment namespace that this command defines for its child elements.
+    /// A value of `None` will not alter the environment in any way. 
+    pub child_env: Option<ChildEnvNamespaceDecl>,
+    pub attributes: HashMap<AttributeKey, Option<AttributeValue>>,
+    pub ignore_attributes: bool,
+    pub arguments: VariableArguments,
+    pub processors: CmdCodegenRef,
+    /// Just the the default implementation.
+    pub internal: InternalCmdDeclOptions
+}
+
+#[derive(Debug, Clone)]
+pub struct InternalCmdDeclOptions {
+    pub automatically_apply_rewrites: bool,
+}
+impl Default for InternalCmdDeclOptions {
+    fn default() -> Self {
+        InternalCmdDeclOptions {
+           automatically_apply_rewrites: true,
+        }
+    }
+}
+
+#[derive(Clone)]
+pub struct CmdCodegenRef(pub Rc<dyn CmdCodegen>);
+
+impl CmdCodegenRef {
+    pub fn new(code_gen: impl CmdCodegen + 'static) -> Self {
+        CmdCodegenRef(Rc::new(code_gen))
+    }
+}
+
+impl Debug for CmdCodegenRef {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CmdCodegenRef").finish()
+    }
+}
+
+pub trait CmdCodegen {
+    fn to_html(
+        &self,
+        env: &mut crate::codegen::HtmlCodegenEnv,
+        cmd: CmdCall
+    ) -> crate::html::ast::Node {
+        crate::codegen::html_cg::default_cmd_html_cg(env, cmd)
+    }
+    fn to_latex(
+        &self,
+        env: &mut crate::codegen::LatexCodegenEnv,
+        cmd: CmdCall
+    ) -> String {
+        crate::codegen::latex_cg::default_cmd_latex_cg(env, cmd)
+    }
+}
+
+
+/// You can provide a function pointer to override specific code-gens, but if
+/// it’s `None` (i.e. the default), it will just use the default implementation.
+/// If you need more flexibility, use a specific implementation for `CmdCodegen`.
+#[derive(Clone, Default)]
+pub struct SimpleCodegen {
+    pub to_html: Option<fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node>,
+    pub to_latex: Option<fn(&mut crate::codegen::LatexCodegenEnv, CmdCall) -> String>,
+}
+
+type ToCmdFnType = fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall;
+type ToHtmlFnType = fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node;
+type ToLatexFnType = fn(&mut crate::codegen::LatexCodegenEnv, CmdCall) -> String;
+
+impl SimpleCodegen {
+    // pub fn to_cmd(mut self, f: ToCmdFnType) -> Self {
+    //     self.to_cmd = Some(f);
+    //     self
+    // }
+    pub fn with_html_cg(mut self, f: ToHtmlFnType) -> Self {
+        self.to_html = Some(f);
+        self
+    }
+    pub fn with_latex_cg(mut self, f: ToLatexFnType) -> Self {
+        self.to_latex = Some(f);
+        self
+    }
+}
+
+impl CmdCodegen for SimpleCodegen {
+    // fn to_cmd_call(
+    //     &self,
+    //     scope: &SemanticScope,
+    //     cmd_decl: &CmdDeclaration,
+    //     ident: Ann<Ident>,
+    //     attrs: Option<Attributes>,
+    //     nodes: &[Node]
+    // ) -> CmdCall {
+    //     if let Some(f) = self.to_cmd {
+    //         return f(scope, cmd_decl, ident, attrs, nodes)
+    //     }
+    //     CmdCall {
+    //         identifier: ident,
+    //         attributes: attrs.unwrap_or_default(),
+    //         arguments: nodes.to_vec()
+    //     }
+    // }
+    fn to_html(
+        &self,
+        env: &mut crate::codegen::HtmlCodegenEnv,
+        cmd: CmdCall
+    ) -> crate::html::ast::Node {
+        if let Some(f) = self.to_html {
+            return f(env, cmd)
+        }
+        crate::codegen::html_cg::default_cmd_html_cg(env, cmd)
+    }
+    fn to_latex(
+        &self,
+        env: &mut crate::codegen::LatexCodegenEnv,
+        cmd: CmdCall
+    ) -> String {
+        if let Some(f) = self.to_latex {
+            return f(env, cmd)
+        }
+        crate::codegen::latex_cg::default_cmd_latex_cg(env, cmd)
+    }
+}
+impl Debug for SimpleCodegen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SimpleCmdProcessor").finish()
+    }
+}
+
+
+// ////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS
+// ////////////////////////////////////////////////////////////////////////////
+
+
+#[derive(Debug, Clone)]
+pub struct RewriteRule<T> {
+    pub pattern: T,
+    pub target: T,
+}
 
 // ////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT
@@ -31,6 +212,22 @@ impl Default for SemanticScope {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct CompilerEnv {
+    pub file_path: PathBuf
+}
+
+impl CompilerEnv {
+    /// Use this to normalize file paths relative to the source file.
+    pub fn normalize_file_path(&self, path: PathBuf) -> PathBuf {
+        if let Some(rel_path) = self.file_path.parent() {
+            let mut rel_path = rel_path.to_path_buf();
+            rel_path.push(path);
+            return rel_path
+        }
+        path
+    }
+}
 
 
 /// `EnvNamespaceDecl` is the declared environment where a given command is
@@ -62,22 +259,118 @@ pub struct ChildEnvNamespaceDecl {
     pub layout_mode: LayoutMode,
 }
 
+// ////////////////////////////////////////////////////////////////////////////
+// COMMAND ARGUMENTS & INVOCATION
+// ////////////////////////////////////////////////////////////////////////////
+
+pub mod cmd_invocation {
+    use super::*;
+
+    #[derive(Debug, Clone)]
+    pub struct Internal {
+        pub rewrites: Option<Vec<RewriteRule<Vec<Node>>>>,
+    }
+
+    #[derive(Debug, Clone)]
+    pub struct Metadata<'a> {
+        pub compiler_env: &'a CompilerEnv,
+        pub scope: &'a SemanticScope,
+        pub cmd_decl: &'a CmdDeclaration,
+    }
+
+    pub struct CmdPayload {
+        pub identifier: Ann<Ident>,
+        pub attributes: Option<Attributes>,
+        pub nodes: Vec<Node>,
+    }
+
+    #[derive(Clone)]
+    pub struct ArgumentDeclMap(pub fn(&mut Internal, Metadata, CmdPayload) -> Node);
+
+    impl Debug for ArgumentDeclMap {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ArgumentDeclMap").finish()
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct VariableArguments(pub Vec<ArgumentsDeclInstance>);
+
+#[derive(Debug, Clone)]
+pub struct ArgumentsDeclInstance {
+    /// Left currently means no arguments.
+    /// Right means static/fixed arguments.
+    pub ty: Either<(), Vec<ArgumentType>>,
+    pub apply: cmd_invocation::ArgumentDeclMap,
+}
+
+#[derive(Debug, Clone)]
+pub enum Override {
+    NoArguments,
+    AllFollowingCurlyBrace,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum ArgumentType {
+    CurlyBrace,
+    SquareParen,
+    Parens,
+}
+
+impl ArgumentType {
+    pub fn curly_brace() -> Self {
+        ArgumentType::CurlyBrace
+    }
+    pub fn square_paren() -> Self {
+        ArgumentType::SquareParen
+    }
+    pub fn parens() -> Self {
+        ArgumentType::Parens
+    }
+    pub const fn get_name(self) -> &'static str {
+        match self {
+            ArgumentType::CurlyBrace => "curly_brace",
+            ArgumentType::SquareParen => "square_paren",
+            ArgumentType::Parens => "parens",
+        }
+    }
+}
 
 // ////////////////////////////////////////////////////////////////////////////
 // MACRO TYPS - BASICS
 // ////////////////////////////////////////////////////////////////////////////
 
 #[derive(Debug, Clone)]
+#[allow(non_snake_case)]
 pub struct All;
 
 
 #[derive(Debug, Clone)]
 pub struct AttributeKey {
-    pub identifier: Node,
+    pub key: String,
     pub required: IsRequired,
 }
 
 impl AttributeKey {
+    pub fn new_attr(name: &str) -> Self {
+        AttributeKey {
+            key: name.to_owned(),
+            required: IsRequired::Optional
+        }
+    }
+    // pub fn optional_attr(name: &str) -> Self {
+    //     AttributeKey {
+    //         identifier: Node::new_text(name),
+    //         required: IsRequired::Optional
+    //     }
+    // }
+    // pub fn required_attr(name: &str) -> Self {
+    //     AttributeKey {
+    //         identifier: Node::new_text(name),
+    //         required: IsRequired::Required
+    //     }
+    // }
     pub fn is_required(&self) -> bool {
         match self.required {
             IsRequired::Required => true,
@@ -120,19 +413,6 @@ pub enum IsRequired {
 pub enum AttrValueRequired {
     Optional,
     Required,
-}
-
-#[derive(Debug, Clone)]
-pub struct ArgumentDecl {
-    /// The argument type
-    pub ty: ArgumentType,
-}
-
-#[derive(Debug, Clone)]
-pub enum ArgumentType {
-    CurlyBrace,
-    SquareParen,
-    Parens,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -325,145 +605,3 @@ fn parse_attrs(node: &Node) -> Option<Attributes> {
     }
     None
 }
-
-// ////////////////////////////////////////////////////////////////////////////
-// COMMAND CALL
-// ////////////////////////////////////////////////////////////////////////////
-
-#[derive(Debug, Clone)]
-pub struct CmdCall {
-    pub identifier: Ann<Ident>,
-    pub attributes: Attributes,
-    pub arguments: Vec<Node>,
-}
-
-impl CmdCall {
-    fn has_name(&self, ident: &str) -> bool {
-        self.identifier.value == ident
-    }
-    fn has_attr(&self, key: impl AsNodeRef) -> bool {
-        self.attributes.has_attr(key)
-    }
-}
-
-
-// ////////////////////////////////////////////////////////////////////////////
-// COMMAND DECLARATION
-// ////////////////////////////////////////////////////////////////////////////
-
-#[derive(Debug, Clone)]
-pub struct CmdDeclaration {
-    pub identifier: Ident,
-    /// This is the environment namespace where this command declaration is made available. 
-    pub parent_env: ParentEnvNamespaceDecl,
-    /// This is the child environment namespace that this command defines for its child elements.
-    /// A value of `None` will not alter the environment in any way. 
-    pub child_env: Option<ChildEnvNamespaceDecl>,
-    pub attributes: HashMap<AttributeKey, Option<AttributeValue>>,
-    pub arguments: Vec<ArgumentDecl>,
-    pub processors: CmdCodegenRef,
-}
-
-#[derive(Clone)]
-pub struct CmdCodegenRef(pub Rc<dyn CmdCodegen>);
-
-impl CmdCodegenRef {
-    pub fn new(code_gen: impl CmdCodegen + 'static) -> Self {
-        CmdCodegenRef(Rc::new(code_gen))
-    }
-}
-
-impl Debug for CmdCodegenRef {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("CmdCodegenRef").finish()
-    }
-}
-
-pub trait CmdCodegen {
-    fn to_cmd_call(
-        &self,
-        scope: &SemanticScope,
-        cmd_decl: &CmdDeclaration,
-        ident: Ann<Ident>,
-        attrs: Option<Attributes>,
-        nodes: &[Node]
-    ) -> CmdCall {
-        CmdCall {
-            identifier: ident,
-            attributes: attrs.unwrap_or_default(),
-            arguments: nodes.to_vec()
-        }
-    }
-    fn to_html(
-        &self,
-        env: &mut crate::codegen::HtmlCodegenEnv,
-        cmd: CmdCall
-    ) -> crate::html::ast::Node {
-        crate::codegen::html_cg::default_cmd_html_cg(env, cmd)
-    }
-    fn to_latex(
-        &self,
-        env: &mut crate::codegen::LatexCodegenEnv,
-        cmd: CmdCall
-    ) -> String {
-        crate::codegen::latex_cg::default_cmd_latex_cg(env, cmd)
-    }
-}
-
-
-/// You can provide a function pointer to override specific code-gens, but if
-/// it’s `None` (i.e. the default), it will just use the default implementation.
-/// If you need more flexibility, use a specific implementation for `CmdCodegen`.
-#[derive(Clone, Default)]
-pub struct SimpleCmdProcessor {
-    to_cmd: Option<fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall>,
-    to_html: Option<fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node>,
-    to_latex: Option<fn(&mut crate::codegen::LatexCodegenEnv, CmdCall) -> String>,
-}
-
-impl CmdCodegen for SimpleCmdProcessor {
-    fn to_cmd_call(
-        &self,
-        scope: &SemanticScope,
-        cmd_decl: &CmdDeclaration,
-        ident: Ann<Ident>,
-        attrs: Option<Attributes>,
-        nodes: &[Node]
-    ) -> CmdCall {
-        if let Some(f) = self.to_cmd {
-            return f(scope, cmd_decl, ident, attrs, nodes)
-        }
-        CmdCall {
-            identifier: ident,
-            attributes: attrs.unwrap_or_default(),
-            arguments: nodes.to_vec()
-        }
-    }
-    fn to_html(
-        &self,
-        env: &mut crate::codegen::HtmlCodegenEnv,
-        cmd: CmdCall
-    ) -> crate::html::ast::Node {
-        if let Some(f) = self.to_html {
-            return f(env, cmd)
-        }
-        crate::codegen::html_cg::default_cmd_html_cg(env, cmd)
-    }
-    fn to_latex(
-        &self,
-        env: &mut crate::codegen::LatexCodegenEnv,
-        cmd: CmdCall
-    ) -> String {
-        if let Some(f) = self.to_latex {
-            return f(env, cmd)
-        }
-        crate::codegen::latex_cg::default_cmd_latex_cg(env, cmd)
-    }
-}
-impl Debug for SimpleCmdProcessor {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("SimpleCmdProcessor").finish()
-    }
-}
-
-

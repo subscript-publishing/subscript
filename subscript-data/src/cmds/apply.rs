@@ -1,6 +1,7 @@
 use std::process::Command;
 use std::{collections::HashMap, path::PathBuf};
 use itertools::Itertools;
+use either::{Either, Either::Left, Either::Right};
 use crate::subscript::ast::{Node, Ann, Bracket, Ident, IdentInitError};
 use crate::subscript::ast::{self, BracketType, ToNode, AsNodeRef, Quotation};
 use super::data::{
@@ -9,7 +10,6 @@ use super::data::{
     AttributeKey,
     AttributeValue,
     AttributeValueType,
-    ArgumentDecl,
     ArgumentType,
     ContentMode,
     SymbolicModeType,
@@ -19,10 +19,15 @@ use super::data::{
     ChildEnvNamespaceDecl,
     Attribute,
     Attributes,
-    SimpleCmdProcessor,
+    SimpleCodegen,
     CmdCodegenRef,
     CmdCall,
     CmdCodegen,
+    VariableArguments,
+    ArgumentsDeclInstance,
+    RewriteRule,
+    CompilerEnv,
+    cmd_invocation,
 };
 use crate::subscript::utils::{sep_by, partition};
 
@@ -42,7 +47,16 @@ impl SemanticScope {
         }
         let scope_match = match_scope(self.scope.as_ref(), cmd.parent.as_ref());
         let content_mode_match = self.content_mode == cmd.content_mode;
-        let layout_mode_match = self.layout_mode == cmd.layout_mode;
+        let layout_mode_match = match (&self.layout_mode, &cmd.layout_mode) {
+            (LayoutMode::Both, _) => true,
+            (_, LayoutMode::Both) => true,
+            (LayoutMode::Block, LayoutMode::Block) => true,
+            (LayoutMode::Inline, LayoutMode::Inline) => true,
+            (l, r) => {
+                assert!(l != r);
+                false
+            }
+        };
         scope_match && content_mode_match && layout_mode_match
     }
     pub fn new_scope(&self, parent: Ident) -> SemanticScope {
@@ -63,73 +77,11 @@ impl SemanticScope {
     }
 }
 
-// ////////////////////////////////////////////////////////////////////////////
-// COMMAND DECLARATION MATCHER - HELPERS
-// ////////////////////////////////////////////////////////////////////////////
-
-fn match_attrs(
-    node_attrs: Attributes,
-    cmd_attrs: &HashMap<AttributeKey, Option<AttributeValue>>
-) {
-    for (cmd_key, cmd_value) in cmd_attrs.iter() {
-        let res = node_attrs
-            .get(&cmd_key.identifier)
-            .map(Attribute::to_tuple)
-            .map(|(node_key, node_value)| {
-                match (cmd_value) {
-                    Some(AttributeValue{value_ty: AttributeValueType::FilePath, required: IsRequired::Required}) => {
-                        unimplemented!()
-                    }
-                    Some(AttributeValue{value_ty: AttributeValueType::String, required: IsRequired::Required}) => {
-                        unimplemented!()
-                    }
-                    Some(AttributeValue{value_ty: AttributeValueType::Int, required: IsRequired::Required}) => {
-                        unimplemented!()
-                    }
-                    Some(AttributeValue{value_ty: AttributeValueType::FilePath, required: IsRequired::Optional}) => {
-                        unimplemented!()
-                    }
-                    Some(AttributeValue{value_ty: AttributeValueType::String, required: IsRequired::Optional}) => {
-                        unimplemented!()
-                    }
-                    Some(AttributeValue{value_ty: AttributeValueType::Int, required: IsRequired::Optional}) => {
-                        unimplemented!()
-                    }
-                    None => {
-                        unimplemented!()
-                    }
-                    None => {
-                        unimplemented!()
-                    }
-                }
-            });
-    }
-    unimplemented!()
-}
-
-fn apply_cmd(
-    scope: &SemanticScope,
-    cmd_decl: &CmdDeclaration,
-    ident: Ann<Ident>,
-    attrs: Option<Attributes>,
-    nodes: &[Node],
-) -> CmdCall {
-    let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
-    let cmd_call = code_gen.to_cmd_call(scope, cmd_decl, ident, attrs, nodes);
-    cmd_call
-}
-
 
 
 // ////////////////////////////////////////////////////////////////////////////
 // REWRITE RULES - HELPERS
 // ////////////////////////////////////////////////////////////////////////////
-
-#[derive(Debug)]
-struct RewriteRule<T> {
-    pattern: T,
-    target: T,
-}
 
 fn parse_where_block(nodes: &[Node]) -> Option<Vec<RewriteRule<Vec<Node>>>> {
     fn parse_where_arms(nodes: &[Node]) -> Vec<RewriteRule<Vec<Node>>> {
@@ -237,14 +189,19 @@ fn apply_rewrites_to_children<'a>(
 impl CmdDeclaration {
     pub fn match_nodes<'a>(
         &self,
+        env: &CompilerEnv,
         scope: &SemanticScope,
         nodes: &'a [Node]
-    ) -> Option<(Node, &'a [Node])> {
+    ) -> Option<(Node, &'a [Node], usize)> {
+        let mut index = 0;
         if let Some(ident) = nodes.first().and_then(Node::unwrap_ident) {
+            index = index + 1;
             let match_ident = ident.value == self.identifier;
             let match_scope = scope.match_cmd(&self.parent_env);
             if match_ident && match_scope {
-                let mut index = 1;
+                while let Some(_) = nodes.get(index).and_then(Node::unwrap_whitespace) {
+                    index = index + 1;
+                }
                 // PARSE ATTRIBUTES
                 let parsed_attributes: Option<Attributes> = {
                     let mut parsed_attributes: Option<Attributes> = None;
@@ -252,7 +209,7 @@ impl CmdDeclaration {
                         .attributes
                         .iter()
                         .any(|(key, _)| key.is_required());
-                    if !self.attributes.is_empty() {
+                    if !self.ignore_attributes {
                         match nodes.get(index).and_then(Attributes::parse_as_attribute_node) {
                             Some(node_attrs) => {
                                 index = index + 1;
@@ -266,17 +223,96 @@ impl CmdDeclaration {
                     }
                     parsed_attributes
                 };
+                while let Some(_) = nodes.get(index).and_then(Node::unwrap_whitespace) {
+                    index = index + 1;
+                }
                 let start_of_args = index;
-                // PARSE ARGUMENTS
-                let mut arg_match_counter = 0;
-                let arguments_match = self.arguments
-                    .clone()
-                    .into_iter()
-                    .zip(nodes[index..].into_iter())
-                    .all(|(arg, node)| -> bool {
-                        index = index + 1;
-                        arg_match_counter = arg_match_counter + 1;
-                        match (arg.ty, node.bracket_kind()) {
+                if let Some(arg_match) = self.arguments.match_instances(scope, &nodes[index..]) {
+                    index = index + arg_match.stop_node_index;
+                    let rewrites = nodes
+                        .get(index..(index + 2))
+                        .and_then(|xs| {
+                            let rewrites = parse_where_block(xs);
+                            if rewrites.is_some() {
+                                index = index + 2;
+                            }
+                            rewrites
+                        });
+                    let mut intenral = cmd_invocation::Internal {
+                        rewrites,
+                    };
+                    let metadata = cmd_invocation::Metadata {
+                        compiler_env: &env,
+                        scope: &scope,
+                        cmd_decl: self,
+                    };
+                    let cmd_arguments = arg_match
+                        .args
+                        .into_iter()
+                        .map(Clone::clone)
+                        // .filter(|x| !x.is_whitespace())
+                        .collect_vec();
+                    let cmd_payload = cmd_invocation::CmdPayload {
+                        identifier: ident.clone(),
+                        attributes: parsed_attributes,
+                        nodes: cmd_arguments.clone(),
+                    };
+                    let mut cmd_call: Node = arg_match.apply.0(
+                        &mut intenral,
+                        metadata,
+                        cmd_payload,
+                    );
+                    if let Some(rewrites) = intenral.rewrites {
+                        if self.internal.automatically_apply_rewrites {
+                            cmd_call = cmd_call.apply_rewrite_rules(&rewrites);
+                        }
+                    }
+                    let rest = &nodes[index..];
+                    return Some((cmd_call, rest, index));
+                }
+                return None
+            }
+        }
+        None
+    }
+}
+
+struct ArgumentMatch<'a> {
+    args: &'a [Node],
+    rest: &'a [Node],
+    stop_node_index: usize,
+    apply: cmd_invocation::ArgumentDeclMap
+}
+
+impl VariableArguments {
+    fn match_instances<'a>(&self, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
+        for instance in self.0.iter() {
+            if let Some(res) = instance.match_instance(scope, nodes) {
+                return Some(res)
+            }
+        }
+        None
+    }
+}
+
+impl ArgumentsDeclInstance {
+    fn match_instance<'a>(&self, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
+        match &self.ty {
+            Either::Left(_) => {
+                return Some(ArgumentMatch{
+                    args: &[],
+                    rest: &nodes,
+                    stop_node_index: 0,
+                    apply: self.apply.clone(),
+                })
+            }
+            Either::Right(ty_list) => {
+                let zip_result = crate::subscript::utils::zip_nodes_all_match(
+                    nodes,
+                    ty_list,
+                    true,
+                    |node, arg_ty| {
+                        match (arg_ty, node.bracket_kind()) {
                             (ArgumentType::CurlyBrace, Some(BracketType::CurlyBrace)) => {
                                 true
                             }
@@ -290,32 +326,21 @@ impl CmdDeclaration {
                                 false
                             }
                         }
-                    });
-                let arguments_fully_matched = arg_match_counter == self.arguments.len();
-                if !arguments_fully_matched {
-                    return None
+                    },
+                );
+                if zip_result.all_match && zip_result.other_fully_consumed {
+                    let args = &nodes[..zip_result.stop_node_ix];
+                    let rest = &nodes[zip_result.stop_node_ix..];
+                    return Some(ArgumentMatch{
+                        args: args,
+                        rest: rest,
+                        stop_node_index: zip_result.stop_node_ix,
+                        apply: self.apply.clone(),
+                    })
                 }
-                let end_of_args = index;
-                let rewrites = nodes
-                    .get(index..(index + 2))
-                    .and_then(|xs| {
-                        index = index + 2;
-                        let rewrites = parse_where_block(xs);
-                        rewrites
-                    });
-                if arguments_match && arguments_fully_matched {
-                    let cmd_nodes = &nodes[start_of_args..end_of_args];
-                    let cmd_call = apply_cmd(scope, self, ident.clone(), parsed_attributes, cmd_nodes);
-                    let mut cmd_call: Node = Node::Cmd(cmd_call);
-                    if let Some(rewrites) = rewrites {
-                        cmd_call = cmd_call.apply_rewrite_rules(&rewrites);
-                    }
-                    return Some((cmd_call, &nodes[index..]));
-                }
-                return None
+                None
             }
         }
-        None
     }
 }
 
@@ -324,24 +349,36 @@ impl CmdDeclaration {
 // ////////////////////////////////////////////////////////////////////////////
 
 fn apply_commands_to_children<'a>(
+    env: &CompilerEnv,
     scope: &SemanticScope,
-    cmds: &HashMap<Ident, CmdDeclaration>,
-    mut nodes: &'a [Node],
+    cmds: &HashMap<Ident, Vec<CmdDeclaration>>,
+    nodes: &'a [Node],
 ) -> (Vec<Node>, &'a [Node]) {
-    let mut processed: Vec<Node> = Vec::new();
-    if let Some(Ann{value: ident, ..}) = nodes.first().and_then(Node::unwrap_ident) {
-        if let Some(cmd) = cmds.get(&ident) {
-            if let Some((node, rest)) = cmd.match_nodes(scope, nodes) {
-                processed.push(node);
-                nodes = rest;
+    let mut processed: Vec<Node> = Vec::with_capacity(nodes.len());
+    let mut index_skip: Option<usize> = None;
+    for (ix, next_node) in nodes.into_iter().enumerate() {
+        if let Some(skip_to_index) = index_skip {
+            if ix < skip_to_index {
+                continue;
             }
         }
-    }
-    if let Some(left) = nodes.get(0) {
-        processed.push(left.clone());
-        let (result, unprocessed) = apply_commands_to_children(scope, cmds, &nodes[1..]);
-        processed.extend(result);
-        return (processed, unprocessed);
+        if let Some(Ann{value: ident, ..}) = next_node.clone().unwrap_ident() {
+            let mut matched = false;
+            if let Some(matching_cmds) = cmds.get(&ident) {
+                for matching_cmd in matching_cmds {
+                    if let Some((node, rest, skip_to_index)) = matching_cmd.match_nodes(env, scope, &nodes[ix..]) {
+                        processed.push(node);
+                        matched = true;
+                        index_skip = Some(ix + skip_to_index);
+                    }
+                }
+            }
+            if !matched {
+                processed.push(next_node.clone());
+            }
+        } else {
+            processed.push(next_node.clone());
+        }
     }
     (processed, &[])
 }
@@ -352,9 +389,14 @@ fn apply_commands_to_children<'a>(
 // ////////////////////////////////////////////////////////////////////////////
 
 impl Node {
-    pub fn apply_commands(self, scope: &SemanticScope, cmds: &HashMap<Ident, CmdDeclaration>) -> Node {
-        fn process_children(scope: &SemanticScope, cmds: &HashMap<Ident, CmdDeclaration>, xs: Vec<Node>) -> Vec<Node> {
-            let (processed, unprocessed) = apply_commands_to_children(scope, cmds, &xs[..]);
+    pub fn apply_commands(self, env: &CompilerEnv, scope: &SemanticScope, cmds: &HashMap<Ident, Vec<CmdDeclaration>>) -> Node {
+        fn process_children(
+            env: &CompilerEnv,
+            scope: &SemanticScope,
+            cmds: &HashMap<Ident, Vec<CmdDeclaration>>,
+            xs: Vec<Node>
+        ) -> Vec<Node> {
+            let (processed, unprocessed) = apply_commands_to_children(env, scope, cmds, &xs[..]);
             let mut xs = Vec::new();
             xs.extend(processed);
             xs.extend_from_slice(unprocessed);
@@ -364,33 +406,33 @@ impl Node {
             Node::Cmd(mut cmd_call) => {
                 cmd_call.arguments = cmd_call.arguments
                     .into_iter()
-                    .map(|x| x.apply_commands(scope, cmds))
+                    .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                cmd_call.arguments = process_children(scope, cmds, cmd_call.arguments);
+                cmd_call.arguments = process_children(env, scope, cmds, cmd_call.arguments);
                 Node::Cmd(cmd_call)
             }
             Node::Bracket(Ann{mut value, range}) => {
                 value.children = value.children
                     .into_iter()
-                    .map(|x| x.apply_commands(scope, cmds))
+                    .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                value.children = process_children(scope, cmds, value.children);
+                value.children = process_children(env, scope, cmds, value.children);
                 Node::Bracket(Ann{range, value})
             }
             Node::Quotation(Ann{mut value, range}) => {
                 value.children = value.children
                     .into_iter()
-                    .map(|x| x.apply_commands(scope, cmds))
+                    .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                value.children = process_children(scope, cmds, value.children);
+                value.children = process_children(env, scope, cmds, value.children);
                 Node::Quotation(Ann{range, value})
             }
             Node::Fragment(xs) => {
                 let xs = xs
                     .into_iter()
-                    .map(|x| x.apply_commands(scope, cmds))
+                    .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                let xs = process_children(scope, cmds, xs);
+                let xs = process_children(env, scope, cmds, xs);
                 Node::Fragment(xs)
             }
             node @ Node::Ident(_) => node,

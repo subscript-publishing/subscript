@@ -229,6 +229,16 @@ impl Node {
             _ => None,
         }
     }
+    pub fn text<T: Into<String>>(txt: T) -> Self {
+        Node::Text(Ann::unannotated(txt.into()))
+    }
+    pub fn curly_brace(children: Vec<Node>) -> Self {
+        Node::Bracket(Ann::unannotated(Bracket{
+            open: Some("{".into()),
+            close: Some("}".into()),
+            children
+        }))
+    }
     pub fn new_bracket<T: Into<Ann<String>>>(
         range: CharRange,
         open: T,
@@ -326,6 +336,14 @@ impl Node {
             _ => false,
         }
     }
+    pub fn is_heading_node(&self) -> bool {
+        self.named("\\h1") ||
+        self.named("\\h2") ||
+        self.named("\\h3") ||
+        self.named("\\h4") ||
+        self.named("\\h5") ||
+        self.named("\\h6")
+    }
     // pub fn is_ident_with_id<T: AsRef<str>>(&self, ) -> bool {
     //     match self {
     //         Node::Ident(node) => node.identifier.value == tag.as_ref(),
@@ -413,6 +431,15 @@ impl Node {
     //         _ => None,
     //     }
     // }
+    /// Is it a command with the given name?
+    pub fn named(&self, val: &str) -> bool {
+        match self {
+            Node::Cmd(cmd) => {
+                cmd.identifier.value == Ident::from(val).unwrap()
+            }
+            _ => false,
+        }
+    }
     pub fn unblock(self, for_bracket: BracketType) -> Vec<Self> {
         match self {
             Node::Bracket(x) if x.value.kind() == Some(BracketType::CurlyBrace) => {
@@ -483,6 +510,12 @@ impl Node {
             Node::Bracket(x) if x.value.kind() == Some(BracketType::SquareParen) => {
                 Some(x.value.children.as_ref())
             },
+            _ => None,
+        }
+    }
+    pub fn unwrap_whitespace<'b>(&'b self) -> Option<&'b Ann<String>> {
+        match self {
+            Node::Text(x) if self.is_whitespace() => Some(x),
             _ => None,
         }
     }

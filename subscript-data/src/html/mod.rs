@@ -5,4 +5,5 @@ pub mod ast;
 pub mod parser;
 pub mod template;
 
+pub use ast::*;
 
