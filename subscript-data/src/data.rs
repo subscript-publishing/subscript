@@ -1,4 +1,5 @@
 //! Miscellaneous stuff used throughout the compiler.
+//! Some of the values here are incomplete.
 use std::path::PathBuf;
 use std::borrow::Cow;
 use std::collections::{HashSet, VecDeque, LinkedList};
@@ -24,6 +25,7 @@ lazy_static! {
     ]);
 }
 
+/// Incomplete. 
 pub static ALL_SUBSCRIPT_TAGS: &[&'static str] = &[
     "note",
     "layout",
@@ -37,6 +39,11 @@ pub static ALLOWED_HTML_TAGS: &[&'static str] = &[
     "footer",
     "header",
     "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
     "section",
     "blockquote",
     "dd",

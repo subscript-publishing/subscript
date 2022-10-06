@@ -448,9 +448,12 @@ fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
         if str == "\"" {
             return Key::Quotation
         }
-        if str == "'" {
-            return Key::Quotation
-        }
+        // TOO MANY ISSUES - WILL FIX LATER...
+        // For instance the `'` character in "Newton's laws of motion" breaks things... 
+        // The parser needs to be more robust. 
+        // if str == "'" {
+        //     return Key::Quotation
+        // }
         if str.chars().all(|x| x.is_ascii_punctuation()) {
             return Key::Symbol
         }
