@@ -5,12 +5,6 @@ use super::LatexCodegenEnv;
 
 pub fn default_cmd_latex_cg(env: &mut LatexCodegenEnv, cmd: CmdCall) -> String {
     let name = cmd.identifier.value.to_tex_ident();
-    // let attributes = cmd.attributes
-    //     .consume()
-    //     .into_iter()
-    //     .filter_map(Attribute::to_key_value_str)
-    //     .map(|(k, v)| format!("{k}"))
-    //     .collect::<HashMap<_, _>>();
     let arguments = cmd.arguments
         .into_iter()
         .map(|x| x.to_latex(env))
@@ -92,7 +86,7 @@ impl Node {
             Node::InvalidToken(Ann{value, ..}) => {
                 value
             }
-            Node::HtmlCode(str) => {
+            Node::Drawing(str) => {
                 unimplemented!()
             }
             Node::Fragment(xs) => {

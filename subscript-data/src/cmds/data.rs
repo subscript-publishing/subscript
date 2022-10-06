@@ -86,9 +86,10 @@ pub trait CmdCodegen {
     fn to_html(
         &self,
         env: &mut crate::codegen::HtmlCodegenEnv,
+        scope: &SemanticScope,
         cmd: CmdCall
     ) -> crate::html::ast::Node {
-        crate::codegen::html_cg::default_cmd_html_cg(env, cmd)
+        crate::codegen::html_cg::default_cmd_html_cg(env, scope, cmd)
     }
     fn to_latex(
         &self,
@@ -105,12 +106,12 @@ pub trait CmdCodegen {
 /// If you need more flexibility, use a specific implementation for `CmdCodegen`.
 #[derive(Clone, Default)]
 pub struct SimpleCodegen {
-    pub to_html: Option<fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node>,
+    pub to_html: Option<ToHtmlFnType>,
     pub to_latex: Option<fn(&mut crate::codegen::LatexCodegenEnv, CmdCall) -> String>,
 }
 
 type ToCmdFnType = fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall;
-type ToHtmlFnType = fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node;
+type ToHtmlFnType = fn(&mut crate::codegen::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node;
 type ToLatexFnType = fn(&mut crate::codegen::LatexCodegenEnv, CmdCall) -> String;
 
 impl SimpleCodegen {
@@ -149,12 +150,13 @@ impl CmdCodegen for SimpleCodegen {
     fn to_html(
         &self,
         env: &mut crate::codegen::HtmlCodegenEnv,
+        scope: &SemanticScope,
         cmd: CmdCall
     ) -> crate::html::ast::Node {
         if let Some(f) = self.to_html {
-            return f(env, cmd)
+            return f(env, scope, cmd)
         }
-        crate::codegen::html_cg::default_cmd_html_cg(env, cmd)
+        crate::codegen::html_cg::default_cmd_html_cg(env, scope, cmd)
     }
     fn to_latex(
         &self,
@@ -199,6 +201,51 @@ pub struct SemanticScope {
     pub scope: Vec<Ident>,
     pub content_mode: ContentMode,
     pub layout_mode: LayoutMode,
+}
+
+impl SemanticScope {
+    pub fn match_cmd(&self, cmd: &ParentEnvNamespaceDecl) -> bool {
+        fn match_scope(scope: &Vec<Ident>, cmd: Option<&Ident>) -> bool {
+            cmd.map(|cmd| {
+                for parent_ident in scope.iter() {
+                    if cmd == parent_ident {
+                        return true
+                    }
+                }
+                false
+            })
+            .unwrap_or(true)
+        }
+        let scope_match = match_scope(self.scope.as_ref(), cmd.parent.as_ref());
+        let content_mode_match = self.content_mode == cmd.content_mode;
+        let layout_mode_match = match (&self.layout_mode, &cmd.layout_mode) {
+            (LayoutMode::Both, _) => true,
+            (_, LayoutMode::Both) => true,
+            (LayoutMode::Block, LayoutMode::Block) => true,
+            (LayoutMode::Inline, LayoutMode::Inline) => true,
+            (l, r) => {
+                assert!(l != r);
+                false
+            }
+        };
+        scope_match && content_mode_match && layout_mode_match
+    }
+    pub fn new_scope(&self, parent: Ident) -> SemanticScope {
+        let mut new_env = self.clone();
+        new_env.scope.push(parent);
+        new_env
+    }
+    pub fn is_math_env(&self) -> bool {
+        unimplemented!()
+    }
+    pub fn is_default_env(&self) -> bool {
+        !self.is_math_env()
+    }
+    pub fn has_parent(&self, parent: &str) -> bool {
+        self.scope
+            .iter()
+            .any(|x| x == parent)
+    }
 }
 
 

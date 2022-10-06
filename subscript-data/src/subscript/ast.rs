@@ -94,7 +94,7 @@ pub struct Text(String);
 
 
 // ////////////////////////////////////////////////////////////////////////////
-// FRONTEND
+// DRAWINGS
 // ////////////////////////////////////////////////////////////////////////////
 
 // #[derive(Debug, Clone)]
@@ -173,6 +173,8 @@ pub struct Text(String);
 // }
 
 
+
+
 // ////////////////////////////////////////////////////////////////////////////
 // AST
 // ////////////////////////////////////////////////////////////////////////////
@@ -196,7 +198,7 @@ pub enum Node {
     /// must use such in their publications, then use the tag version. 
     InvalidToken(Ann<String>),
     // MacroDecl(Ann<MacroDecl>),
-    HtmlCode(String),
+    Drawing(crate::ss_drawing::Drawing),
     /// An internal array of Nodes. 
     Fragment(Vec<Node>),
 }
@@ -719,7 +721,7 @@ impl Node {
             node @ Node::InvalidToken(_) => {
                 f(env.clone(), node)
             }
-            node @ Node::HtmlCode(_) => {
+            node @ Node::Drawing(_) => {
                 f(env.clone(), node)
             }
         }
@@ -796,7 +798,7 @@ impl Node {
             node @ Node::InvalidToken(_) => {
                 (f.borrow_mut())(scope.clone(), node)
             }
-            node @ Node::HtmlCode(_) => {
+            node @ Node::Drawing(_) => {
                 (f.borrow_mut())(scope.clone(), node)
             }
         }
@@ -866,7 +868,7 @@ impl Node {
             node @ Node::Text(_) => node,
             node @ Node::Symbol(_) => node,
             node @ Node::InvalidToken(_) => node,
-            node @ Node::HtmlCode(_) => node,
+            node @ Node::Drawing(_) => node,
         }
     }
     pub fn to_string(&self) -> String {
@@ -947,7 +949,7 @@ impl Node {
             Node::Text(x) => x.value.clone(),
             Node::Symbol(x) => x.value.clone(),
             Node::InvalidToken(x) => x.value.clone(),
-            Node::HtmlCode(_) => "HtmlCode(...)".to_owned()
+            Node::Drawing(_) => "HtmlCode(...)".to_owned()
         }
     }
     /// If the node is a fragment the contents of such are returned.
@@ -1013,7 +1015,7 @@ impl Node {
             Node::Text(x) => Node::Text(x),
             Node::Symbol(x) => Node::Symbol(x),
             Node::InvalidToken(x) => Node::InvalidToken(x),
-            Node::HtmlCode(x) => Node::HtmlCode(x),
+            Node::Drawing(x) => Node::Drawing(x),
         }
     }
     /// You may wanna call `Node::trim_whitespace` and `Node::defragment_node_tree`

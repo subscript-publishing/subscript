@@ -27,6 +27,7 @@ use data::{
     ArgumentsDeclInstance,
     InternalCmdDeclOptions,
     cmd_invocation,
+    RewriteRule,
 };
 use crate::html;
 
@@ -141,8 +142,8 @@ macro_rules! arguments {
 }
 
 macro_rules! to_html {
-    (fn ($env:ident, $cmd:ident) $block:block) => {{
-        fn f($env: &mut crate::codegen::HtmlCodegenEnv, $cmd: CmdCall) -> crate::html::ast::Node {
+    (fn ($env:ident, $scope:ident, $cmd:ident) $block:block) => {{
+        fn f($env: &mut crate::codegen::HtmlCodegenEnv, $scope: &SemanticScope, $cmd: CmdCall) -> crate::html::ast::Node {
             $block
         }
         f
@@ -197,7 +198,7 @@ pub struct CmdDeclBuilder {
     attributes: HashMap<AttributeKey, Option<AttributeValue>>,
     arguments: Option<VariableArguments>,
     to_cmd: Option<fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall>,
-    to_html: Option<fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node>,
+    to_html: Option<fn(&mut crate::codegen::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node>,
     to_latex: Option<fn(&mut crate::codegen::LatexCodegenEnv, CmdCall) -> String>,
     internal: Option<InternalCmdDeclOptions>,
 }
@@ -253,7 +254,10 @@ impl CmdDeclBuilder {
         self.arguments = Some(arguments);
         self
     }
-    pub fn to_html(mut self, f: fn(&mut crate::codegen::HtmlCodegenEnv, CmdCall) -> crate::html::ast::Node) -> Self {
+    pub fn to_html(
+        mut self,
+        f: fn(&mut crate::codegen::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node
+    ) -> Self {
         self.to_html = Some(f);
         self
     }
@@ -415,7 +419,66 @@ fn normalize_ref_headings(baseline: HeadingType, node: Node) -> Node {
     node.transform(scope, Rc::new(f))
 }
 
-fn handle_include(env: &CompilerEnv, attributes: &Option<Attributes>) -> Option<Node> {
+fn process_ssd1_include(
+    env: &CompilerEnv,
+    file_path: &PathBuf,
+    rewrite_rules: Option<Vec<RewriteRule<Vec<Node>>>>,
+) -> Vec<Node> {
+    let file_path = file_path.clone();
+    let file_path = env.normalize_file_path(file_path);
+    if let Ok(svgs) = crate::ss_drawing::api::parse_file(file_path).map(|x| x.canvas.entries) {
+        let rewrite_rules = rewrite_rules
+            .and_then(|rules| {
+                rules.first().map(Clone::clone)
+            })
+            .and_then(|rule| -> Option<RewriteRule<Node>> {
+                let pattern = Node::Fragment(rule.pattern.clone());
+                let target = Node::Fragment(rule.target.clone());
+                println!("REWRITE {pattern:#?} {target:#?}\n");
+                Some(RewriteRule {
+                    pattern,
+                    target,
+                })
+            });
+        if let Some(rewrite_rule) = rewrite_rules {
+            let children = svgs
+                .clone()
+                .into_iter()
+                .map(|svg| -> Node {
+                    let f = {
+                        let svg = svg.clone();
+                        let pattern = rewrite_rule.pattern.clone();
+                        move |scope: SemanticScope, node: Node| -> Node {
+                            println!("NODE {node:#?}");
+                            if node.syntactically_equal(&pattern) {
+                                return Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg.clone()))
+                            }
+                            node
+                        }
+                    };
+                    let scope = SemanticScope::default();
+                    rewrite_rule.target.clone().transform(scope, Rc::new(f))
+                        // .unblock(crate::subscript::BracketType::CurlyBrace)
+                })
+                .collect_vec();
+            println!("HERE {children:#?}");
+            return children
+        }
+        return svgs
+            .into_iter()
+            .map(|svg| {
+                Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg))
+            })
+            .collect_vec()
+    }
+    vec![]
+}
+
+fn handle_include(
+    env: &CompilerEnv,
+    attributes: &Option<Attributes>,
+    rewrite_rules: Option<Vec<RewriteRule<Vec<Node>>>>,
+) -> Option<Node> {
     let attributes = attributes.as_ref()?;
     let baseline = attributes
         .get("baseline")
@@ -435,11 +498,21 @@ fn handle_include(env: &CompilerEnv, attributes: &Option<Attributes>) -> Option<
         .as_stringified_attribute_value_str("")?;
     let src_path = PathBuf::from(&src_path_str);
     let src_path = env.normalize_file_path(src_path);
-    let mut nodes = crate::compiler::low_level_api::parse_process(&src_path).ok()?;
-    if let Some(baseline) = baseline {
-        nodes = normalize_ref_headings(baseline, nodes);
+    let ext = src_path.extension()?.to_str();
+    match ext {
+        Some("ss") => {
+            let mut nodes = crate::compiler::low_level_api::parse_process(&src_path).ok()?;
+            if let Some(baseline) = baseline {
+                nodes = normalize_ref_headings(baseline, nodes);
+            }
+            return Some(nodes)
+        }
+        Some("ssd1") => {
+            let nodes = process_ssd1_include(env, &src_path, rewrite_rules);
+            return Some(Node::Fragment(nodes));
+        }
+        _ => None
     }
-    Some(nodes)
 }
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -507,15 +580,24 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
         })
         .finish();
     let note = CmdDeclBuilder::new(Ident::from("\\note").unwrap())
-        .child_layout_mode(LayoutMode::Inline)
-        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments!{
+            for (internal, metadata, cmd_payload) match {
+                ({arg1}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg1]
+                    })
+                },
+            }
+        })
         .to_html(to_html!{
-            fn (env, cmd) {
+            fn (env, scope, cmd) {
                 let mut attributes = HashMap::default();
                 attributes.insert(String::from("data-tag-note"), String::new());
                 let children = cmd.arguments
                     .into_iter()
-                    .map(|x| x.to_html(env))
+                    .map(|x| x.to_html(env, scope))
                     .collect_vec();
                 html::Node::Element(html::Element {
                     name: String::from("section"),
@@ -528,10 +610,17 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
     let include = CmdDeclBuilder::new(Ident::from("\\include").unwrap())
         .child_layout_mode(LayoutMode::Inline)
         .child_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .internal_cmd_options(InternalCmdDeclOptions {
+            automatically_apply_rewrites: false
+        })
         .arguments(arguments!{
             for (internal, metadata, cmd_payload) match {
-                ({arg}) => {
-                    let result = handle_include(&metadata.compiler_env, &cmd_payload.attributes);
+                () => {
+                    let result = handle_include(
+                        &metadata.compiler_env,
+                        &cmd_payload.attributes,
+                        internal.rewrites.clone()
+                    );
                     match result {
                         Some(result) => result,
                         None => Node::Fragment(Vec::new())

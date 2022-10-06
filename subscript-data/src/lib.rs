@@ -11,3 +11,4 @@ pub mod css;
 pub mod latex;
 pub mod codegen;
 pub mod compiler;
+pub mod ss_drawing;

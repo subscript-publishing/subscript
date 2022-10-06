@@ -32,51 +32,6 @@ use super::data::{
 use crate::subscript::utils::{sep_by, partition};
 
 
-impl SemanticScope {
-    fn match_cmd(&self, cmd: &ParentEnvNamespaceDecl) -> bool {
-        fn match_scope(scope: &Vec<Ident>, cmd: Option<&Ident>) -> bool {
-            cmd.map(|cmd| {
-                for parent_ident in scope.iter() {
-                    if cmd == parent_ident {
-                        return true
-                    }
-                }
-                false
-            })
-            .unwrap_or(true)
-        }
-        let scope_match = match_scope(self.scope.as_ref(), cmd.parent.as_ref());
-        let content_mode_match = self.content_mode == cmd.content_mode;
-        let layout_mode_match = match (&self.layout_mode, &cmd.layout_mode) {
-            (LayoutMode::Both, _) => true,
-            (_, LayoutMode::Both) => true,
-            (LayoutMode::Block, LayoutMode::Block) => true,
-            (LayoutMode::Inline, LayoutMode::Inline) => true,
-            (l, r) => {
-                assert!(l != r);
-                false
-            }
-        };
-        scope_match && content_mode_match && layout_mode_match
-    }
-    pub fn new_scope(&self, parent: Ident) -> SemanticScope {
-        let mut new_env = self.clone();
-        new_env.scope.push(parent);
-        new_env
-    }
-    pub fn is_math_env(&self) -> bool {
-        unimplemented!()
-    }
-    pub fn is_default_env(&self) -> bool {
-        !self.is_math_env()
-    }
-    pub fn has_parent(&self, parent: &str) -> bool {
-        self.scope
-            .iter()
-            .any(|x| x == parent)
-    }
-}
-
 
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -439,7 +394,7 @@ impl Node {
             node @ Node::Text(_) => node,
             node @ Node::Symbol(_) => node,
             node @ Node::InvalidToken(_) => node,
-            Node::HtmlCode(x) => {
+            Node::Drawing(x) => {
                 unimplemented!()
             }
         }
@@ -489,9 +444,7 @@ impl Node {
             node @ Node::Text(_) => node,
             node @ Node::Symbol(_) => node,
             node @ Node::InvalidToken(_) => node,
-            Node::HtmlCode(x) => {
-                unimplemented!()
-            }
+            node @ Node::Drawing(_) => node,
         }
     }
 }

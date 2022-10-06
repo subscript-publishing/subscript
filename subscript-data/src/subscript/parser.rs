@@ -5,10 +5,11 @@ use std::rc::Rc;
 use std::borrow::{Borrow, Cow};
 use std::collections::{HashSet, VecDeque, LinkedList, HashMap};
 use std::iter::FromIterator;
-use std::vec;
+use std::{vec, panic};
 use itertools::Itertools;
 use serde::{Serialize, Deserialize};
 use unicode_segmentation::UnicodeSegmentation;
+use crate::cmds::data::CompilerEnv;
 
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -283,7 +284,8 @@ enum ParserAst {
     Symbol(Ann<String>),
     Bracket(Bracket),
     Quotation(Quotation),
-    InvalidToken(Ann<String>)
+    InvalidToken(Ann<String>),
+    Comment(Ann<String>),
 }
 
 impl ParserAst {
@@ -321,14 +323,14 @@ impl ParserAst {
                     children,
                 }))
             }
-            ParserAst::InvalidToken(tk) => ast::Node::InvalidToken(tk)
+            ParserAst::InvalidToken(tk) => ast::Node::InvalidToken(tk),
+            ParserAst::Comment(text) => ast::Node::Fragment(vec![]),
         }
     }
 }
 
 fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
     use itertools::Itertools;
-    let ending_byte_size = source.len();
     #[derive(Debug, Clone)]
     enum Key {
         Ident,
@@ -343,11 +345,13 @@ fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
         OpenBracket,
         CloseBracket,
         Quotation,
+        Comment,
     }
     impl PartialEq for Key {
         fn eq(&self, other: &Self) -> bool {
             match (self, other) {
                 (Key::Ident, Key::Ident) => true,
+                (Key::Comment, Key::Comment) => true,
                 // WE EXPLICITLY WANT THIS TO MATCH AS TRUE
                 (Key::Ident, Key::ModifierIdent) => true,
                 (Key::ModifierIdent, Key::ModifierIdent) => true,
@@ -365,6 +369,98 @@ fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
             }
         }
     }
+    struct Comment {
+        first_slash: bool,
+        second_slash: bool,
+        third_slash: bool,
+    }
+    impl Comment {
+        fn new(first: bool, second: bool, third: bool) -> Self {
+            Comment { first_slash: first, second_slash: second, third_slash: third }
+        }
+    }
+    fn match_str(in_comment_mode: &mut Comment, last_key: Option<Key>, ix: &CharIndex, str: &str) -> Key {
+        let mut process_is_comment = |ix: &CharIndex, str: &str| -> bool {
+            assert!(str.chars().count() == 1);
+            let first = in_comment_mode.first_slash;
+            let second = in_comment_mode.second_slash;
+            let third = in_comment_mode.third_slash;
+            match (first, second, third) {
+                (false, false, false) if str == "/" => {
+                    *in_comment_mode = Comment::new(true, false, false);
+                    true
+                }
+                (true, false, false) if str == "/" => {
+                    *in_comment_mode = Comment::new(true, true, false);
+                    true
+                }
+                (true, true, false) if str == "/" => {
+                    *in_comment_mode = Comment::new(true, true, true);
+                    true
+                }
+                (true, true, true) if str == "\n" => {
+                    *in_comment_mode = Comment { first_slash: false, second_slash: false, third_slash: false };
+                    false
+                }
+                (true, true, true) => {
+                    true
+                }
+                (_, _, _) => {
+                    *in_comment_mode = Comment { first_slash: false, second_slash: false, third_slash: false };
+                    false
+                }
+            }
+        };
+        let str_char_length = str.chars().count();
+        let is_empty = str_char_length == 0;
+        assert!(!is_empty);
+        if process_is_comment(ix, str) {
+            return Key::Comment
+        }
+        if last_key == Some(Key::ModifierIdent) && str.chars().all(char::is_alphanumeric) {
+            return Key::ModifierIdent
+        }
+        if last_key == Some(Key::Ident) && str == "!" {
+            return Key::ModifierIdent
+        }
+        if last_key == Some(Key::Ident) && str.chars().all(|x| {
+            x.is_alphanumeric() || x == ':' || x == '_' || x == '-'
+        }) {
+            return Key::Ident
+        }
+        if last_key == Some(Key::ModifierIdent) && str.chars().enumerate().all(|(ix, x)| {
+            if ix == (str_char_length - 1) {
+                return x == '!'
+            }
+            x.is_alphanumeric() || x == ':' || x == '_' || x == '-'
+        }) {
+            return Key::ModifierIdent
+        }
+        if str == "\\" {
+            return Key::Ident
+        }
+        if str == "{" || str == "[" || str == "(" {
+            return Key::OpenBracket
+        }
+        if str == "}" || str == "]" || str == ")" {
+            return Key::CloseBracket
+        }
+        if str == "\"" {
+            return Key::Quotation
+        }
+        if str == "'" {
+            return Key::Quotation
+        }
+        if str.chars().all(|x| x.is_ascii_punctuation()) {
+            return Key::Symbol
+        }
+        if str.chars().all(|x| x.is_ascii_punctuation()) {
+            return Key::Symbol
+        }
+        Key::Text
+    }
+    let ending_byte_size = source.len();
+    let mut in_comment_mode: Comment = Comment { first_slash: false, second_slash: false, third_slash: false };
     let mut last_key: Option<Key> = None;
     let words = source
         .grapheme_indices(true)
@@ -373,54 +469,9 @@ fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
             let index = CharIndex {byte_index: bix, char_index: cix};
             (index, x)
         })
+        .into_iter()
         .group_by(|(ix, str)| -> Key {
-            fn match_str(ix: &CharIndex, last_key: Option<Key>, str: &str) -> Key {
-                let str_char_length = str.chars().count();
-                let is_empty = str_char_length == 0;
-                assert!(!is_empty);
-                if last_key == Some(Key::ModifierIdent) && str.chars().all(char::is_alphanumeric) {
-                    return Key::ModifierIdent
-                }
-                if last_key == Some(Key::Ident) && str == "!" {
-                    return Key::ModifierIdent
-                }
-                if last_key == Some(Key::Ident) && str.chars().all(|x| {
-                    x.is_alphanumeric() || x == ':' || x == '_' || x == '-'
-                }) {
-                    return Key::Ident
-                }
-                if last_key == Some(Key::ModifierIdent) && str.chars().enumerate().all(|(ix, x)| {
-                    if ix == (str_char_length - 1) {
-                        return x == '!'
-                    }
-                    x.is_alphanumeric() || x == ':' || x == '_' || x == '-'
-                }) {
-                    return Key::ModifierIdent
-                }
-                if str == "\\" {
-                    return Key::Ident
-                }
-                if str == "{" || str == "[" || str == "(" {
-                    return Key::OpenBracket
-                }
-                if str == "}" || str == "]" || str == ")" {
-                    return Key::CloseBracket
-                }
-                if str == "\"" {
-                    return Key::Quotation
-                }
-                if str == "'" {
-                    return Key::Quotation
-                }
-                if str.chars().all(|x| x.is_ascii_punctuation()) {
-                    return Key::Symbol
-                }
-                if str.chars().all(|x| x.is_ascii_punctuation()) {
-                    return Key::Symbol
-                }
-                Key::Text
-            }
-            let key = match_str(ix, last_key.clone(), str);
+            let key = match_str(&mut in_comment_mode, last_key.clone(), ix, str);
             last_key = Some(key.clone());
             key
         })
@@ -471,6 +522,7 @@ fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
                         assert!(str_ref == s);
                         str_ref
                     }),
+                    Key::Comment => WordType::Comment
                 },
                 range: r.clone(),
                 str: Ann::new(r, s),
@@ -619,6 +671,7 @@ pub enum WordType<'a> {
     OpenBracket(&'a str),
     CloseBracket(&'a str),
     Quotation(&'a str),
+    Comment,
 }
 
 impl<'a> WordType<'a> {
@@ -645,7 +698,13 @@ impl<'a> WordType<'a> {
 type CloseWord<'a> = Word<'a>;
 type OpenWord<'a> = Word<'a>;
 
+#[derive(Debug, Clone)]
+pub enum ParserError {
+    
+}
+
 fn parse_words<'a>(
+    env: &CompilerEnv,
     words: &mut VecDeque<Word<'a>>,
     parent: Option<(OpenWord<'a>)>,
 ) -> (Vec<ParserAst>, Option<CloseWord<'a>>) {
@@ -662,6 +721,9 @@ fn parse_words<'a>(
             }
             WordType::OpenBracket(_) | WordType::CloseBracket(_) | WordType::Quotation(_) => {
                 None
+            }
+            WordType::Comment => {
+                Some(ParserAst::Comment(word.str))
             }
         }
     }
@@ -686,12 +748,17 @@ fn parse_words<'a>(
             (Some(WordType::Quotation("\"")), _) => {
                 nodes.push(to_node(current).unwrap())
             }
-            (Some(WordType::Quotation("'")), _) => {
-                nodes.push(to_node(current).unwrap())
+            (Some(WordType::Quotation("'")), ty) => {
+                match to_node(current.clone()) {
+                    Some(x) => nodes.push(x),
+                    None => {
+                        nodes.push(ParserAst::Symbol(current.str));
+                    },
+                }
             }
             (_, WordType::OpenBracket("{")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(words, Some(current.clone()));
+                let (children, close) = parse_words(env, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Bracket("{"), Some(CloseType::Bracket("}"))) => {
@@ -715,7 +782,7 @@ fn parse_words<'a>(
             }
             (_, WordType::OpenBracket("[")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(words, Some(current.clone()));
+                let (children, close) = parse_words(env, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Bracket("["), Some(CloseType::Bracket("]"))) => {
@@ -739,7 +806,7 @@ fn parse_words<'a>(
             }
             (_, WordType::OpenBracket("(")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(words, Some(current.clone()));
+                let (children, close) = parse_words(env, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Bracket("("), Some(CloseType::Bracket(")"))) => {
@@ -763,7 +830,7 @@ fn parse_words<'a>(
             }
             (_, WordType::Quotation("\"")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(words, Some(current.clone()));
+                let (children, close) = parse_words(env, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Quotation("\""), Some(CloseType::Quotation("\""))) => {
@@ -787,7 +854,7 @@ fn parse_words<'a>(
             }
             (_, WordType::Quotation("'")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(words, Some(current.clone()));
+                let (children, close) = parse_words(env, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Quotation("'"), Some(CloseType::Quotation("'"))) => {
@@ -830,9 +897,10 @@ fn parse_words<'a>(
     (nodes, None)
 }
 
-pub fn parse_source<T: AsRef<str>>(source: T) -> crate::subscript::ast::Node {
+pub fn parse_source<T: AsRef<str>>(env: &CompilerEnv, source: T) -> crate::subscript::ast::Node {
     let mut words = init_words(source.as_ref());
-    let (ast, res) = parse_words(&mut words, None);
+    println!("{:#?}", words);
+    let (ast, res) = parse_words(env, &mut words, None);
     assert!(res.is_none());
     let ast = ast
         .into_iter()
@@ -843,8 +911,11 @@ pub fn parse_source<T: AsRef<str>>(source: T) -> crate::subscript::ast::Node {
 
 pub fn dev() {
     let source = std::fs::read_to_string("source.ss").unwrap();
+    let env = CompilerEnv {
+        file_path: PathBuf::from("source.ss")
+    };
     let mut words = init_words(&source);
-    let (ast, res) = parse_words(&mut words, None);
+    let (ast, res) = parse_words(&env, &mut words, None);
     assert!(res.is_none());
     println!("{:#?}", ast);
 }

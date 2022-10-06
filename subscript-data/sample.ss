@@ -1,2 +1,1 @@
-\h1{Alpha}
-\h2{Beta}
+\include[src="test/sample.ssd1"]\where!{{\svg} => {\note{\h1{Hello}\svg}};}
