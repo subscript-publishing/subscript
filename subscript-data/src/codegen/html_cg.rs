@@ -1,7 +1,81 @@
 use std::{collections::HashMap, borrow::BorrowMut};
 use itertools::Itertools;
-use crate::{subscript::ast::{Node, Ann, Attribute}, cmds::data::{CmdCall, CmdCodegen, CmdDeclaration, SemanticScope}};
-use super::HtmlCodegenEnv;
+use crate::{subscript::ast::{Node, Ident, Ann, Attribute}, cmds::data::{CmdCall, CmdCodegen, CmdDeclaration, SemanticScope, LayoutMode}};
+use crate::html;
+
+// ////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS
+// ////////////////////////////////////////////////////////////////////////////
+
+
+
+// ////////////////////////////////////////////////////////////////////////////
+// DATA TYPES
+// ////////////////////////////////////////////////////////////////////////////
+
+
+pub struct HtmlCodegenEnv {
+    pub commands: HashMap<Ident, Vec<crate::cmds::data::CmdDeclaration>>,
+    pub math_env: MathEnv,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct MathEnv {
+    pub entries: Vec<MathCodeEntry>,
+}
+
+impl MathEnv {
+    pub fn add_inline_entry<'a>(&mut self, code: String) -> html::Node {
+        let id = crate::utils::ramdom_id();
+        let mut attributes: HashMap<String, String> = Default::default();
+        attributes.insert("id".to_owned(), id.clone());
+        attributes.insert("data-math-node".to_owned(), "inline".to_owned());
+        let entry = MathCodeEntry {id, code, mode: LayoutMode::Inline};
+        self.entries.push(entry);
+        html::Node::Element(html::Element{
+            name: String::from("span"),
+            attributes,
+            children: Vec::new(),
+        })
+    }
+    pub fn add_block_entry<'a>(&mut self, code: String) -> html::Node {
+        let id = crate::utils::ramdom_id();
+        let mut attributes: HashMap<String, String> = Default::default();
+        attributes.insert("id".to_owned(), id.clone());
+        attributes.insert("data-math-node".to_owned(), "block".to_owned());
+        let entry = MathCodeEntry {id, code, mode: LayoutMode::Block};
+        self.entries.push(entry);
+        html::Node::Element(html::Element{
+            name: String::from("div"),
+            attributes,
+            children: Vec::new(),
+        })
+    }
+    pub fn to_javascript(&self) -> String {
+        self.entries
+            .iter()
+            .map(|x| {
+                format!(
+                    "katex.render({code}, document.getElementById('{id}'), {{throwOnError: true}});",
+                    code=format!("{:?}", x.code),
+                    id=x.id,
+                )
+            })
+            .join("\n")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MathCodeEntry {
+    pub id: String,
+    pub code: String,
+    pub mode: LayoutMode,
+}
+
+// ////////////////////////////////////////////////////////////////////////////
+// CODE-GEN
+// ////////////////////////////////////////////////////////////////////////////
+
 
 pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> crate::html::ast::Node {
     let name = cmd.identifier.value.unwrap_remove_slash().to_string();
@@ -13,6 +87,7 @@ pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd:
         .collect::<HashMap<_, _>>();
     let arguments = cmd.arguments
         .into_iter()
+        .flat_map(Node::unblock_curly_brace)
         .map(|x| x.to_html(env, scope))
         .collect_vec();
     crate::html::ast::Node::Element(crate::html::ast::Element{

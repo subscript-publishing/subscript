@@ -477,25 +477,36 @@ fn init_words<'a>(source: &'a str) -> VecDeque<Word> {
         })
         .into_iter()
         .filter_map(|(key, group)| -> Option<(Key, CharRange, String)> {
-            let mut start: Option<CharIndex> = None;
-            let mut last: Option<CharIndex> = None;
-            let mut str = String::new();
-            for (ix, x) in group {
-                str.push_str(x);
-                if start.is_none() {
-                    start = Some(ix);
-                    continue;
+            fn apply(key: Key, group: Vec<(CharIndex, &str)>) -> Option<(Key, CharRange, String)> {
+                let mut start: Option<CharIndex> = None;
+                let mut last: Option<CharIndex> = None;
+                let mut str = String::new();
+                for (ix, x) in group {
+                    str.push_str(x);
+                    if start.is_none() {
+                        start = Some(ix);
+                        continue;
+                    }
+                    last = Some(ix);
                 }
-                last = Some(ix);
+                if let Some(start) = start {
+                    let end = CharIndex{
+                        char_index: start.char_index + str.clone().chars().count(),
+                        byte_index: start.byte_index + str.len(),
+                    };
+                    return Some((key, CharRange{start, end}, str));
+                }
+                unimplemented!("What to do?")
             }
-            if let Some(start) = start {
-                let end = CharIndex{
-                    char_index: start.char_index + str.clone().chars().count(),
-                    byte_index: start.byte_index + str.len(),
-                };
-                return Some((key, CharRange{start, end}, str));
+            let group = group.collect_vec();
+            if key == Key::Comment {
+                if group.len() < 3 {
+                    return apply(Key::Symbol, group)
+                } else {
+                    return None
+                }
             }
-            unimplemented!("What to do?")
+            apply(key, group)
         })
         .map(|(k, r, s)| {
             Word {

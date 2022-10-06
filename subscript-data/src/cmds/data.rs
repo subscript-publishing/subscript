@@ -94,9 +94,10 @@ pub trait CmdCodegen {
     fn to_latex(
         &self,
         env: &mut crate::codegen::LatexCodegenEnv,
+        scope: &SemanticScope,
         cmd: CmdCall
     ) -> String {
-        crate::codegen::latex_cg::default_cmd_latex_cg(env, cmd)
+        crate::codegen::latex_cg::default_cmd_latex_cg(env, scope, cmd)
     }
 }
 
@@ -161,12 +162,13 @@ impl CmdCodegen for SimpleCodegen {
     fn to_latex(
         &self,
         env: &mut crate::codegen::LatexCodegenEnv,
+        scope: &SemanticScope,
         cmd: CmdCall
     ) -> String {
         if let Some(f) = self.to_latex {
             return f(env, cmd)
         }
-        crate::codegen::latex_cg::default_cmd_latex_cg(env, cmd)
+        crate::codegen::latex_cg::default_cmd_latex_cg(env, scope, cmd)
     }
 }
 impl Debug for SimpleCodegen {
@@ -268,8 +270,10 @@ impl CompilerEnv {
     /// Use this to normalize file paths relative to the source file.
     pub fn normalize_file_path(&self, path: PathBuf) -> PathBuf {
         if let Some(rel_path) = self.file_path.parent() {
+            let root_path = self.file_path.clone();
             let mut rel_path = rel_path.to_path_buf();
-            rel_path.push(path);
+            rel_path.push(path.clone());
+            println!("normalize_file_path [{root_path:?}]: {path:?} => {rel_path:?}");
             return rel_path
         }
         path

@@ -14,6 +14,7 @@ pub mod latex;
 pub mod codegen;
 pub mod compiler;
 pub mod ss_drawing;
+pub mod utils;
 
 fn main() {
     let file_path = PathBuf::from("source.ss");

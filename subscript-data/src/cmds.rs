@@ -151,8 +151,8 @@ macro_rules! to_html {
 }
 
 macro_rules! to_latex {
-    (fn ($env:ident, $cmd:ident) $block:block) => {{
-        fn f($env: &mut crate::codegen::LatexCodegenEnv, $cmd: CmdCall) -> String {
+    (fn ($env:ident, $scope:ident, $cmd:ident) $block:block) => {{
+        fn f($env: &mut crate::codegen::LatexCodegenEnv, $scope: &SemanticScope, $cmd: CmdCall) -> String {
             $block
         }
         f
@@ -497,6 +497,7 @@ fn handle_include(
         .clone()
         .as_stringified_attribute_value_str("")?;
     let src_path = PathBuf::from(&src_path_str);
+    println!("src_path {src_path:?}");
     let src_path = env.normalize_file_path(src_path);
     let ext = src_path.extension()?.to_str();
     match ext {
@@ -537,18 +538,61 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
             })
             .finish()
     }
-    let math = CmdDeclBuilder::new(Ident::from("\\math").unwrap())
+    let inline_math = CmdDeclBuilder::new(Ident::from("\\").unwrap())
         .child_layout_mode(LayoutMode::Inline)
-        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::Math))
         .arguments(arguments!{
             for (internal, metadata, cmd_payload) match {
                 ({xs}) => {
                     Node::Cmd(CmdCall {
                         identifier: cmd_payload.identifier,
-                            attributes: cmd_payload.attributes.unwrap_or_default(),
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
                         arguments: vec![xs]
                     })
                 },
+            }
+        })
+        .to_html(to_html!{
+            fn (env, scope, cmd) {
+                let mut latex_env = crate::codegen::LatexCodegenEnv{
+                    commands: all_commands_map(),
+                    drawings: Default::default(),
+                };
+                let latex_code = cmd.arguments
+                    .into_iter()
+                    .map(|x| x.to_latex(&mut latex_env, scope))
+                    .collect::<String>();
+                let html_node = env.math_env.add_inline_entry(latex_code);
+                html_node
+            }
+        })
+        .finish();
+    let math_block = CmdDeclBuilder::new(Ident::from("\\math").unwrap())
+        .child_layout_mode(LayoutMode::Inline)
+        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::Math))
+        .arguments(arguments!{
+            for (internal, metadata, cmd_payload) match {
+                ({xs}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![xs]
+                    })
+                },
+            }
+        })
+        .to_html(to_html!{
+            fn (env, scope, cmd) {
+                let mut latex_env = crate::codegen::LatexCodegenEnv{
+                    commands: all_commands_map(),
+                    drawings: Default::default(),
+                };
+                let latex_code = cmd.arguments
+                    .into_iter()
+                    .map(|x| x.to_latex(&mut latex_env, scope))
+                    .collect::<String>();
+                let html_node = env.math_env.add_block_entry(latex_code);
+                html_node
             }
         })
         .finish();
@@ -637,7 +681,8 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
         header_cmd(HeadingType::H5),
         header_cmd(HeadingType::H6),
         include,
-        math,
+        math_block,
+        inline_math,
         frac,
         note
     ]

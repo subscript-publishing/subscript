@@ -444,6 +444,14 @@ impl Node {
     }
     pub fn unblock(self, for_bracket: BracketType) -> Vec<Self> {
         match self {
+            Node::Bracket(x) if x.value.kind() == Some(for_bracket) => {
+                x.value.children
+            }
+            x => vec![x]
+        }
+    }
+    pub fn unblock_curly_brace(self) -> Vec<Self> {
+        match self {
             Node::Bracket(x) if x.value.kind() == Some(BracketType::CurlyBrace) => {
                 x.value.children
             }

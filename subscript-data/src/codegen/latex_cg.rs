@@ -1,30 +1,39 @@
 use std::{collections::HashMap, borrow::BorrowMut, fmt::format};
 use itertools::Itertools;
-use crate::{subscript::ast::{Node, Ann, Attribute}, cmds::data::{CmdCall, CmdCodegen, CmdDeclaration}};
+use crate::{subscript::ast::{Node, Ann, Attribute}, cmds::data::{CmdCall, CmdCodegen, CmdDeclaration, SemanticScope}};
 use super::LatexCodegenEnv;
 
-pub fn default_cmd_latex_cg(env: &mut LatexCodegenEnv, cmd: CmdCall) -> String {
+pub fn default_cmd_latex_cg(env: &mut LatexCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> String {
     let name = cmd.identifier.value.to_tex_ident();
     let arguments = cmd.arguments
         .into_iter()
-        .map(|x| x.to_latex(env))
+        .map(|x| x.to_latex(env, scope))
         .collect_vec()
         .join("");
     format!("{name}{arguments}")
 }
 
-fn apply_cmd(env: &mut LatexCodegenEnv, cmd: CmdCall) -> Option<String> {
-    let cmd_decl: CmdDeclaration = env.commands.get(&cmd.identifier.value)?.clone();
-    let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
-    Some(code_gen.to_latex(env, cmd))
+fn apply_cmd(env: &mut LatexCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> Option<String> {
+    // let cmd_decl: CmdDeclaration = env.commands.get(&cmd.identifier.value)?.clone();
+    // let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
+    // Some(code_gen.to_latex(env, cmd))
+    let cmd_decl_set: Vec<CmdDeclaration> = env.commands.get(&cmd.identifier.value)?.clone();
+    for cmd_decl in cmd_decl_set {
+        let matches_cmd = scope.match_cmd(&cmd_decl.parent_env);
+        if matches_cmd {
+            let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
+            return Some(code_gen.to_latex(env, scope, cmd));
+        }
+    }
+    None
 }
 
 impl Node {
-    pub fn to_latex(self, env: &mut LatexCodegenEnv) -> String {
+    pub fn to_latex(self, env: &mut LatexCodegenEnv, scope: &SemanticScope) -> String {
         match self {
             Node::Cmd(cmd) => {
                 // TODO
-                apply_cmd(env, cmd).unwrap()
+                apply_cmd(env, scope, cmd).unwrap()
             }
             Node::Ident(Ann{value, ..}) => {
                 value.to_tex_ident().to_owned()
@@ -33,7 +42,7 @@ impl Node {
                 let brackets = value.to_unicode_brackets();
                 let children = value.children
                     .into_iter()
-                    .map(|x| x.to_latex(env))
+                    .map(|x| x.to_latex(env, scope))
                     .collect::<String>();
                 match brackets {
                     Some((open, close)) => {
@@ -57,7 +66,7 @@ impl Node {
                 let brackets = value.to_unicode_quotation();
                 let children = value.children
                     .into_iter()
-                    .map(|x| x.to_latex(env))
+                    .map(|x| x.to_latex(env, scope))
                     .collect::<String>();
                 match brackets {
                     Some((open, close)) => {
@@ -91,7 +100,7 @@ impl Node {
             }
             Node::Fragment(xs) => {
                 xs  .into_iter()
-                    .map(|x| x.to_latex(env))
+                    .map(|x| x.to_latex(env, scope))
                     .collect::<String>()
             }
         }
