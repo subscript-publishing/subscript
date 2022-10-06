@@ -26,7 +26,7 @@ repository:
         match: \\.
   lineComment:
     name: comment.line
-    match: //.*$
+    match: ///.*$
   pipeModifiderIdent:
     name: keyword.control.subscript
     match: \\!\w+!
