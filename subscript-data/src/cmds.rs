@@ -446,7 +446,6 @@ fn process_ssd1_include(
             .and_then(|rule| -> Option<RewriteRule<Node>> {
                 let pattern = Node::Fragment(rule.pattern.clone());
                 let target = Node::Fragment(rule.target.clone());
-                println!("REWRITE {pattern:#?} {target:#?}\n");
                 Some(RewriteRule { pattern, target })
             });
         if let Some(rewrite_rule) = rewrite_rules {
@@ -458,7 +457,6 @@ fn process_ssd1_include(
                         let svg = svg.clone();
                         let pattern = rewrite_rule.pattern.clone();
                         move |scope: SemanticScope, node: Node| -> Node {
-                            println!("NODE {node:#?}");
                             if node.syntactically_equal(&pattern) {
                                 return Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg.clone()));
                             }
@@ -470,7 +468,6 @@ fn process_ssd1_include(
                     // .unblock(crate::subscript::BracketType::CurlyBrace)
                 })
                 .collect_vec();
-            println!("HERE {children:#?}");
             return children;
         }
         return svgs
@@ -505,7 +502,6 @@ fn handle_include(
         .clone()
         .as_stringified_attribute_value_str("")?;
     let src_path = PathBuf::from(&src_path_str);
-    println!("src_path {src_path:?}");
     let src_path = env.normalize_file_path(src_path);
     let ext = src_path.extension()?.to_str();
     match ext {

@@ -273,7 +273,6 @@ impl CompilerEnv {
             let root_path = self.file_path.clone();
             let mut rel_path = rel_path.to_path_buf();
             rel_path.push(path.clone());
-            println!("normalize_file_path [{root_path:?}]: {path:?} => {rel_path:?}");
             return rel_path
         }
         path

@@ -97,36 +97,36 @@ macro_rules! declare_cmd_processors {
 //     };
 // }
 
-#[derive(Debug, Clone)]
-pub struct CmdDeclNamespace {
-    pub parent: ParentEnvNamespaceDecl,
-    pub child: ChildEnvNamespaceDecl,
-}
+// #[derive(Debug, Clone)]
+// pub struct CmdDeclNamespace {
+//     pub parent: ParentEnvNamespaceDecl,
+//     pub child: ChildEnvNamespaceDecl,
+// }
 
-declare_cmd!{
-    fn namespace() -> CmdDeclNamespace {
-        CmdDeclNamespace {
-            parent_env: ParentEnvNamespaceDecl {
-                parent: None,
-                content_mode: ContentMode::Text,
-                layout_mode: LayoutMode::Block,
-            },
-            child_env: ChildEnvNamespaceDecl {
-                content_mode: ContentMode::Symbolic(SymbolicModeType::All),
-                layout_mode: LayoutMode::Block,
-            },
-        }
-    }
-    fn to_cmd(arg1: CurlyBrace, arg2: CurlyBrace, arg3: CurlyBrace) {
+// declare_cmd!{
+//     fn namespace() -> CmdDeclNamespace {
+//         CmdDeclNamespace {
+//             parent_env: ParentEnvNamespaceDecl {
+//                 parent: None,
+//                 content_mode: ContentMode::Text,
+//                 layout_mode: LayoutMode::Block,
+//             },
+//             child_env: ChildEnvNamespaceDecl {
+//                 content_mode: ContentMode::Symbolic(SymbolicModeType::All),
+//                 layout_mode: LayoutMode::Block,
+//             },
+//         }
+//     }
+//     fn to_cmd(arg1: CurlyBrace, arg2: CurlyBrace, arg3: CurlyBrace) {
         
-    }
-    fn to_html(env, cmd_call) {
+//     }
+//     fn to_html(env, cmd_call) {
         
-    }
-    fn to_latex(env, cmd_call) {
+//     }
+//     fn to_latex(env, cmd_call) {
 
-    }
-}
+//     }
+// }
 
 
 
