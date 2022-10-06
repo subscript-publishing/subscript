@@ -899,7 +899,6 @@ fn parse_words<'a>(
 
 pub fn parse_source<T: AsRef<str>>(env: &CompilerEnv, source: T) -> crate::subscript::ast::Node {
     let mut words = init_words(source.as_ref());
-    println!("{:#?}", words);
     let (ast, res) = parse_words(env, &mut words, None);
     assert!(res.is_none());
     let ast = ast
