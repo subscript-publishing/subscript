@@ -352,14 +352,16 @@ pub struct VariableArguments(pub Vec<ArgumentsDeclInstance>);
 pub struct ArgumentsDeclInstance {
     /// Left currently means no arguments.
     /// Right means static/fixed arguments.
-    pub ty: Either<(), Vec<ArgumentType>>,
+    pub ty: Either<Override, Vec<ArgumentType>>,
     pub apply: cmd_invocation::ArgumentDeclMap,
 }
 
 #[derive(Debug, Clone)]
 pub enum Override {
+    /// Will not match against ant arguments. 
     NoArguments,
-    AllFollowingCurlyBrace,
+    /// Will match against all following curly braces (zero or more).
+    AllFollowingCurlyBraces,
 }
 
 #[derive(Debug, Copy, Clone)]

@@ -2,6 +2,10 @@
 #![allow(unused)]
 
 use std::path::PathBuf;
+
+use subscript::SemanticScope;
+
+use crate::codegen::HtmlCodegenEnv;
 #[macro_use] extern crate html5ever;
 #[macro_use] extern crate markup5ever;
 
@@ -22,6 +26,10 @@ fn main() {
     let line = "-".repeat(80);
     println!("{line}");
     println!("RESULT\n{result:#?}");
+    let html = result
+        .to_html(&mut HtmlCodegenEnv::default(), &SemanticScope::default())
+        .to_html_str();
+    std::fs::write("test/output.html", html).unwrap();
     // println!("{:#?}", result);
 
     // let svgs = ss_drawing::api::parse_file("test/sample.ssd1").unwrap().canvas.entries;

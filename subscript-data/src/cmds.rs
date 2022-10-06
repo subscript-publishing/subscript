@@ -12,6 +12,7 @@ use data::{
     AttributeValueType, Attributes, ChildEnvNamespaceDecl, CmdCall, CmdCodegenRef, CmdDeclaration,
     ContentMode, InternalCmdDeclOptions, IsRequired, LayoutMode, ParentEnvNamespaceDecl,
     RewriteRule, SemanticScope, SimpleCodegen, SymbolicModeType, VariableArguments,
+    Override,
 };
 
 use self::data::CompilerEnv;
@@ -29,6 +30,21 @@ macro_rules! declare_cmd {
 // CmdPayload
 
 macro_rules! argument_decl_impl {
+    ($arg_instances:ident, $internal:ident, $metadata:ident, $cmd_payload:ident, (.. as $args:ident), $body:block) => {{
+        fn apply(
+            $internal: &mut cmd_invocation::Internal,
+            $metadata: cmd_invocation::Metadata,
+            $cmd_payload: cmd_invocation::CmdPayload,
+        ) -> Node {
+            let $args: Vec<Node> = $cmd_payload.nodes.clone();
+            $body
+        }
+        let arg_instance: ArgumentsDeclInstance = ArgumentsDeclInstance {
+            ty: Either::Left(Override::AllFollowingCurlyBraces),
+            apply: cmd_invocation::ArgumentDeclMap(apply),
+        };
+        $arg_instances.0.push(arg_instance);
+    }};
     ($arg_instances:ident, $internal:ident, $metadata:ident, $cmd_payload:ident, (), $body:block) => {{
         fn apply(
             $internal: &mut cmd_invocation::Internal,
@@ -38,7 +54,7 @@ macro_rules! argument_decl_impl {
             $body
         }
         let arg_instance: ArgumentsDeclInstance = ArgumentsDeclInstance {
-            ty: Either::Left(()),
+            ty: Either::Left(Override::NoArguments),
             apply: cmd_invocation::ArgumentDeclMap(apply),
         };
         $arg_instances.0.push(arg_instance);
@@ -1384,6 +1400,8 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
             })
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\caption").unwrap())
+            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1395,10 +1413,9 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent(Ident::from("table").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\col").unwrap())
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1410,9 +1427,9 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\colgroup").unwrap())
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1424,9 +1441,10 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tbody").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1438,10 +1456,10 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\td").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1453,10 +1471,10 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tfoot").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1468,10 +1486,10 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\th").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1483,10 +1501,10 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\thead").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1498,10 +1516,10 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tr").unwrap())
+            .parent_layout_mode(LayoutMode::Block)
+            .parent(Ident::from("\\table").unwrap())
             .arguments(arguments! {
                 for (internal, metadata, cmd_payload) match {
                     ({xs}) => {
@@ -1513,8 +1531,6 @@ fn all_supported_html_tags() -> Vec<CmdDeclaration> {
                     },
                 }
             })
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("table").unwrap())
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\details").unwrap())
             .arguments(arguments! {
@@ -1571,6 +1587,7 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
                 };
                 let latex_code = cmd.arguments
                     .into_iter()
+                    .flat_map(Node::unblock_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
                     .collect::<String>();
                 let html_node = env.math_env.add_inline_entry(latex_code);
@@ -1600,6 +1617,7 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
                 };
                 let latex_code = cmd.arguments
                     .into_iter()
+                    .flat_map(Node::unblock_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
                     .collect::<String>();
                 let html_node = env.math_env.add_block_entry(latex_code);
@@ -1652,6 +1670,7 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
                 attributes.insert(String::from("data-tag-note"), String::new());
                 let children = cmd.arguments
                     .into_iter()
+                    .flat_map(Node::unblock_curly_brace)
                     .map(|x| x.to_html(env, scope))
                     .collect_vec();
                 html::Node::Element(html::Element {
@@ -1684,8 +1703,56 @@ pub fn all_commands_list() -> Vec<CmdDeclaration> {
             }
         })
         .finish();
+    let table_row = CmdDeclBuilder::new(Ident::from("\\row").unwrap())
+        .parent_layout_mode(LayoutMode::Block)
+        .parent(Ident::from("\\table").unwrap())
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                (.. as nodes) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: nodes
+                    })
+                },
+            }
+        })
+        .to_html(to_html! {
+            fn (env, scope, cmd) {
+                let children = cmd.arguments
+                    .into_iter()
+                    .flat_map(|x| {
+                        if let Some(block) = x.clone().unwrap_curly_brace() {
+                            if block.len() == 1 && block[0].named("\\td") {
+                                return block
+                                    .into_iter()
+                                    .map(|x| x.to_html(env, scope))
+                                    .collect_vec()
+                            }
+                            return vec![
+                                html::Node::Element(html::Element {
+                                    name: String::from("td"),
+                                    attributes: HashMap::default(),
+                                    children: block
+                                        .into_iter()
+                                        .map(|x| x.to_html(env, scope))
+                                        .collect_vec(),
+                                })
+                            ]
+                        }
+                        return vec![x.to_html(env, scope)]
+                    })
+                    .collect_vec();
+                html::Node::Element(html::Element {
+                    name: String::from("tr"),
+                    attributes: HashMap::default(),
+                    children,
+                })
+            }
+        })
+        .finish();
     vec![
-        vec![include, math_block, inline_math, frac, note],
+        vec![include, math_block, inline_math, frac, note, table_row],
         all_supported_html_tags(),
     ]
     .concat()

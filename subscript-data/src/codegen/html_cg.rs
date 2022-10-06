@@ -19,6 +19,15 @@ pub struct HtmlCodegenEnv {
     pub math_env: MathEnv,
 }
 
+impl Default for HtmlCodegenEnv {
+    fn default() -> Self {
+        HtmlCodegenEnv {
+            commands: crate::cmds::all_commands_map(),
+            math_env: MathEnv::default(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct MathEnv {
     pub entries: Vec<MathCodeEntry>,
@@ -79,6 +88,7 @@ pub struct MathCodeEntry {
 
 pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> crate::html::ast::Node {
     let name = cmd.identifier.value.unwrap_remove_slash().to_string();
+    let child_scope = scope.new_scope(cmd.identifier.value.clone());
     let attributes = cmd.attributes
         .consume()
         .into_iter()
@@ -88,7 +98,7 @@ pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd:
     let arguments = cmd.arguments
         .into_iter()
         .flat_map(Node::unblock_curly_brace)
-        .map(|x| x.to_html(env, scope))
+        .map(|x| x.to_html(env, &child_scope))
         .collect_vec();
     crate::html::ast::Node::Element(crate::html::ast::Element{
         name,

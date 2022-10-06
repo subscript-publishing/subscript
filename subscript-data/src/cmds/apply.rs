@@ -28,6 +28,7 @@ use super::data::{
     RewriteRule,
     CompilerEnv,
     cmd_invocation,
+    Override,
 };
 use crate::subscript::utils::{sep_by, partition};
 
@@ -182,7 +183,10 @@ impl CmdDeclaration {
                     index = index + 1;
                 }
                 let start_of_args = index;
-                if let Some(arg_match) = self.arguments.match_instances(scope, &nodes[index..]) {
+                if let Some(arg_match) = self.arguments.match_instances(
+                    scope,
+                    &nodes[index..]
+                ) {
                     index = index + arg_match.stop_node_index;
                     let rewrites = nodes
                         .get(index..(index + 2))
@@ -253,11 +257,33 @@ impl VariableArguments {
 impl ArgumentsDeclInstance {
     fn match_instance<'a>(&self, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
         match &self.ty {
-            Either::Left(_) => {
+            Either::Left(Override::NoArguments) => {
                 return Some(ArgumentMatch{
                     args: &[],
                     rest: &nodes,
                     stop_node_index: 0,
+                    apply: self.apply.clone(),
+                })
+            }
+            Either::Left(Override::AllFollowingCurlyBraces) => {
+                use itertools::FoldWhile::{Continue, Done};
+                let index = nodes
+                    .into_iter()
+                    .position(|node| {
+                        !node.is_curly_brace()
+                    });
+                if let Some(index) = index {
+                    return Some(ArgumentMatch{
+                        args: &nodes[..index],
+                        rest: &nodes[index..],
+                        stop_node_index: index,
+                        apply: self.apply.clone(),
+                    })
+                }
+                Some(ArgumentMatch{
+                    args: &nodes[..],
+                    rest: &[],
+                    stop_node_index: nodes.len(),
                     apply: self.apply.clone(),
                 })
             }
@@ -359,35 +385,40 @@ impl Node {
         }
         match self {
             Node::Cmd(mut cmd_call) => {
+                let child_scope = scope.new_scope(cmd_call.identifier.value.clone());
+                cmd_call.arguments = {
+                    process_children(env, &child_scope, cmds, cmd_call.arguments)
+                };
                 cmd_call.arguments = cmd_call.arguments
                     .into_iter()
-                    .map(|x| x.apply_commands(env, scope, cmds))
+                    .map(|x| {
+                        x.apply_commands(env, &child_scope, cmds)
+                    })
                     .collect_vec();
-                cmd_call.arguments = process_children(env, scope, cmds, cmd_call.arguments);
                 Node::Cmd(cmd_call)
             }
             Node::Bracket(Ann{mut value, range}) => {
+                value.children = process_children(env, scope, cmds, value.children);
                 value.children = value.children
                     .into_iter()
                     .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                value.children = process_children(env, scope, cmds, value.children);
                 Node::Bracket(Ann{range, value})
             }
             Node::Quotation(Ann{mut value, range}) => {
+                value.children = process_children(env, scope, cmds, value.children);
                 value.children = value.children
                     .into_iter()
                     .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                value.children = process_children(env, scope, cmds, value.children);
                 Node::Quotation(Ann{range, value})
             }
             Node::Fragment(xs) => {
+                let xs = process_children(env, scope, cmds, xs);
                 let xs = xs
                     .into_iter()
                     .map(|x| x.apply_commands(env, scope, cmds))
                     .collect_vec();
-                let xs = process_children(env, scope, cmds, xs);
                 Node::Fragment(xs)
             }
             node @ Node::Ident(_) => node,
