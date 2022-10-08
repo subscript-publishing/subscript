@@ -903,6 +903,7 @@ fileprivate struct SelectionTool: View {
 }
 
 fileprivate struct PenView: View {
+    let width: CGFloat
     let setToPen: (SS1.RuntimeDataModel.Pen) -> ()
     @ObservedObject var runtimeModel: SS1.RuntimeDataModel
     @Binding var pen: SS1.RuntimeDataModel.Pen
@@ -925,9 +926,6 @@ fileprivate struct PenView: View {
             let graphic = ZStack(alignment: Alignment.top) {
                 let backColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 let frontColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-//                let penColor = colorScheme == .dark
-//                    ? pen.options.darkUIColorSchemeColor.color.withAlphaComponent(0.8)
-//                    : pen.options.lightUIColorSchemeColor.color.withAlphaComponent(0.8)
                 let invertToggle = runtimeModel.invertPenColors
                 let penColor = pen.options.color
                     .getUIColorFor(invertToggle: invertToggle, colorScheme)
@@ -1164,8 +1162,9 @@ extension SS1.Drawing {
             }
         }
         @ViewBuilder private func penItem(ix: Int, pen: SS1.RuntimeDataModel.Pen) -> some View {
-//            let getPenSize = getPenSize()
+            let width = getPenSize(pen)
             let penView = PenView(
+                width: width,
                 setToPen: { pen in
                     self.usingSelectionTool = false
                     self.usingEraserTool = false
@@ -1176,11 +1175,11 @@ extension SS1.Drawing {
             )
             if pen.layer == .foreground {
                 penView
-                    .frame(width: getPenSize(pen), alignment: .center)
+                    .frame(width: width, alignment: .center)
             } else {
                 penView
                     .rotationEffect(Angle.degrees(180))
-                    .frame(width: getPenSize(pen), alignment: .center)
+                    .frame(width: width, alignment: .center)
             }
         }
         @ViewBuilder private var pensListMenu: some View {

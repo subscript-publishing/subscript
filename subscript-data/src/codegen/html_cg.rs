@@ -209,14 +209,15 @@ impl Node {
                 crate::html::ast::Node::Text(value.to_owned())
             }
             Node::Drawing(drawing) => {
-                match drawing {
-                    crate::ss_drawing::Drawing::Ssd1(ssd1) => {
-                        crate::html::Node::Image(crate::html::Image::Svg {
-                            kind: crate::html::LayoutKind::Block,
-                            payload: ssd1.to_svg()
-                        })
-                    }
-                }
+                // match drawing {
+                //     crate::ss_drawing::Drawing::Ssd1(ssd1) => {
+                //         crate::html::Node::Image(crate::html::Image::Svg {
+                //             kind: crate::html::LayoutKind::Block,
+                //             payload: ssd1.to_svg()
+                //         })
+                //     }
+                // }
+                unimplemented!()
             }
             Node::Fragment(xs) => {
                 crate::html::ast::Node::Fragment(

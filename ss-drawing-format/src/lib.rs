@@ -1,3 +1,4 @@
+#![allow(unused)]
 pub mod api;
 pub mod format;
 pub mod stroke_points;
@@ -7,3 +8,4 @@ pub mod utils;
 pub enum Drawing {
     // Ssd1(format::DrawingDataModel),
 }
+

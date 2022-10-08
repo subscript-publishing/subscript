@@ -17,8 +17,8 @@ extension SS1 {
         /// Drawn strokes
         var foregroundStrokes: Array<Stroke> = []
         var backgroundStrokes: Array<Stroke> = []
-        @Published
-        var isTitle: Set<UUID> = []
+//        @Published
+//        var isTitle: Set<UUID> = []
         /// Active stroke
         var active: Stroke = Stroke()
         var activeLayer: SS1.Stroke.Layer = SS1.Stroke.Layer.foreground

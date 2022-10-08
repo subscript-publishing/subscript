@@ -1,10 +1,8 @@
 [workspace]
 members = [
-    "subscript-compiler",
-    "subscript-project",
     "ss-language-server",
-    "format-ss-drawing",
-    "subscript-web-trinity",
+    "ss-drawing-format",
+    "ss-drawing-lab",
     "subscript-data",
     "subscript",
 ]

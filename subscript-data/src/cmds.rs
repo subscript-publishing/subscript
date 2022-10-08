@@ -440,41 +440,42 @@ fn process_ssd1_include(
 ) -> Vec<Node> {
     let file_path = file_path.clone();
     let file_path = env.normalize_file_path(file_path);
-    if let Ok(svgs) = crate::ss_drawing::api::parse_file(file_path).map(|x| x.canvas.entries) {
-        let rewrite_rules = rewrite_rules
-            .and_then(|rules| rules.first().map(Clone::clone))
-            .and_then(|rule| -> Option<RewriteRule<Node>> {
-                let pattern = Node::Fragment(rule.pattern.clone());
-                let target = Node::Fragment(rule.target.clone());
-                Some(RewriteRule { pattern, target })
-            });
-        if let Some(rewrite_rule) = rewrite_rules {
-            let children = svgs
-                .clone()
-                .into_iter()
-                .map(|svg| -> Node {
-                    let f = {
-                        let svg = svg.clone();
-                        let pattern = rewrite_rule.pattern.clone();
-                        move |scope: SemanticScope, node: Node| -> Node {
-                            if node.syntactically_equal(&pattern) {
-                                return Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg.clone()));
-                            }
-                            node
-                        }
-                    };
-                    let scope = SemanticScope::default();
-                    rewrite_rule.target.clone().transform(scope, Rc::new(f))
-                    // .unblock(crate::subscript::BracketType::CurlyBrace)
-                })
-                .collect_vec();
-            return children;
-        }
-        return svgs
-            .into_iter()
-            .map(|svg| Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg)))
-            .collect_vec();
-    }
+    unimplemented!();
+    // if let Ok(svgs) = crate::ss_drawing::api::parse_file(file_path).map(|x| x.canvas.entries) {
+    //     let rewrite_rules = rewrite_rules
+    //         .and_then(|rules| rules.first().map(Clone::clone))
+    //         .and_then(|rule| -> Option<RewriteRule<Node>> {
+    //             let pattern = Node::Fragment(rule.pattern.clone());
+    //             let target = Node::Fragment(rule.target.clone());
+    //             Some(RewriteRule { pattern, target })
+    //         });
+    //     if let Some(rewrite_rule) = rewrite_rules {
+    //         let children = svgs
+    //             .clone()
+    //             .into_iter()
+    //             .map(|svg| -> Node {
+    //                 let f = {
+    //                     let svg = svg.clone();
+    //                     let pattern = rewrite_rule.pattern.clone();
+    //                     move |scope: SemanticScope, node: Node| -> Node {
+    //                         if node.syntactically_equal(&pattern) {
+    //                             return Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg.clone()));
+    //                         }
+    //                         node
+    //                     }
+    //                 };
+    //                 let scope = SemanticScope::default();
+    //                 rewrite_rule.target.clone().transform(scope, Rc::new(f))
+    //                 // .unblock(crate::subscript::BracketType::CurlyBrace)
+    //             })
+    //             .collect_vec();
+    //         return children;
+    //     }
+    //     return svgs
+    //         .into_iter()
+    //         .map(|svg| Node::Drawing(crate::ss_drawing::Drawing::Ssd1(svg)))
+    //         .collect_vec();
+    // }
     vec![]
 }
 

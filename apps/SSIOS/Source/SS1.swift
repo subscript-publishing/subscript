@@ -215,8 +215,8 @@ struct SS1 {
         @State private var loaded: Bool = false
         @State private var displayStyle: ColorScheme = ColorScheme.dark
         private func load(with file: FileDocumentConfiguration<SS1.DrawingFileDocument>) -> () -> () {
-            documentFilePath = file.fileURL!
             return {
+                documentFilePath = file.fileURL!
                 if case let .some(model) = SS1.CanvasDataModel.load(filePath: file.fileURL!) {
                     self.canvasModel.entries = model.entries
                 }
@@ -253,46 +253,40 @@ struct SS1 {
             }
         }
         @ViewBuilder private var entrypoint: some View {
-            if loaded {
-                SS1.CanvasEditor(
-                    title: Binding.constant(SS1.Title()),
-                    displayTitle: false,
-                    canvasModel: canvasModel,
-                    runtimeModel: runtimeModel,
-                    toggleColorScheme: {
-                        
-                    },
-                    goBack: {
-                        UIApplication.shared.windows
-                            .first?
-                            .rootViewController?
-                            .dismiss(animated: true, completion: nil)
-                    },
-                    onSave: {
-                        self.runtimeModel.saveDefault()
-                        self.canvasModel.save(filePath: documentFilePath!)
-                    }
-                )
-                    .navigationViewStyle(StackNavigationViewStyle())
-                    .navigationBarTitle("")
-                    .navigationBarHidden(true)
-                    .environment(\.colorScheme, displayStyle)
-            } else {
-                Text("Loading...")
-            }
+            SS1.CanvasEditor(
+                title: Binding.constant(SS1.Title()),
+                displayTitle: false,
+                canvasModel: canvasModel,
+                runtimeModel: runtimeModel,
+                toggleColorScheme: {
+                    
+                },
+                goBack: {
+                    UIApplication.shared.windows
+                        .first?
+                        .rootViewController?
+                        .dismiss(animated: true, completion: nil)
+                },
+                onSave: {
+                    self.runtimeModel.saveDefault()
+                    self.canvasModel.save(filePath: documentFilePath!)
+                }
+            )
         }
         var body: some Scene {
             DocumentGroup(newDocument: document) { file in
                 entrypoint
-                    .colorScheme(displayStyle)
                     .onAppear(perform: self.load(with: file))
                     .onAppear(perform: self.syncColorScheme)
-                    .navigationViewStyle(StackNavigationViewStyle())
-                    .navigationBarTitle("")
-                    .navigationBarHidden(true)
                     .environment(\.colorScheme, displayStyle)
                     .preferredColorScheme(displayStyle)
                     .colorScheme(displayStyle)
+                    .navigationViewStyle(StackNavigationViewStyle())
+                    .navigationBarTitle("")
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }

@@ -128,7 +128,7 @@ pub mod stroke {
     impl Color {
         fn to_svg_rgba_color(&self) -> String {
             let Color{red, blue, green, alpha} = self;
-            let scale = crate::ss_drawing::utils::new_linear_scale((0.0, 1.0), (0.0, 255.0));
+            let scale = crate::utils::new_linear_scale((0.0, 1.0), (0.0, 255.0));
             let red = scale(*red).round();
             let green = scale(*green).round();
             let blue = scale(*blue).round();
@@ -319,7 +319,7 @@ pub mod canvas_data_model {
     }
 
     impl Debug for DrawingDataModel {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> swc_css_codegen::Result {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("DrawingDataModel").finish()
         }
     }
@@ -345,14 +345,15 @@ pub mod canvas_data_model {
             let min_y = ys.iter().copied().fold(f64::NAN, f64::min);
             let max_y = ys.iter().copied().fold(f64::NAN, f64::max);
             let is_valid = |x: f64| {x.is_normal() && x > 0.0};
+            let max_point_range = 1000.0;
             if is_valid(min_x) && is_valid(max_x) && is_valid(min_y) && is_valid(min_y) {
-                let x_scale = crate::ss_drawing::utils::new_linear_scale(
+                let x_scale = crate::utils::new_linear_scale(
                     ((min_x, max_x)),
-                    ((0.0, 1000.0)),
+                    ((0.0, max_point_range)),
                 );
-                let y_scale = crate::ss_drawing::utils::new_linear_scale(
+                let y_scale = crate::utils::new_linear_scale(
                     ((min_y, max_y)),
-                    ((0.0, 1000.0)),
+                    ((0.0, max_point_range)),
                 );
                 let for_each = |mut outline_stroke: stroke::OutlinedStroke| {
                     outline_stroke.points = outline_stroke.points
@@ -372,79 +373,26 @@ pub mod canvas_data_model {
                     .map(for_each)
                     .collect_vec();
             }
-            unimplemented!()
+            let mut paths = outlines_background_strokes
+                .into_iter()
+                .chain(outlines_foreground_strokes.into_iter())
+                .map(|outline_stroke| {
+                    outline_stroke.to_svg_path(for_color_scheme)
+                })
+                .collect::<String>();
+            let viewbox_attr = format!("viewBox=\"0 0 {max_point_range} {max_point_range}\"");
+            let attrs = format!(
+                "xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" {viewbox_attr}",
+            );
+            format!(
+                "<svg preserveAspectRatio=\"meet\" {attrs}>{paths}</svg>",
+            )
         }
-        pub fn to_pdf(&self) -> Vec<u8> {
-            // let svg = self.to_svg();
-            // let pdf = svg2pdf::convert_str(&svg, svg2pdf::Options::default()).unwrap();
-            // pdf
-            unimplemented!()
+        pub fn to_pdf(&self, for_color_scheme: &ColorScheme) -> Vec<u8> {
+            let svg = self.to_svg(for_color_scheme);
+            let pdf = svg2pdf::convert_str(&svg, svg2pdf::Options::default()).unwrap();
+            pdf
         }
-        // pub fn to_svg_old(&self) -> String {
-        //     let mut xs: Vec<f64> = Vec::new();
-        //     let mut ys: Vec<f64> = Vec::new();
-        //     let strokes = self.strokes
-        //         .clone()
-        //         .into_iter()
-        //         .map(|mut stroke| {
-        //             let points = stroke.to_points();
-        //             for (x, y) in points.iter() {
-        //                 xs.push(*x);
-        //                 ys.push(*y);
-        //             }
-        //             (stroke, points)
-        //         })
-        //         .collect_vec();
-        //     let min_x = xs.iter().copied().fold(f64::NAN, f64::min);
-        //     let max_x = xs.iter().copied().fold(f64::NAN, f64::max);
-        //     let min_y = ys.iter().copied().fold(f64::NAN, f64::min);
-        //     let max_y = ys.iter().copied().fold(f64::NAN, f64::max);
-        //     let x_scale = crate::ss_drawing::utils::new_linear_scale(
-        //         ((min_x, max_x)),
-        //         ((0.0, 100.0)),
-        //     );
-        //     let y_scale = crate::ss_drawing::utils::new_linear_scale(
-        //         ((min_y, max_y)),
-        //         ((0.0, 100.0)),
-        //     );
-        //     let mut counter = 0;
-        //     let strokes = strokes
-        //         .into_iter()
-        //         .map(|(stroke, points)| {
-        //             let points = points
-        //                 .into_iter()
-        //                 .enumerate()
-        //                 .map(|(ix, (x, y))| {
-        //                     counter = counter + 1;
-        //                     let x = x_scale(x);
-        //                     let y = y_scale(y);
-        //                     if ix == 0 {
-        //                         return format!("M {x} {y}")
-        //                     }
-        //                     format!("L {x} {y}")
-        //                 })
-        //                 .collect_vec()
-        //                 .join(" ");
-        //             let stroke::Color{red, blue, green, alpha} = stroke.options.color;
-        //             let scale = crate::ss_drawing::utils::new_linear_scale((0.0, 1.0), (0.0, 255.0));
-        //             let red = scale(red).round();
-        //             let blue = scale(blue).round();
-        //             let green = scale(green).round();
-        //             let alpha = scale(alpha).round();
-        //             let fill_attr = format!("fill=\"rgba({}, {}, {}, {})\"", red, green, blue, alpha);
-        //             format!("<path {fill_attr} d=\"{points}z\"/>")
-        //         })
-        //         .collect_vec()
-        //         .join("\n");
-        //     println!("POINTS {counter}");
-        //     let view_box_attr = format!("viewBox=\"0 0 100 100\"");
-        //     let attrs = format!(
-        //         "xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" {view_box_attr}",
-        //     );
-        //     format!(
-        //         "<svg preserveAspectRatio=\"meet\" {attrs}>{strokes}</svg>",
-        //     )
-        // }
     }
 }
 

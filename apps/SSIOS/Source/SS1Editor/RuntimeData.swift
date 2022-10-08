@@ -95,7 +95,7 @@ fileprivate func defaultPenList() -> Array<SS1.RuntimeDataModel.Pen> {
 //    var rightPens: Array<SS1.RuntimeDataModel.Pen> = []
     var pens: Array<SS1.RuntimeDataModel.Pen> = []
     for (colorMap, primaryColorSchemeMode) in defaulColorList {
-        let pen = SS1.RuntimeDataModel.Pen(
+        let pen1 = SS1.RuntimeDataModel.Pen(
             options: SS1.Stroke.Options(
                 color: colorMap,
                 size: SS1.RuntimeDataModel.Pen.defaultExtraThinPenSize
@@ -103,10 +103,18 @@ fileprivate func defaultPenList() -> Array<SS1.RuntimeDataModel.Pen> {
             layer: SS1.Stroke.Layer.foreground,
             primaryColorSchemeMode: primaryColorSchemeMode
         )
-        pens.append(pen)
+        let pen2 = SS1.RuntimeDataModel.Pen(
+            options: SS1.Stroke.Options(
+                color: colorMap,
+                size: SS1.RuntimeDataModel.Pen.defaultExtraThinPenSize
+            ),
+            layer: SS1.Stroke.Layer.background,
+            primaryColorSchemeMode: primaryColorSchemeMode
+        )
+        pens.append(contentsOf: [pen1, pen2])
     }
     for (colorMap, primaryColorSchemeMode) in defaulColorList {
-        let pen = SS1.RuntimeDataModel.Pen(
+        let pen1 = SS1.RuntimeDataModel.Pen(
             options: SS1.Stroke.Options(
                 color: colorMap,
                 size: SS1.RuntimeDataModel.Pen.defaultThinPenSize
@@ -114,7 +122,15 @@ fileprivate func defaultPenList() -> Array<SS1.RuntimeDataModel.Pen> {
             layer: SS1.Stroke.Layer.foreground,
             primaryColorSchemeMode: primaryColorSchemeMode
         )
-        pens.append(pen)
+        let pen2 = SS1.RuntimeDataModel.Pen(
+            options: SS1.Stroke.Options(
+                color: colorMap,
+                size: SS1.RuntimeDataModel.Pen.defaultThinPenSize
+            ),
+            layer: SS1.Stroke.Layer.background,
+            primaryColorSchemeMode: primaryColorSchemeMode
+        )
+        pens.append(contentsOf: [pen1, pen2])
     }
     for (colorMap, primaryColorSchemeMode) in defaulColorList {
         let pen1 = SS1.RuntimeDataModel.Pen(
