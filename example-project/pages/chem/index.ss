@@ -1,1 +1,1 @@
-\h1[rel]{Chemistry}
+\h1{Chemistry}

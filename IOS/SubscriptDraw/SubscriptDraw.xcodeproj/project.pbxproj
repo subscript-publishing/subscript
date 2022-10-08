@@ -31,11 +31,10 @@
 		F430FC2F28E65427006C211B /* DrawingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2628E65427006C211B /* DrawingData.swift */; };
 		F430FC3028E65427006C211B /* DrawingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2728E65427006C211B /* DrawingRenderer.swift */; };
 		F430FC3228E65427006C211B /* CanvasData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2A28E65427006C211B /* CanvasData.swift */; };
-		F430FC3328E65427006C211B /* CanvasUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2B28E65427006C211B /* CanvasUI.swift */; };
+		F430FC3328E65427006C211B /* CanvasEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2B28E65427006C211B /* CanvasEditor.swift */; };
 		F430FC3428E65427006C211B /* CanvasToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2C28E65427006C211B /* CanvasToolBar.swift */; };
 		F430FC3528E65427006C211B /* RuntimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2D28E65427006C211B /* RuntimeData.swift */; };
-		F430FC3728E6542E006C211B /* SS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC3628E6542E006C211B /* SS.swift */; };
-		F430FC3B28E682CB006C211B /* FileTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC3A28E682CB006C211B /* FileTree.swift */; };
+		F430FC3728E6542E006C211B /* SS1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC3628E6542E006C211B /* SS1.swift */; };
 		F485ECA328E57203006E69BD /* SubscriptDrawApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECA228E57203006E69BD /* SubscriptDrawApp.swift */; };
 		F485ECA528E57203006E69BD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECA428E57203006E69BD /* ContentView.swift */; };
 		F485ECA728E57205006E69BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F485ECA628E57205006E69BD /* Assets.xcassets */; };
@@ -46,6 +45,49 @@
 		F485ECC328E57205006E69BD /* SubscriptDrawUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECC228E57205006E69BD /* SubscriptDrawUITests.swift */; };
 		F485ECC528E57205006E69BD /* SubscriptDrawUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECC428E57205006E69BD /* SubscriptDrawUITestsLaunchTests.swift */; };
 		F485ECD428E57375006E69BD /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECD328E57375006E69BD /* Main.swift */; };
+		F4D156B828EE953F000C29F2 /* PageEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156B628EE953F000C29F2 /* PageEditor.swift */; };
+		F4D156B928EE953F000C29F2 /* PageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156B728EE953F000C29F2 /* PageData.swift */; };
+		F4D156BB28EE95F7000C29F2 /* SwiftUIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156BA28EE95F7000C29F2 /* SwiftUIUtils.swift */; };
+		F4D156BD28EF7424000C29F2 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156BC28EF7424000C29F2 /* Shapes.swift */; };
+		F4D156C028EF9438000C29F2 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFC28E653C5006C211B /* Result.swift */; };
+		F4D156C128EF9438000C29F2 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156BC28EF7424000C29F2 /* Shapes.swift */; };
+		F4D156C228EF9438000C29F2 /* PageEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156B628EE953F000C29F2 /* PageEditor.swift */; };
+		F4D156C328EF9438000C29F2 /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0928E653C5006C211B /* Border.swift */; };
+		F4D156C428EF9438000C29F2 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECD328E57375006E69BD /* Main.swift */; };
+		F4D156C528EF9438000C29F2 /* RefBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0C28E653C5006C211B /* RefBox.swift */; };
+		F4D156C628EF9438000C29F2 /* GetStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2528E65427006C211B /* GetStroke.swift */; };
+		F4D156C728EF9438000C29F2 /* CanvasData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2A28E65427006C211B /* CanvasData.swift */; };
+		F4D156C828EF9438000C29F2 /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0128E653C5006C211B /* CGFloat.swift */; };
+		F4D156C928EF9438000C29F2 /* CanvasEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2B28E65427006C211B /* CanvasEditor.swift */; };
+		F4D156CA28EF9438000C29F2 /* LinearAlgebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBF828E653C5006C211B /* LinearAlgebra.swift */; };
+		F4D156CB28EF9438000C29F2 /* UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0428E653C5006C211B /* UITextView.swift */; };
+		F4D156CC28EF9438000C29F2 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFE28E653C5006C211B /* URL.swift */; };
+		F4D156CD28EF9438000C29F2 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFA28E653C5006C211B /* Array.swift */; };
+		F4D156CE28EF9438000C29F2 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECAB28E57205006E69BD /* Persistence.swift */; };
+		F4D156CF28EF9438000C29F2 /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0E28E653C5006C211B /* CodableColor.swift */; };
+		F4D156D028EF9438000C29F2 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFF28E653C5006C211B /* String.swift */; };
+		F4D156D128EF9438000C29F2 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0228E653C5006C211B /* UIFont.swift */; };
+		F4D156D228EF9438000C29F2 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0728E653C5006C211B /* Bindings.swift */; };
+		F4D156D328EF9438000C29F2 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0028E653C5006C211B /* CGPoint.swift */; };
+		F4D156D428EF9438000C29F2 /* Basics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0828E653C5006C211B /* Basics.swift */; };
+		F4D156D528EF9438000C29F2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECA428E57203006E69BD /* ContentView.swift */; };
+		F4D156D628EF9438000C29F2 /* DrawingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2628E65427006C211B /* DrawingData.swift */; };
+		F4D156D728EF9438000C29F2 /* UIFFI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0A28E653C5006C211B /* UIFFI.swift */; };
+		F4D156D828EF9438000C29F2 /* MathUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0D28E653C5006C211B /* MathUtil.swift */; };
+		F4D156D928EF9438000C29F2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFB28E653C5006C211B /* UIColor.swift */; };
+		F4D156DA28EF9438000C29F2 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FBFD28E653C5006C211B /* Int.swift */; };
+		F4D156DB28EF9438000C29F2 /* SwiftUIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156BA28EE95F7000C29F2 /* SwiftUIUtils.swift */; };
+		F4D156DC28EF9438000C29F2 /* SubscriptDrawApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485ECA228E57203006E69BD /* SubscriptDrawApp.swift */; };
+		F4D156DD28EF9438000C29F2 /* PageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D156B728EE953F000C29F2 /* PageData.swift */; };
+		F4D156DE28EF9438000C29F2 /* Scroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0628E653C5006C211B /* Scroller.swift */; };
+		F4D156DF28EF9438000C29F2 /* SubscriptDraw.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F485ECAD28E57205006E69BD /* SubscriptDraw.xcdatamodeld */; };
+		F4D156E028EF9438000C29F2 /* SS1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC3628E6542E006C211B /* SS1.swift */; };
+		F4D156E128EF9438000C29F2 /* CanvasToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2C28E65427006C211B /* CanvasToolBar.swift */; };
+		F4D156E228EF9438000C29F2 /* RuntimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2D28E65427006C211B /* RuntimeData.swift */; };
+		F4D156E328EF9438000C29F2 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC0328E653C5006C211B /* Optional.swift */; };
+		F4D156E428EF9438000C29F2 /* DrawingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F430FC2728E65427006C211B /* DrawingRenderer.swift */; };
+		F4D156E728EF9438000C29F2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F485ECA928E57205006E69BD /* Preview Assets.xcassets */; };
+		F4D156E828EF9438000C29F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F485ECA628E57205006E69BD /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,12 +132,11 @@
 		F430FC2628E65427006C211B /* DrawingData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingData.swift; sourceTree = "<group>"; };
 		F430FC2728E65427006C211B /* DrawingRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingRenderer.swift; sourceTree = "<group>"; };
 		F430FC2A28E65427006C211B /* CanvasData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasData.swift; sourceTree = "<group>"; };
-		F430FC2B28E65427006C211B /* CanvasUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasUI.swift; sourceTree = "<group>"; };
+		F430FC2B28E65427006C211B /* CanvasEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasEditor.swift; sourceTree = "<group>"; };
 		F430FC2C28E65427006C211B /* CanvasToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasToolBar.swift; sourceTree = "<group>"; };
 		F430FC2D28E65427006C211B /* RuntimeData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuntimeData.swift; sourceTree = "<group>"; };
-		F430FC3628E6542E006C211B /* SS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SS.swift; sourceTree = "<group>"; };
+		F430FC3628E6542E006C211B /* SS1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SS1.swift; sourceTree = "<group>"; };
 		F430FC3928E67BCD006C211B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		F430FC3A28E682CB006C211B /* FileTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTree.swift; sourceTree = "<group>"; };
 		F485EC9F28E57203006E69BD /* SubscriptDraw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubscriptDraw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F485ECA228E57203006E69BD /* SubscriptDrawApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptDrawApp.swift; sourceTree = "<group>"; };
 		F485ECA428E57203006E69BD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +151,17 @@
 		F485ECC428E57205006E69BD /* SubscriptDrawUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptDrawUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F485ECD128E57219006E69BD /* SubscriptDraw.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubscriptDraw.entitlements; sourceTree = "<group>"; };
 		F485ECD328E57375006E69BD /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		F4D156B628EE953F000C29F2 /* PageEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageEditor.swift; sourceTree = "<group>"; };
+		F4D156B728EE953F000C29F2 /* PageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageData.swift; sourceTree = "<group>"; };
+		F4D156BA28EE95F7000C29F2 /* SwiftUIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIUtils.swift; sourceTree = "<group>"; };
+		F4D156BC28EF7424000C29F2 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
+		F4D156EC28EF9438000C29F2 /* SubscriptComposition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubscriptComposition.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4D156ED28EF9439000C29F2 /* SubscriptDraw copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SubscriptDraw copy-Info.plist"; path = "/Users/colbyn/Projects/subscript-root/IOS/SubscriptDraw/SubscriptDraw copy-Info.plist"; sourceTree = "<absolute>"; };
+		F4E35F2428EF969900249BBD /* SubscriptCompositionInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SubscriptCompositionInfo.plist; sourceTree = "<group>"; };
+		F4E35F2528EF969900249BBD /* SubscriptDrawInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SubscriptDrawInfo.plist; sourceTree = "<group>"; };
+		F4E35F2628EF969900249BBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F4E35F2828EF969900249BBD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F4E35F2928EF969900249BBD /* SubscriptCatalyst.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SubscriptCatalyst.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +186,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4D156E528EF9438000C29F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -151,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				F430FBF828E653C5006C211B /* LinearAlgebra.swift */,
+				F4D156BA28EE95F7000C29F2 /* SwiftUIUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -182,6 +242,7 @@
 				F430FC0828E653C5006C211B /* Basics.swift */,
 				F430FC0928E653C5006C211B /* Border.swift */,
 				F430FC0A28E653C5006C211B /* UIFFI.swift */,
+				F4D156BC28EF7424000C29F2 /* Shapes.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -196,14 +257,15 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		F430FC2328E65427006C211B /* Freehand */ = {
+		F430FC2328E65427006C211B /* SS1Editor */ = {
 			isa = PBXGroup;
 			children = (
+				F4D156B528EE953F000C29F2 /* PageEditor */,
 				F430FC2928E65427006C211B /* Canvas */,
 				F430FC2428E65427006C211B /* Drawing */,
 				F430FC2D28E65427006C211B /* RuntimeData.swift */,
 			);
-			path = Freehand;
+			path = SS1Editor;
 			sourceTree = "<group>";
 		};
 		F430FC2428E65427006C211B /* Drawing */ = {
@@ -220,7 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				F430FC2A28E65427006C211B /* CanvasData.swift */,
-				F430FC2B28E65427006C211B /* CanvasUI.swift */,
+				F430FC2B28E65427006C211B /* CanvasEditor.swift */,
 				F430FC2C28E65427006C211B /* CanvasToolBar.swift */,
 			);
 			path = Canvas;
@@ -229,12 +291,14 @@
 		F485EC9628E57203006E69BD = {
 			isa = PBXGroup;
 			children = (
+				F4E35F2328EF969900249BBD /* Build */,
 				F430FBF628E653C5006C211B /* Lib */,
 				F485ECD228E5735B006E69BD /* Source */,
 				F485ECA128E57203006E69BD /* SubscriptDraw */,
 				F485ECB728E57205006E69BD /* SubscriptDrawTests */,
 				F485ECC128E57205006E69BD /* SubscriptDrawUITests */,
 				F485ECA028E57203006E69BD /* Products */,
+				F4D156ED28EF9439000C29F2 /* SubscriptDraw copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -244,6 +308,7 @@
 				F485EC9F28E57203006E69BD /* SubscriptDraw.app */,
 				F485ECB428E57205006E69BD /* SubscriptDrawTests.xctest */,
 				F485ECBE28E57205006E69BD /* SubscriptDrawUITests.xctest */,
+				F4D156EC28EF9438000C29F2 /* SubscriptComposition.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -291,12 +356,40 @@
 		F485ECD228E5735B006E69BD /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				F430FC2328E65427006C211B /* Freehand */,
-				F430FC3628E6542E006C211B /* SS.swift */,
+				F430FC2328E65427006C211B /* SS1Editor */,
+				F430FC3628E6542E006C211B /* SS1.swift */,
 				F485ECD328E57375006E69BD /* Main.swift */,
-				F430FC3A28E682CB006C211B /* FileTree.swift */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		F4D156B528EE953F000C29F2 /* PageEditor */ = {
+			isa = PBXGroup;
+			children = (
+				F4D156B628EE953F000C29F2 /* PageEditor.swift */,
+				F4D156B728EE953F000C29F2 /* PageData.swift */,
+			);
+			path = PageEditor;
+			sourceTree = "<group>";
+		};
+		F4E35F2328EF969900249BBD /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				F4E35F2428EF969900249BBD /* SubscriptCompositionInfo.plist */,
+				F4E35F2528EF969900249BBD /* SubscriptDrawInfo.plist */,
+				F4E35F2628EF969900249BBD /* Assets.xcassets */,
+				F4E35F2728EF969900249BBD /* Preview Content */,
+				F4E35F2928EF969900249BBD /* SubscriptCatalyst.entitlements */,
+			);
+			path = Build;
+			sourceTree = "<group>";
+		};
+		F4E35F2728EF969900249BBD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				F4E35F2828EF969900249BBD /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -355,6 +448,23 @@
 			productReference = F485ECBE28E57205006E69BD /* SubscriptDrawUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		F4D156BE28EF9438000C29F2 /* SubscriptComposition */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4D156E928EF9438000C29F2 /* Build configuration list for PBXNativeTarget "SubscriptComposition" */;
+			buildPhases = (
+				F4D156BF28EF9438000C29F2 /* Sources */,
+				F4D156E528EF9438000C29F2 /* Frameworks */,
+				F4D156E628EF9438000C29F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SubscriptComposition;
+			productName = SubscriptDraw;
+			productReference = F4D156EC28EF9438000C29F2 /* SubscriptComposition.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -392,6 +502,7 @@
 			projectRoot = "";
 			targets = (
 				F485EC9E28E57203006E69BD /* SubscriptDraw */,
+				F4D156BE28EF9438000C29F2 /* SubscriptComposition */,
 				F485ECB328E57205006E69BD /* SubscriptDrawTests */,
 				F485ECBD28E57205006E69BD /* SubscriptDrawUITests */,
 			);
@@ -422,6 +533,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4D156E628EF9438000C29F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4D156E728EF9438000C29F2 /* Preview Assets.xcassets in Resources */,
+				F4D156E828EF9438000C29F2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -430,15 +550,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				F430FC1228E653C5006C211B /* Result.swift in Sources */,
+				F4D156BD28EF7424000C29F2 /* Shapes.swift in Sources */,
+				F4D156B828EE953F000C29F2 /* PageEditor.swift in Sources */,
 				F430FC1E28E653C5006C211B /* Border.swift in Sources */,
 				F485ECD428E57375006E69BD /* Main.swift in Sources */,
 				F430FC2028E653C5006C211B /* RefBox.swift in Sources */,
 				F430FC2E28E65427006C211B /* GetStroke.swift in Sources */,
 				F430FC3228E65427006C211B /* CanvasData.swift in Sources */,
 				F430FC1728E653C5006C211B /* CGFloat.swift in Sources */,
-				F430FC3328E65427006C211B /* CanvasUI.swift in Sources */,
+				F430FC3328E65427006C211B /* CanvasEditor.swift in Sources */,
 				F430FC0F28E653C5006C211B /* LinearAlgebra.swift in Sources */,
-				F430FC3B28E682CB006C211B /* FileTree.swift in Sources */,
 				F430FC1A28E653C5006C211B /* UITextView.swift in Sources */,
 				F430FC1428E653C5006C211B /* URL.swift in Sources */,
 				F430FC1028E653C5006C211B /* Array.swift in Sources */,
@@ -455,10 +576,12 @@
 				F430FC2128E653C5006C211B /* MathUtil.swift in Sources */,
 				F430FC1128E653C5006C211B /* UIColor.swift in Sources */,
 				F430FC1328E653C5006C211B /* Int.swift in Sources */,
+				F4D156BB28EE95F7000C29F2 /* SwiftUIUtils.swift in Sources */,
 				F485ECA328E57203006E69BD /* SubscriptDrawApp.swift in Sources */,
+				F4D156B928EE953F000C29F2 /* PageData.swift in Sources */,
 				F430FC1B28E653C5006C211B /* Scroller.swift in Sources */,
 				F485ECAF28E57205006E69BD /* SubscriptDraw.xcdatamodeld in Sources */,
-				F430FC3728E6542E006C211B /* SS.swift in Sources */,
+				F430FC3728E6542E006C211B /* SS1.swift in Sources */,
 				F430FC3428E65427006C211B /* CanvasToolBar.swift in Sources */,
 				F430FC3528E65427006C211B /* RuntimeData.swift in Sources */,
 				F430FC1928E653C5006C211B /* Optional.swift in Sources */,
@@ -480,6 +603,50 @@
 			files = (
 				F485ECC528E57205006E69BD /* SubscriptDrawUITestsLaunchTests.swift in Sources */,
 				F485ECC328E57205006E69BD /* SubscriptDrawUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4D156BF28EF9438000C29F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4D156C028EF9438000C29F2 /* Result.swift in Sources */,
+				F4D156C128EF9438000C29F2 /* Shapes.swift in Sources */,
+				F4D156C228EF9438000C29F2 /* PageEditor.swift in Sources */,
+				F4D156C328EF9438000C29F2 /* Border.swift in Sources */,
+				F4D156C428EF9438000C29F2 /* Main.swift in Sources */,
+				F4D156C528EF9438000C29F2 /* RefBox.swift in Sources */,
+				F4D156C628EF9438000C29F2 /* GetStroke.swift in Sources */,
+				F4D156C728EF9438000C29F2 /* CanvasData.swift in Sources */,
+				F4D156C828EF9438000C29F2 /* CGFloat.swift in Sources */,
+				F4D156C928EF9438000C29F2 /* CanvasEditor.swift in Sources */,
+				F4D156CA28EF9438000C29F2 /* LinearAlgebra.swift in Sources */,
+				F4D156CB28EF9438000C29F2 /* UITextView.swift in Sources */,
+				F4D156CC28EF9438000C29F2 /* URL.swift in Sources */,
+				F4D156CD28EF9438000C29F2 /* Array.swift in Sources */,
+				F4D156CE28EF9438000C29F2 /* Persistence.swift in Sources */,
+				F4D156CF28EF9438000C29F2 /* CodableColor.swift in Sources */,
+				F4D156D028EF9438000C29F2 /* String.swift in Sources */,
+				F4D156D128EF9438000C29F2 /* UIFont.swift in Sources */,
+				F4D156D228EF9438000C29F2 /* Bindings.swift in Sources */,
+				F4D156D328EF9438000C29F2 /* CGPoint.swift in Sources */,
+				F4D156D428EF9438000C29F2 /* Basics.swift in Sources */,
+				F4D156D528EF9438000C29F2 /* ContentView.swift in Sources */,
+				F4D156D628EF9438000C29F2 /* DrawingData.swift in Sources */,
+				F4D156D728EF9438000C29F2 /* UIFFI.swift in Sources */,
+				F4D156D828EF9438000C29F2 /* MathUtil.swift in Sources */,
+				F4D156D928EF9438000C29F2 /* UIColor.swift in Sources */,
+				F4D156DA28EF9438000C29F2 /* Int.swift in Sources */,
+				F4D156DB28EF9438000C29F2 /* SwiftUIUtils.swift in Sources */,
+				F4D156DC28EF9438000C29F2 /* SubscriptDrawApp.swift in Sources */,
+				F4D156DD28EF9438000C29F2 /* PageData.swift in Sources */,
+				F4D156DE28EF9438000C29F2 /* Scroller.swift in Sources */,
+				F4D156DF28EF9438000C29F2 /* SubscriptDraw.xcdatamodeld in Sources */,
+				F4D156E028EF9438000C29F2 /* SS1.swift in Sources */,
+				F4D156E128EF9438000C29F2 /* CanvasToolBar.swift in Sources */,
+				F4D156E228EF9438000C29F2 /* RuntimeData.swift in Sources */,
+				F4D156E328EF9438000C29F2 /* Optional.swift in Sources */,
+				F4D156E428EF9438000C29F2 /* DrawingRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,19 +795,19 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SubscriptDraw/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SubscriptDraw;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.colbyn.SubscriptDraw;
+				PRODUCT_BUNDLE_IDENTIFIER = app.subscript.SubscriptDraw;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -662,19 +829,19 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SubscriptDraw/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SubscriptDraw;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.colbyn.SubscriptDraw;
+				PRODUCT_BUNDLE_IDENTIFIER = app.subscript.SubscriptDraw;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -759,6 +926,74 @@
 			};
 			name = Release;
 		};
+		F4D156EA28EF9438000C29F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SubscriptDraw/SubscriptDraw.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SubscriptDraw/Preview Content\"";
+				DEVELOPMENT_TEAM = CV5FXG5P92;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SubscriptDraw copy-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SubscriptComposition;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.subscript.SubscriptComposition;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4D156EB28EF9438000C29F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SubscriptDraw/SubscriptDraw.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SubscriptDraw/Preview Content\"";
+				DEVELOPMENT_TEAM = CV5FXG5P92;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SubscriptDraw copy-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SubscriptComposition;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.subscript.SubscriptComposition;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -794,6 +1029,15 @@
 			buildConfigurations = (
 				F485ECCF28E57205006E69BD /* Debug */,
 				F485ECD028E57205006E69BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4D156E928EF9438000C29F2 /* Build configuration list for PBXNativeTarget "SubscriptComposition" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4D156EA28EF9438000C29F2 /* Debug */,
+				F4D156EB28EF9438000C29F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

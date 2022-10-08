@@ -1,1 +1,1 @@
-\h1[rel]{Trigonometric Identities}
+\h1{Trigonometric Identities}

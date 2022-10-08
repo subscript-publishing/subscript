@@ -1,1 +1,1 @@
-\h1[rel]{Normal force and contact force}
+\h1{Normal force and contact force}

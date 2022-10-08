@@ -1,1 +1,1 @@
-\h1[rel]{Tension}
+\h1{Tension}

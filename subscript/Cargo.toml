@@ -1,0 +1,15 @@
+[package]
+name = "subscript"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+either = "1.6.1"
+structopt = "0.3.26"
+lazy_static = "1.4.0"
+itertools = "0.10.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+toml = "0.5.9"
+subscript_data = {path = "../subscript-data"}
+wax = "0.5.0"

@@ -1,1 +1,1 @@
-\h1[rel]{Algebra}
+\h1{Algebra}

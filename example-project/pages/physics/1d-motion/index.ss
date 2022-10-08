@@ -1,1 +1,1 @@
-\h1[rel]{One-dimensional Motion}
+\h1{One-dimensional Motion}

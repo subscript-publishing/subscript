@@ -1,1 +1,1 @@
-\h1[rel]{Newton's laws of motion}
+\h1{Newton's laws of motion}

@@ -1,1 +1,1 @@
-\h1[rel]{Balanced and unbalanced forces}
+\h1{Balanced and unbalanced forces}

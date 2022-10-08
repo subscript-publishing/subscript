@@ -1,1 +1,1 @@
-\h1[rel]{Inclined planes and friction}
+\h1{Inclined planes and friction}

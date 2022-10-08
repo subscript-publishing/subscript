@@ -1,10 +1,30 @@
 //! See the example-project for an example of the TOML data layout.
 use std::path::{Path, PathBuf};
+use wax::{Glob, Pattern};
 
 #[derive(Debug, Clone)]
 pub struct ProjectSettings {
     manifest: manifest_format::RootManifestFile,
     project_dir: PathBuf,
+}
+
+impl ProjectSettings {
+    pub fn compile_pages(&self) {
+        let file_glob = Glob::new("**/index.{ss}").unwrap();
+        let index_file_paths = file_glob.walk(&self.manifest.project.locations.pages)
+            .flatten()
+            .map(|x| x.into_path())
+            .collect::<Vec<_>>();
+        for src_file_path in index_file_paths {
+            println!("FILE {:?}", src_file_path);
+            // let html_contents = subscript_compiler::compiler::compile(src_file_path.clone());
+            // let output_path = self.project.to_output_html_file_path(src_file_path);
+            // output_path.parent().map(|dir| {
+            //     std::fs::create_dir_all(dir).unwrap();
+            // });
+            // std::fs::write(&output_path, html_contents).unwrap();
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
