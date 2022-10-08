@@ -1,3 +1,0 @@
-\note {
-    \h1{Hello}
-}
