@@ -1411,13 +1411,13 @@ dependencies = [
  "serde",
  "serde_json",
  "structopt",
- "subscript_ast",
+ "subscript_compiler",
  "toml",
  "wax",
 ]
 
 [[package]]
-name = "subscript_ast"
+name = "subscript_compiler"
 version = "0.1.0"
 dependencies = [
  "either",

@@ -280,11 +280,44 @@ pub mod stroke {
 
 
 pub mod canvas_data_model {
+    use std::path::Path;
+
     use super::*;
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct CanvasDataModel {
         pub entries: Vec<DrawingDataModel>
+    }
+    impl CanvasDataModel {
+        pub fn parse_file<T: AsRef<Path>>(file_path: T) -> Result<Self, crate::api::SS1FreeformSuiteError> {
+            if !crate::api::SS1FreeformSuite::is_ss1_drawing_file(file_path.as_ref()) {
+                return Err(crate::api::SS1FreeformSuiteError::ExpectedSs1DrawingFileFormat {
+                    file_path: file_path.as_ref().to_path_buf()
+                })
+            }
+            let payload = std::fs::read(file_path.as_ref())
+                .map_err(|_| {
+                    crate::api::SS1FreeformSuiteError::FailedToOpenFile {
+                        file_path: file_path.as_ref().to_path_buf()
+                    }
+                })?;
+            // For some reason I’m unable to this into a `CanvasDataModel` directly, 
+            // but it works if I parse this as a `serde_json::Value` type and then use
+            // `serde_json` to parse into a `CanvasDataModel`.
+            let payload = plist::from_bytes::<serde_json::Value>(&payload)
+                .map_err(|_| {
+                    crate::api::SS1FreeformSuiteError::FailedToParseFileFormat {
+                        file_path: file_path.as_ref().to_path_buf()
+                    }
+                })?;
+            let payload = serde_json::from_value::<CanvasDataModel>(payload)
+                .map_err(|e| {
+                    crate::api::SS1FreeformSuiteError::FailedToParseFileFormat {
+                        file_path: file_path.as_ref().to_path_buf()
+                    }
+                })?;
+            Ok(payload)
+        }
     }
     #[derive(Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
@@ -349,12 +382,25 @@ pub mod canvas_data_model {
                     outline_stroke.to_svg_path(for_color_scheme)
                 })
                 .collect::<String>();
-            let viewbox_attr = format!("viewBox=\"0 0 {max_point_range} {max_point_range}\"");
-            let attrs = format!(
-                "xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" {viewbox_attr}",
-            );
+            let attrs: Vec<(String, String)> = vec![
+                (String::from("viewBox"), format!("0 0 {max_point_range} {max_point_range}")),
+                (String::from("xmlns"), String::from("http://www.w3.org/2000/svg")),
+                (String::from("xmlns:xlink"), String::from("http://www.w3.org/1999/xlink")),
+                (String::from("preserveAspectRatio"), String::from("meet")),
+                // For CSS selectors that toggle the display of a an SVG in
+                // accordance with the browsers color scheme preference. 
+                (String::from("data-svg-color-scheme"), match for_color_scheme {
+                    ColorScheme::Dark => format!("dark-mode"),
+                    ColorScheme::Light => format!("light-mode"),
+                }),
+            ];
+            let attrs = attrs
+                .into_iter()
+                .map(|(k, v)| format!("{k}=\"{v}\""))
+                .collect_vec()
+                .join(" ");
             format!(
-                "<svg preserveAspectRatio=\"meet\" {attrs}>{paths}</svg>",
+                "<svg {attrs}>{paths}</svg>",
             )
         }
         pub fn to_pdf(&self, for_color_scheme: &ColorScheme) -> Vec<u8> {
@@ -373,12 +419,45 @@ pub mod canvas_data_model {
 
 
 pub mod page_data_model {
+    use std::path::Path;
+
     use super::*;
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct PageDataModel {
         page_title: String,
         entries: Vec<PageEntry>,
+    }
+    impl PageDataModel {
+        pub fn parse_file<T: AsRef<Path>>(file_path: T) -> Result<Self, crate::api::SS1FreeformSuiteError> {
+            if !crate::api::SS1FreeformSuite::is_ss1_drawing_file(file_path.as_ref()) {
+                return Err(crate::api::SS1FreeformSuiteError::ExpectedSs1DrawingFileFormat {
+                    file_path: file_path.as_ref().to_path_buf()
+                })
+            }
+            let payload = std::fs::read(file_path.as_ref())
+                .map_err(|_| {
+                    crate::api::SS1FreeformSuiteError::FailedToOpenFile {
+                        file_path: file_path.as_ref().to_path_buf()
+                    }
+                })?;
+            // For some reason I’m unable to this into a `PageDataModel` directly, 
+            // but it works if I parse this as a `serde_json::Value` type and then use
+            // `serde_json` to parse into a `PageDataModel`.
+            let payload = plist::from_bytes::<serde_json::Value>(&payload)
+                .map_err(|_| {
+                    crate::api::SS1FreeformSuiteError::FailedToParseFileFormat {
+                        file_path: file_path.as_ref().to_path_buf()
+                    }
+                })?;
+            let payload = serde_json::from_value::<PageDataModel>(payload)
+                .map_err(|e| {
+                    crate::api::SS1FreeformSuiteError::FailedToParseFileFormat {
+                        file_path: file_path.as_ref().to_path_buf()
+                    }
+                })?;
+            Ok(payload)
+        }
     }
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]

@@ -12,4 +12,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 toml = "0.5.9"
 wax = "0.5.0"
-subscript_ast = {path = "../subscript-ast"}
+subscript_compiler = {path = "../subscript-compiler"}

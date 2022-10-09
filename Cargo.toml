@@ -2,13 +2,13 @@
 members = [
     "ss-language-server",
     "ss-freeform-format",
-    "subscript-ast",
+    "subscript-compiler",
     "subscript",
 ]
 
 exclude = [
-    "ss-drawing-lab",
-    "cavalier_contours",
-    "cavalier_contours_ffi",
+    "local-dev/ss-drawing-lab",
+    "local-dev/cavalier_contours",
+    "local-dev/cavalier_contours_ffi",
 ]
 

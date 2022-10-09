@@ -30,53 +30,19 @@ impl SS1FreeformSuite {
             })
             .unwrap_or(false)
     }
+    pub fn is_ss1_drawing_file_ext<T: AsRef<str>>(ext: T) -> bool {
+        ext.as_ref() == "ss1-drawing"
+    }
+    pub fn is_ss1_composition_file_ext<T: AsRef<str>>(ext: T) -> bool {
+        ext.as_ref() == "ss1-composition"
+    }
     pub fn parse_ss1_drawing_file<T: AsRef<Path>>(file_path: T) -> Result<Self, SS1FreeformSuiteError> {
-        if !SS1FreeformSuite::is_ss1_drawing_file(file_path.as_ref()) {
-            return Err(SS1FreeformSuiteError::ExpectedSs1DrawingFileFormat {
-                file_path: file_path.as_ref().to_path_buf()
-            })
-        }
-        let payload = std::fs::read(file_path.as_ref())
-            .map_err(|_| {
-                SS1FreeformSuiteError::FailedToOpenFile {file_path: file_path.as_ref().to_path_buf()}
-            })?;
-        // For some reason I’m unable to this into a `CanvasDataModel` directly, 
-        // but it works if I parse this as a `serde_json::Value` type and then use
-        // `serde_json` to parse into a `CanvasDataModel`.
-        let payload = plist::from_bytes::<serde_json::Value>(&payload)
-            .map_err(|_| {
-                SS1FreeformSuiteError::FailedToParseFileFormat {file_path: file_path.as_ref().to_path_buf()}
-            })?;
-        let payload = serde_json::from_value::<CanvasDataModel>(payload)
-            .map_err(|e| {
-                println!("ERROR {e:#?}");
-                SS1FreeformSuiteError::FailedToParseFileFormat {file_path: file_path.as_ref().to_path_buf()}
-            })?;
-        Ok(SS1FreeformSuite::Ss1Drawing(payload))
+        CanvasDataModel::parse_file(file_path.as_ref())
+            .map(SS1FreeformSuite::Ss1Drawing)
     }
     pub fn parse_ss1_composition_file<T: AsRef<Path>>(file_path: T) -> Result<Self, SS1FreeformSuiteError> {
-        if !SS1FreeformSuite::is_ss1_composition_file(file_path.as_ref()) {
-            return Err(SS1FreeformSuiteError::ExpectedSs1CompositionFileFormat {
-                file_path: file_path.as_ref().to_path_buf()
-            })
-        }
-        let payload = std::fs::read(file_path.as_ref())
-            .map_err(|_| {
-                SS1FreeformSuiteError::FailedToOpenFile {file_path: file_path.as_ref().to_path_buf()}
-            })?;
-        // For some reason I’m unable to this into a `PageDataModel` directly, 
-        // but it works if I parse this as a `serde_json::Value` type and then use
-        // `serde_json` to parse into a `PageDataModel`.
-        let payload = plist::from_bytes::<serde_json::Value>(&payload)
-            .map_err(|_| {
-                SS1FreeformSuiteError::FailedToParseFileFormat {file_path: file_path.as_ref().to_path_buf()}
-            })?;
-        let payload = serde_json::from_value::<PageDataModel>(payload)
-            .map_err(|e| {
-                println!("ERROR {e:#?}");
-                SS1FreeformSuiteError::FailedToParseFileFormat {file_path: file_path.as_ref().to_path_buf()}
-            })?;
-        Ok(SS1FreeformSuite::Ss1Composition(payload))
+        PageDataModel::parse_file(file_path.as_ref())
+            .map(SS1FreeformSuite::Ss1Composition)
     }
 }
 
