@@ -357,11 +357,18 @@ pub mod canvas_data_model {
                     ((min_y, max_y)),
                     ((0.0, max_point_range)),
                 );
+                let mut normalized_xs: Vec<f64> = Vec::new();
+                let mut normalized_ys: Vec<f64> = Vec::new();
                 let for_each = |mut outline_stroke: stroke::OutlinedStroke| {
                     outline_stroke.points = outline_stroke.points
                         .into_iter()
                         .map(|(x, y)| {
-                            (x_scale(x), y_scale(y))
+                            // let normalized_x = x_scale(x);
+                            // let normalized_y = y_scale(y);
+                            // normalized_xs.push(normalized_x);
+                            // normalized_ys.push(normalized_ys);
+                            // (normalized_x, normalized_y)
+                            (x, y)
                         })
                         .collect_vec();
                     outline_stroke
@@ -383,10 +390,14 @@ pub mod canvas_data_model {
                 })
                 .collect::<String>();
             let attrs: Vec<(String, String)> = vec![
-                (String::from("viewBox"), format!("0 0 {max_point_range} {max_point_range}")),
+                (String::from("viewBox"), format!("{min_x} {min_y} {max_x} {max_y}")),
                 (String::from("xmlns"), String::from("http://www.w3.org/2000/svg")),
                 (String::from("xmlns:xlink"), String::from("http://www.w3.org/1999/xlink")),
                 (String::from("preserveAspectRatio"), String::from("meet")),
+                (String::from("style"), match for_color_scheme {
+                    ColorScheme::Dark => String::from("width: 100%; background: #000;"),
+                    ColorScheme::Light => String::from("width: 100%; background: #fff;"),
+                }),
                 // For CSS selectors that toggle the display of a an SVG in
                 // accordance with the browsers color scheme preference. 
                 (String::from("data-svg-color-scheme"), match for_color_scheme {
