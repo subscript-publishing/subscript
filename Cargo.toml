@@ -1,9 +1,14 @@
 [workspace]
 members = [
     "ss-language-server",
-    "ss-drawing-format",
-    "ss-drawing-lab",
-    "subscript-data",
+    "ss-freeform-format",
+    "subscript-ast",
     "subscript",
+]
+
+exclude = [
+    "ss-drawing-lab",
+    "cavalier_contours",
+    "cavalier_contours_ffi",
 ]
 

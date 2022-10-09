@@ -224,7 +224,6 @@ extension SS1.Stroke {
     struct Sample: Equatable, Hashable, Codable {
         var point: CGPoint
         var pressure: CGFloat = 0.5
-        var layer: SS1.Stroke.Layer = SS1.Stroke.Layer.foreground
     }
     
     enum Layer: String, Codable {
@@ -405,7 +404,6 @@ extension SS1 {
         var entries: Array<DrawingDataModel> = [
             DrawingDataModel()
         ]
-        
         enum CodingKeys: CodingKey {
             case entries
         }
@@ -418,62 +416,6 @@ extension SS1 {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             entries = try container.decode(Array.self, forKey: .entries)
         }
-        
-//        func toSVG() -> String {
-//            var paths: Array<String> = []
-//            var xs: Array<CGFloat> = []
-//            var ys: Array<CGFloat> = []
-//            var hightOffset: CGFloat = 0
-//            for entry in entries {
-//                var entryYValues: Array<CGFloat> = []
-//                for stroke in entry.strokes {
-//                    var pathData = ""
-//                    for (ix, point) in stroke.vectorOutlinePoints().enumerated() {
-//                        let x = round((point.x) * 10) / 10.0
-//                        let y = round((point.y + hightOffset) * 10) / 10.0
-//                        xs.append(x)
-//                        ys.append(y)
-//                        entryYValues.append(y)
-//                        if ix == 0 {
-//                            pathData += "M \(x) \(y) L"
-//                        } else {
-//                            pathData += " \(x) \(y)"
-//                        }
-//                    }
-//                    let (r, g, b, a): (Int, Int, Int, Int) = {
-//                        let scale = MathUtils.newLinearScale(domain: (0.0, 1.0), range: (0, 255))
-//                        let (r, g, b, a) = stroke.options.color.color.rgbaComponents
-//                        let newRed = Int(scale(r).rounded())
-//                        let newBlue = Int(scale(g).rounded())
-//                        let newGreen = Int(scale(b).rounded())
-//                        let newAlpha = Int(scale(a).rounded())
-//                        return (newRed, newBlue, newGreen, newAlpha)
-//                    }()
-//                    let pathAttr = "d=\"\(pathData)\""
-//                    let fillAttr = "fill=\"rgba(\(r), \(g), \(b), \(a))\""
-//                    paths.append("<path \(fillAttr) \(pathAttr) />")
-//                }
-//                switch (entryYValues.max(), entryYValues.min()) {
-//                case (let .some(maxHeight), let .some(minHeight)):
-//                    hightOffset += (maxHeight - minHeight)
-//                case (let .some(maxHeight), _):
-//                    hightOffset += maxHeight
-//                default: ()
-//                }
-//            }
-//            if paths.isEmpty {
-//                return ""
-//            }
-//            let minX = xs.min()!
-//            let maxX = xs.max()!
-//            let minY = ys.min()!
-//            let maxY = ys.max()!
-//            let styleAttr = "style=\"max-width: \(maxX)px;\""
-//            let viewBoxAttr = "viewBox=\"\(minX) \(minY) \(maxX) \(maxY)\""
-//            let attrs = "xmlns=\"http://www.w3.org/2000/svg\" \(styleAttr) \(viewBoxAttr)"
-//            let svg = "<svg \(attrs)>\(paths.joined(separator: " "))</svg>"
-//            return svg
-//        }
         func save(filePath: URL) {
             let encoder = PropertyListEncoder()
             let data = try! encoder.encode(self)

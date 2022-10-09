@@ -258,9 +258,7 @@ struct SS1 {
                 displayTitle: false,
                 canvasModel: canvasModel,
                 runtimeModel: runtimeModel,
-                toggleColorScheme: {
-                    
-                },
+                toggleColorScheme: toggleColorScheme,
                 goBack: {
                     UIApplication.shared.windows
                         .first?

@@ -27,13 +27,11 @@ pub mod stroke {
         pub options: StrokeOptions,
         pub samples: Vec<StrokeSample>
     }
-
     #[derive(Debug, Clone, Serialize, Deserialize)]
     pub struct OutlinedStroke {
         pub points: Vec<(f64, f64)>,
         pub color: ColorMap,
     }
-
     impl OutlinedStroke {
         pub fn to_svg_path(self, for_color_scheme: &ColorScheme) -> String {
             let path_points = self.points
@@ -63,7 +61,6 @@ pub mod stroke {
             format!("<path {fill_attr} {path_attr} />")
         }
     }
-
     impl Stroke {
         pub fn to_points(&self) -> Vec<(f64, f64)> {
             vector_outline_points(self.clone())
@@ -116,7 +113,6 @@ pub mod stroke {
             format!("<path {fill_attr} {path_attr} />")
         }
     }
-
     #[derive(Debug, Clone, Serialize, Deserialize)]
     pub struct Color {
         pub red: f64,
@@ -124,7 +120,6 @@ pub mod stroke {
         pub blue: f64,
         pub alpha: f64,
     }
-
     impl Color {
         fn to_svg_rgba_color(&self) -> String {
             let Color{red, blue, green, alpha} = self;
@@ -136,13 +131,14 @@ pub mod stroke {
             format!("rgba({red}, {green}, {blue}, {alpha})")
         }
     }
-
     #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
     pub struct ColorMap {
+        #[serde(alias = "lightUIMode")]
         light_ui_mode: Color,
+        #[serde(alias = "darkUIMode")]
         dark_ui_mode: Color
     }
-    
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct StrokeOptions {
@@ -164,14 +160,12 @@ pub mod stroke {
         /// Cap, taper and easing for the end of the line.
         pub end: EndCap,
     }
-    
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct StrokeSample {
         pub point: [f64; 2],
         pub pressure: f64,
     }
-
     #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
     pub enum Easing {
         #[serde(rename = "linear")]
@@ -211,7 +205,6 @@ pub mod stroke {
         #[serde(rename = "easeOutExpo")]
         EaseOutExpo,
     }
-
     impl Easing {
         fn linear(t: f64) -> f64 {t}
         fn ease_in_quad(t: f64) -> f64 {t * t}
@@ -239,7 +232,6 @@ pub mod stroke {
         fn ease_in_out_sine(t: f64) -> f64 {-(f64::cos(std::f64::consts::PI * t) - 1.0) / 2.0}
         fn ease_in_expo(t: f64) -> f64 {if t <= 0.0 {0.0} else {f64::powf(2.0, 10.0 * t - 10.0)}}
         fn ease_out_expo(t: f64) -> f64 {if t >= 1.0 {1.0} else {1.0 - f64::powf(2.0, -10.0 * t)}}
-
         pub fn to_function(self) -> fn(f64) -> f64 {
             match self {
                 Easing::Linear => Easing::linear,
@@ -263,7 +255,6 @@ pub mod stroke {
             }
         }
     }
-
     #[derive(Debug, Clone, Serialize, Deserialize)]
     pub enum Layer {
         #[serde(rename = "foreground")]
@@ -271,7 +262,6 @@ pub mod stroke {
         #[serde(rename = "background")]
         Background,
     }
-
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct StartCap {
@@ -279,7 +269,6 @@ pub mod stroke {
         pub taper: f64,
         pub easing: Easing,
     }
-    
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct EndCap {
@@ -292,24 +281,11 @@ pub mod stroke {
 
 pub mod canvas_data_model {
     use super::*;
-
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct CanvasDataModel {
         pub entries: Vec<DrawingDataModel>
     }
-
-    impl CanvasDataModel {
-        // pub fn to_svgs(&self) -> Vec<String> {
-        //     self.entries
-        //         .iter()
-        //         .map(|stroke| {
-
-        //         })
-        //         .collect::<Vec<_>>()
-        // }
-    }
-
     #[derive(Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct DrawingDataModel {
@@ -317,13 +293,6 @@ pub mod canvas_data_model {
         pub background_strokes: Vec<stroke::Stroke>,
         pub height: f64,
     }
-
-    impl Debug for DrawingDataModel {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("DrawingDataModel").finish()
-        }
-    }
-
     impl DrawingDataModel {
         pub fn to_svg(&self, for_color_scheme: &ColorScheme) -> String {
             let mut xs: Vec<f64> = Vec::new();
@@ -394,60 +363,71 @@ pub mod canvas_data_model {
             pdf
         }
     }
+    impl Debug for DrawingDataModel {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DrawingDataModel(…)")
+        }
+    }
 }
 
 
 
 pub mod page_data_model {
     use super::*;
-
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
     pub struct PageDataModel {
         page_title: String,
         entries: Vec<PageEntry>,
     }
-
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
     pub struct PageEntry {
-        r#type: EntryType,
+        r#type: PageEntryType,
         title: Title,
         drawing: canvas_data_model::CanvasDataModel,
     }
-
-    #[derive(Debug, Clone)]
-    pub enum EntryType {
+    #[derive(Debug, Clone, Serialize, Deserialize)]
+    pub enum PageEntryType {
+        #[serde(alias = "title")]
         Title,
+        #[serde(alias = "drawing")]
         Drawing,
     }
-
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
     pub struct Title {
         r#type: HeadingType,
         text: String,
     }
-
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, Serialize, Deserialize)]
     pub enum HeadingType {
+        #[serde(alias = "h1")]
         H1,
+        #[serde(alias = "h2")]
         H2,
+        #[serde(alias = "h3")]
         H3,
+        #[serde(alias = "h4")]
         H4,
+        #[serde(alias = "h5")]
         H5,
+        #[serde(alias = "h6")]
         H6,
     }
 }
 
 
-// pub fn dev() {
-//     let file_path = "/Users/colbyn/Library/Containers/com.colbyn.SubscriptTablet/Data/Documents/data.json";
-//     let contents = std::fs::read_to_string(file_path).unwrap();
-//     let contents = serde_json::from_str::<CanvasDataModel>(&contents).unwrap();
-//     let html = contents.to_html();
-//     let html = format!("<!DOCTYPE html><html><head></head><body>{}</body></html>", html);
-//     std::fs::write("test.html", html).unwrap();
-//     // println!("{:#?}", contents);
-//     // let res = serde_json::to_string(&stroke::Easing::Linear);
-//     // println!("{:?}", res);
-//     // let res = serde_json::from_str::<stroke::Easing>(&res.unwrap());
-//     // println!("{:?}", res);
-// }
+pub fn dev() {
+    // let file_path = "/Users/colbyn/Library/Containers/com.colbyn.SubscriptTablet/Data/Documents/data.json";
+    // let contents = std::fs::read_to_string(file_path).unwrap();
+    // let contents = serde_json::from_str::<CanvasDataModel>(&contents).unwrap();
+    // let html = contents.to_html();
+    // let html = format!("<!DOCTYPE html><html><head></head><body>{}</body></html>", html);
+    // std::fs::write("test.html", html).unwrap();
+    // println!("{:#?}", contents);
+    // let res = serde_json::to_string(&stroke::Easing::Linear);
+    // println!("{:?}", res);
+    // let res = serde_json::from_str::<stroke::Easing>(&res.unwrap());
+    // println!("{:?}", res);
+}

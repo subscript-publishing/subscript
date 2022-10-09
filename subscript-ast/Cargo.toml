@@ -1,5 +1,5 @@
 [package]
-name = "subscript_data"
+name = "subscript_ast"
 version = "0.1.0"
 edition = "2021"
 
@@ -25,4 +25,4 @@ rmp-serde = "1.1.0"
 plist = "1.3.1"
 svg2pdf = "0.4.0"
 rand = "0.7.3"
-ss_drawing_format = {path = "../ss-drawing-format"}
+ss_freeform_format = {path = "../ss-freeform-format"}
