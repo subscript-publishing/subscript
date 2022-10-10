@@ -59,7 +59,7 @@ Safe your files to e.g. `iCloud Drive` and seamlessly include such in your notes
 - The strokes are rendered into relatively beautiful SVG paths (compared to other implementations out there that used ugly fixed diameter strokes with hard cutoffs).
 - NOTE: It's not yet available on the App Store since dev licenses are expensive (but you don't need a dev license to compile and run on your own iPad). Although if this project gains traction with users, I may eventually publish such to the app store... 
 
-Each freeform file can contain multiple drawing entries, which can be manipulated & formatted like so:
+Each freeform file can contain multiple drawing entries, which can be manipulated & formatted like so (VIA the `\where!` macro):
 
 ![Freeform drawing import example](assets/preview-images/drawing-import-with-rewrites-syntax-example.png)
 
