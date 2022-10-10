@@ -301,7 +301,7 @@ pub mod canvas_data_model {
                         file_path: file_path.as_ref().to_path_buf()
                     }
                 })?;
-            // For some reason I’m unable to this into a `CanvasDataModel` directly, 
+            // For some reason I’m unable to parse this into a `CanvasDataModel` directly, 
             // but it works if I parse this as a `serde_json::Value` type and then use
             // `serde_json` to parse into a `CanvasDataModel`.
             let payload = plist::from_bytes::<serde_json::Value>(&payload)
@@ -452,7 +452,7 @@ pub mod page_data_model {
                         file_path: file_path.as_ref().to_path_buf()
                     }
                 })?;
-            // For some reason I’m unable to this into a `PageDataModel` directly, 
+            // For some reason I’m unable to parse this into a `PageDataModel` directly, 
             // but it works if I parse this as a `serde_json::Value` type and then use
             // `serde_json` to parse into a `PageDataModel`.
             let payload = plist::from_bytes::<serde_json::Value>(&payload)
