@@ -58,36 +58,18 @@ Safe your files to e.g. `iCloud Drive` and seamlessly include such in your notes
 - The strokes are rendered into relatively beautiful SVG paths (compared to other implementations out there was used ugly fixed diameter strokes with hard cutoffs).
 - NOTE: It's not yet available on the App Store since dev licenses are expensive (but you don't need a dev license to compile and run your own iPad). Although if this project gains traction with users, I may eventually publish such to the app store... 
 
-Each freeform file can contain multiple drawing entries, which can be manipulated & formatted like so (note that this interface is unstable and likely to change):
+Each freeform file can contain multiple drawing entries, which can be manipulated & formatted like so:
 
 ![Freeform drawing import example](assets/preview-images/drawing-import-with-rewrites-syntax-example.png)
+
+Notes:
+- This interface is **unstable and likely to change** and may currently be broken. 
+- At the time of this writing, drawing rewrite rules are only supported for `.ss1-drawing` files, since `.ss1-composition` files are more complicated and I haven't worked out how the interface should work.  
 
 
 ## Lots more planned! 
 
 
-
-
-# Sub-projects Overview
-
-- `./apps/SSIOS`
-    + iPad freeform drawing apps:
-        1. `SubscriptDraw` [file extension = `.ss1-drawing`] simple drawing only files
-        2. `SubscriptComposition` [file extension = `.ss1-composition`] multiple drawings organized in a hierarchal manner, it's the notebook version of `SubscriptDraw`, but limited to a single page.
-        3. There is also a notebook version of Subscript that maps to multiple HTML pages but it's yet to integrated with the compiler.
-- `./subscript-compiler`
-    - The compiler implementation for the subscript markup language (i.e. `.ss` files). Can be used directly, or indirectly in an automated manner VIA the `subscript` build tool.
-- `./ss-language-server`
-    + Dev tools/plugins for your text-editor
-        - `./ss-language-server/vscode-subscript-markup-language`
-            + Basic syntax highlighting for `.ss` files.
-        - `./ss-language-server/vscode-subscript-autocomplete`
-            + Basic autocomplete for `.ss` files.
-        - Eventually there will be a rust language server that uses the compiler for analysis. But for now, the rust project (`ss-language-server`) is currently unimplemented, since `vscode-subscript-markup-language` and `vscode-subscript-autocomplete` works well enough for an MVP... 
-- `./subscript`: an opinionated build tool. 
-- `./example-project`: Example project showcasing a subscript project using the `subscript-project` toolchain.
-- `./format-ss-drawing`: internal (used by `subscript-compiler`)
-    + Parser for `.ss1-drawing` and `.ss1-composition` files and SVG compiler for each format respectively. 
 
 ## Supported Compilation Targets/Formats
 
@@ -108,8 +90,32 @@ Regarding PDF support, there are multiple options to chose from
 
 # Development
 
+
+## Overview 
+
+- `./apps/SSIOS`
+    + iPad freeform drawing apps:
+        1. `SubscriptDraw` [file extension = `.ss1-drawing`] simple drawing only files
+        2. `SubscriptComposition` [file extension = `.ss1-composition`] multiple drawings organized in a hierarchal manner, it's the notebook version of `SubscriptDraw`, but limited to a single page.
+        3. There is also a notebook version of Subscript that maps to multiple HTML pages but it's yet to integrated with the compiler.
+- `./subscript-compiler`
+    - The compiler implementation for the subscript markup language (i.e. `.ss` files). Can be used directly, or indirectly in an automated manner VIA the `subscript` build tool.
+- `./ss-language-server`
+    + Dev tools/plugins for your text-editor
+        - `./ss-language-server/vscode-subscript-markup-language`
+            + Basic syntax highlighting for `.ss` files.
+        - `./ss-language-server/vscode-subscript-autocomplete`
+            + Basic autocomplete for `.ss` files.
+        - Eventually there will be a rust language server that uses the compiler for analysis. But for now, the rust project (`ss-language-server`) is currently unimplemented, since `vscode-subscript-markup-language` and `vscode-subscript-autocomplete` works well enough for an MVP... 
+- `./subscript`: an opinionated build tool. 
+- `./example-project`: Example project showcasing a subscript project using the `subscript` toolchain.
+- `./format-ss-drawing`: internal (used by `subscript-compiler`)
+    + Parser for `.ss1-drawing` and `.ss1-composition` files and SVG compiler for each format respectively. 
+
+
 ## Issues 
 
-I'm having a hard time laying out drawings in a compact manner on the right, as opposed to the HTML target on the left:
+Regarding the following image:
+- I'm having a hard time laying out drawings in a compact manner on the right (i.e. for the PDF target), as opposed to the HTML target on the left. For some reason LaTeX really wants to display drawings on it's own page. I’ve tried tons of StackOverflow snippets and have yet to find a solution… 
 
 ![Include syntax example](assets/preview-images/latex-issue.jpg)
