@@ -41,6 +41,12 @@ Currently being reimplemented to better handle multi-page and nested (hierarchic
 This was initially motivated by the ungodly mess that happened when I tried to color-code a complex bit of LaTeX math, where the resulting markup thereafter was incredibly hard to read... What I wanted was something akin to
 ![Where cmd syntax example](assets/preview-images/where-cmd-syntax-example-2.png)
 
+#### **Update** 
+
+**WARNING**: I forgot to include ‘;’ at the end of each rewrite rule! Due to recent changes to the parser. It should instead look like this:
+
+![Where macro update](assets/preview-images/where-macro-updated.png)
+
 
 ### Integration with hand drawn notes VIA your iPad and Apple Pencil (With Dark/Light Mode Support!)
 
