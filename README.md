@@ -66,6 +66,11 @@ Notes:
 - This interface is **unstable and likely to change** and may currently be broken. 
 - At the time of this writing, drawing rewrite rules are only supported for `.ss1-drawing` files, since `.ss1-composition` files are more complicated and I haven't worked out how the interface should work.  
 
+#### IOS freeform/drawing UI Overview
+
+
+![IOS freeform/drawing UI Overview](assets/preview-images/ios-editor-ui-info.jpeg)
+
 
 ## Lots more planned! 
 

@@ -282,120 +282,120 @@ extension SS1 {
         typealias PrimaryColorSchemeMode = SS1.RuntimeDataModel.Pen.PrimaryColorSchemeMode
         
         @Published var currentToolType: CurrentToolType = CurrentToolType.pen
-        @Published var pens: Array<Pen> = defaultPenList()
-//        @Published var pens: Array<Pen> = [
-//            // DEFAULT THIN PENS
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
-//                    ),
-//                    size: Pen.defaultThinPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThinPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThinPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThinPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThinPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThinPenSize
-//                )
-//            ),
-//            // DEFAULT THICK PENS
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
-//                    ),
-//                    size: Pen.defaultThickPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThickPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThickPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThickPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThickPenSize
-//                )
-//            ),
-//            Pen(
-//                options: Stroke.Options(
-//                    color: ColorMap(
-//                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
-//                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1))
-//                    ),
-//                    size: Pen.defaultThickPenSize
-//                )
-//            ),
-//            // OTHER
-//        ]
+//        @Published var pens: Array<Pen> = defaultPenList()
+        @Published var pens: Array<Pen> = [
+            // DEFAULT THIN PENS
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
+                    ),
+                    size: Pen.defaultThinPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
+                    ),
+                    size: Pen.defaultThinPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
+                    ),
+                    size: Pen.defaultThinPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
+                    ),
+                    size: Pen.defaultThinPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1))
+                    ),
+                    size: Pen.defaultThinPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1))
+                    ),
+                    size: Pen.defaultThinPenSize
+                )
+            ),
+            // DEFAULT THICK PENS
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
+                    ),
+                    size: Pen.defaultThickPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
+                    ),
+                    size: Pen.defaultThickPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
+                    ),
+                    size: Pen.defaultThickPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
+                    ),
+                    size: Pen.defaultThickPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1))
+                    ),
+                    size: Pen.defaultThickPenSize
+                )
+            ),
+            Pen(
+                options: Stroke.Options(
+                    color: ColorMap(
+                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
+                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1))
+                    ),
+                    size: Pen.defaultThickPenSize
+                )
+            ),
+            // OTHER
+        ]
         
         @Published var templatePen: Pen = Pen(
             options: SS1.Stroke.Options(),
