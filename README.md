@@ -56,7 +56,7 @@ Safe your files to e.g. `iCloud Drive` and seamlessly include such in your notes
 
 - Freeform files are essentially vector objects and are therefore resolution independent.
 - The strokes are rendered into relatively beautiful SVG paths (compared to other implementations out there was used ugly fixed diameter strokes with hard cutoffs).
-- NOTE: It's not yet available on the App Store since dev licenses are expensive (but you don't need a dev license to compile and run your own iPad). Although if this project gains traction with users, I may eventually publish such to the app store... 
+- NOTE: It's not yet available on the App Store since dev licenses are expensive (but you don't need a dev license to compile and run on your own iPad). Although if this project gains traction with users, I may eventually publish such to the app store... 
 
 Each freeform file can contain multiple drawing entries, which can be manipulated & formatted like so:
 
@@ -90,6 +90,13 @@ Regarding PDF support, there are multiple options to chose from
 
 # Development
 
+I’ve overhauled the parser (didn’t realize how bad the previous implementation was), and the core compiler data models, with a unified interface for command declarations, where commands can be implemented and made available in a very fined tuned manner.
+
+So you can have commands that are available based on parent command scope, block/inline mode, or content mode (i.e. text (the default) or the multitude “symbolic modes” (such as math, chemistry, both, etc.)). For instance, LaTeX technically has two different fraction macros, where one is for block display modes and the other for inline fractions (can’t remember what it’s called) , with the interface I have: you can use the came command identifier for both, and the compiler will automatically select the appropriate version.
+
+**Although at the time of this writing, not all information is propagated during relevant AST traversals.**
+
+Defining/declaring SS commands in rust is somewhat awkward, and perhaps could be better, but the real innovation here (as opposed to previous implementations) is that all commands are defined in a manner that (in theory) is easily fed to autocomplete engines. 
 
 ## Overview 
 
