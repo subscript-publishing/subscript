@@ -33,7 +33,7 @@ Currently being reimplemented to better handle multi-page and nested (hierarchic
 - The parser is based on the `unicode-segmentation` crate (which identifies Grapheme Cluster, Word and Sentence boundaries according to Unicode Standard Annex #29 rules).
 - Unicode beautification of characters such as mapping `"..."` → `“…”`
 
-### Local (anonymous) rewrite rules (VIA the `\!where` macro)
+### Local (anonymous) rewrite rules (VIA the `\where!` macro)
 
 ![Where cmd syntax example](assets/preview-images/where-cmd-syntax-example.png)
 
