@@ -68,13 +68,14 @@ Notes:
 
 #### IOS freeform/drawing UI Overview
 
+![IOS freeform/drawing UI Overview](assets/preview-images/ios-editor-ui-info.jpeg)
+
 Regarding the pen list:
 - `Foreground` pens point down
 - `Background` pens point up
 - The `Foreground`/`Background` feature allows you to underline and highlight things and have such highlights under ‘underneath’ foreground strokes (it just looks nicer). 
 
 
-![IOS freeform/drawing UI Overview](assets/preview-images/ios-editor-ui-info.jpeg)
 
 
 ## Lots more planned! 
