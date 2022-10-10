@@ -73,7 +73,7 @@ Notes:
 Regarding the pen list:
 - `Foreground` pens point down
 - `Background` pens point up
-- The `Foreground`/`Background` feature allows you to underline and highlight things and have such highlights under ‘underneath’ foreground strokes (it just looks nicer). 
+- The `Foreground`/`Background` feature allows you to underline and highlight things and have such highlights render ‘underneath’ foreground strokes (it just looks nicer). 
 
 #### Page Layout Editor Overview
 > This feature is specific to the ‘SubscriptComposition’ app.
