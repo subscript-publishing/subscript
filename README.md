@@ -1,4 +1,5 @@
 # Welcome to the SubScript Note-Taking Tools
+> Behold the culmination of a failing school grades. Been too obsessed with this project for some reason… Next semester should be great though with the perfect tools that conform to my preferred note-taking workflow, from beautifully typesetted (but relatively time consuming) LaTeX math and other markup, to rapid hand drawn notes when time constrained —**all in one** and seamlessly intermixed.
 
 ## Features
 
