@@ -7,7 +7,7 @@
 
 - Based on HTML tags with LaTeX-like syntax.
 - Compile your notes to HTML webpages, or PDF files (WIP).
-- Seamlessly intermix markup with hand drawn content VIA the Subscript Freehand Tools (iPad only).
+- Seamlessly intermix markup with hand drawn content VIA the Subscript Freeform Tools (iPad only).
 - Seamless dark/light mode support throughout all subscript tools. 
 
 #### Math Support 
