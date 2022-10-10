@@ -255,11 +255,11 @@ extension SS1 {
             var defaultLeadingMargin: CGFloat {
                 switch self {
                 case .h1: return 0
-                case .h2: return 20
-                case .h3: return 30
-                case .h4: return 40
-                case .h5: return 50
-                case .h6: return 60
+                case .h2: return 30
+                case .h3: return 60
+                case .h4: return 90
+                case .h5: return 100
+                case .h6: return 110
                 }
             }
             var decremented: HeadingType {

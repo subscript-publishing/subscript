@@ -492,11 +492,11 @@ class DrawingRendererView: UIView {
             size: CGSize,
             runtimeModel: SS1.RuntimeDataModel,
             drawingPaper: SS1.DrawingDataModel
-        ) -> CGImage {
+        ) -> Optional<CGImage> {
             autoreleasepool {
                 let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
                 let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-                let context: CGContext = CGContext(
+                let context: Optional<CGContext> = CGContext(
                     data: nil,
                     width: Int(size.width),
                     height: Int(size.height),
@@ -504,16 +504,19 @@ class DrawingRendererView: UIView {
                     bytesPerRow: 0,
                     space: colorSpace,
                     bitmapInfo: bitmapInfo.rawValue
-                )!
-                context.setAllowsAntialiasing(true)
-                DrawingView.renderToCGContext(
-                    displayMode: displayMode,
-                    context: context,
-                    runtimeModel: runtimeModel,
-                    drawingPaper: drawingPaper,
-                    size: size
                 )
-                return context.makeImage()!
+                if case let .some(context) = context {
+                    context.setAllowsAntialiasing(true)
+                    DrawingView.renderToCGContext(
+                        displayMode: displayMode,
+                        context: context,
+                        runtimeModel: runtimeModel,
+                        drawingPaper: drawingPaper,
+                        size: size
+                    )
+                    return context.makeImage()!
+                }
+                return .none
             }
         }
     }
@@ -809,35 +812,46 @@ extension SS1.Drawing {
         @StateObject private var runtimeModel = SS1.RuntimeDataModel()
         @ObservedObject var canvasModel: SS1.CanvasDataModel
         @Environment(\.colorScheme) private var colorScheme
-        
+        private func renderDrawings(size: CGSize, ix: Int) -> Optional<(CGImage, CGImage)> {
+            let height = (canvasModel.entries[ix].height - 50) * 1.5
+            let width = size.width * 1.5
+            let rect = CGRect(x: 0, y: 0, width: width, height: height)
+            let darkCgImage: CGImage? = DrawingRendererView.DrawingView.computeCGImage(
+                displayMode: .dark,
+                size: rect.size,
+                runtimeModel: runtimeModel,
+                drawingPaper: canvasModel.entries[ix]
+            )
+            let lightCgImage: CGImage? = DrawingRendererView.DrawingView.computeCGImage(
+                displayMode: .light,
+                size: rect.size,
+                runtimeModel: runtimeModel,
+                drawingPaper: canvasModel.entries[ix]
+            )
+            if case let .some(darkCgImage) = darkCgImage {
+                if case let .some(lightCgImage) = lightCgImage {
+                    return .some((darkCgImage, lightCgImage))
+                }
+            }
+            return .none
+        }
         var body: some View {
             VStack(alignment: .center, spacing: 0) {
                 ForEach(Array(canvasModel.entries.enumerated()), id: \.1.id) {(ix, _) in
                     GeometryReader { geo in
-                        let height = (canvasModel.entries[ix].height - 50) * 1.5
-                        let width = geo.size.width * 1.5
-                        let rect = CGRect(x: 0, y: 0, width: width, height: height)
-                        let darkCgImage: CGImage = DrawingRendererView.DrawingView.computeCGImage(
-                            displayMode: .dark,
-                            size: rect.size,
-                            runtimeModel: runtimeModel,
-                            drawingPaper: canvasModel.entries[ix]
-                        )
-                        let lightCgImage: CGImage = DrawingRendererView.DrawingView.computeCGImage(
-                            displayMode: .light,
-                            size: rect.size,
-                            runtimeModel: runtimeModel,
-                            drawingPaper: canvasModel.entries[ix]
-                        )
-                        if colorScheme == .dark {
-                            Image(decorative: darkCgImage, scale: 1.5, orientation: Image.Orientation.downMirrored).resizable()
-                                .foregroundColor(Color.clear)
+                        if case let .some((darkCgImage, lightCgImage)) = self.renderDrawings(size: geo.size, ix: ix) {
+                            if colorScheme == .dark {
+                                Image(decorative: darkCgImage, scale: 1.5, orientation: Image.Orientation.downMirrored).resizable()
+                                    .foregroundColor(Color.clear)
+                            } else {
+                                Image(decorative: lightCgImage, scale: 1.5, orientation: Image.Orientation.downMirrored).resizable()
+                                    .foregroundColor(Color.clear)
+                            }
                         } else {
-                            Image(decorative: lightCgImage, scale: 1.5, orientation: Image.Orientation.downMirrored).resizable()
-                                .foregroundColor(Color.clear)
+                            Text("Failed to Render Drawing")
                         }
                     }
-                    .frame(height: canvasModel.entries[ix].height - 50)
+                    .frame(height: max(canvasModel.entries[ix].height - 50, 100))
                 }
             }
         }
