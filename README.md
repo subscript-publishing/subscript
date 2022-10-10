@@ -66,7 +66,7 @@ Notes:
 - This interface is **unstable and likely to change** and may currently be broken. 
 - At the time of this writing, drawing rewrite rules are only supported for `.ss1-drawing` files, since `.ss1-composition` files are more complicated and I haven't worked out how the interface should work.  
 
-#### Drawing Editor (same for all apps)
+#### Drawing Editor Overview (same for all apps)
 
 ![IOS freeform/drawing UI Overview](assets/preview-images/ios-editor-ui-info.jpeg)
 
@@ -75,7 +75,8 @@ Regarding the pen list:
 - `Background` pens point up
 - The `Foreground`/`Background` feature allows you to underline and highlight things and have such highlights under ‘underneath’ foreground strokes (it just looks nicer). 
 
-#### ‘SubscriptComposition’ Page Layout Editor 
+#### Page Layout Editor Overview
+> This feature is specific to the ‘SubscriptComposition’ app.
 
 ![IOS freeform/drawing UI Overview](assets/preview-images/ss-composition-ios-ui-info.jpeg)
 
