@@ -218,11 +218,11 @@ impl Default for CommandDeclarations {
 /// `SemanticScope` is used for storing environment information during AST traversals. 
 #[derive(Debug, Clone)]
 pub struct SemanticScope {
+    pub cmd_decls: CommandDeclarations,
     /// A list of parent command names that a given node is located under.
     /// E.g. given `\note{\p{\x}}`
     /// * the `scope` of `\p` is `["\\note"]`.
     /// * the `scope` of `\x` is `["\\note", "\\p"]`.
-    pub cmd_decls: CommandDeclarations,
     pub scope: Vec<Ident>,
     pub content_mode: ContentMode,
     pub layout_mode: LayoutMode,
