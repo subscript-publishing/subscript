@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use either::{Either, Either::Left, Either::Right};
-use super::ast::Node;
+use super::ast_data::Node;
+
 
 pub fn sep_by(nodes: &[Node], sep: impl Fn(&Node) -> bool) -> Vec<Vec<&Node>> {
     nodes

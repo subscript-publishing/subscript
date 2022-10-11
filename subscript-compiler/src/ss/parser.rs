@@ -9,12 +9,12 @@ use std::{vec, panic};
 use itertools::Itertools;
 use serde::{Serialize, Deserialize};
 use unicode_segmentation::UnicodeSegmentation;
-use crate::cmds::data::CompilerEnv;
+use crate::ss::SemanticScope;
 
 
-// ////////////////////////////////////////////////////////////////////////////
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // IDENTIFIERS
-// ////////////////////////////////////////////////////////////////////////////
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 
 /// Unlike old implementations, the new SubScript parser doesn’t remove `\`
@@ -32,9 +32,9 @@ use crate::cmds::data::CompilerEnv;
 /// 
 /// E.g.
 /// ```
-/// use subscript_data::subscript::parser::Ident;
-/// assert!(Ident::from("name").is_none());
-/// assert!(Ident::from("\\name").is_some());
+/// use subscript_compiler::ss::parser::Ident;
+/// assert!(Ident::from("name").is_err());
+/// assert!(Ident::from("\\name").is_ok());
 /// ```
 #[derive(Debug, Clone, PartialEq, Hash, Eq)]
 pub struct Ident(String);
@@ -42,9 +42,9 @@ pub struct Ident(String);
 impl Ident {
     /// For consistency, all identifiers must start with `\`, otherwise `None` is returned.
     /// ```
-    /// use subscript_data::subscript::parser::Ident;
-    /// assert!(Ident::from("name").is_none());
-    /// assert!(Ident::from("\\name").is_some());
+    /// use subscript_compiler::ss::parser::Ident;
+    /// assert!(Ident::from("name").is_err());
+    /// assert!(Ident::from("\\name").is_ok());
     /// ```
     /// When I initially wrote this in swift, I repeatedly found myself
     /// forgetting to prefix identifiers with `\` and would run into bugs
@@ -118,9 +118,9 @@ impl<T> PartialEq<T> for Ident where T: AsRef<str> {
     }
 }
 
-// ////////////////////////////////////////////////////////////////////////////
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // COMMON AST RELATED DATA TYPES
-// ////////////////////////////////////////////////////////////////////////////
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -148,9 +148,9 @@ struct Quotation {
     pub children: Vec<ParserAst>,
 }
 
-// ////////////////////////////////////////////////////////////////////////////
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // INDEXING DATA TYPES
-// ////////////////////////////////////////////////////////////////////////////
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 #[derive(Debug, Clone, Copy, PartialEq, Hash, Serialize, Deserialize)]
 pub struct CharIndex {
@@ -196,23 +196,33 @@ impl CharRange {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Ann<T> {
     pub range: Option<CharRange>,
     pub value: T,
 }
 
-impl<T: std::cmp::PartialEq> std::cmp::PartialEq for Ann<T> {
-    fn eq(&self, other: &Self) -> bool {
-        self.value == other.value
-    }
-}
+// impl<T: PartialEq> Ann<T> {
+//     pub fn strictly_eq_to(&self, other: &Ann<T>) -> bool {
+//         self.value == other.value &&
+//         self.range == other.range
+//     }
+//     pub fn syntactically_eq_to(&self, other: &Ann<T>) -> bool {
+//         self.value == other.value
+//     }
+// }
 
-impl Ann<String> {
-    pub fn equal_to(&self, value: &str) -> bool {
-        &self.value == value
-    }
-}
+// impl<T: std::cmp::PartialEq> std::cmp::PartialEq for Ann<T> {
+//     fn eq(&self, other: &Self) -> bool {
+//         self.value == other.value
+//     }
+// }
+
+// impl Ann<String> {
+//     pub fn equal_to(&self, value: &str) -> bool {
+//         &self.value == value
+//     }
+// }
 
 impl<T> Ann<T> {
     pub fn unannotated(data: T) -> Self {
@@ -289,24 +299,24 @@ enum ParserAst {
 }
 
 impl ParserAst {
-    fn to_node(self) -> crate::subscript::ast::Node {
-        use crate::subscript::ast;
+    fn to_node(self) -> crate::ss::ast_data::Node {
+        use crate::ss::ast_data;
         match self {
             ParserAst::Text(node) => {
-                ast::Node::Text(node)
+                ast_data::Node::Text(node)
             }
             ParserAst::Ident(node) => {
-                ast::Node::Ident(node)
+                ast_data::Node::Ident(node)
             }
             ParserAst::Symbol(node) => {
-                ast::Node::Symbol(node)
+                ast_data::Node::Symbol(node)
             }
             ParserAst::Bracket(node) => {
                 let children = node.children
                     .into_iter()
                     .map(ParserAst::to_node)
                     .collect_vec();
-                ast::Node::Bracket(Ann::unannotated(ast::Bracket{
+                ast_data::Node::Bracket(Ann::unannotated(ast_data::Bracket{
                     open: node.open,
                     close: node.close,
                     children,
@@ -317,14 +327,14 @@ impl ParserAst {
                     .into_iter()
                     .map(ParserAst::to_node)
                     .collect_vec();
-                ast::Node::Quotation(Ann::unannotated(ast::Quotation{
+                ast_data::Node::Quotation(Ann::unannotated(ast_data::Quotation{
                     open: node.open,
                     close: node.close,
                     children,
                 }))
             }
-            ParserAst::InvalidToken(tk) => ast::Node::InvalidToken(tk),
-            ParserAst::Comment(text) => ast::Node::Fragment(vec![]),
+            ParserAst::InvalidToken(tk) => ast_data::Node::InvalidToken(tk),
+            ParserAst::Comment(text) => ast_data::Node::Fragment(vec![]),
         }
     }
 }
@@ -718,7 +728,7 @@ pub enum ParserError {
 }
 
 fn parse_words<'a>(
-    env: &CompilerEnv,
+    scope: &SemanticScope,
     words: &mut VecDeque<Word<'a>>,
     parent: Option<(OpenWord<'a>)>,
 ) -> (Vec<ParserAst>, Option<CloseWord<'a>>) {
@@ -772,7 +782,7 @@ fn parse_words<'a>(
             }
             (_, WordType::OpenBracket("{")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(env, words, Some(current.clone()));
+                let (children, close) = parse_words(scope, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Bracket("{"), Some(CloseType::Bracket("}"))) => {
@@ -796,7 +806,7 @@ fn parse_words<'a>(
             }
             (_, WordType::OpenBracket("[")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(env, words, Some(current.clone()));
+                let (children, close) = parse_words(scope, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Bracket("["), Some(CloseType::Bracket("]"))) => {
@@ -820,7 +830,7 @@ fn parse_words<'a>(
             }
             (_, WordType::OpenBracket("(")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(env, words, Some(current.clone()));
+                let (children, close) = parse_words(scope, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Bracket("("), Some(CloseType::Bracket(")"))) => {
@@ -844,7 +854,7 @@ fn parse_words<'a>(
             }
             (_, WordType::Quotation("\"")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(env, words, Some(current.clone()));
+                let (children, close) = parse_words(scope, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Quotation("\""), Some(CloseType::Quotation("\""))) => {
@@ -868,7 +878,7 @@ fn parse_words<'a>(
             }
             (_, WordType::Quotation("'")) => {
                 let open_ty = current.to_open_type().unwrap();
-                let (children, close) = parse_words(env, words, Some(current.clone()));
+                let (children, close) = parse_words(scope, words, Some(current.clone()));
                 let close_ty = close.clone().and_then(|close| close.to_close_type());
                 match ((open_ty, close_ty)) {
                     (OpenType::Quotation("'"), Some(CloseType::Quotation("'"))) => {
@@ -911,24 +921,90 @@ fn parse_words<'a>(
     (nodes, None)
 }
 
-pub fn parse_source<T: AsRef<str>>(env: &CompilerEnv, source: T) -> crate::subscript::ast::Node {
+
+pub fn parse_source<T: AsRef<str>>(scope: &SemanticScope, source: T) -> crate::ss::ast_data::Node {
     let mut words = init_words(source.as_ref());
-    let (ast, res) = parse_words(env, &mut words, None);
+    let (ast, res) = parse_words(scope, &mut words, None);
     assert!(res.is_none());
     let ast = ast
         .into_iter()
         .map(ParserAst::to_node)
         .collect_vec();
-    crate::subscript::ast::Node::Fragment(ast)
+    crate::ss::ast_data::Node::Fragment(ast).defragment_node_tree()
 }
 
-pub fn dev() {
-    let source = std::fs::read_to_string("source.ss").unwrap();
-    let env = CompilerEnv {
-        file_path: PathBuf::from("source.ss")
-    };
-    let mut words = init_words(&source);
-    let (ast, res) = parse_words(&env, &mut words, None);
-    assert!(res.is_none());
-    println!("{:#?}", ast);
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ss::ast_traits::StrictlyEq;
+    
+    #[test]
+    fn parse_ident() {
+        let source = "\\name";
+        let scope = SemanticScope::test_mode_empty();
+        let parsed = parse_source(&scope, source);
+        let parsed_ident = parsed.into_ident().expect("should be an `Ident` node");
+        let expected_ident = Ann {
+            range: Some(CharRange {
+                start: CharIndex {byte_index: 0, char_index: 0},
+                end: CharIndex {byte_index: 5, char_index: 5}
+            }),
+            value: Ident::from("\\name").unwrap()
+        };
+        assert!(parsed_ident.strictly_eq_to(&expected_ident));
+    }
+
+    #[test]
+    pub fn parse_small_snippet() {
+        use crate::ss::ast_traits::{StrictlyEq, SyntacticallyEq};
+        use crate::ss::{Node, Ann, Ident, CharRange, CharIndex, Bracket};
+        let source = "\\name{\\test}";
+        let scope = SemanticScope::test_mode_empty();
+        let parsed = parse_source(&scope, source);
+        println!("{:#?}", parsed);
+        let expected = Node::Fragment(vec![
+            Node::Ident(Ann {
+                range: Some(
+                    CharRange {
+                        start: CharIndex {byte_index: 0, char_index: 0},
+                        end: CharIndex {byte_index: 5, char_index: 5},
+                    },
+                ),
+                value: Ident::from("\\name").unwrap(),
+            }),
+            Node::Bracket(Ann {
+                range: None,
+                value: Bracket {
+                    open: Some(Ann {
+                        range: Some(CharRange {
+                            start: CharIndex {byte_index: 5, char_index: 5},
+                            end: CharIndex {byte_index: 6, char_index: 6},
+                        }),
+                        value: "{".to_owned(),
+                    }),
+                    close: Some(Ann {
+                        range: Some(
+                            CharRange {
+                                start: CharIndex {byte_index: 11, char_index: 11},
+                                end: CharIndex {byte_index: 12, char_index: 12},
+                            },
+                        ),
+                        value: "}".to_owned(),
+                    }),
+                    children: vec![
+                        Node::Ident(Ann {
+                            range: Some(CharRange {
+                                start: CharIndex {byte_index: 6, char_index: 6},
+                                end: CharIndex {byte_index: 11, char_index: 11},
+                            }),
+                            value: Ident::from("\\test").unwrap(),
+                        }),
+                    ],
+                },
+            }),
+        ]);
+        assert!(parsed.strictly_eq_to(&expected));
+    }
 }
+
+

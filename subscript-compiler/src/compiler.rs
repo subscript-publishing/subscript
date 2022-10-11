@@ -1,62 +1,59 @@
 use std::{fmt::Display, path::{PathBuf, Path}, collections::HashMap};
 
-use crate::subscript::ast::*;
-use crate::cmds::CommandDeclarations;
-pub use crate::cmds::data::CompilerEnv;
+use crate::ss::SemanticScope;
 
 pub mod low_level_api {
     use std::path::Path;
-
     use super::*;
     #[derive(Debug, Clone)]
     pub enum CompilerError {
-        FileNotFound {file_path: PathBuf}
+        NoFilePath,
+        FileNotFound {file_path: PathBuf},
     }
-
     impl Display for CompilerError {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             match self {
                 CompilerError::FileNotFound { file_path } => {
                     write!(f, "File not found: {:?}", file_path)
                 }
+                CompilerError::NoFilePath => {
+                    write!(f, "You didn't define a file path and tried to use a compiler feature that expected such.")
+                }
             }
         }
     }
-
-    pub fn parse_file<T: AsRef<Path>>(file_path: T) -> Result<Node, CompilerError> {
-        let file_path = file_path.as_ref();
-        let env = CompilerEnv {
-            file_path: file_path.to_path_buf(),
-        };
-        if !file_path.exists() {
-            return Err(CompilerError::FileNotFound { file_path: file_path.to_owned() });
+    /// Make sure that `Scope::file_path` is set to the file you want to parse.
+    pub fn parse_file(scope: &SemanticScope) -> Result<crate::ss::Node, CompilerError> {
+        if let Some(file_path) = scope.file_path.clone() {
+            if !file_path.exists() {
+                return Err(CompilerError::FileNotFound { file_path: file_path.to_owned() });
+            }
+            let source = std::fs::read_to_string(file_path).unwrap();
+            let node = crate::ss::parser::parse_source(scope, source).defragment_node_tree();
+            return Ok(node)
         }
-        let source = std::fs::read_to_string(file_path).unwrap();
-        let node = crate::subscript::parser::parse_source(&env, source).defragment_node_tree();
-        Ok(node)
+        Err(CompilerError::NoFilePath)
     }
 
-    pub fn process_commands(env: &CompilerEnv, ast: Node) -> Node {
-        // let cmds = crate::cmds::all_commands();
-        let scope = crate::cmds::data::SemanticScope::default();
-        let node = ast.apply_commands(env, &scope);
+    /// Make sure that `Scope::file_path` is set to the file you want to parse.
+    pub fn process_commands(scope: &SemanticScope, ast: crate::ss::Node) -> crate::ss::Node {
+        let node = ast.apply_commands(&scope);
         node
     }
-
-    pub fn parse_process<T: AsRef<Path>>(file_path: T) -> Result<Node, CompilerError> {
-        let file_path = file_path.as_ref();
-        let ref env = CompilerEnv {file_path: file_path.to_owned()};
-        let nodes = parse_file(&env.file_path)?;
-        let nodes = process_commands(&env, nodes);
+    
+    /// Make sure that `Scope::file_path` is set to the file you want to parse.
+    pub fn parse_process(scope: &SemanticScope) -> Result<crate::ss::Node, CompilerError> {
+        let nodes = parse_file(&scope)?;
+        let nodes = process_commands(&scope, nodes);
         Ok(nodes)
     }
 }
 
 
-pub fn compile_to_html<T: AsRef<Path>>(src_file_path: T) -> Result<String, low_level_api::CompilerError> {
-    let ss_ast = low_level_api::parse_process(src_file_path.as_ref())?;
-    let mut html_cg_env = crate::codegen::HtmlCodegenEnv::default();
-    let scope = SemanticScope::default();
+pub fn compile_to_html(scope: &SemanticScope) -> Result<String, low_level_api::CompilerError> {
+    let ss_ast = low_level_api::parse_process(scope)?;
+    let mut html_cg_env = crate::ss::HtmlCodegenEnv::from_scope(scope);
+    let html_ast = ss_ast.to_html(&mut html_cg_env, scope);
     let script = {
         if !html_cg_env.math_env.entries.is_empty() {
             Some(crate::html::Node::Element(crate::html::Element{
@@ -70,7 +67,6 @@ pub fn compile_to_html<T: AsRef<Path>>(src_file_path: T) -> Result<String, low_l
             None
         }
     };
-    let html_ast = ss_ast.to_html(&mut html_cg_env, &scope);
     let html_ast = crate::html::Node::Fragment(vec![
         html_ast,
         script.unwrap_or(crate::html::Node::Fragment(Vec::new())),
