@@ -76,7 +76,12 @@ impl ProjectSettings {
             .map(|x| x.into_path())
             .collect::<Vec<_>>();
         for src_file_path in index_file_paths {
-            let html_res = subscript_compiler::compiler::compile_to_html(&src_file_path).unwrap();
+            let subscript_std = subscript_compiler::ss_std::all_commands_list();
+            let scope = subscript_compiler::ss::SemanticScope::new(
+                &src_file_path,
+                subscript_std,
+            );
+            let html_res = subscript_compiler::compiler::compile_to_html(&scope).unwrap();
             let out_path = self.to_output_file_path(&src_file_path, "html");
             assert!(out_path.starts_with(&self.manifest.project.locations.output));
             assert!(out_path.starts_with(&self.project_dir));
