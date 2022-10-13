@@ -203,10 +203,30 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .finish();
+    let chem = CmdDeclBuilder::new(Ident::from("\\chem").unwrap())
+        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(default_arg1_type())
+        .to_html(to_html! {
+            fn (env, scope, cmd) {
+                let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(scope);
+                let latex_code = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(&mut latex_env, scope))
+                    // .map(|x| x.trim().to_string())
+                    .collect::<String>();
+                let latex_code = format!("\\ce{{{latex_code}}}");
+                let is_unique = !scope.in_heading_scope();
+                let html_node = env.math_env.add_inline_entry(latex_code, is_unique);
+                html_node
+            }
+        })
+        .finish();
     vec![
         inline_math,
         math_block,
         equation,
+        chem,
     ]
 }
 
