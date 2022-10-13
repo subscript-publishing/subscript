@@ -89,6 +89,9 @@ Furthermore, this rule is recursively applied in a bottom-up fashion when files 
 
 Currently being reimplemented to better handle multi-page and nested (hierarchical) page layouts.
 
+Currently looks like this:
+![TOC example](assets/preview-images/toc-preview.png)
+
 
 ### Unicode Support and Typography
 - The parser is based on the `unicode-segmentation` crate (which identifies Grapheme Cluster, Word and Sentence boundaries according to Unicode Standard Annex #29 rules).
