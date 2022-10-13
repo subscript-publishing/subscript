@@ -17,6 +17,8 @@ But this doesn't cover everything, especially on the LaTeX math/chem side.
 
 Likewise, be sure to check out the `./example-project` [over here](https://github.com/subscript-publishing/subscript/tree/master/example-project) as well and it's sub-pages.  
 
+When Subscript nears it's MPV, I'll replace the hardcoded stuff in `subscript/src/main.rs` with a CLI interface. 
+
 
 ## Features
 
