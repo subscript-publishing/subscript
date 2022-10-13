@@ -1,4 +1,5 @@
 //! All Subscript STEM related notation typesetting. 
+use crate::html;
 use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
 use crate::ss::SymbolicModeType;
@@ -70,11 +71,11 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let is_unique = !scope.in_heading_scope();
-                let html_node = env.math_env.add_inline_entry(latex_code, is_unique);
-                html_node
+                let mut html_node = env.math_env.add_inline_entry(latex_code, is_unique);
+                html_node.attributes.insert(String::from("data-cmd"), String::from("inline-math"));
+                html::Node::Element(html_node)
             }
         })
         .finish();
@@ -156,13 +157,14 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let latex_code = match preset {
                     Some((open, close)) => format!("{open}{latex_code}{close}"),
                     _ => latex_code
                 };
-                env.math_env.add_block_entry(latex_code, is_unique)
+                let mut html_node = env.math_env.add_block_entry(latex_code, is_unique);
+                html_node.attributes.insert(String::from("data-cmd"), String::from("math"));
+                html::Node::Element(html_node)
             }
         })
         .finish();
@@ -196,10 +198,12 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let latex_code = format!("{start}{latex_code}{end}");
-                env.math_env.add_block_entry(latex_code, is_unique)
+                let mut html_node = env.math_env.add_block_entry(latex_code, is_unique);
+                html_node.attributes.insert(String::from("data-cmd"), String::from("equation"));
+                html::Node::Element(html_node)
+
             }
         })
         .finish();
@@ -213,12 +217,39 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let latex_code = format!("\\ce{{{latex_code}}}");
                 let is_unique = !scope.in_heading_scope();
-                let html_node = env.math_env.add_inline_entry(latex_code, is_unique);
-                html_node
+                let mut html_node = if scope.in_inline_mode() {
+                    env.math_env.add_inline_entry(latex_code, is_unique)
+                } else {
+                    env.math_env.add_block_entry(latex_code, is_unique)
+                };
+                html_node.attributes.insert(String::from("data-cmd"), String::from("chem"));
+                html::Node::Element(html_node)
+            }
+        })
+        .finish();
+    let unit = CmdDeclBuilder::new(Ident::from("\\unit").unwrap())
+        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(default_arg1_type())
+        .to_html(to_html! {
+            fn (env, scope, cmd) {
+                let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(scope);
+                let latex_code = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(&mut latex_env, scope))
+                    .collect::<String>();
+                let latex_code = format!("\\pu{{{latex_code}}}");
+                let is_unique = !scope.in_heading_scope();
+                let mut html_node = if scope.in_inline_mode() {
+                    env.math_env.add_inline_entry(latex_code, is_unique)
+                } else {
+                    env.math_env.add_block_entry(latex_code, is_unique)
+                };
+                html_node.attributes.insert(String::from("data-cmd"), String::from("unit"));
+                html::Node::Element(html_node)
             }
         })
         .finish();
@@ -227,6 +258,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         math_block,
         equation,
         chem,
+        unit,
     ]
 }
 

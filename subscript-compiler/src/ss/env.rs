@@ -129,6 +129,18 @@ impl SemanticScope {
         scope.file_path = None;
         scope
     }
+    pub fn in_inline_mode(&self) -> bool {
+        match self.layout_mode {
+            LayoutMode::Inline => true,
+            _ => false
+        }
+    }
+    pub fn in_block_mode(&self) -> bool {
+        match self.layout_mode {
+            LayoutMode::Block => true,
+            _ => false
+        }
+    }
     /// Use this to normalize file paths relative to the source file.
     pub fn normalize_file_path<T: AsRef<Path>>(&self, path: T) -> Result<PathBuf, ()> {
         if let Some(file_path) = self.file_path.as_ref() {
@@ -271,7 +283,7 @@ impl MathEnv {
         &mut self,
         code: String,
         unique: bool,
-    ) -> crate::html::Node {
+    ) -> crate::html::Element {
         let id = crate::utils::random_str_id();
         let mut attributes: HashMap<String, String> = Default::default();
         if unique {
@@ -282,17 +294,17 @@ impl MathEnv {
         attributes.insert("data-math-node".to_owned(), "inline".to_owned());
         let entry = MathCodeEntry {id, code, mode: LayoutMode::Inline, unique};
         self.entries.push(entry);
-        crate::html::Node::Element(crate::html::Element{
+        crate::html::Element{
             name: String::from("span"),
             attributes,
             children: Vec::new(),
-        })
+        }
     }
     pub fn add_block_entry<'a>(
         &mut self,
         code: String,
         unique: bool,
-    ) -> crate::html::Node {
+    ) -> crate::html::Element {
         let id = crate::utils::random_str_id();
         let mut attributes: HashMap<String, String> = Default::default();
         if unique {
@@ -303,11 +315,11 @@ impl MathEnv {
         attributes.insert("data-math-node".to_owned(), "block".to_owned());
         let entry = MathCodeEntry {id, code, mode: LayoutMode::Block, unique};
         self.entries.push(entry);
-        crate::html::Node::Element(crate::html::Element{
+        crate::html::Element{
             name: String::from("div"),
             attributes,
             children: Vec::new(),
-        })
+        }
     }
     pub fn to_javascript(&self) -> String {
         self.entries
