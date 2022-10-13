@@ -77,6 +77,17 @@ When I update the `\where!` macro to support rewriting attributes, you'll be abl
 
 By default numbered expressions are turned off, because I want a better interface for such than what KaTeX provides.
 
+#### Layout
+
+Things can be broken down into newspaper like columns VIA the `\layout[col=num]` command, for instance,
+![Where labels](assets/preview-images/newpaper-like-layout.png)
+
+By default this also includes breakpoints that can decrement columns as the viewport width decreases until it breaks into single column mode. 
+
+While the `\grid` command gives you access to very fine tuned layout CSS grids:
+
+![Where labels](assets/preview-images/grid-layout.png)
+
 
 ### File Import Support With Relative Headings
 
