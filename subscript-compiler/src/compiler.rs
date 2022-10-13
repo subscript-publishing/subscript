@@ -1,6 +1,6 @@
 use std::{fmt::Display, path::{PathBuf, Path}, collections::HashMap};
 
-use crate::ss::SemanticScope;
+use crate::ss::{SemanticScope, HtmlCodegenEnv};
 
 pub mod low_level_api {
     use std::path::Path;
@@ -50,28 +50,15 @@ pub mod low_level_api {
 }
 
 
-pub fn compile_to_html(scope: &SemanticScope) -> Result<String, low_level_api::CompilerError> {
+
+pub fn compile_to_html(
+    scope: &SemanticScope
+) -> Result<(HtmlCodegenEnv, crate::html::Node), low_level_api::CompilerError> {
     let ss_ast = low_level_api::parse_process(scope)?;
+    // let ss_ast = crate::ss::utils::toc_rewrites(ss_ast, options.base_path, options.output_path);
     let mut html_cg_env = crate::ss::HtmlCodegenEnv::from_scope(scope);
     let html_ast = ss_ast.to_html(&mut html_cg_env, scope);
-    let script = {
-        if !html_cg_env.math_env.entries.is_empty() {
-            Some(crate::html::Node::Element(crate::html::Element{
-                name: String::from("script"),
-                attributes: Default::default(),
-                children: vec![
-                    crate::html::Node::Text(html_cg_env.math_env.to_javascript()),
-                ]
-            }))
-        } else {
-            None
-        }
-    };
-    let html_ast = crate::html::Node::Fragment(vec![
-        html_ast,
-        script.unwrap_or(crate::html::Node::Fragment(Vec::new())),
-    ]);
-    Ok(html_ast.to_html_str())
+    Ok((html_cg_env, html_ast))
 }
 
 

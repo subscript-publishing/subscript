@@ -1,16 +1,26 @@
 
 
-pub fn dev() {
-    // use crate::ss::ast_traits::{StrictlyEq, SyntacticallyEq};
-    // use crate::ss::{Node, Ann, Ident, CharRange, CharIndex, Bracket, SemanticScope, Attributes, CmdCall};
-    // let commands = crate::ss_std::all_commands_list();
-    // let scope = SemanticScope::test_mode_with_cmds(commands);
-    // let source = "\\h1{\\test1 \\test1}\\where!{{\\test1}=>{Text}}";
-    // let parsed = crate::ss::parser::parse_source(&scope, source);
-    // let processed = crate::compiler::low_level_api::process_commands(&scope, parsed);
-    // println!("{processed:#?}");
-}
+// pub fn dev() {
+//     use crate::ss::ast_traits::{StrictlyEq, SyntacticallyEq};
+//     use crate::ss::{Node, Ann, Ident, CharRange, CharIndex, Bracket, SemanticScope, Attributes, CmdCall};
+//     let commands = crate::ss_std::all_commands_list();
+//     let scope = SemanticScope::test_mode_with_cmds(commands);
+//     let source = "\\h1{\\test1 \\test1}\\where!{{\\test1}=>{Text}}";
+//     let parsed = crate::ss::parser::parse_source(&scope, source);
+//     let processed = crate::compiler::low_level_api::process_commands(&scope, parsed);
+//     println!("{processed:#?}");
+// }
 
+// pub fn dev() {
+//     let template_path = "../example-project/template/page.html";
+//     let payload = crate::html::template::TemplatePayload{
+//         content: vec![
+
+//         ]
+//     };
+//     let result = crate::html::template::compile_template_file(template_path, payload);
+//     println!("{result:#?}")
+// }
 
 
 #[cfg(test)]
@@ -21,7 +31,7 @@ mod tests {
     fn where_rewrite_test1() {
         use crate::ss::ast_traits::{StrictlyEq, SyntacticallyEq};
         use crate::ss::{Node, Ann, Ident, CharRange, CharIndex, Bracket, SemanticScope, Attributes, CmdCall};
-        let commands = crate::ss_std::all_commands_list();
+        let commands = crate::ss_v1_std::all_commands_list();
         let scope = SemanticScope::test_mode_with_cmds(commands);
         let source = "\\h1{\\test1_{x}}\\where!{{\\test1_{x}}=>{HelloWorld}}";
         let parsed = crate::ss::parser::parse_source(&scope, source);
@@ -67,7 +77,7 @@ mod tests {
     pub fn where_rewrite_test2() {
         use crate::ss::ast_traits::{StrictlyEq, SyntacticallyEq};
         use crate::ss::{Node, Ann, Ident, CharRange, CharIndex, Bracket, SemanticScope, Attributes, CmdCall};
-        let commands = crate::ss_std::all_commands_list();
+        let commands = crate::ss_v1_std::all_commands_list();
         let scope = SemanticScope::test_mode_with_cmds(commands);
         let source = "\\h1{\\test1-\\test2}\\where!{{\\test1}=>{Hello};{\\test2}=>{World}}";
         let parsed = crate::ss::parser::parse_source(&scope, source);

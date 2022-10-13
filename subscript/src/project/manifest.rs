@@ -1,5 +1,6 @@
 //! See the example-project for an example of the TOML data layout.
-use std::path::{Path, PathBuf};
+use std::{path::{Path, PathBuf}, collections::HashMap};
+use itertools::Itertools;
 use wax::{Glob, Pattern};
 
 #[derive(Debug, Clone)]
@@ -70,28 +71,66 @@ impl ProjectSettings {
         output_path
     }
     pub fn compile_pages(&self) {
+        use subscript_compiler::html::utils::TocPageEntry;
         let file_glob = Glob::new("**/index.{ss}").unwrap();
         let index_file_paths = file_glob.walk(&self.manifest.project.locations.pages)
             .flatten()
             .map(|x| x.into_path())
             .collect::<Vec<_>>();
+        let mut nav_entries: Vec<TocPageEntry> = Default::default();
+        let ref root_path = PathBuf::from("/");
         for src_file_path in index_file_paths {
-            let subscript_std = subscript_compiler::ss_std::all_commands_list();
+            let subscript_std = subscript_compiler::ss_v1_std::all_commands_list();
             let scope = subscript_compiler::ss::SemanticScope::new(
                 &src_file_path,
                 subscript_std,
             );
-            let html_res = subscript_compiler::compiler::compile_to_html(&scope).unwrap();
+            let (html_env, page_html) = subscript_compiler::compiler::compile_to_html(&scope).unwrap();
+            let page_script = subscript_compiler::html::utils::math_env_to_html_script(&html_env.math_env);;
             let out_path = self.to_output_file_path(&src_file_path, "html");
+            let mut toc_page_entry = TocPageEntry{
+                src_path: src_file_path.clone(),
+                out_path: out_path.clone(),
+                math_entries: html_env.math_env.entries
+                    .into_iter()
+                    .filter(|x| !x.unique)
+                    .collect_vec(),
+                li_entries: Default::default(),
+            };
+            let page_html = subscript_compiler::html::utils::toc_rewrites(
+                self.manifest.project.locations.pages.clone(),
+                src_file_path.clone(),
+                page_html,
+                &mut toc_page_entry
+            );
             assert!(out_path.starts_with(&self.manifest.project.locations.output));
             assert!(out_path.starts_with(&self.project_dir));
+            let main = subscript_compiler::html::Node::Element(subscript_compiler::html::Element{
+                name: String::from("main"),
+                attributes: HashMap::default(),
+                children: vec![page_html]
+            });
+            let template_payload = subscript_compiler::html::template::TemplatePayload{
+                content: subscript_compiler::html::Node::Fragment(vec![
+                    toc_page_entry.to_page_toc(root_path),
+                    main,
+                    page_script,
+                ]),
+            };
+            let html = subscript_compiler::html::template::compile_template_file(
+                &self.manifest.project.locations.template,
+                template_payload
+            );
             out_path.parent().map(|dir| {
                 std::fs::create_dir_all(dir).unwrap();
             });
-            std::fs::write(&out_path, html_res).unwrap();
+            nav_entries.push(toc_page_entry);
+            std::fs::write(&out_path, html.to_html_document()).unwrap();
         }
+        
     }
 }
+
 
 #[derive(Debug, Clone)]
 pub enum SettingsError {

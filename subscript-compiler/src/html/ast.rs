@@ -1,5 +1,15 @@
+use std::borrow::BorrowMut;
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::cell::RefCell;
+
+use itertools::Itertools;
+
+impl<T: Into<String>> From<T> for Node {
+    fn from(val: T) -> Self {
+        Node::Text(val.into())
+    }
+}
 
 #[derive(Debug, Clone)]
 pub enum LayoutKind {
@@ -7,9 +17,69 @@ pub enum LayoutKind {
     Inline,
 }
 
-///////////////////////////////////////////////////////////////////////////////
+
+#[derive(Debug, Clone)]
+pub struct TagBuilder {
+    pub name: String,
+    pub attributes: HashMap<String, String>,
+    pub children: Vec<Node>,
+}
+
+impl TagBuilder {
+    pub fn new(tag: impl Into<String>) -> Self {
+        let name = tag.into();
+        TagBuilder {
+            name,
+            attributes: Default::default(),
+            children: Default::default(),
+        }
+    }
+    pub fn with_attr<K, V>(
+        mut self,
+        key: K,
+        value: V
+    ) -> Self where K: Into<String>, V: Into<String> {
+        self.attributes.insert(key.into(), value.into());
+        self
+    }
+    pub fn with_attr_key<K: Into<String>>(mut self, key: K) -> Self {
+        self.attributes.insert(key.into(), String::new());
+        self
+    }
+    pub fn with_id<T: AsRef<str>>(mut self, value: T) -> Self {
+        self.attributes.insert(String::from("id"), value.as_ref().to_string());
+        self
+    }
+    pub fn with_class<T: AsRef<str>>(mut self, name: T) -> Self {
+        if let Some(val) = self.attributes.get_mut("class") {
+            val.push(' ');
+            val.push_str(name.as_ref());
+            return self
+        }
+        self.attributes.insert(String::from("class"), name.as_ref().to_string());
+        self
+    }
+    pub fn with_children<T: Into<Node>>(mut self, children: impl IntoIterator<Item=T>) -> Self {
+        self.children.extend(children.into_iter().map(|x| x.into()));
+        self
+    }
+    pub fn push_child<T: Into<Node>>(mut self, child: T) -> Self {
+        self.children.push(child.into());
+        self
+    }
+    pub fn finalize(self) -> Node {
+        Node::Element(Element{
+            name: self.name,
+            attributes: self.attributes,
+            children: self.children,
+        })
+    }
+}
+
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // BASICS
-///////////////////////////////////////////////////////////////////////////////
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 // #[derive(Clone)]
 // pub enum Image {
@@ -26,26 +96,10 @@ pub enum LayoutKind {
 //     }
 // }
 
-#[derive(Debug, Clone, Default)]
-pub struct NodeScope {
-    pub parents: Vec<String>,
-}
 
-impl NodeScope {
-    pub fn push_parent(&mut self, name: String) {
-        self.parents.push(name)
-    }
-    pub fn has_parent(&self, parent: &str) -> bool {
-        self.parents
-            .iter()
-            .any(|x| x == parent)
-    }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // HTML TREE
-///////////////////////////////////////////////////////////////////////////////
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 #[derive(Debug, Clone)]
 pub struct Element {
@@ -55,7 +109,7 @@ pub struct Element {
 }
 
 impl Element {
-    pub fn has_tag<T: AsRef<str>>(&self, name: T) -> bool {
+    pub fn has_name<T: AsRef<str>>(&self, name: T) -> bool {
         self.name == name.as_ref()
     }
     pub fn has_attr<T: AsRef<str>>(&self, key: T) -> bool {
@@ -63,6 +117,20 @@ impl Element {
     }
     pub fn get_attr_value<T: AsRef<str>>(&self, key: T) -> Option<&String> {
         self.attributes.get(key.as_ref())
+    }
+    pub fn is_heading_node(&self) -> bool {
+        self.unpack_heading_node().is_some()
+    }
+    pub fn unpack_heading_node(&self) -> Option<crate::ss::ast_data::HeadingType> {
+        match self.name.as_str() {
+            "h1" => Some(crate::ss::ast_data::HeadingType::H1),
+            "h2" => Some(crate::ss::ast_data::HeadingType::H2),
+            "h3" => Some(crate::ss::ast_data::HeadingType::H3),
+            "h4" => Some(crate::ss::ast_data::HeadingType::H4),
+            "h5" => Some(crate::ss::ast_data::HeadingType::H5),
+            "h6" => Some(crate::ss::ast_data::HeadingType::H6),
+            _ => None,
+        }
     }
 }
 
@@ -79,17 +147,21 @@ impl Node {
     pub fn new_text<T: Into<String>>(val: T) -> Self {
         Node::Text(val.into())
     }
-    pub fn new_element<T: Into<String>>(tag: T, attrs: HashMap<String, String>, children: Vec<Node>) -> Self {
-        Node::Element(Element{
-            name: tag.into(),
-            attributes: attrs,
-            children
-        })
+    pub fn into_element(self) -> Option<Element> {
+        match self {
+            Node::Element(x) => Some(x),
+            _ => None
+        }
     }
     pub fn parse_str<T: AsRef<str>>(html_str: T) -> Self {
         Node::Fragment(crate::html::parser::parse_html_str(html_str.as_ref()).payload)
     }
-    pub fn to_html_str(self) -> String {
+    /// TODO: Check that self is a root html tag.
+    pub fn to_html_document(self) -> String {
+        let html = self.to_html_fragment_str();
+        format!("<!DOCTYPE html>\n{html}")
+    }
+    fn to_html_fragment_str(self) -> String {
         match self {
             Node::Text(node) => node,
             Node::Element(node) => {
@@ -121,7 +193,7 @@ impl Node {
                 };
                 let children = node.children
                     .into_iter()
-                    .map(Node::to_html_str)
+                    .map(Node::to_html_fragment_str)
                     // .map(|x| x.0)
                     .collect::<Vec<_>>()
                     .join("");
@@ -136,7 +208,7 @@ impl Node {
             Node::Fragment(nodes) => {
                 let children = nodes
                     .into_iter()
-                    .map(Node::to_html_str)
+                    .map(Node::to_html_fragment_str)
                     // .map(|x| x.0)
                     .collect::<Vec<_>>()
                     .join("");
@@ -149,38 +221,33 @@ impl Node {
             }
         }
     }
-    pub fn transform<F: Fn(NodeScope, Node) -> Node>(
-        self,
-        mut env: NodeScope,
-        f: Rc<F>
-    ) -> Node {
+    pub fn transform<F: Fn(Node) -> Node>(self, mut f: Rc<F>) -> Node {
         match self {
             Node::Element(node) => {
-                env.push_parent(node.name.clone());
                 let children = node.children
                     .into_iter()
-                    .map(|x| x.transform(env.clone(), f.clone()))
+                    .map(|x| x.transform(f.clone()))
                     .collect::<Vec<_>>();
                 let node = Element {
                     name: node.name,
                     attributes: node.attributes,
                     children,
                 };
-                f(env.clone(), Node::Element(node))
+                f(Node::Element(node))
             }
             Node::Fragment(children) => {
                 let children = children
                     .into_iter()
-                    .map(|x| x.transform(env.clone(), f.clone()))
+                    .map(|x| x.transform(f.clone()))
                     .collect();
                 let node = Node::Fragment(children);
-                f(env.clone(), node)
+                f(node)
             }
             node @ Node::Text(_) => {
-                f(env.clone(), node)
+                f(node)
             }
             node @ Node::Drawing(_) => {
-                f(env.clone(), node)
+                f(node)
             }
         }
     }

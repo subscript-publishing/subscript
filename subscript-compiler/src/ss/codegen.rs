@@ -191,7 +191,7 @@ impl Node {
                 value.to_tex_ident().to_owned()
             }
             Node::Bracket(Ann{value, ..}) => {
-                let brackets = value.to_unicode_brackets();
+                let brackets = value.to_ascii_brackets();
                 let children = value.children
                     .into_iter()
                     .map(|x| x.to_latex(env, scope))
@@ -215,7 +215,7 @@ impl Node {
                 }
             }
             Node::Quotation(Ann{value, ..}) => {
-                let brackets = value.to_unicode_quotation();
+                let brackets = value.to_ascii_quotation();
                 let children = value.children
                     .into_iter()
                     .map(|x| x.to_latex(env, scope))

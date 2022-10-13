@@ -1,6 +1,8 @@
+use std::{path::{PathBuf, Path}, rc::Rc};
+
 use itertools::Itertools;
 use either::{Either, Either::Left, Either::Right};
-use super::ast_data::Node;
+use super::{ast_data::Node, Ann, ToNode, SemanticScope};
 
 
 pub fn sep_by(nodes: &[Node], sep: impl Fn(&Node) -> bool) -> Vec<Vec<&Node>> {
@@ -100,6 +102,42 @@ pub fn zip_nodes_all_match<T>(
         other_fully_consumed,
     }
 }
+
+
+// pub fn toc_rewrites(
+//     scope: SemanticScope,
+//     ast: Node,
+//     base_path: PathBuf,
+//     output_path: PathBuf,
+// ) -> Node {
+//     let f = |node: Node| -> Node {
+//         match node {
+//             Node::Cmd(mut cmd) if cmd.is_heading_node() => {
+//                 cmd.attributes.upsert_key_value(
+//                     "source",
+//                     |value| {
+//                         if let Some(Ann{value, ..}) = value.get_text_ref() {
+//                             let src_file_path = PathBuf::from(value);
+//                             let mut src_file_path = src_file_path
+//                                 .strip_prefix(&base_path)
+//                                 .map(Path::to_path_buf)
+//                                 .unwrap_or(src_file_path);
+//                             src_file_path.set_extension("html");
+//                             return src_file_path.to_str().unwrap().to_string();
+//                         }
+//                         return String::new()
+//                     },
+//                     || {
+                        
+//                     },
+//                 );
+//                 Node::Cmd(cmd)
+//             }
+//             x => x
+//         }
+//     };
+//     ast.transform(Rc::new(f))
+// }
 
 
 

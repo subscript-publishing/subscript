@@ -14,8 +14,8 @@ pub enum ColorScheme {
 
 #[derive(Debug, Clone)]
 pub struct ColorModes<T> {
-    dark_ui: T,
-    light_ui: T,
+    pub dark_ui: T,
+    pub light_ui: T,
 }
 
 pub mod stroke {
@@ -289,6 +289,13 @@ pub mod canvas_data_model {
         pub entries: Vec<DrawingDataModel>
     }
     impl CanvasDataModel {
+        pub fn for_each_drawing<T>(self, f: impl Fn(canvas_data_model::DrawingDataModel) -> T) -> Vec<T> {
+            self.entries
+                .into_iter()
+                .filter(|x| !x.is_empty())
+                .map(f)
+                .collect_vec()
+        }
         pub fn parse_file<T: AsRef<Path>>(file_path: T) -> Result<Self, crate::api::SS1FreeformSuiteError> {
             if !crate::api::SS1FreeformSuite::is_ss1_drawing_file(file_path.as_ref()) {
                 return Err(crate::api::SS1FreeformSuiteError::ExpectedSs1DrawingFileFormat {
@@ -327,6 +334,9 @@ pub mod canvas_data_model {
         pub height: f64,
     }
     impl DrawingDataModel {
+        pub fn is_empty(&self) -> bool {
+            self.foreground_strokes.is_empty() && self.background_strokes.is_empty()
+        }
         pub fn to_svg(&self, for_color_scheme: &ColorScheme) -> String {
             let mut xs: Vec<f64> = Vec::new();
             let mut ys: Vec<f64> = Vec::new();
@@ -393,11 +403,8 @@ pub mod canvas_data_model {
                 (String::from("viewBox"), format!("{min_x} {min_y} {max_x} {max_y}")),
                 (String::from("xmlns"), String::from("http://www.w3.org/2000/svg")),
                 (String::from("xmlns:xlink"), String::from("http://www.w3.org/1999/xlink")),
-                (String::from("preserveAspectRatio"), String::from("meet")),
-                (String::from("style"), match for_color_scheme {
-                    ColorScheme::Dark => String::from("width: 100%; background: #000;"),
-                    ColorScheme::Light => String::from("width: 100%; background: #fff;"),
-                }),
+                (String::from("style"), String::from("width: 100%;")),
+                (String::from("data-drawing"), String::new()),
                 // For CSS selectors that toggle the display of a an SVG in
                 // accordance with the browsers color scheme preference. 
                 (String::from("data-svg-color-scheme"), match for_color_scheme {
@@ -436,12 +443,12 @@ pub mod page_data_model {
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct PageDataModel {
-        page_title: String,
-        entries: Vec<PageEntry>,
+        pub page_title: String,
+        pub entries: Vec<PageEntry>,
     }
     impl PageDataModel {
         pub fn parse_file<T: AsRef<Path>>(file_path: T) -> Result<Self, crate::api::SS1FreeformSuiteError> {
-            if !crate::api::SS1FreeformSuite::is_ss1_drawing_file(file_path.as_ref()) {
+            if !crate::api::SS1FreeformSuite::is_ss1_composition_file(file_path.as_ref()) {
                 return Err(crate::api::SS1FreeformSuiteError::ExpectedSs1DrawingFileFormat {
                     file_path: file_path.as_ref().to_path_buf()
                 })
@@ -473,9 +480,23 @@ pub mod page_data_model {
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct PageEntry {
-        r#type: PageEntryType,
-        title: Title,
-        drawing: canvas_data_model::CanvasDataModel,
+        pub r#type: PageEntryType,
+        pub title: Title,
+        pub drawing: canvas_data_model::CanvasDataModel,
+    }
+    impl PageEntry {
+        pub fn is_title(&self) -> bool {
+            match self.r#type {
+                PageEntryType::Title => true,
+                _ => false
+            }
+        }
+        pub fn is_drawing(&self) -> bool {
+            match self.r#type {
+                PageEntryType::Drawing => true,
+                _ => false
+            }
+        }
     }
     #[derive(Debug, Clone, Serialize, Deserialize)]
     pub enum PageEntryType {
@@ -487,8 +508,16 @@ pub mod page_data_model {
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct Title {
-        r#type: HeadingType,
-        text: String,
+        pub r#type: HeadingType,
+        pub text: String,
+    }
+    impl Title {
+        pub fn new_h1<T: Into<String>>(text: T) -> Self {
+            Title{
+                r#type: HeadingType::H1,
+                text: text.into(),
+            }
+        }
     }
     #[derive(Debug, Clone, Serialize, Deserialize)]
     pub enum HeadingType {

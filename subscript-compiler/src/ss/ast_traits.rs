@@ -102,14 +102,14 @@ pub trait SyntacticallyEq<Rhs: ?Sized = Self> {
     fn syn_eq(&self, other: &Rhs) -> bool;
 }
 
-impl SyntacticallyEq for Ann<&str> {
+impl SyntacticallyEq for str {
     fn syn_eq(&self, other: &Self) -> bool {
-        self.value == other.value
+        self == other
     }
 }
-impl SyntacticallyEq for Ann<String> {
+impl SyntacticallyEq for String {
     fn syn_eq(&self, other: &Self) -> bool {
-        self.value == other.value
+        self == other
     }
 }
 impl<T: SyntacticallyEq> SyntacticallyEq for Ann<T> {
@@ -244,16 +244,14 @@ pub trait StrictlyEq<Rhs: ?Sized = Self> {
     fn strictly_eq_to(&self, other: &Rhs) -> bool;
 }
 
-impl StrictlyEq for Ann<&str> {
+impl StrictlyEq for str {
     fn strictly_eq_to(&self, other: &Self) -> bool {
-        self.value == other.value
-            && self.range == other.range
+        self == other
     }
 }
-impl StrictlyEq for Ann<String> {
+impl StrictlyEq for String {
     fn strictly_eq_to(&self, other: &Self) -> bool {
-        self.value == other.value
-            && self.range == other.range
+        self == other
     }
 }
 impl<T: StrictlyEq> StrictlyEq for Ann<T> {

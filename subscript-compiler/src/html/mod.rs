@@ -4,6 +4,7 @@ use crate::ss::Ident;
 pub mod ast;
 pub mod parser;
 pub mod template;
+pub mod utils;
 
 pub use ast::*;
 

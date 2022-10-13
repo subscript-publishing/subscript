@@ -1,0 +1,198 @@
+:root {
+  --color-bg: #fff;
+  --color-fg: #000;
+  --link-color: #0059ff;
+  --headline-font: 'Sail', cursive;
+  --section-font: 'Playfair Display', serif;
+  --toc-font: 'Dancing Script', cursive;
+  --content-font: 'Open Sans', sans-serif;
+  --monospace-font: 'Inconsolata', monospace;
+//   --paragraph-font: 'Dancing Script', cursive;
+//   --section-font: 'Playfair Display SC', serif;
+}
+
+/* UNIVERSAL BOX SIZING WITH INHERITANCE */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+
+/* DARK/LIGHT MODE DRAWING TOGGLE */
+@media (prefers-color-scheme: dark) {
+    :root {
+    --color-bg: #2b303d;
+    --color-fg: #fff;
+    // --link-color: #18deff;
+    --link-color: #dba4f9;
+    }
+    svg[data-svg-color-scheme="dark-mode"] {
+        display: unset;
+    }
+    svg[data-svg-color-scheme="light-mode"] {
+        display: none;
+    }
+}
+@media (prefers-color-scheme: light) {
+    svg[data-svg-color-scheme="dark-mode"] {
+        display: none;
+    }
+    svg[data-svg-color-scheme="light-mode"] {
+        display: unset;
+    }
+}
+
+html, body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--content-font);
+    shape-rendering: geometricPrecision;
+    image-rendering: optimizeQuality;
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// MISCELLANEOUS
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+a {
+    color: var(--link-color);
+}
+
+hr {
+    @media (prefers-color-scheme: dark) {
+        border: 1px solid #000;
+        border-bottom: none;
+    }
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// HEADLINES
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+main {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    padding: 20px;
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// HEADLINES
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+h1, h2, h3, h4, h5, h6 {
+    // font-family: 'Miss Fajardose', cursive;
+    // font-family: 'Lovers Quarrel', cursive;
+    // font-family: 'Tangerine', cursive;
+    // font-family: 'Caveat', cursive;
+    // font-family: 'Tangerine', cursive;
+    // font-family: 'Stalemate', cursive;
+    // font-family: 'Ballet', cursive;
+    // font-family: 'Elsie Swash Caps', cursive;
+    // font-family: 'Sansita Swashed', cursive;
+    font-family: var(--headline-font);
+    // font-weight: 900;
+    font-size: 3em;
+    a {
+        text-decoration: none;
+        color: var(--color-fg);
+    }
+}
+
+h1 {
+    font-size: 2.8em;
+}
+h2 {
+    font-size: 2.5em;
+}
+h3 {
+    font-size: 2.2em;
+}
+h4 {
+    font-size: 1.9em;
+}
+h5 {
+    font-size: 1.6em;
+}
+h6 {
+    font-size: 1.3em;
+}
+main > * {
+    padding: 0;
+    margin: 0;
+}
+main > h1 {
+    margin-left: min(5vw, 100px);
+    font-size: 2.8em;
+}
+main > h2 {
+    margin-left: min(10vw, 150px);
+    font-size: 2.5em;
+}
+main > h3 {
+    margin-left: min(15vw, 200px);
+    font-size: 2.2em;
+}
+main > h4 {
+    margin-left: min(20vw, 250px);
+    font-size: 1.9em;
+}
+main > h5 {
+    margin-left: min(25vw, 300px);
+    font-size: 1.6em;
+}
+main > h6 {
+    margin-left: min(30vw, 350px);
+    font-size: 1.3em;
+}
+
+section {
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+    }
+    p {
+        margin: 0;
+    }
+}
+section > h1, section > h2, section > h3, section > h4, section > h5, section > h6 {
+    text-align: center;
+    font-family: var(--section-font);
+}
+section > h1 {
+    font-size: 2.8em;
+}
+section > h2 {
+    font-size: 2.5em;
+}
+section > h3 {
+    font-size: 2.2em;
+}
+section > h4 {
+    font-size: 1.9em;
+}
+section > h5 {
+    font-size: 1.6em;
+}
+section > h6 {
+    font-size: 1.3em;
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// CONTENT
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+p {
+    hyphens: auto;
+    text-align: justify;
+    text-indent: 7px;
+}
+
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// LISTS
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+
+

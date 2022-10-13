@@ -259,6 +259,9 @@ impl<T> Ann<T> {
     pub fn consume(self) -> T {
         self.value
     }
+    pub fn value(&self) -> &T {
+        &self.value
+    }
 }
 
 impl Ann<String> {
@@ -272,9 +275,6 @@ impl Ann<String> {
 impl From<String> for Ann<String> {
     fn from(value: String) -> Self {Ann::unannotated(value)}
 }
-// impl From<Cow<'a, str>> for Ann<String> {
-//     fn from(value: Cow<'a, str>) -> Self {Ann::unannotated(Text(value))}
-// }
 impl From<&str> for Ann<String> {
     fn from(value: &str) -> Self {Ann::unannotated(value.to_string())}
 }
@@ -284,6 +284,11 @@ impl From<&String> for Ann<String> {
 impl From<Ann<&str>> for Ann<String> {
     fn from(value: Ann<&str>) -> Self {
         value.map(|x| x.to_owned())
+    }
+}
+impl From<Ident> for Ann<Ident> {
+    fn from(value: Ident) -> Self {
+        Ann::unannotated(value)
     }
 }
 

@@ -1,0 +1,13 @@
+@import 'prelude.scss';
+@import 'toc.scss';
+@import 'commands.scss';
+
+body {
+    margin: 0;
+}
+
+svg[data-drawing] {
+    padding: 10px;
+}
+
+

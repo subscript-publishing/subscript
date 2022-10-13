@@ -178,6 +178,11 @@ impl SemanticScope {
             .iter()
             .any(|x| x == parent)
     }
+    pub fn in_heading_scope(&self) -> bool {
+        self.scope
+            .iter()
+            .any(|x| x.is_heading_node())
+    }
     pub fn to_matching_cmd_call<'a>(&self, nodes: &'a [Node]) -> Option<(Node, &'a [Node], usize)> {
         if let Some(Ann{value: ident, ..}) = nodes.first().and_then(Node::get_ident_ref) {
             if let Some(matching_cmds) = self.cmd_decls.map.get(&ident) {
@@ -262,12 +267,20 @@ pub struct MathEnv {
 }
 
 impl MathEnv {
-    pub fn add_inline_entry<'a>(&mut self, code: String) -> crate::html::Node {
+    pub fn add_inline_entry<'a>(
+        &mut self,
+        code: String,
+        unique: bool,
+    ) -> crate::html::Node {
         let id = crate::utils::random_str_id();
         let mut attributes: HashMap<String, String> = Default::default();
-        attributes.insert("id".to_owned(), id.clone());
+        if unique {
+            attributes.insert(String::from("id"), id.clone());
+        } else {
+            attributes.insert(String::from("data-math-target"), id.clone());
+        }
         attributes.insert("data-math-node".to_owned(), "inline".to_owned());
-        let entry = MathCodeEntry {id, code, mode: LayoutMode::Inline};
+        let entry = MathCodeEntry {id, code, mode: LayoutMode::Inline, unique};
         self.entries.push(entry);
         crate::html::Node::Element(crate::html::Element{
             name: String::from("span"),
@@ -275,12 +288,20 @@ impl MathEnv {
             children: Vec::new(),
         })
     }
-    pub fn add_block_entry<'a>(&mut self, code: String) -> crate::html::Node {
+    pub fn add_block_entry<'a>(
+        &mut self,
+        code: String,
+        unique: bool,
+    ) -> crate::html::Node {
         let id = crate::utils::random_str_id();
         let mut attributes: HashMap<String, String> = Default::default();
-        attributes.insert("id".to_owned(), id.clone());
+        if unique {
+            attributes.insert(String::from("id"), id.clone());
+        } else {
+            attributes.insert(String::from("data-math-target"), id.clone());
+        }
         attributes.insert("data-math-node".to_owned(), "block".to_owned());
-        let entry = MathCodeEntry {id, code, mode: LayoutMode::Block};
+        let entry = MathCodeEntry {id, code, mode: LayoutMode::Block, unique};
         self.entries.push(entry);
         crate::html::Node::Element(crate::html::Element{
             name: String::from("div"),
@@ -292,11 +313,33 @@ impl MathEnv {
         self.entries
             .iter()
             .map(|x| {
-                format!(
-                    "katex.render({code}, document.getElementById('{id}'), {{throwOnError: true}});",
-                    code=format!("{:?}", x.code),
-                    id=x.id,
-                )
+                let code = format!("{:?}", x.code);
+                let id = x.id.clone();
+                let display_mode = match x.mode {
+                    LayoutMode::Block => true,
+                    LayoutMode::Both => true,
+                    LayoutMode::Inline => false,
+                };
+                let options: &[(String, String)] = &[
+                    (String::from("throwOnError"), String::from("true")),
+                    (String::from("displayMode"), match x.mode {
+                        LayoutMode::Block => String::from("true"),
+                        LayoutMode::Both => String::from("true"),
+                        LayoutMode::Inline => String::from("false"),
+                    }),
+                    (String::from("strict"), String::from("false")),
+                    (String::from("trust"), String::from("true")),
+                ];
+                // let options = options
+                //     .into_iter()
+                //     .map(|(k, v)| format!(""))
+                if x.unique {
+                    format!("katex.render({code}, document.getElementById('{id}'), {{throwOnError: true, displayMode: {display_mode}}});")
+                } else {
+                    format!(
+                        "document.querySelectorAll('[data-math-target=\"{id}\"]').forEach(function(x){{katex.render({code}, x, {{throwOnError: true, displayMode: {display_mode}}});}})"
+                    )
+                }
             })
             .join("\n")
     }
@@ -307,6 +350,7 @@ pub struct MathCodeEntry {
     pub id: String,
     pub code: String,
     pub mode: LayoutMode,
+    pub unique: bool,
 }
 
 

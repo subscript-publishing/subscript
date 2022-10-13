@@ -13,9 +13,8 @@ use swc_css_codegen::CodegenConfig;
 use swc_css_codegen::Emit;
 
 
-pub fn rewrite_stylesheet<T: Into<String>>(source: T) {
+pub fn rewrite_stylesheet<T: Into<String>>(source: T) -> String {
     fn code_gen(stylesheet: Stylesheet) -> String {
-
         let mut css_str = String::new();
         let wr = BasicCssWriter::new(
             &mut css_str,
@@ -34,9 +33,7 @@ pub fn rewrite_stylesheet<T: Into<String>>(source: T) {
     let mut parser = Parser::new(lexer, Default::default());
     let mut stylesheet: Stylesheet = parser.parse_all().unwrap();
     stylesheet.visit_mut_with(&mut SubscriptCssRewrites);
-    println!("{}", "-".repeat(80));
-    println!("{:#?}", stylesheet);
-    // stylesheet
+    code_gen(stylesheet)
 }
 
 struct SubscriptCssRewrites;

@@ -21,6 +21,21 @@ use super::{Attribute, Attributes};
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// IDENT MISCELLANEOUS
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+impl Ident {
+    pub fn is_heading_node(&self) -> bool {
+        let str_ref = self.as_str();
+        str_ref == "\\h1" ||
+        str_ref == "\\h2" ||
+        str_ref == "\\h3" ||
+        str_ref == "\\h4" ||
+        str_ref == "\\h5" ||
+        str_ref == "\\h6"
+    }
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // NODE CONSTRUCTORS CONVENIENCE METHODS
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
@@ -568,6 +583,15 @@ impl Node {
     }
 }
 
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// NODE - MISCELLANEOUS
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+// impl Node {
+//     pub fn to_html_id(&self) -> String {
+        
+//     }
+// }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // BRACKET & QUOTATION METHODS
@@ -595,6 +619,13 @@ impl Bracket {
             BracketType::CurlyBrace => Some(("｛", "｝")),
         }
     }
+    pub fn to_ascii_brackets(&self) -> Option<(&'static str, &'static str)> {
+        match self.kind()? {
+            BracketType::Parens => Some(("(", ")")),
+            BracketType::SquareParen => Some(("[", "]")),
+            BracketType::CurlyBrace => Some(("{", "}")),
+        }
+    }
 }
 
 impl Quotation {
@@ -602,6 +633,13 @@ impl Quotation {
         match (self.open.as_ref()?.value.as_str(), self.close.as_ref()?.value.as_str()) {
             ("\"", "\"") => Some(("“", "”")),
             ("'", "'") => Some(("‘", "’")),
+            _ => None
+        }
+    }
+    pub fn to_ascii_quotation(&self) -> Option<(&'static str, &'static str)> {
+        match (self.open.as_ref()?.value.as_str(), self.close.as_ref()?.value.as_str()) {
+            ("\"", "\"") => Some(("\"", "\"")),
+            ("'", "'") => Some(("'", "'")),
             _ => None
         }
     }
@@ -719,5 +757,8 @@ impl Attribute {
             .consume();
         let value: Option<String> = self.value.as_stringified_attribute_value_str(" ");
         Some((key, value))
+    }
+    pub fn value(&self) -> &Node {
+        &self.value
     }
 }

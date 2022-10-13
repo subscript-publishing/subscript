@@ -58,11 +58,13 @@ fn convert_impl(handle: &Handle) -> Vec<Node> {
                 .filter(|x| !x.is_empty())
                 .flatten()
                 .collect::<Vec<_>>();
-            vec![Node::new_element(
-                &tag,
-                attrs,
-                children,
-            )]
+            vec![
+                Node::Element(Element{
+                    name: tag,
+                    attributes: attrs,
+                    children
+                })
+            ]
         },
         _ => {
             node

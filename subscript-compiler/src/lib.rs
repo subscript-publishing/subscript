@@ -8,5 +8,7 @@ pub mod data;
 pub mod css;
 pub mod compiler;
 pub mod utils;
-pub mod ss_std;
+#[macro_use]
+pub mod ss_v1_std;
 mod dev;
+

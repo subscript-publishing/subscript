@@ -1,0 +1,75 @@
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// MATH STYLING
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+.katex-display {overflow: auto hidden}
+.katex-display > .katex { white-space: normal }
+/* Add space between broken lines: */
+.katex-display > .base { margin: 0.25em 0 }
+/* Compensate by reducing space around display math */
+.katex-display { margin: 0.5em 0; }
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// LAYOUT
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+div[data-cmd="layout"] {
+    column-gap: 20px;
+    row-gap: 10px;
+    padding: 0 20px;
+    // column-rule: 1px solid #ccc;
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        break-after: avoid;
+    }
+    p {
+        margin: 0;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            text-align: justify;
+            hyphens: auto;
+        }
+    }
+    p:first-child {
+        text-indent: 0;
+    }
+    p + p {
+        text-indent: 2em;
+    }
+    ul {
+        list-style-position: outside;
+        margin-left: 12px;
+    }
+    [data-math-node="block"] {
+        column-span: all;
+    }
+}
+
+@mixin layout-base($col) {
+    div[data-cmd="layout"][data-col="#{$col}"] {
+        // grid-template-columns: repeat($col, 1fr);
+        column-count: $col;
+    }
+}
+@mixin layout-breakpoint($min, $for, $to) {
+    @media (max-width: $min) {
+        div[data-cmd="layout"][data-col="#{$for}"] {
+            column-count: $to;
+            
+        }
+    }
+}
+
+@include layout-base(1);
+@include layout-base(2);
+@include layout-base(3);
+@include layout-base(4);
+// @include layout-breakpoint(1200px, 4, 3);
+// @include layout-breakpoint(960px, 3, 2);
+// @include layout-breakpoint(960px, 4, 2);
+// @include layout-breakpoint(760px, 4, 1);
+// @include layout-breakpoint(760px, 3, 1);
+// @include layout-breakpoint(760px, 2, 1);

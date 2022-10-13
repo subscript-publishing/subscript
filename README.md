@@ -3,20 +3,62 @@
 
 ## Features
 
+#### **Content publishing VIA Web-Technologies!** (WIP)
+
+There are TONS of JS libs that do very specific things that no-one ever uses outside e.g. their official web-app, for instance Desmos and GeoGebra are trivially embeddable, but in all cases you have to write JS and then embed such in your content. The goal of Subscript is to make this as convenient as possible with a declarative non-programming API for each. Something akin to e.g. exclusively using HTML tags for each in a declarative manner.
+
+WIP:
+- The compiler infrastructure is there, but I’m very time constrained, so the only stuff thats currently getting implemented is stuff that solves immediate needs and problems in my projects. But for an example of what the API may look like, for instance, here is a version I wrote some time ago that embeds Desmos VIA an HTML interface ([source](https://github.com/colbyn/school-notes/blob/main/build/posthtml-custom-elements/index.js#L529)): 
+    ```html
+    <desmos root-options>
+        <expr expr-options>y=x^2</expr>
+    </desmos>
+    ```
+
+
+In a certain regard, SubScript is basically LaTeX, except, while you loose out on it's massive array of packages that do everything from math to extremely fine tuned musical notation rendering, you instead get a WIP LaTeX-like interface to the COLOSSAL JS ecosystem.
+
+- For instance, need to publish content with musical notation? Maybe I'll one day add support for [VexFlow](https://www.vexflow.com) so I say that Subscript supports rendering complex musical notation. Can markdown do that? Or better yet, will markdown ever do that?
+
+In 2022 popular markdown displays are finally getting support for displaying math, but it's still relatively limited with regards to the feature-set LaTeX provides.
+
+The goal of Subscript is to be a **monolithic publishing platform** for everything under the sun, and by monolithic, I mean monolithic. While red flags may go off in your head, I've tried AsciiDoc, and the problem with AsciiDoc is that it's both slow, incredibly slow after a while, and especially, there's no syntax highlighting or autocomplete of embedded content! In theory AsciiDoc's idea of extensibility sounds nice, it may please your enterprise system architect, but it leads to a multitude of annoyances (to say the least) that you simply don't have with LaTeX. Furthermore, AsciiDoc makes assumptions that wouldn't easily translate to a browser environment. Whereas a monolithic architecture entails end-to-end uniformity, such as, uniform light/dark mode support (unless I suppose it's possible (hacks included) with a given JS lib).
+
+In theory, Markdown based content publishing tools has the same issue, I've seen platforms built upon markdown with extra features, but will your stock markdown syntax highlighter support such? Whereas e.g. if you see a LaTeX package, odds are it supports the entirety of (Xe)LaTeX syntax and whatnot.
+
+
 ### Subscript Markup Language
 
-- Based on HTML tags with LaTeX-like syntax.
-- Compile your notes to HTML webpages, or PDF files (WIP).
+- Built upon LaTeX-ified HTML tags.
+    - Meta:
+        - (Except in Subscript, instead of calling things like `\h1{…}` a tag, it's a command (you can go on calling it a tag, idc. Originally, in the compiler implementation I used the tag terminology for relevant names, but this was later changed without any particular conscious reason, perhaps's it was just less confusing given it's LaTeX-like syntax, regardless this is what stuck.)
+    - Therefore, in Subscript:
+        - all command identifiers begin with a slash `\` (which is an easy trigger for auto-complete),
+        - while macros with specially implemented behavior (in the compiler) end in an exclamation mark (`!`) (inspired by rust).
+    - **A command is broken down into** `\name[attributes]{arguments}`
+    - For instance,
+        - `\h1{Hello World}`
+        - `\include[src="./path/to/filename.ss"]`
+        - `\layout[cols=3]{…}`
+        - `\frac{1}{2}`
+    - Generally speaking:
+        - For all HTML based commands, the overall format is
+            - `\name[attributes]{argument}` or `\name[attributes]`
+        - For all LaTeX based commands, the overall format is 
+            - `\name[attributes]{arg1}{arg2}…{argN}`
+    - Some commands are only available if it's nested under a `parent` command, for instance, `\row` is only available if it's nested under a `\table` command. (It's a variable arity/argument convenience command for creating a table row where each argument is automatically wrapped in in a table-data element (if its not already), since HTML tables are very verbose and I've been trying to streamline their creation for fast notes).
+        - (I call these convenience commands that simply expand out to more verbose HTML trees "HTML sugar")
+- Compile your notes to HTML webpages, or PDF files (very long-term WIP).
 - Seamlessly intermix markup with hand drawn content VIA the Subscript Freeform Tools (iPad only).
 - Seamless dark/light mode support throughout all subscript tools. 
 
 #### Math Support 
 
-| Cmd | Type |
-|---|---|
-| `\math{…}` | Math Block |
-| `\{…}` | Inline Math |
-| `\equation{…}` | Math Block where the environment is equivalent to LaTeX's equation + split env |
+| Cmd | Type | Notes |
+|---|---|---|
+| `\math{…}` | Math Block ||
+| `\{…}` | Inline Math |Due to how frequently it's used, I made it's invocation as short as possible |
+| `\equation{…}` | Math Block |The default environment is equivalent to LaTeX's equation + split env|
 
 ### File Import Support With Relative Headings
 
@@ -88,30 +130,12 @@ Regarding the pen list:
 ![IOS freeform/drawing UI Overview](assets/preview-images/ss-composition-ios-ui-info.jpeg)
 
 
-
-
 ## Lots more planned! 
 
 
-
-## Supported Compilation Targets/Formats
-
-| Format | Supported |
-|---|---|
-| Web Target (HTML/CSS/JS) | ✅  |
-| PDF Target | ❌ |
-
-Regarding PDF support, there are multiple options to chose from
-
-- `Paged.js`: One such option is to use `Paged.js` or something related, which are generally built upon the `CSS Paged Media Modules` for defining layout and content that maps to pages.
-    - Originally my aspiration for Subscript was to be a content publishing platform using web technologies VIA a LaTeX like system, and therein benefit from the vast and myriad array of preexisting stuff that arguably outnumbers the feature-set provided by LaTeX packages... The problem is, PDF rendering VIA a browser is terrible! The design side isn't all that bad, but for some reason simple things like selecting and highlighting text doesn't work on my MacOS provided PDF renderer/client (no idea why).
-        - But the uniformity benefit is HUGE! If technical problems can be worked out this is a very attractive option... 
-- Another option is to use a hybrid approach, and render graphics VIA a browser, and use something else for overall layout and text rendering...
-- Part of me likes the idea of integrating with the SILE typesetter -if only it was implemented in rust! I know how to work with C++ and embed such in a rust project, but it's a massive pain and complicates a multitude of things... Especially with regards cross-compilation and running in a browser environment/runtime...
-- Just re-implement the SILE typesetter in rust.
-
-
 # Development
+
+## Miscellaneous Notes
 
 I’ve overhauled the parser (didn’t realize how bad the previous implementation was), and the core compiler data models, with a unified interface for command declarations, where commands can be implemented and made available in a very fined tuned manner.
 
@@ -121,8 +145,39 @@ So you can have commands that are available based on parent command scope (for i
 
 Defining/declaring SS commands in rust is somewhat awkward and very verbose, and perhaps could be better, but the real innovation here (as opposed to previous implementations) is that all commands are defined in a manner that (in theory) is easily fed to autocomplete engines. Furthermore, everything pertaining to a given command is defined in one place, from post-parser structure to target specific code-gens. Furthermore, for a given processing stage, all commands are essentially processed in a single AST traversal. 
 
+## Subscript Compiler TODO
 
-## Overview 
+- The parser should never fail
+    - When invalid syntax is parsed, the parser should maximize valid `subscript_compiler::ss::Node::Bracket(…)` and `subscript_compiler::ss::Node::Quotation(…)` AST nodes, such that erroneous parse trees match the otherwise correct parse tree as much as possible.
+    - Currently the parser isn’t very robust with tokens that may or may not be closed. For instance, initially I setup the parser to look for closing `'` tokens for automatic unicode beautification (e.g. mapping '...' -> ‘…’), but this caused issues with e.g. the `'` character in “Newton's laws of motion”, so it’s been turned off. With a more robust parser we’ll be able to turn this feature back on.
+- Compiler error messages
+    - The compiler should never fail, and always return output that resembles output from otherwise valid programs as much as possible, but, the compiler should still make the user aware of erroneous behavior with beautiful and informative diagnostics, from e.g. invalid syntax to improper command API use. 
+    - Problems that need to be addressed:
+        - The SS AST should be isomorphic to the source code as much as possible, such that source can can be rendered from AST without loss of information. Currently, most of the SS AST leaves are wrapped in `subscript_compiler::ss::Ann` which is used to annotate wrapped values with start & end indices, where each index is product of byte and char offsets of the source code (internally the SS compiler uses byte indices since unicode support complicates things, but char indices are also tracked for easy integration with external tools that only support char indices (although this may lead to improper behavior)). But I don’t think the current design is sufficient for this use-case, and furthermore SS macros complicates things, and -at the time of this writing- the `\where!` macro doesn’t propagate annotation metadata in rewritten syntax trees. 
+            - Note that what SS considers to be a `char` is defined by the iterator index from the `grapheme_indices::UnicodeSegmentation::grapheme_indices` function. IDK if this is could cause problems or whatnot.  
+        - The command declaration API needs to be updated to give command declarations the ability to emit error and warning diagnostics. 
+
+### Commands (WIP)
+
+- **Integrate with lots of JS libs** (with a very convenient and easy-to-use command based API for each <sup>†</sup>). 
+    - Easy Desmos and GeoGebra graphs
+        - Difficulty: pretty easy just haven't got to it
+        - (I’ve always implemented and reimplemented this a multitude of times in different mediums, but Subscript should be the medium that lasts.)
+        - E.g. `\desmos{…}` where the body could be a single math expression to be graphed, or a list of sub-commands that customize things
+- Something that replaces PGF/TikZ with something else thats significantly better and animatable:
+    - Difficulty: hard
+    - Implementation Notes: 
+        - Should be based on a VDOM implementation. 
+            - Furthermore, for me, the ideal API would be a stateless setup where the entire state of graphic (including animations and whatnot) is defined VIA a model, and therein, we could define an initial model for rendering in the browser, or an predefined model for static mediums.
+        - I really like the example from the [mafs project](https://mafs.dev), which is based on React.
+        - Should this be external JS/TS/JSX/TSX files (that are then imported into a subscript file, akin to importing other subscript files or drawings)? 
+            - Should SS use the [SWC crate](https://crates.io/crates/swc) for managing such? (I really like it's overall design and API for implimenting plugins and whatnot, and I already use their CSS stuff for parsing/rewrites and codegen.)
+        - Support static rendering for the PDF backend and browser reader modes.
+
+[†]: This is where Subscript's parent/child command name-spacing will really shine, since each top-level-command can define a multitude of sub-commands that are only available if they are a child of a given parent command.
+
+
+## Overview
 
 - `./apps/SSIOS`
     + iPad freeform drawing apps:
