@@ -61,17 +61,22 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 | `\equation{…}` | Math Block |The default environment is equivalent to LaTeX's equation + split env|
 
 Also the `\math` command support a few options for quickly defining common environments and whatnot, as shown in the following example (the `num` and `tag` options also work for `\equation`):
-![Include syntax example](assets/preview-images/math-presets.png)
+![Presents syntax example](assets/preview-images/math-presets.png)
+Which results in:
+![Presents syntax example](assets/preview-images/math-presets-results.png)
+
 
 | Value | Shorthand | Notes |
 |---|---|---|
 |`equations`|`e`||
 |`centered`|`c`||
 
+When I update the `\where!` to support rewriting attributes, you'll be able to use such to keep track of labels within a local expression. Which will be something akin to: 
+
+![Where labels](assets/preview-images/where-labels.png)
 
 
-Which results in:
-![Include syntax example](assets/preview-images/math-presets-results.png)
+
 
 ### File Import Support With Relative Headings
 
