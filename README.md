@@ -75,7 +75,7 @@ When I update the `\where!` macro to support rewriting attributes, you'll be abl
 
 ![Where labels](assets/preview-images/where-labels.png)
 
-
+By default numbered expressions are turned off, because I want a better interface for such than what KaTeX provides.
 
 
 ### File Import Support With Relative Headings
