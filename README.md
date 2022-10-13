@@ -5,7 +5,7 @@
 
 #### **Content publishing VIA Web-Technologies!** (WIP)
 
-There are TONS of JS libs that do very specific things that no-one ever uses outside e.g. their official web-app, for instance Desmos and GeoGebra are trivially embeddable, but in all cases you have to write JS and then embed such in your content. The goal of Subscript is to make this as convenient as possible with a declarative non-programming API for each. Something akin to e.g. exclusively using HTML tags for each in a declarative manner.
+There are TONS of JS libs that do very specific things (for literally everything) that no-one ever uses outside perhaps an official web-app, for instance Desmos and GeoGebra are trivially embeddable but people hardly ever use their JS APIs. The goal of Subscript is to make this as convenient as possible with a declarative non-programming API for each. Something akin to e.g. exclusively using HTML tags for each in a declarative manner.
 
 WIP:
 - The compiler infrastructure is there, but I’m very time constrained, so the only stuff thats currently getting implemented is stuff that solves immediate needs and problems in my projects. But for an example of what the API may look like, for instance, here is a version I wrote some time ago that embeds Desmos VIA an HTML interface ([source](https://github.com/colbyn/school-notes/blob/main/build/posthtml-custom-elements/index.js#L529)): 
