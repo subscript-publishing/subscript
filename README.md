@@ -60,8 +60,12 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 | `\{…}` | Inline Math |Due to how frequently it's used, I made it's invocation as short as possible |
 | `\equation{…}` | Math Block |The default environment is equivalent to LaTeX's equation + split env|
 
-Also the `\math` and `\equation` commands support a few options for quickly defining common envs and whatnot, as shown in the following example:
+Also the `\math` command support a few options for quickly defining common environments and whatnot, as shown in the following example (the `num` and `tag` options also work for `\equation`):
 ![Include syntax example](assets/preview-images/math-presets.png)
+
+(Although I suppose `tag` doesn't make any sense for the `equations` and `centered` present.)
+
+
 
 Which results in:
 ![Include syntax example](assets/preview-images/math-presets-results.png)
