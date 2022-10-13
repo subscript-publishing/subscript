@@ -82,7 +82,7 @@ By default numbered expressions are turned off, because I want a better interfac
 Things can be broken down into newspaper like columns VIA the `\layout[col=num]` command, for instance,
 ![Where labels](assets/preview-images/newpaper-like-layout.png)
 
-By default this also includes breakpoints that can decrement columns as the viewport width decreases until it breaks into single column mode. 
+By default this also includes breakpoints that will decrement columns as the viewport width decreases until it breaks into single column mode.
 
 While the `\grid` command gives you access to very fine tuned CSS grids:
 
