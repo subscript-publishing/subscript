@@ -1,6 +1,8 @@
 # Welcome to the SubScript Note-Taking & Content Publishing Tools
 > Behold the culmination of my failing school grades. Been too obsessed with this project for some reason… Next semester should be great though with the perfect tools that conform to my preferred note-taking workflow, from beautifully typesetted (but relatively time consuming) LaTeX math and other markup, to rapid hand drawn notes when time constrained —**all in one and seamlessly intermixed**.
 
+**This is only a preview - not yet ready for public consumption!**
+
 ## Features
 
 #### **Content publishing VIA Web-Technologies!** (WIP)
