@@ -84,7 +84,7 @@ Things can be broken down into newspaper like columns VIA the `\layout[col=num]`
 
 By default this also includes breakpoints that can decrement columns as the viewport width decreases until it breaks into single column mode. 
 
-While the `\grid` command gives you access to very fine tuned layout CSS grids:
+While the `\grid` command gives you access to very fine tuned CSS grids:
 
 ![Where labels](assets/preview-images/grid-layout.png)
 
