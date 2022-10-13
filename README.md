@@ -100,7 +100,7 @@ Furthermore, this rule is recursively applied in a bottom-up fashion when files 
 
 Currently being reimplemented to better handle multi-page and nested (hierarchical) page layouts.
 
-Currently looks like this:
+Currently looks like this (in dark mode):
 ![TOC example](assets/preview-images/toc-preview.png)
 
 
