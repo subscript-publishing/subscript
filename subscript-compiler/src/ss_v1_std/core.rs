@@ -193,7 +193,7 @@ fn handle_include(
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-// ALL SUBSCRIPT MACROS
+// ALL CORE MACROS
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 pub fn core_subscript_commands() -> Vec<cmd_decl::CmdDeclaration> {
