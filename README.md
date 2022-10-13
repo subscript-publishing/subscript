@@ -71,7 +71,7 @@ Which results in:
 |`equations`|`e`||
 |`centered`|`c`||
 
-When I update the `\where!` to support rewriting attributes, you'll be able to use such to keep track of labels within a local expression. Which will be something akin to: 
+When I update the `\where!` macro to support rewriting attributes, you'll be able to use such to keep track of labels within a local expression. Which will be something akin to: 
 
 ![Where labels](assets/preview-images/where-labels.png)
 
