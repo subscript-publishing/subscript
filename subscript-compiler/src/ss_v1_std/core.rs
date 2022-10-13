@@ -199,7 +199,6 @@ fn handle_include(
 pub fn core_subscript_commands() -> Vec<cmd_decl::CmdDeclaration> {
     let include = CmdDeclBuilder::new(Ident::from("\\include").unwrap())
         .child_layout_mode(LayoutMode::Inline)
-        .child_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
         .internal_cmd_options(cmd_decl::InternalCmdDeclOptions {
             automatically_apply_rewrites: false,
         })
