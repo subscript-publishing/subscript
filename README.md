@@ -60,6 +60,12 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 | `\{…}` | Inline Math |Due to how frequently it's used, I made it's invocation as short as possible |
 | `\equation{…}` | Math Block |The default environment is equivalent to LaTeX's equation + split env|
 
+Also the `\math` and `\equation` commands support a few options for quickly defining common envs and whatnot, as shown in the following example:
+![Include syntax example](assets/preview-images/math-presets.png)
+
+Which results in:
+![Include syntax example](assets/preview-images/math-presets-results.png)
+
 ### File Import Support With Relative Headings
 
 For example
@@ -131,7 +137,6 @@ Regarding the pen list:
 
 
 ## Lots more planned! 
-
 
 # Development
 
