@@ -63,8 +63,6 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 Also the `\math` command support a few options for quickly defining common environments and whatnot, as shown in the following example (the `num` and `tag` options also work for `\equation`):
 ![Include syntax example](assets/preview-images/math-presets.png)
 
-(Although I suppose `tag` doesn't make any sense for the `equations` and `centered` present.)
-
 
 
 Which results in:
