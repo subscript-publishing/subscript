@@ -3,6 +3,19 @@
 
 **This is only a preview - not yet ready for public consumption!** Unless you wanna hack on the code (and know how to work with rust).
 
+This readme is perpetually out of date. If you want to see the entire list of currently implemented commands, go to `subscript/subscript-compiler/src/ss_v1_std/`, [over here](https://github.com/subscript-publishing/subscript/tree/master/subscript-compiler/src/ss_v1_std) and check out the following files (be sure to check out the top-level dir as well in case new files are added):
+
+- [core](https://github.com/subscript-publishing/subscript/blob/master/subscript-compiler/src/ss_v1_std/core.rs)
+- [formatting](https://github.com/subscript-publishing/subscript/blob/master/subscript-compiler/src/ss_v1_std/formatting.rs)
+- [formatting](https://github.com/subscript-publishing/subscript/blob/master/subscript-compiler/src/ss_v1_std/formatting.rs)
+- [html_tags](https://github.com/subscript-publishing/subscript/blob/master/subscript-compiler/src/ss_v1_std/html_tags.rs)
+- [html_sugar](https://github.com/subscript-publishing/subscript/blob/master/subscript-compiler/src/ss_v1_std/html_sugar.rs)
+- [symbolic](https://github.com/subscript-publishing/subscript/blob/master/subscript-compiler/src/ss_v1_std/symbolic.rs)
+
+Likewise, be sure to check out the `./example-project` as well and it's sub-pages.  
+
+what's currently implemented 
+
 ## Features
 
 #### **Content publishing VIA Web-Technologies!** (WIP)
