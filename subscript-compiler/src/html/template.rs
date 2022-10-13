@@ -82,10 +82,17 @@ pub fn compile_template_file<T: Into<PathBuf>>(file_path: T, payload: TemplatePa
                     attributes: HashMap::default(),
                     children: vec![Node::Text(default_styling)]
                 });
+                let ss_runtime = String::from(include_str!("../../assets/template/ss-runtime.js"));
+                let ss_runtime = Node::Element(Element{
+                    name: String::from("script"),
+                    attributes: HashMap::default(),
+                    children: vec![Node::Text(ss_runtime)]
+                });
                 let head_mixin = String::from(include_str!("../../assets/template/head.html"));
                 let head_contents = Node::Fragment(vec![
                     Node::Text(head_mixin),
                     default_styling,
+                    ss_runtime,
                 ]);
                 if elem.children.is_empty() {
                     elem.children.push(head_contents);

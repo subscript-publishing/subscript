@@ -25,3 +25,4 @@ regex = "1.6.0"
 svg2pdf = "0.4.0"
 rand = "0.7.3"
 ss_freeform_format = {path = "../ss-freeform-format"}
+percent-encoding-rfc3986 = "0.1.3"

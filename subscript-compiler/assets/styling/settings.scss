@@ -1,0 +1,13 @@
+$max-single-col: 760px;
+
+:root {
+  --color-bg: #fff;
+  --color-fg: #000;
+  --link-color: #0059ff;
+  --headline-font: 'Sail', cursive;
+  --section-font: 'Playfair Display', serif;
+  --toc-font: 'Dancing Script', cursive;
+  --content-font: 'Open Sans', sans-serif;
+  --monospace-font: 'Inconsolata', monospace;
+  --force-single-column: 0;
+}

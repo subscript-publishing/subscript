@@ -70,7 +70,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    .map(|x| x.trim().to_string())
+                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let is_unique = !scope.in_heading_scope();
                 let html_node = env.math_env.add_inline_entry(latex_code, is_unique);
@@ -156,7 +156,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    .map(|x| x.trim().to_string())
+                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let latex_code = match preset {
                     Some((open, close)) => format!("{open}{latex_code}{close}"),
@@ -176,17 +176,17 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                 let (start, end) = config.for_each(LabelMetaApply {
                     default: &|| {
                         let start = "\\begin{equation*}\\begin{split}";
-                        let end = "\\end{equation*}\\end{split}";
+                        let end = "\\end{split}\\end{equation*}";
                         (start.to_owned(), end.to_owned())
                     },
                     tag: &|tag: &str| {
                         let start = format!("\\begin{{equation}}\\tag{{{tag}}}\\begin{{split}}");
-                        let end = "\\end{equation}\\end{split}";
+                        let end = "\\end{split}\\end{equation}";
                         (start.to_owned(), end.to_owned())
                     },
                     numbered: &|| {
                         let start = "\\begin{equation}\\begin{split}";
-                        let end = "\\end{equation}\\end{split}";
+                        let end = "\\end{split}\\end{equation}";
                         (start.to_owned(), end.to_owned())
                     },
                 });
@@ -196,7 +196,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_latex(&mut latex_env, scope))
-                    .map(|x| x.trim().to_string())
+                    // .map(|x| x.trim().to_string())
                     .collect::<String>();
                 let latex_code = format!("{start}{latex_code}{end}");
                 env.math_env.add_block_entry(latex_code, is_unique)

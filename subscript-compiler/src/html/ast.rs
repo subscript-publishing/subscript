@@ -269,6 +269,34 @@ impl Node {
             _ => None
         }
     }
+
+    /// We try to generate stable titles irrespective of formatting.
+    pub fn to_dashed_title(&self) -> String {
+        fn pack(value: &str) -> String {
+            value
+                .chars()
+                .flat_map(|ch| {
+                    ch.to_lowercase()
+                        .filter(|x| x.is_alphanumeric())
+                })
+                .collect::<String>()
+        }
+        match self {
+            Node::Element(cmd) => {
+                cmd.children
+                    .iter()
+                    .map(Node::to_dashed_title)
+                    .collect::<String>()
+            },
+            Node::Fragment(xs) => {
+                xs  .iter()
+                    .map(Node::to_dashed_title)
+                    .collect::<String>()
+            },
+            Node::Text(value) => pack(value),
+            Node::Drawing(x) => String::default(),
+        }
+    }
 }
 
 

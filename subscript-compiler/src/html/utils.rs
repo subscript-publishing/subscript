@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::path::Path;
 use std::cell::RefCell;
 use std::path::PathBuf;
@@ -28,6 +29,18 @@ pub fn toc_rewrites(
 ) -> Node {
     match node {
         Node::Element(mut element) if element.is_heading_node() => {
+            let mut dashed_title = element.children
+                .iter()
+                .map(Node::to_dashed_title)
+                .collect::<String>();
+            let mut original_title = dashed_title.clone();
+            let mut ix = 1;
+            while toc_entry.used_ids.contains(&dashed_title) {
+                dashed_title = format!("{original_title}{ix}");
+                ix = ix + 1;
+            }
+            std::mem::drop(original_title);
+            toc_entry.used_ids.insert(dashed_title.clone());
             let mut is_local = false;
             let path = element
                 .get_attr_value("source")
@@ -43,7 +56,7 @@ pub fn toc_rewrites(
             path.set_extension("html");
             let path = path.to_str().unwrap().to_string();
             let _ = element.attributes.remove("source");
-            let href = (String::from("href"), format!("/{path}"));
+            let href = (String::from("href"), format!("/{path}#{dashed_title}"));
             let li_entry = Node::Element(Element {
                 name: String::from("li"),
                 attributes: HashMap::from_iter([
@@ -72,6 +85,7 @@ pub fn toc_rewrites(
                 }
             };
             toc_entry.li_entries.push(TocLiEntry {node: li_entry, kind: source_type });
+            element.attributes.insert(String::from("id"), dashed_title);
             element.children = vec![
                 Node::Element(Element {
                     name: String::from("a"),
@@ -113,6 +127,7 @@ pub fn toc_rewrites(
 
 #[derive(Debug, Clone)]
 pub struct TocPageEntry {
+    pub used_ids: HashSet<String>,
     pub src_path: PathBuf,
     pub out_path: PathBuf,
     pub math_entries: Vec<crate::ss::env::MathCodeEntry>,
@@ -234,12 +249,49 @@ impl TocPageEntry {
             )
             .push_child(toc_list_wrapper)
             .finalize();
-        
+        let settings = TagBuilder::new("div")
+            .with_id("site-settings-wrapper")
+            .push_child(
+                TagBuilder::new("button")
+                    .with_id("set-single-col-to-off-btn")
+                    .with_class("pill")
+                    .with_attr("onclick", "setForceSingleColumnToOff()")
+                    .push_child(
+                        TagBuilder::new("span")
+                            .push_child("Force Single Column")
+                            .finalize()
+                    )
+                    .push_child(
+                        TagBuilder::new("span")
+                            .push_child("On")
+                            .finalize()
+                    )
+                    .finalize()
+            )
+            .push_child(
+                TagBuilder::new("button")
+                    .with_id("set-single-col-to-on-btn")
+                    .with_class("pill")
+                    .with_attr("onclick", "setForceSingleColumnToOn()")
+                    .push_child(
+                        TagBuilder::new("span")
+                            .push_child("Force Single Column")
+                            .finalize()
+                    )
+                    .push_child(
+                        TagBuilder::new("span")
+                            .push_child("Off")
+                            .finalize()
+                    )
+                    .finalize()
+            )
+            .finalize();
         TagBuilder::new("header")
             .with_id("page-header")
             .with_children([
                 site_title,
                 site_nav,
+                settings,
             ])
             .finalize()
     }

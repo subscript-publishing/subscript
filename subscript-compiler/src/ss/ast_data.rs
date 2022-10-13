@@ -237,9 +237,8 @@ impl Attributes {
             .map(Attribute::value)
             .and_then(|x| x.clone().as_stringified_attribute_value_str(""))
     }
-    /// Returns true if the attribute key exists, and has a value that could be
-    /// interpreted as ‘true’, where true is defined for any non-empty value
-    /// that exists for the given attribute key that isn’t `false` or `0`. 
+    /// Returns true if the attribute key exists, and DOES NOT has a value that
+    /// could be interpreted as ‘false’, i.e. isn’t `false` or `0`. 
     pub fn has_truthy_option(&self, key: impl AsNodeRef) -> bool {
         self.get_str_value(key)
             .map(|x| -> bool {

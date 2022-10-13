@@ -182,7 +182,11 @@ fn handle_include(
         Some(ext) if ss_freeform_format::SS1FreeformSuite::is_ss1_composition_file_ext(ext) => {
             let sub_scope = scope.new_file(&src_path);
             let nodes = process_ss1_composition(&sub_scope, rewrite_rules);
-            return Some(Node::Fragment(nodes));
+            let mut nodes = Node::Fragment(nodes).defragment_node_tree();
+            if let Some(baseline) = baseline {
+                nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
+            }
+            return Some(nodes.defragment_node_tree());
         }
         _ => None,
     }

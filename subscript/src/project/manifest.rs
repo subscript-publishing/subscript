@@ -89,6 +89,7 @@ impl ProjectSettings {
             let page_script = subscript_compiler::html::utils::math_env_to_html_script(&html_env.math_env);;
             let out_path = self.to_output_file_path(&src_file_path, "html");
             let mut toc_page_entry = TocPageEntry{
+                used_ids: Default::default(),
                 src_path: src_file_path.clone(),
                 out_path: out_path.clone(),
                 math_entries: html_env.math_env.entries

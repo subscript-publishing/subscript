@@ -88,6 +88,12 @@ impl Node {
             _ => false,
         }
     }
+    pub fn is_heading(&self) -> bool {
+        match self {
+            Node::Cmd(node) => node.identifier.value.is_heading_node(),
+            _ => false,
+        }
+    }
     pub fn is_ident(&self) -> bool {
         match self {
             Node::Ident(_) => true,
@@ -581,17 +587,35 @@ impl Node {
             Node::Drawing(x) => Node::Drawing(x),
         }
     }
+    pub fn as_any_children(self) -> Vec<Node> {
+        match self {
+            Node::Cmd(mut cmd) => {
+                cmd.arguments
+            },
+            Node::Bracket(mut node) => {
+                node.value.children
+            },
+            Node::Quotation(node) => {
+                node.value.children
+            },
+            Node::Fragment(xs) => {
+                xs
+            },
+            x @ Node::Ident(_) => vec![x],
+            x @ Node::Text(_) => vec![x],
+            x @ Node::Symbol(_) => vec![x],
+            Node::InvalidToken(x) => Vec::default(),
+            Node::Drawing(x) => Vec::default(),
+        }
+    }
+    pub fn first_non_empty_node(self) -> Option<Node> {
+        self.as_any_children()
+            .into_iter()
+            .find(|x| !x.is_whitespace())
+    }
 }
 
-//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-// NODE - MISCELLANEOUS
-//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-// impl Node {
-//     pub fn to_html_id(&self) -> String {
-        
-//     }
-// }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // BRACKET & QUOTATION METHODS
@@ -737,6 +761,13 @@ impl CmdCall {
         self.has_name("\\h4") ||
         self.has_name("\\h5") ||
         self.has_name("\\h6")
+    }
+    pub fn first_non_empty_node(&self) -> Option<Node> {
+        self.arguments
+            .clone()
+            .into_iter()
+            .flat_map(|x| x.as_any_children())
+            .find(|x| !x.is_whitespace())
     }
 }
 
