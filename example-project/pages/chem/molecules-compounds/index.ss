@@ -1,3 +1,4 @@
+/// This file was auto-translated from the original HTML source, it is pretty messy. 
 \h1{Molecules and Compounds}
 
 \h2{Terms}

@@ -1,4 +1,4 @@
-\include[src="chem/index.ss", baseline="h2"]
-\include[src="math/index.ss", baseline="h2"]
-\include[src="physics/index.ss", baseline="h2"]
-\include[src="test/index.ss", baseline="h2"]
+\include[src="chem/index.ss"]
+\include[src="math/index.ss"]
+\include[src="physics/index.ss"]
+\include[src="test/index.ss"]

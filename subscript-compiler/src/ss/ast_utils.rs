@@ -58,6 +58,13 @@ impl Node {
             children
         }))
     }
+    pub fn new_paren(children: Vec<Node>) -> Self {
+        Node::Bracket(Ann::unannotated(Bracket{
+            open: Some("(".into()),
+            close: Some(")".into()),
+            children
+        }))
+    }
     pub fn new_text<T: Into<Ann<String>>>(str: T) -> Self {
         Node::Text(str.into())
     }

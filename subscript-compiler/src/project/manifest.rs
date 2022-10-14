@@ -7,20 +7,18 @@ use rayon::prelude::*;
 
 #[derive(Debug, Clone)]
 pub struct ProjectSettings {
-    manifest: manifest_format::RootManifestFile,
-    project_dir: PathBuf,
+    pub manifest: manifest_format::RootManifestFile,
+    pub project_dir: PathBuf,
 }
 
 impl ProjectSettings {
-    pub fn parse_subscript_toml_file<T: Into<PathBuf>>(project_dir: T) -> Result<ProjectSettings, SettingsError> {
-        let project_dir = project_dir.into();
+    pub fn parse_subscript_toml_file(project_dir: impl AsRef<Path>) -> Result<ProjectSettings, SettingsError> {
+        let project_dir = project_dir.as_ref().to_path_buf();
         let (manifest_file_path, default_file_path) = {
             let mut manifest_file_path1: PathBuf = project_dir.clone();
             let mut manifest_file_path2: PathBuf = project_dir.clone();
-
             manifest_file_path1.push("Subscript.toml");
             manifest_file_path2.push("subscript.toml");
-        
             if manifest_file_path1.exists() {
                 (Some(manifest_file_path1.clone()), manifest_file_path1)
             } else if manifest_file_path2.exists() {
@@ -72,89 +70,16 @@ impl ProjectSettings {
         assert!(output_path.set_extension(ext.as_ref()));
         output_path
     }
-    pub fn compile_pages(&self) {
-        use subscript_compiler::html::toc::TocPageEntry;
-        use subscript_compiler::html::template::TemplateFile;
-        let file_glob = Glob::new("**/index.{ss}").unwrap();
-        let index_file_paths = file_glob.walk(&self.manifest.project.locations.pages)
-            .flatten()
-            .map(|x| x.into_path())
-            .collect::<Vec<_>>();
-        let mut nav_entries: Vec<TocPageEntry> = Default::default();
-        let ref root_path = PathBuf::from("/");
-        let system_start = Instant::now();
-        let nav_entries = index_file_paths.clone()
-            .into_par_iter()
-            .map(|src_file_path| {
-                // let is_index_page = src_file_path
-                //     .strip_prefix(&self.manifest.project.locations.pages)
-                //     .ok()
-                //     .and_then(|page| page.as_os_str().to_str())
-                //     .filter(|page| {
-                //         *page ==  "index.ss"
-                //     })
-                //     .is_some();
-                // let subscript_std = subscript_compiler::ss_v1_std::all_commands_list();
-                // let scope = subscript_compiler::ss::SemanticScope::new(
-                //     &src_file_path,
-                //     subscript_std,
-                // );
-                // let (html_env, page_html) = subscript_compiler::compiler::compile_to_html(&scope).unwrap();
-                // let page_script = subscript_compiler::html::utils::math_env_to_html_script(&html_env.math_env);;
-                // let out_path = self.to_output_file_path(&src_file_path, "html");
-                // let mut toc_page_entry = TocPageEntry{
-                //     used_ids: Default::default(),
-                //     src_path: src_file_path.clone(),
-                //     out_path: out_path.clone(),
-                //     math_entries: html_env.math_env.entries
-                //         .into_iter()
-                //         .filter(|x| !x.unique)
-                //         .collect_vec(),
-                //     page_title: None,
-                //     li_entries: Default::default(),
-                // };
-                // let page_html = subscript_compiler::html::utils::toc_rewrites(
-                //     self.manifest.project.locations.pages.clone(),
-                //     src_file_path.clone(),
-                //     page_html,
-                //     &mut toc_page_entry
-                // );
-                // assert!(out_path.starts_with(&self.manifest.project.locations.output));
-                // assert!(out_path.starts_with(&self.project_dir));
-                // let main = subscript_compiler::html::Node::Element(subscript_compiler::html::Element{
-                //     name: String::from("main"),
-                //     attributes: HashMap::default(),
-                //     children: vec![page_html]
-                // });
-                // let toc_options = subscript_compiler::html::utils::TocPageRenderingOptions{
-                //     is_index_page,
-                //     ..Default::default()
-                // };
-                // let template_payload = subscript_compiler::html::template::TemplatePayload{
-                //     content: subscript_compiler::html::Node::Fragment(vec![
-                //         toc_page_entry.to_page_toc(root_path, toc_options),
-                //         main,
-                //         page_script,
-                //     ]),
-                // };
-                // let html = subscript_compiler::html::template::compile_template_file(
-                //     &self.manifest.project.locations.template,
-                //     template_payload
-                // );
-                // out_path.parent().map(|dir| {
-                //     std::fs::create_dir_all(dir).unwrap();
-                // });
-                // nav_entries.push(toc_page_entry);
-                // std::fs::write(&out_path, html.to_html_document()).unwrap();
-                // nav_entries
-                // toc_page_entry
-                unimplemented!()
-            })
-            .collect::<Vec<_>>();
-        // for src_file_path in index_file_paths {
-        // }
-        let elapsed = system_start.elapsed();
-        println!("\nTotal Elapsed Time: {:.2?}\n", elapsed);
+    pub fn init_compiler(&self) -> crate::compiler::Compiler {
+        // let file_glob = Glob::new("**/index.{ss}").unwrap();
+        let src_file_glob = "**/index.{ss}";
+        let compiler = crate::compiler::Compiler::new().add_files_via_glob(
+            &self.manifest.project.locations.pages,
+            src_file_glob,
+            &self.manifest.project.locations.output,
+            "html",
+        );
+        compiler
     }
 }
 
@@ -223,3 +148,4 @@ pub mod manifest_format {
     fn pages_default_value() -> PathBuf {PathBuf::from("pages")}
     fn template_default_value() -> PathBuf {PathBuf::from("template")}
 }
+

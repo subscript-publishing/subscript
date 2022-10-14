@@ -1,3 +1,4 @@
+/// This file was auto-translated from the original HTML source, it is pretty messy. 
 \h1{Periodic Properties of the Elements}
 
 \p{Note, electron affinity is not the same as electronegativity!}

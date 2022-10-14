@@ -1,3 +1,4 @@
+/// This file was auto-translated from the original HTML source, it is pretty messy. 
 \h1{The Atom and Nuclear Chemistry}
 
 \h2{Isotopes and Subatomic Particles}
@@ -40,21 +41,21 @@
       \p{Therefore}
       \equation{
          \small
-                     \smallText{avg}_m &= X_{\smallText{B-11}} M_1 + X_{\smallText{B-10}} M_2\\
-                     \smallText{avg}_m &= X_{\smallText{B-11}} M_1 + \left(1 - X_{\smallText{B-11}}\right) M_2\\
-                     \smallText{avg}_m &= X_{\smallText{B-11}} M_1 + M_2 - X_{\smallText{B-11}} M_2\\
-                     \smallText{avg}_m - M_2 &= X_{\smallText{B-11}} \left(M_1 - M_2\right)\\
-                     \frac{\smallText{avg}_m - M_2}{M_1 - M_2} &= X_{\smallText{B-11}}\\
-                     \therefore X_{\smallText{B-11}}
-                         &= \frac{\smallText{avg}_m - M_2}{M_1 - M_2}\\
-                         &= \frac{10.81\;\mathrm{amu} - 10.012937\;\mathrm{amu}}{11.009306\;\mathrm{amu} - 10.012937\;\mathrm{amu}}\\
-                         &\approx \underbrace{0.7995}_{\mathclap{
-                             \begin{gathered}
-                             \smallText{decimal form}\\
-                             \smallText{multiply by $100$ to get percentage}
-                             \end{gathered}
-                         }}\\
-                         &\approx 79.95\%
+         \smallText{avg}_m &= X_{\smallText{B-11}} M_1 + X_{\smallText{B-10}} M_2\\
+         \smallText{avg}_m &= X_{\smallText{B-11}} M_1 + \left(1 - X_{\smallText{B-11}}\right) M_2\\
+         \smallText{avg}_m &= X_{\smallText{B-11}} M_1 + M_2 - X_{\smallText{B-11}} M_2\\
+         \smallText{avg}_m - M_2 &= X_{\smallText{B-11}} \left(M_1 - M_2\right)\\
+         \frac{\smallText{avg}_m - M_2}{M_1 - M_2} &= X_{\smallText{B-11}}\\
+         \therefore X_{\smallText{B-11}}
+               &= \frac{\smallText{avg}_m - M_2}{M_1 - M_2}\\
+               &= \frac{10.81\;\mathrm{amu} - 10.012937\;\mathrm{amu}}{11.009306\;\mathrm{amu} - 10.012937\;\mathrm{amu}}\\
+               &\approx \underbrace{0.7995}_{\mathclap{
+                  \begin{gathered}
+                  \smallText{decimal form}\\
+                  \smallText{multiply by $100$ to get percentage}
+                  \end{gathered}
+               }}\\
+               &\approx 79.95\%
       }
       \p{But we aren't done, we have to compute significant figures.}
       \math{

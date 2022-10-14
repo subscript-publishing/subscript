@@ -89,9 +89,9 @@ impl TagBuilder {
         self.children.push(child.into());
         self
     }
-    pub fn push_child_if<T: Into<Node>>(mut self, show: bool, child: T) -> Self {
+    pub fn push_child_if<T: Into<Node>>(mut self, show: bool, f: impl Fn() -> T) -> Self {
         if show {
-            self.children.push(child.into());
+            self.children.push(f().into());
         }
         self
     }

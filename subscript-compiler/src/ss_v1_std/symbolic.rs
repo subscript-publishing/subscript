@@ -383,7 +383,7 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 })
                 .to_latex(to_latex!{
-                    fn (env, cmd) {
+                    fn (env, scope, cmd) {
                         // if cmd.identifier.value == Ident::from("\\lbrace") {
 
                         // }
@@ -398,13 +398,237 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
                 .finish()
         }}
     }
+    let color = CmdDeclBuilder::new(Ident::from("\\color").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                let contents = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(env, scope))
+                    .collect::<Vec<_>>()
+                    .join("");
+                contents
+            }
+        })
+        .finish();
+    let hbrace = CmdDeclBuilder::new(Ident::from("\\hbrace").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                let contents = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(env, scope))
+                    .collect::<Vec<_>>()
+                    .join("");
+                if cmd.attributes.has_truthy_option("left") {
+                    let open = "\\begin{dcases}";
+                    let close = "\\end{dcases}";
+                    return format!("{open}{contents}{close}")
+                }
+                if cmd.attributes.has_truthy_option("right") {
+                    let open = "\\begin{rcases}";
+                    let close = "\\end{rcases}";
+                    return format!("{open}{contents}{close}")
+                }
+                contents
+            }
+        })
+        .finish();
+    let small_text = CmdDeclBuilder::new(Ident::from("\\smallText").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                let contents = cmd.arguments
+                    .into_iter()
+                    // .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(env, scope))
+                    .collect::<Vec<_>>()
+                    .join("");
+                format!("\\small\\text{{{contents}}}\\normalsize")
+            }
+        })
+        .finish();
+    let tiny_text = CmdDeclBuilder::new(Ident::from("\\tinyText").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                let contents = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(env, scope))
+                    .collect::<Vec<_>>()
+                    .join("");
+                format!("\\tiny\\text{{{contents}}}\\normalsize")
+            }
+        })
+        .finish();
+    let smaller = CmdDeclBuilder::new(Ident::from("\\smaller").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                let contents = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(env, scope))
+                    .collect::<Vec<_>>()
+                    .join("");
+                format!("\\small{{{contents}}}\\normalsize")
+            }
+        })
+        .finish();
+    let tinier = CmdDeclBuilder::new(Ident::from("\\tinier").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![arg]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                let contents = cmd.arguments
+                    .into_iter()
+                    .flat_map(Node::unblock_root_curly_brace)
+                    .map(|x| x.to_latex(env, scope))
+                    .collect::<Vec<_>>()
+                    .join("");
+                format!("\\tiny{{{contents}}}\\normalsize")
+            }
+        })
+        .finish();
+    let sci = CmdDeclBuilder::new(Ident::from("\\sci").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg1}, {arg2}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![
+                            arg1,
+                            "\\times10^",
+                            arg2
+                        ]
+                    })
+                },
+            }
+        })
+        .finish();
+    let parens = CmdDeclBuilder::new(Ident::from("\\parens").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({arg1}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![
+                            Node::new_text("\\left"),
+                            Node::new_paren(vec![arg1]),
+                            Node::new_text("\\right"),
+                        ]
+                    })
+                },
+            }
+        })
+        .finish();
+    let reciprocal = CmdDeclBuilder::new(Ident::from("\\reciprocal").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                ({den}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![
+                            Node::new_curly_brace(vec![
+                                Node::new_text("1")
+                            ]),
+                            den
+                        ]
+                    })
+                },
+            }
+        })
+        .finish();
     vec![
-        frac,
         token_hack!("\\lbrace", "{"),
         token_hack!("\\rbrace", "}"),
         token_hack!("\\lparen", "("),
         token_hack!("\\rparen", ")"),
         token_hack!("\\lbrack", "["),
         token_hack!("\\rbrack", "]"),
+        frac,
+        color,
+        hbrace,
+        small_text,
+        tiny_text,
+        smaller,
+        tinier,
+        sci,
+        parens,
+        reciprocal,
     ]
 }

@@ -15,6 +15,22 @@
         ||\vec{v}|| &= \sqrt{(v_x)^2 + (v_y)^2 + (v_z)^2}
 }
 
+\math {
+    \hbrace[left] {
+        a & x\\
+        a & y\\
+        a & z
+    }
+}
+
+\math {
+    \hbrace[right] {
+        a & x\\
+        a & y\\
+        a & z
+    }
+}
+
 \math[preset="equations"]{
     2x - 5y &=  8 \\ 
     3x + 9y &=  -12

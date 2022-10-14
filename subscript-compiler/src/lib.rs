@@ -11,4 +11,8 @@ pub mod utils;
 #[macro_use]
 pub mod ss_v1_std;
 mod dev;
+pub mod cli;
+pub mod project;
+
+pub use compiler::{FileIOEntry, FileIOPageMode, HtmlMetadata, Compiler};
 

@@ -130,10 +130,10 @@ macro_rules! to_html {
 }
 
 macro_rules! to_latex {
-    (fn ($env:ident, $cmd:ident) $block:block) => {{
+    (fn ($env:ident, $scope:ident, $cmd:ident) $block:block) => {{
         fn f(
             $env: &mut $crate::ss::env::LatexCodegenEnv,
-            // $scope: &$crate::ss::env::SemanticScope,
+            $scope: &$crate::ss::env::SemanticScope,
             $cmd: CmdCall,
         ) -> String {
             $block

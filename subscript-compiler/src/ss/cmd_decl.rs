@@ -84,12 +84,12 @@ impl Default for InternalCmdDeclOptions {
 #[derive(Clone, Default)]
 pub struct CmdCodegen {
     pub to_html: Option<ToHtmlFnType>,
-    pub to_latex: Option<fn(&mut crate::ss::LatexCodegenEnv, CmdCall) -> String>,
+    pub to_latex: Option<ToLatexFnType>,
 }
 
 type ToCmdFnType = fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall;
 type ToHtmlFnType = fn(&mut crate::ss::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node;
-type ToLatexFnType = fn(&mut crate::ss::LatexCodegenEnv, CmdCall) -> String;
+type ToLatexFnType = fn(&mut crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String;
 
 impl CmdCodegen {
     // pub fn to_cmd(mut self, f: ToCmdFnType) -> Self {
@@ -125,7 +125,7 @@ impl CmdCodegen {
         cmd: CmdCall
     ) -> String {
         if let Some(f) = self.to_latex {
-            return f(env, cmd)
+            return f(env, scope, cmd)
         }
         crate::ss::codegen::default_cmd_latex_cg(env, scope, cmd)
     }
