@@ -9,12 +9,18 @@ header#page-header {
 
 .site-header-row {
     display: grid;
-    grid-template-columns: 100px 1fr;
     // column-gap: 20px;
     position: relative;
     transition: 0.8s ease-in-out;
 
-    a.left-link:first-child {
+    &[col="2"] {
+        grid-template-columns: 100px 1fr
+    }
+    &[col="1"] {
+        grid-template-columns: 1fr
+    }
+
+    a.left-link {
         position: relative;
         height: 100%;
         width: 100%;
@@ -36,24 +42,24 @@ header#page-header {
             transition: 0.8s ease-in-out;
         }
     }
-    a.left-link:first-child:hover {
+    a.left-link:hover {
         span {
             font-size: 4em;
         }
     }
     @media (prefers-color-scheme: light) {
-        a.left-link:first-child {
+        a.left-link {
             border-bottom: 1px solid #000;
         }
     }
     @media (max-width: 45em) {
         grid-template-columns: 60px 1fr;
-        a.left-link:first-child {
+        a.left-link {
             span {
                 font-size: 2em;
             }
         }
-        a.left-link:first-child:hover {
+        a.left-link:hover {
             span {
                 font-size: 3em;
             }
@@ -61,9 +67,9 @@ header#page-header {
     }
 }
 
-.site-header-row:first-child {
+.site-header-row {
     @media (prefers-color-scheme: light) {
-        a.left-link:first-child {
+        a.left-link {
             border-top: 1px solid #000;
         }
     }
@@ -71,7 +77,7 @@ header#page-header {
 
 #site-title-wrapper {
     z-index: 2;
-    a.left-link:first-child {
+    a.left-link {
         z-index: 2;
         overflow: hidden;
     }
@@ -94,14 +100,16 @@ header#page-header {
 #site-nav-wrapper {
     margin-top: -5px;
     padding-top: 5px;
-    a.left-link:first-child {
+    a.left-link {
         z-index: 1;
+        align-items: flex-start;
+        padding-top: 20px;
     }
     @media (max-width: 45em) {
         grid-template-columns: unset;
         grid-template-rows: 50px 1fr;
         @media (prefers-color-scheme: light) {
-            a.left-link:first-child {
+            a.left-link {
                 border-bottom: 1px solid #000;
             }
         }
@@ -145,12 +153,15 @@ header#page-header {
         height: 50px;
         display: flex;
         align-items: center;
-    }
-
-    li a {
-        text-decoration: none;
-        font-family: var(--toc-font);
-        font-weight: 100;
+        a {
+            text-decoration: none;
+            font-family: var(--toc-font);
+            font-weight: 100;
+            
+            [data-math-node] {
+                font-size: 0.7em;
+            }
+        }
     }
 
     li[data-level="h1"] {

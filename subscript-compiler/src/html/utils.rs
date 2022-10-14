@@ -11,6 +11,10 @@ use super::Node;
 use super::TagBuilder;
 use crate::ss::ast_data::HeadingType;
 
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// MISCELLANEOUS
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
 pub fn math_env_to_html_script(math: &crate::ss::env::MathEnv) -> Node {
     Node::Element(Element{
         name: String::from("script"),
@@ -57,7 +61,7 @@ pub fn toc_rewrites(
             let path = path.to_str().unwrap().to_string();
             let _ = element.attributes.remove("source");
             let href = (String::from("href"), format!("/{path}#{dashed_title}"));
-            let li_entry = Node::Element(Element {
+            let li_entry = Element {
                 name: String::from("li"),
                 attributes: HashMap::from_iter([
                     (String::from("data-level"), match element.unpack_heading_node().unwrap() {
@@ -76,7 +80,7 @@ pub fn toc_rewrites(
                         children: element.children.clone(),
                     })
                 ]
-            });
+            };
             let source_type = {
                 if is_local {
                     TocLiEntryType::Local
@@ -125,19 +129,24 @@ pub fn toc_rewrites(
 }
 
 
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// TOC-PAGE-ENTRY
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
 #[derive(Debug, Clone)]
 pub struct TocPageEntry {
     pub used_ids: HashSet<String>,
     pub src_path: PathBuf,
     pub out_path: PathBuf,
     pub math_entries: Vec<crate::ss::env::MathCodeEntry>,
+    pub page_title: Option<TocLiEntry>,
     pub li_entries: Vec<TocLiEntry>,
 }
 
 #[derive(Debug, Clone)]
 pub struct TocLiEntry {
     kind: TocLiEntryType,
-    node: Node,
+    node: Element,
 }
 
 #[derive(Debug, Clone)]
@@ -161,12 +170,21 @@ impl TocLiEntryType {
     }
 }
 
+#[derive(Default)]
+pub struct TocPageRenderingOptions {
+    pub is_index_page: bool,
+}
+
 impl TocPageEntry {
-    pub fn to_page_toc(&self, root_index: &PathBuf) -> Node {
+    pub fn to_page_toc(
+        &self,
+        root_index: &PathBuf,
+        options: TocPageRenderingOptions,
+    ) -> Node {
         let ul_children = self.li_entries
             .iter()
             .map(|TocLiEntry{kind, node: element}| {
-                let mut element = element.clone().into_element().unwrap();
+                let mut element = element.clone();
                 match kind {
                     TocLiEntryType::Local => {
                         element.attributes.insert(String::from("data-source"), String::from("local"));
@@ -193,20 +211,13 @@ impl TocPageEntry {
                     .finalize()
             )
             .finalize();
-        // <span class="material-symbols-outlined">arrow_circle_left</span>
-        // let left_icon = Node::new_element(
-        //     "span",
-        //     HashMap::from_iter([(String::from())])
-        // );
-        // let homepage = Node::Element(Element {
-        //     name: String::from("div"),
-        //     attributes: HashMap::default(),
-        //     children: ul_children
-        // });
         let site_title = TagBuilder::new("div")
             .with_class("site-header-row")
+            .with_attr_if(options.is_index_page, "data-col", "1")
+            .with_attr_if(!options.is_index_page, "data-col", "2")
             .with_id("site-title-wrapper")
-            .push_child(
+            .push_child_if(
+                !options.is_index_page,
                 TagBuilder::new("a")
                     .with_class("left-link")
                     .with_attr("href", "/")
@@ -234,8 +245,11 @@ impl TocPageEntry {
             .finalize();
         let site_nav = TagBuilder::new("nav")
             .with_class("site-header-row")
+            .with_class_if(options.is_index_page, "single-col")
+            .with_class_if(!options.is_index_page, "two-col")
             .with_id("site-nav-wrapper")
-            .push_child(
+            .push_child_if(
+                !options.is_index_page,
                 TagBuilder::new("a")
                     .with_class("left-link")
                     .with_attr("href", "/")
@@ -297,7 +311,9 @@ impl TocPageEntry {
     }
 }
 
-pub fn compile_index_page() {
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// HTML PAGE TEMPLATE HELPERS
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-}
+
 

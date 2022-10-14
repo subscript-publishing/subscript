@@ -56,6 +56,12 @@ pub struct CommandDeclarations {
     map: HashMap<Ident, Vec<CmdDeclaration>>,
 }
 
+impl CommandDeclarations {
+    pub fn len(&self) -> usize {
+        self.map.len()
+    }
+}
+
 // impl Default for CommandDeclarations {
 //     fn default() -> Self {
 //         let list = crate::cmds::all_commands_list();
@@ -153,6 +159,9 @@ impl SemanticScope {
         }
         Err(())
     }
+    // pub fn match_cmd(&self, cmd: &ParentEnvNamespaceDecl) -> bool {
+    //     self.match_cmd_debug("none", cmd)
+    // }
     pub fn match_cmd(&self, cmd: &ParentEnvNamespaceDecl) -> bool {
         fn match_scope(scope: &Vec<Ident>, cmd: Option<&Ident>) -> bool {
             cmd.map(|cmd| {
@@ -166,7 +175,11 @@ impl SemanticScope {
             .unwrap_or(true)
         }
         let scope_match = match_scope(self.scope.as_ref(), cmd.parent.as_ref());
-        let content_mode_match = self.content_mode == cmd.content_mode;
+        let content_mode_match = match (&self.content_mode, &cmd.content_mode) {
+            (ContentMode::Symbolic(_), ContentMode::Symbolic(_)) => true,
+            (ContentMode::Text, ContentMode::Text) => true,
+            _ => false
+        };
         let layout_mode_match = match (&self.layout_mode, &cmd.layout_mode) {
             (LayoutMode::Both, _) => true,
             (_, LayoutMode::Both) => true,
@@ -195,6 +208,17 @@ impl SemanticScope {
             .iter()
             .any(|x| x.is_heading_node())
     }
+    pub fn get_cmd_decl<'a>(&self, cmd_call: &CmdCall) -> Option<&CmdDeclaration> {
+        let cmd_set = self.cmd_decls.map.get(&cmd_call.identifier.value);
+        if let Some(cmd_set) = cmd_set {
+            for cmd_decl in cmd_set {
+                if cmd_decl.matches_cmd(&self, cmd_call) {
+                    return Some(cmd_decl);
+                }
+            }
+        }
+        None
+    }
     pub fn to_matching_cmd_call<'a>(&self, nodes: &'a [Node]) -> Option<(Node, &'a [Node], usize)> {
         if let Some(Ann{value: ident, ..}) = nodes.first().and_then(Node::get_ident_ref) {
             if let Some(matching_cmds) = self.cmd_decls.map.get(&ident) {
@@ -216,7 +240,7 @@ impl SemanticScope {
         for cmd_decl in cmd_decl_set {
             let matches_cmd = self.match_cmd(&cmd_decl.parent_env);
             if matches_cmd {
-                let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
+                let code_gen = cmd_decl.processors;
                 return Some(code_gen.to_html(env, self, cmd));
             }
         }
@@ -225,21 +249,21 @@ impl SemanticScope {
     pub fn cmd_call_to_latex(
         &self,
         env: &mut LatexCodegenEnv,
-        cmd: CmdCall,
+        cmd_call: CmdCall,
     ) -> Option<String> {
-        let cmd_decl_set: Vec<CmdDeclaration> = self.cmd_decls.map.get(&cmd.identifier.value)?.clone();
-        for cmd_decl in cmd_decl_set {
-            let matches_cmd = self.match_cmd(&cmd_decl.parent_env);
-            if matches_cmd {
-                let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
-                return Some(code_gen.to_latex(env, self, cmd));
-            }
-        }
-        None
+        let cmd_decl = self.get_cmd_decl(&cmd_call)?;
+        // let code_gen = cmd_decl.processors;
+        let sub_scope = self.new_scope(&cmd_call);
+        return Some(cmd_decl.processors.to_latex(env, &sub_scope, cmd_call))
     }
-    pub fn new_scope(&self, parent: Ident) -> SemanticScope {
+    pub fn new_scope(&self, cmd_call: &CmdCall) -> SemanticScope {
         let mut new_env = self.clone();
-        new_env.scope.push(parent);
+        let cmd_decl = self.get_cmd_decl(cmd_call).unwrap();
+        if let Some(child_meta) = cmd_decl.child_env.as_ref() {
+            new_env.content_mode = child_meta.content_mode.clone();
+            new_env.layout_mode = child_meta.layout_mode.clone();
+        }
+        new_env.scope.push(cmd_call.identifier.value.clone());
         new_env
     }
     pub fn new_file<T: AsRef<Path>>(
@@ -332,8 +356,23 @@ impl MathEnv {
                     LayoutMode::Both => true,
                     LayoutMode::Inline => false,
                 };
+                // let options: &[(String, String)] = &[
+                //     (String::from("throwOnError"), String::from("true")),
+                //     (String::from("displayMode"), match x.mode {
+                //         LayoutMode::Block => String::from("true"),
+                //         LayoutMode::Both => String::from("true"),
+                //         LayoutMode::Inline => String::from("false"),
+                //     }),
+                //     (String::from("strict"), String::from("false")),
+                //     (String::from("trust"), String::from("true")),
+                // ];
+                // let options = options
+                //     .into_iter()
+                //     .map(|(k, v)| format!("{k}:{v}"))
+                //     .join(",");
+                // let options = format!("{{options}}");
                 let options: &[(String, String)] = &[
-                    (String::from("throwOnError"), String::from("true")),
+                    (String::from("throwOnError"), String::from("false")),
                     (String::from("displayMode"), match x.mode {
                         LayoutMode::Block => String::from("true"),
                         LayoutMode::Both => String::from("true"),
@@ -342,16 +381,19 @@ impl MathEnv {
                     (String::from("strict"), String::from("false")),
                     (String::from("trust"), String::from("true")),
                 ];
-                // let options = options
-                //     .into_iter()
-                //     .map(|(k, v)| format!(""))
-                if x.unique {
-                    format!("katex.render({code}, document.getElementById('{id}'), {{throwOnError: true, displayMode: {display_mode}}});")
+                let options = options
+                    .into_iter()
+                    .map(|(k, v)| format!("{k}: {v}"))
+                    .join(",");
+                let options = format!("{{{options}}}");
+                let render_code = if x.unique {
+                    format!("katex.render({code}, document.getElementById('{id}'), {options});")
                 } else {
                     format!(
-                        "document.querySelectorAll('[data-math-target=\"{id}\"]').forEach(function(x){{katex.render({code}, x, {{throwOnError: true, displayMode: {display_mode}}});}})"
+                        "document.querySelectorAll('[data-math-target=\"{id}\"]').forEach(function(x){{katex.render({code}, x, {options});}})"
                     )
-                }
+                };
+                format!("try{{{render_code}}}catch(msg){{console.log(\"Error\", msg)}}")
             })
             .join("\n")
     }

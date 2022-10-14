@@ -1,1 +1,1 @@
-\h1{Newton's laws of motion}
+\h1[page-title]{Newton's laws of motion}

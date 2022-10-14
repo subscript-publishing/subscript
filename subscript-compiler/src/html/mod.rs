@@ -5,6 +5,7 @@ pub mod ast;
 pub mod parser;
 pub mod template;
 pub mod utils;
+pub mod experimental;
 
 pub use ast::*;
 

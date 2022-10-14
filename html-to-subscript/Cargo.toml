@@ -1,0 +1,18 @@
+[package]
+name = "html-to-subscript"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+either = "1.6.1"
+structopt = "0.3.26"
+lazy_static = "1.4.0"
+itertools = "0.10.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+toml = "0.5.9"
+wax = "0.5.0"
+subscript_compiler = {path = "../subscript-compiler"}
+

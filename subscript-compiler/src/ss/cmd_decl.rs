@@ -26,7 +26,7 @@ pub struct CmdDeclaration {
     pub attributes: HashMap<AttributeKey, Option<AttributeValue>>,
     pub ignore_attributes: bool,
     pub arguments: VariableArguments,
-    pub processors: CmdCodegenRef,
+    pub processors: CmdCodegen,
     /// Just the the default implementation.
     pub internal: InternalCmdDeclOptions
 }
@@ -43,46 +43,46 @@ impl Default for InternalCmdDeclOptions {
     }
 }
 
-#[derive(Clone)]
-pub struct CmdCodegenRef(pub Rc<dyn CmdCodegen>);
+// #[derive(Clone)]
+// pub struct CmdCodegenRef(pub Rc<dyn CmdCodegen>);
 
-impl CmdCodegenRef {
-    pub fn new(code_gen: impl CmdCodegen + 'static) -> Self {
-        CmdCodegenRef(Rc::new(code_gen))
-    }
-}
+// impl CmdCodegenRef {
+//     pub fn new(code_gen: impl CmdCodegen + 'static) -> Self {
+//         CmdCodegenRef(Rc::new(code_gen))
+//     }
+// }
 
-impl Debug for CmdCodegenRef {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("CmdCodegenRef").finish()
-    }
-}
+// impl Debug for CmdCodegenRef {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         f.debug_struct("CmdCodegenRef").finish()
+//     }
+// }
 
-pub trait CmdCodegen {
-    fn to_html(
-        &self,
-        env: &mut crate::ss::HtmlCodegenEnv,
-        scope: &SemanticScope,
-        cmd: CmdCall
-    ) -> crate::html::ast::Node {
-        crate::ss::codegen::default_cmd_html_cg(env, scope, cmd)
-    }
-    fn to_latex(
-        &self,
-        env: &mut crate::ss::LatexCodegenEnv,
-        scope: &SemanticScope,
-        cmd: CmdCall
-    ) -> String {
-        crate::ss::codegen::default_cmd_latex_cg(env, scope, cmd)
-    }
-}
+// pub trait CmdCodegen {
+//     fn to_html(
+//         &self,
+//         env: &mut crate::ss::HtmlCodegenEnv,
+//         scope: &SemanticScope,
+//         cmd: CmdCall
+//     ) -> crate::html::ast::Node {
+//         crate::ss::codegen::default_cmd_html_cg(env, scope, cmd)
+//     }
+//     fn to_latex(
+//         &self,
+//         env: &mut crate::ss::LatexCodegenEnv,
+//         scope: &SemanticScope,
+//         cmd: CmdCall
+//     ) -> String {
+//         crate::ss::codegen::default_cmd_latex_cg(env, scope, cmd)
+//     }
+// }
 
 
 /// You can provide a function pointer to override specific code-gens, but if
 /// it’s `None` (i.e. the default), it will just use the default implementation.
 /// If you need more flexibility, use a specific implementation for `CmdCodegen`.
 #[derive(Clone, Default)]
-pub struct SimpleCodegen {
+pub struct CmdCodegen {
     pub to_html: Option<ToHtmlFnType>,
     pub to_latex: Option<fn(&mut crate::ss::LatexCodegenEnv, CmdCall) -> String>,
 }
@@ -91,7 +91,7 @@ type ToCmdFnType = fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attrib
 type ToHtmlFnType = fn(&mut crate::ss::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node;
 type ToLatexFnType = fn(&mut crate::ss::LatexCodegenEnv, CmdCall) -> String;
 
-impl SimpleCodegen {
+impl CmdCodegen {
     // pub fn to_cmd(mut self, f: ToCmdFnType) -> Self {
     //     self.to_cmd = Some(f);
     //     self
@@ -106,8 +106,8 @@ impl SimpleCodegen {
     }
 }
 
-impl CmdCodegen for SimpleCodegen {
-    fn to_html(
+impl CmdCodegen {
+    pub fn to_html(
         &self,
         env: &mut crate::ss::HtmlCodegenEnv,
         scope: &SemanticScope,
@@ -118,7 +118,7 @@ impl CmdCodegen for SimpleCodegen {
         }
         crate::ss::codegen::default_cmd_html_cg(env, scope, cmd)
     }
-    fn to_latex(
+    pub fn to_latex(
         &self,
         env: &mut crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
@@ -130,7 +130,7 @@ impl CmdCodegen for SimpleCodegen {
         crate::ss::codegen::default_cmd_latex_cg(env, scope, cmd)
     }
 }
-impl Debug for SimpleCodegen {
+impl Debug for CmdCodegen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("SimpleCmdProcessor").finish()
     }
@@ -189,6 +189,7 @@ pub mod cmd_invocation {
         pub cmd_decl: &'a CmdDeclaration,
     }
 
+    #[derive(Debug, Clone)]
     pub struct CmdPayload {
         pub identifier: Ann<Ident>,
         pub attributes: Option<Attributes>,
@@ -196,7 +197,7 @@ pub mod cmd_invocation {
     }
 
     #[derive(Clone)]
-    pub struct ArgumentDeclMap(pub fn(&mut Internal, Metadata, CmdPayload) -> Node);
+    pub struct ArgumentDeclMap(pub fn(&mut Internal, Metadata, CmdPayload) -> Option<Node>);
 
     impl Debug for ArgumentDeclMap {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

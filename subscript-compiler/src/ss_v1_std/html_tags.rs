@@ -8,75 +8,417 @@ use super::*;
 pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
     vec![
         CmdDeclBuilder::new(Ident::from("\\address").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\article").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\aside").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\footer").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\header").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\h1").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\h2").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\h3").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\h4").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\h5").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\h6").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\section").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\blockquote").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\dd").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\dl").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\dt").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\figcaption").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\figure").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\hr").unwrap())
@@ -84,133 +426,741 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\li").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .child_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\ol").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\p").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .child_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\pre").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\ul").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\a").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\abbr").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\b").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\bdi").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\bdo").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\br").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\cite").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\code").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\data").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\dfn").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\em").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\i").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\kbd").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\mark").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\q").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\s").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\samp").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\small").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\span").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\strong").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\sub").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\sup").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\time").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\u").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\var").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\wbr").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\audio").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\img").unwrap())
@@ -218,93 +1168,492 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\map").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\area").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\track").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\video").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\object").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\picture").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\source").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\del").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\ins").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\caption").unwrap())
             .parent(Ident::from("\\table").unwrap())
             .parent_layout_mode(LayoutMode::Block)
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\col").unwrap())
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\colgroup").unwrap())
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tbody").unwrap())
             .parent_layout_mode(LayoutMode::Block)
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\td").unwrap())
             .parent_layout_mode(LayoutMode::Block)
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tfoot").unwrap())
             .parent_layout_mode(LayoutMode::Block)
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\th").unwrap())
             .parent_layout_mode(LayoutMode::Block)
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\thead").unwrap())
             .parent_layout_mode(LayoutMode::Block)
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tr").unwrap())
             .parent_layout_mode(LayoutMode::Block)
             .parent(Ident::from("\\table").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\details").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\summary").unwrap())
-            .arguments(default_arg1_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        ({xs}) => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![xs]
+                            })
+                        },
+                        () => {
+                            Node::Cmd(CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Block)
             .child_layout_mode(LayoutMode::Block)
             .finish(),

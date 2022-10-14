@@ -13,9 +13,9 @@ macro_rules! argument_decl_impl {
             $internal: &mut cmd_decl::cmd_invocation::Internal,
             $metadata: cmd_decl::cmd_invocation::Metadata,
             $cmd_payload: cmd_decl::cmd_invocation::CmdPayload,
-        ) -> Node {
+        ) -> Option<Node> {
             let $args: Vec<Node> = $cmd_payload.nodes.clone();
-            $body
+            Some($body)
         }
         let arg_instance: cmd_decl::ArgumentsDeclInstance = cmd_decl::ArgumentsDeclInstance {
             ty: Either::Left(cmd_decl::Override::AllFollowingCurlyBraces),
@@ -28,8 +28,8 @@ macro_rules! argument_decl_impl {
             $internal: &mut cmd_decl::cmd_invocation::Internal,
             $metadata: cmd_decl::cmd_invocation::Metadata,
             $cmd_payload: cmd_decl::cmd_invocation::CmdPayload,
-        ) -> Node {
-            $body
+        ) -> Option<Node> {
+            Some($body)
         }
         let arg_instance: cmd_decl::ArgumentsDeclInstance = cmd_decl::ArgumentsDeclInstance {
             ty: Either::Left(cmd_decl::Override::NoArguments),
@@ -44,13 +44,11 @@ macro_rules! argument_decl_impl {
             $internal: &mut cmd_decl::cmd_invocation::Internal,
             $metadata: cmd_decl::cmd_invocation::Metadata,
             $cmd_payload: cmd_decl::cmd_invocation::CmdPayload,
-        ) -> Node {
-            if let Some($arg1) = $cmd_payload.nodes.get(0).map(Clone::clone) {
-                $body
-            } else {
-                let nodes = $cmd_payload.nodes;
-                panic!("internal compiler error: args are 2 but such is empty. Given: {nodes:#?}")
-            }
+        ) -> Option<Node> {
+            let $arg1: Node = $cmd_payload.nodes.get(0).expect(&format!(
+                "should match with 1 arg: {:#?}", $cmd_payload,
+            )).clone();
+            Some($body)
         }
         let arg_instance: cmd_decl::ArgumentsDeclInstance = cmd_decl::ArgumentsDeclInstance {
             ty: Either::Right(vec![cmd_decl::ArgumentType::curly_brace()]),
@@ -65,10 +63,11 @@ macro_rules! argument_decl_impl {
             $internal: &mut cmd_decl::cmd_invocation::Internal,
             $metadata: cmd_decl::cmd_invocation::Metadata,
             $cmd_payload: cmd_decl::cmd_invocation::CmdPayload,
-        ) -> Node {
-            let $arg1: Node = $cmd_payload.nodes.get(0).unwrap().clone();
-            let $arg2: Node = $cmd_payload.nodes.get(0).unwrap().clone();
-            $body
+        ) -> Option<Node> {
+            // let $arg1: Node = $cmd_payload.nodes.get(0).unwrap().clone();
+            // let $arg2: Node = $cmd_payload.nodes.get(1).unwrap().clone();
+            // Some($body)
+            unimplemented!()
         }
         let arg_instance: cmd_decl::ArgumentsDeclInstance = cmd_decl::ArgumentsDeclInstance {
             ty: ::either::Either::Right(vec![
@@ -87,10 +86,11 @@ macro_rules! argument_decl_impl {
             $metadata: cmd_decl::cmd_invocation::Metadata,
             $cmd_payload: cmd_decl::cmd_invocation::CmdPayload,
         ) -> Node {
-            let $arg1: Node = $cmd_payload.nodes.get(0).unwrap().clone();
-            let $arg2: Node = $cmd_payload.nodes.get(0).unwrap().clone();
-            let $arg3: Node = $cmd_payload.nodes.get(0).unwrap().clone();
-            $body
+            // let $arg1: Node = $cmd_payload.nodes.get(0)?.clone();
+            // let $arg2: Node = $cmd_payload.nodes.get(0)?.clone();
+            // let $arg3: Node = $cmd_payload.nodes.get(0)?.clone();
+            // Some($body)
+            unimplemented!()
         }
         let arg_instance: cmd_decl::ArgumentsDeclInstance = cmd_decl::ArgumentsDeclInstance {
             ty: Either::Right(vec![
@@ -130,10 +130,10 @@ macro_rules! to_html {
 }
 
 macro_rules! to_latex {
-    (fn ($env:ident, $scope:ident, $cmd:ident) $block:block) => {{
+    (fn ($env:ident, $cmd:ident) $block:block) => {{
         fn f(
             $env: &mut $crate::ss::env::LatexCodegenEnv,
-            $scope: &$crate::ss::env::SemanticScope,
+            // $scope: &$crate::ss::env::SemanticScope,
             $cmd: CmdCall,
         ) -> String {
             $block

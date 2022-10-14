@@ -42,6 +42,17 @@ impl TagBuilder {
         self.attributes.insert(key.into(), value.into());
         self
     }
+    pub fn with_attr_if<K, V>(
+        mut self,
+        show: bool,
+        key: K,
+        value: V
+    ) -> Self where K: Into<String>, V: Into<String> {
+        if show {
+            self.attributes.insert(key.into(), value.into());
+        }
+        self
+    }
     pub fn with_attr_key<K: Into<String>>(mut self, key: K) -> Self {
         self.attributes.insert(key.into(), String::new());
         self
@@ -59,12 +70,29 @@ impl TagBuilder {
         self.attributes.insert(String::from("class"), name.as_ref().to_string());
         self
     }
+    pub fn with_class_if<T: AsRef<str>>(mut self, show: bool, name: T) -> Self {
+        if show {
+            if let Some(val) = self.attributes.get_mut("class") {
+                val.push(' ');
+                val.push_str(name.as_ref());
+                return self
+            }
+            self.attributes.insert(String::from("class"), name.as_ref().to_string());
+        }
+        self
+    }
     pub fn with_children<T: Into<Node>>(mut self, children: impl IntoIterator<Item=T>) -> Self {
         self.children.extend(children.into_iter().map(|x| x.into()));
         self
     }
     pub fn push_child<T: Into<Node>>(mut self, child: T) -> Self {
         self.children.push(child.into());
+        self
+    }
+    pub fn push_child_if<T: Into<Node>>(mut self, show: bool, child: T) -> Self {
+        if show {
+            self.children.push(child.into());
+        }
         self
     }
     pub fn finalize(self) -> Node {
@@ -161,7 +189,7 @@ impl Node {
         let html = self.to_html_fragment_str();
         format!("<!DOCTYPE html>\n{html}")
     }
-    fn to_html_fragment_str(self) -> String {
+    pub fn to_html_fragment_str(self) -> String {
         match self {
             Node::Text(node) => node,
             Node::Element(node) => {

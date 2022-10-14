@@ -1,7 +1,9 @@
 $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
 name: Subscript
 patterns:
-  - include: '#keywords'
+  - include: '#inlineMath'
+  # - include: '#tmpTest'
+  # - include: '#keywords'
   - include: '#strings'
   - include: '#lineComment'
   - include: '#pipeModifiderIdent'
@@ -11,6 +13,9 @@ patterns:
   - include: '#tagWithAttr'
   - include: '#curlyBrace'
   - include: '#squareParen'
+  - include: '#paren'
+  # - include: '#mathKeywords'
+  # - include: '#latexMathAlignmentOperator'
 
 repository:
   keywords:
@@ -24,6 +29,34 @@ repository:
     patterns:
       - name: constant.character.escape.subscript
         match: \\.
+  
+  inlineMath:
+    name: meta.embedded
+    begin: \\\{
+    beginCaptures:
+      '0':
+        name: punctuation.paren.open
+    end: \}
+    endCaptures:
+      '0':
+        name: punctuation.paren.close
+    patterns:
+      - include: $self
+      - include: '#mathContent'
+  
+  tmpTest:
+    name: punctuation.paren.open
+    begin: \\[a-z]{
+    beginCaptures:
+      '0':
+        name: punctuation.paren.open
+    end: \}
+    endCaptures:
+      '0':
+        name: punctuation.paren.close
+    patterns:
+      - include: $self
+  
   lineComment:
     name: comment.line
     match: ///.*$
@@ -51,6 +84,24 @@ repository:
   # pipeModifiderIdent:
   #   name: keyword.control.subscript
   #   match: \\![a-zA-Z0-9]+!
+  mathContent:
+    patterns:
+      - name: constant.character.escape
+        match: (\\\\$)|(&=)|(=&)|(&)|(&\\[a-z])
+      - name: keyword.operator
+        match: (\+)|(\-)|(=)|(\*)|(\d)|(>)|(<)|(\|)
+      - name: constant.numeric
+        match: \d
+      - name: keyword.operator
+        match: (\^)|(_)
+      - name: entity.name.type
+        match: (\\lbrack\[inline\])|(\\rbrack\[inline\])|(\\lparen\[inline\])|(\\rparen\[inline\])|(\\lbrace\[inline\])|(\\rbrace\[inline\])
+      - name: entity.name.type
+        match: (\\lbrack)|(\\rbrack)|(\\lparen)|(\\rparen)|(\\lbrace)|(\\rbrace)
+      # DE-EMPHASIZE
+      - name: comment
+        match: (\\;)|((\\,))|(\\mathbf)|(\\mathrm)|(\\left)|(\\right)|(\\left\.)|(\\right\.)
+
   curlyBrace:
     begin: \{
     beginCaptures:
@@ -61,6 +112,7 @@ repository:
       '0':
         name: punctuation.definition.end.example
     patterns:
+      - include: '#mathContent'
       - include: $self
   squareParen:
     name: punctuation.definition.parameters
@@ -74,6 +126,19 @@ repository:
       '0':
         name: punctuation.definition.parameters.end
     patterns:
+      - include: $self
+  paren:
+    name: meta.math.block.latex
+    begin: \(
+    beginCaptures:
+      '0':
+        name: meta.math.block.latex.begin
+    end: \)
+    endCaptures:
+      '0':
+        name: meta.math.block.latex.end
+    patterns:
+      - include: '#mathContent'
       - include: $self
 scopeName: source.ss
 

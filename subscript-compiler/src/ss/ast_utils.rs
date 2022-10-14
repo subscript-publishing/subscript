@@ -51,6 +51,13 @@ impl Node {
             children
         }))
     }
+    pub fn new_square_paren(children: Vec<Node>) -> Self {
+        Node::Bracket(Ann::unannotated(Bracket{
+            open: Some("[".into()),
+            close: Some("]".into()),
+            children
+        }))
+    }
     pub fn new_text<T: Into<Ann<String>>>(str: T) -> Self {
         Node::Text(str.into())
     }
@@ -457,49 +464,189 @@ impl Node {
 
 
 impl Node {
-    pub fn to_string(&self) -> String {
-        fn enclosure(
-            start: String,
-            content: String,
-            end: Option<String>,
-        ) -> String {
-            let end = end
-                .map(|x| x.to_string())
-                .unwrap_or(String::new());
-            format!("{}{}{}", start, content, end)
-        }
+    // fn to_string(&self) -> String {
+    //     self.to_string_impl(false)
+    // }
+    pub fn to_string_impl(
+        &self,
+        use_inline_formatting: bool,
+        inline_enclosure_only: bool,
+        level: usize,
+    ) -> String {
         fn enclosure_str(
+            use_inline_formatting: bool,
+            inline_enclosure_only: bool,
+            level: usize,
             start: &str,
             content: String,
             end: &str,
         ) -> String {
-            format!("{}{}{}", start, content, end)
+            // let inner_level = " ".repeat((level + 1) * 4);
+            // let level = " ".repeat(level * 4);
+            let inner_level = "";
+            let level = "";
+            if inline_enclosure_only {
+                let content = content.trim();
+                let content = content
+                    .lines()
+                    // .map(|l| format!("{inner_level}{}", l.trim_start()))
+                    .map(|l| format!("   {l}"))
+                    .collect_vec()
+                    .join("\n");
+                format!("{start}\n{inner_level}{content}\n{level}{end}")
+            } else if use_inline_formatting {
+                let content = content.trim();
+                format!("{start}{content}{end}")
+            } else {
+                let content = content.trim();
+                let content = content
+                    .lines()
+                    .map(|l| format!("   {l}"))
+                    // .map(|l| format!("{inner_level}{}", l.trim_start()))
+                    .collect_vec()
+                    .join("\n");
+                format!("{start}\n{inner_level}{content}\n{level}{end}")
+            }
         }
+        let use_inline_formatting_children = |name: &Ident| -> bool {
+            name.is_heading_node()
+                || name == "\\"
+                || name == "\\equation"
+                || name == "\\address"
+                || name == "\\blockquote"
+                || name == "\\dd"
+                || name == "\\dl"
+                || name == "\\dt"
+                || name == "\\figcaption"
+                || name == "\\figure"
+                || name == "\\hr"
+                || name == "\\li"
+                || name == "\\p"
+                || name == "\\pre"
+                || name == "\\a"
+                || name == "\\abbr"
+                || name == "\\b"
+                || name == "\\bdi"
+                || name == "\\bdo"
+                || name == "\\br"
+                || name == "\\cite"
+                || name == "\\code"
+                || name == "\\data"
+                || name == "\\dfn"
+                || name == "\\em"
+                || name == "\\i"
+                || name == "\\kbd"
+                || name == "\\mark"
+                || name == "\\q"
+                || name == "\\s"
+                || name == "\\samp"
+                || name == "\\small"
+                || name == "\\span"
+                || name == "\\strong"
+                || name == "\\sub"
+                || name == "\\sup"
+                || name == "\\time"
+                || name == "\\u"
+                || name == "\\var"
+                || name == "\\wbr"
+                || name == "\\audio"
+                || name == "\\img"
+                || name == "\\map"
+                || name == "\\area"
+                || name == "\\track"
+                || name == "\\video"
+                || name == "\\object"
+                || name == "\\picture"
+                || name == "\\source"
+                || name == "\\del"
+                || name == "\\ins"
+                || name == "\\caption"
+                || name == "\\col"
+                || name == "\\colgroup"
+                || name == "\\td"
+                || name == "\\th"
+                || name == "\\details"
+                || name == "\\summary"
+        };
+        // let cmd_decls = crate::ss_v1_std::all_commands_list();
+        // let scope = SemanticScope::test_mode_with_cmds(cmd_decls);
         match self {
             Node::Cmd(cmd) => {
+                let inline_children = use_inline_formatting_children(&cmd.identifier.value);
                 let name = cmd.identifier.value.to_tex_ident();
+                let empty_attrs = cmd.attributes.is_empty();
+                let attributes = cmd.attributes
+                    .clone()
+                    .consume()
+                    .into_iter()
+                    .map(|Attribute { key, value }| {
+                        let key = key.to_string_impl(true, false, 0);
+                        let value = value.to_string_impl(true, false, 0);
+                        if value.is_empty() {
+                            format!("{key}")
+                        } else {
+                            format!("{key}={value:?}")
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let attributes = {
+                    if !empty_attrs {
+                        enclosure_str(true, false, 0, "[", attributes, "]")
+                    } else {
+                        String::default()
+                    }
+                };
                 let children = cmd.arguments
                     .iter()
-                    .map(|x| x.to_string())
+                    .map(|x| {
+                        let level = level + 1;
+                        let inline_enclosure_only = {
+                            if cmd.has_name("\\equation") {
+                                true
+                            } else {
+                                inline_enclosure_only
+                            }
+                        };
+                        x.to_string_impl(inline_children, inline_enclosure_only, level)
+                    })
                     .collect::<Vec<_>>()
                     .join("");
-                format!("\\{}{}", name, children)
+                let ending = {
+                    let use_newline = {
+                        cmd.is_heading_node()
+                            || cmd.has_name("\\p")
+                            || cmd.has_name("\\li")
+                            || cmd.has_name("\\th")
+                            || cmd.has_name("\\layout")
+                            || cmd.has_name("\\equation")
+                            || cmd.has_name("\\note")
+                    };
+                    if use_newline {
+                        String::from("\n")
+                    } else {
+                        String::default()
+                    }
+                };
+                // let level = " ".repeat(level * 4);
+                let level = "";
+                format!("{level}{name}{attributes}{children}{ending}")
             }
             Node::Bracket(node) => {
                 let children = node.value.children
                     .iter()
-                    .map(|x| x.to_string())
+                    .map(|x| x.to_string_impl(use_inline_formatting, false, level))
                     .collect::<Vec<_>>()
                     .join("");
                 match node.value.kind() {
                     Some(BracketType::CurlyBrace) => {
-                        enclosure_str("{", children, "}")
+                        enclosure_str(use_inline_formatting, inline_enclosure_only, level, "{", children, "}")
                     }
                     Some(BracketType::Parens) => {
-                        enclosure_str("(", children, ")")
+                        enclosure_str(use_inline_formatting, inline_enclosure_only, level, "(", children, ")")
                     }
                     Some(BracketType::SquareParen) => {
-                        enclosure_str("[", children, "]")
+                        enclosure_str(use_inline_formatting, inline_enclosure_only, level, "[", children, "]")
                     }
                     None => {
                         unimplemented!("todo {:#?}", node.value)
@@ -509,17 +656,17 @@ impl Node {
             Node::Quotation(node) => {
                 let children = node.value.children
                     .iter()
-                    .map(|x| x.to_string())
+                    .map(|x| x.to_string_impl(use_inline_formatting, inline_enclosure_only, level))
                     .collect::<Vec<_>>()
                     .join("");
                 let open = node.value.open.as_ref().map(|x| x.value.as_str());
                 let close = node.value.close.as_ref().map(|x| x.value.as_str());
                 match ((open, close)) {
                     (Some("\""), Some("\"")) => {
-                        enclosure_str("\"", children, "\"")
+                        enclosure_str(false, inline_enclosure_only, level, "\"", children, "\"")
                     }
                     (Some("'"), Some("'")) => {
-                        enclosure_str("'", children, "'")
+                        enclosure_str(false, inline_enclosure_only, level, "'", children, "'")
                     }
                     (_, _) => {
                         unimplemented!()
@@ -528,8 +675,8 @@ impl Node {
             }
             Node::Fragment(xs) => {
                 xs  .into_iter()
-                    .map(|x| x.to_string())
-                    .join(" ")
+                    .map(|x| x.to_string_impl(use_inline_formatting, inline_enclosure_only, level))
+                    .join("\n")
             },
             Node::Ident(x) => x.value.to_tex_ident().to_owned(),
             Node::Text(x) => x.value.clone(),

@@ -1,1 +1,1 @@
-\h1{Inclined planes and friction}
+\h1[page-title]{Inclined planes and friction}

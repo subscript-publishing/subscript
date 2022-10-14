@@ -1,1 +1,1 @@
-\h1{Two-dimensional Motion}
+\h1[page-title]{Two-dimensional Motion}

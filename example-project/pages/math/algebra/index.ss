@@ -1,1 +1,1 @@
-\h1{Algebra}
+\h1[page-title]{Algebra}

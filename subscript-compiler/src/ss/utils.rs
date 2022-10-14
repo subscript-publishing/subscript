@@ -1,3 +1,4 @@
+use core::fmt::Debug;
 use std::{path::{PathBuf, Path}, rc::Rc};
 
 use itertools::Itertools;
@@ -53,7 +54,8 @@ pub struct ZipNodesAllMatch {
     pub other_fully_consumed: bool,
 }
 
-pub fn zip_nodes_all_match<T>(
+pub fn zip_nodes_all_match<T: Debug>(
+    debug: &str,
     nodes: &[Node],
     other: &[T],
     default: bool,
@@ -62,6 +64,9 @@ pub fn zip_nodes_all_match<T>(
     let mut node_index = 0;
     let mut other_index = 0;
     let other_len = other.len();
+    // println!(
+    //     "{nodes:#?} <=> {other:#?}",
+    // );
     let mut results: Vec<bool> = Vec::with_capacity(usize::max(nodes.len(), other.len()));
     // let mut matched: Vec<Node> = Vec::new();
     for (ix, node) in nodes.iter().enumerate() {
@@ -92,7 +97,12 @@ pub fn zip_nodes_all_match<T>(
         other_index = other_index + 1;
         node_index = node_index + 1;
     }
-    let other_fully_consumed = (other_index + 1) >= other_len;
+    let other_fully_consumed = other_index == other_len;
+    // println!(
+    //     "{} <=> {}",
+    //     other_index,
+    //     other_len,
+    // );
     return ZipNodesAllMatch{
         //                   Seems redundant?
         //                 _____________________

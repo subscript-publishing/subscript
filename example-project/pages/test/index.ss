@@ -1,3 +1,5 @@
+\h1[page-title]{Test Page}
+
 \h1{Hello world}
 \h2{Hello world}
 \h3{Hello world}
@@ -6,6 +8,12 @@
 \h6{Hello world}
 
 \h1{Math}
+
+\equation{
+    \vec{v} &= \begin{bmatrix} v_x & v_y & v_z \end{bmatrix}\\
+        \;\;\;\;
+        ||\vec{v}|| &= \sqrt{(v_x)^2 + (v_y)^2 + (v_z)^2}
+}
 
 \math[preset="equations"]{
     2x - 5y &=  8 \\ 

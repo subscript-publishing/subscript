@@ -1,1 +1,1 @@
-\h1{Normal force and contact force}
+\h1[page-title]{Normal force and contact force}

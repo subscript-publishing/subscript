@@ -1,7 +1,9 @@
 //! See the example-project for an example of the TOML data layout.
+use std::time::Instant;
 use std::{path::{Path, PathBuf}, collections::HashMap};
 use itertools::Itertools;
 use wax::{Glob, Pattern};
+use rayon::prelude::*;
 
 #[derive(Debug, Clone)]
 pub struct ProjectSettings {
@@ -79,56 +81,78 @@ impl ProjectSettings {
             .collect::<Vec<_>>();
         let mut nav_entries: Vec<TocPageEntry> = Default::default();
         let ref root_path = PathBuf::from("/");
-        for src_file_path in index_file_paths {
-            let subscript_std = subscript_compiler::ss_v1_std::all_commands_list();
-            let scope = subscript_compiler::ss::SemanticScope::new(
-                &src_file_path,
-                subscript_std,
-            );
-            let (html_env, page_html) = subscript_compiler::compiler::compile_to_html(&scope).unwrap();
-            let page_script = subscript_compiler::html::utils::math_env_to_html_script(&html_env.math_env);;
-            let out_path = self.to_output_file_path(&src_file_path, "html");
-            let mut toc_page_entry = TocPageEntry{
-                used_ids: Default::default(),
-                src_path: src_file_path.clone(),
-                out_path: out_path.clone(),
-                math_entries: html_env.math_env.entries
-                    .into_iter()
-                    .filter(|x| !x.unique)
-                    .collect_vec(),
-                li_entries: Default::default(),
-            };
-            let page_html = subscript_compiler::html::utils::toc_rewrites(
-                self.manifest.project.locations.pages.clone(),
-                src_file_path.clone(),
-                page_html,
-                &mut toc_page_entry
-            );
-            assert!(out_path.starts_with(&self.manifest.project.locations.output));
-            assert!(out_path.starts_with(&self.project_dir));
-            let main = subscript_compiler::html::Node::Element(subscript_compiler::html::Element{
-                name: String::from("main"),
-                attributes: HashMap::default(),
-                children: vec![page_html]
-            });
-            let template_payload = subscript_compiler::html::template::TemplatePayload{
-                content: subscript_compiler::html::Node::Fragment(vec![
-                    toc_page_entry.to_page_toc(root_path),
-                    main,
-                    page_script,
-                ]),
-            };
-            let html = subscript_compiler::html::template::compile_template_file(
-                &self.manifest.project.locations.template,
-                template_payload
-            );
-            out_path.parent().map(|dir| {
-                std::fs::create_dir_all(dir).unwrap();
-            });
-            nav_entries.push(toc_page_entry);
-            std::fs::write(&out_path, html.to_html_document()).unwrap();
-        }
-        
+        let system_start = Instant::now();
+        let nav_entries = index_file_paths.clone()
+            .into_par_iter()
+            .map(|src_file_path| {
+                let is_index_page = src_file_path
+                    .strip_prefix(&self.manifest.project.locations.pages)
+                    .ok()
+                    .and_then(|page| page.as_os_str().to_str())
+                    .filter(|page| {
+                        *page ==  "index.ss"
+                    })
+                    .is_some();
+                let subscript_std = subscript_compiler::ss_v1_std::all_commands_list();
+                let scope = subscript_compiler::ss::SemanticScope::new(
+                    &src_file_path,
+                    subscript_std,
+                );
+                let (html_env, page_html) = subscript_compiler::compiler::compile_to_html(&scope).unwrap();
+                let page_script = subscript_compiler::html::utils::math_env_to_html_script(&html_env.math_env);;
+                let out_path = self.to_output_file_path(&src_file_path, "html");
+                let mut toc_page_entry = TocPageEntry{
+                    used_ids: Default::default(),
+                    src_path: src_file_path.clone(),
+                    out_path: out_path.clone(),
+                    math_entries: html_env.math_env.entries
+                        .into_iter()
+                        .filter(|x| !x.unique)
+                        .collect_vec(),
+                    page_title: None,
+                    li_entries: Default::default(),
+                };
+                let page_html = subscript_compiler::html::utils::toc_rewrites(
+                    self.manifest.project.locations.pages.clone(),
+                    src_file_path.clone(),
+                    page_html,
+                    &mut toc_page_entry
+                );
+                assert!(out_path.starts_with(&self.manifest.project.locations.output));
+                assert!(out_path.starts_with(&self.project_dir));
+                let main = subscript_compiler::html::Node::Element(subscript_compiler::html::Element{
+                    name: String::from("main"),
+                    attributes: HashMap::default(),
+                    children: vec![page_html]
+                });
+                let toc_options = subscript_compiler::html::utils::TocPageRenderingOptions{
+                    is_index_page,
+                    ..Default::default()
+                };
+                let template_payload = subscript_compiler::html::template::TemplatePayload{
+                    content: subscript_compiler::html::Node::Fragment(vec![
+                        toc_page_entry.to_page_toc(root_path, toc_options),
+                        main,
+                        page_script,
+                    ]),
+                };
+                let html = subscript_compiler::html::template::compile_template_file(
+                    &self.manifest.project.locations.template,
+                    template_payload
+                );
+                out_path.parent().map(|dir| {
+                    std::fs::create_dir_all(dir).unwrap();
+                });
+                // nav_entries.push(toc_page_entry);
+                std::fs::write(&out_path, html.to_html_document()).unwrap();
+                // nav_entries
+                toc_page_entry
+            })
+            .collect::<Vec<_>>();
+        // for src_file_path in index_file_paths {
+        // }
+        let elapsed = system_start.elapsed();
+        println!("\nTotal Elapsed Time: {:.2?}\n", elapsed);
     }
 }
 

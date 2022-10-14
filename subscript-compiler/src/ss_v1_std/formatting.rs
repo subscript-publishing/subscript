@@ -7,7 +7,19 @@ use super::*;
 
 pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
     let layout = CmdDeclBuilder::new(Ident::from("\\layout").unwrap())
-        .arguments(default_arg1_type())
+        .arguments(
+            arguments! {
+                for (internal, metadata, cmd_payload) match {
+                    ({xs}) => {
+                        Node::Cmd(CmdCall {
+                            identifier: cmd_payload.identifier,
+                            attributes: cmd_payload.attributes.unwrap_or_default(),
+                            arguments: vec![xs]
+                        })
+                    },
+                }
+            }
+        )
         .to_html(to_html! {
             fn (env, scope, cmd) {
                 let is_section = {
@@ -54,7 +66,19 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
         })
         .finish();
     let grid = CmdDeclBuilder::new(Ident::from("\\grid").unwrap())
-        .arguments(default_arg1_type())
+        .arguments(
+            arguments! {
+                for (internal, metadata, cmd_payload) match {
+                    ({xs}) => {
+                        Node::Cmd(CmdCall {
+                            identifier: cmd_payload.identifier,
+                            attributes: cmd_payload.attributes.unwrap_or_default(),
+                            arguments: vec![xs]
+                        })
+                    },
+                }
+            }
+        )
         .to_html(to_html! {
             fn (env, scope, cmd) {
                 let is_section = {
@@ -97,8 +121,20 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .finish();
-    let grid = CmdDeclBuilder::new(Ident::from("\\note").unwrap())
-        .arguments(default_arg1_type())
+    let note = CmdDeclBuilder::new(Ident::from("\\note").unwrap())
+        .arguments(
+            arguments! {
+                for (internal, metadata, cmd_payload) match {
+                    ({xs}) => {
+                        Node::Cmd(CmdCall {
+                            identifier: cmd_payload.identifier,
+                            attributes: cmd_payload.attributes.unwrap_or_default(),
+                            arguments: vec![xs]
+                        })
+                    },
+                }
+            }
+        )
         .to_html(to_html! {
             fn (env, scope, cmd) {
                 let mut attributes = HashMap::default();
@@ -119,6 +155,7 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
     vec![
         layout,
         grid,
+        note,
     ]
 }
 

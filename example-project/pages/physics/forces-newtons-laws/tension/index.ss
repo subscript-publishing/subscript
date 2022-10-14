@@ -1,1 +1,1 @@
-\h1{Tension}
+\h1[page-title]{Tension}

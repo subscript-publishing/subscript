@@ -159,13 +159,11 @@ impl CmdDeclBuilder {
             ignore_attributes: self.ignore_attributes.unwrap_or(false),
             attributes: self.attributes,
             arguments: self.arguments.unwrap_or_default(),
-            processors: cmd_decl::CmdCodegenRef::new({
-                cmd_decl::SimpleCodegen {
-                    // to_cmd: self.to_cmd,
-                    to_html: self.to_html,
-                    to_latex: self.to_latex,
-                }
-            }),
+            processors: cmd_decl::CmdCodegen {
+                // to_cmd: self.to_cmd,
+                to_html: self.to_html,
+                to_latex: self.to_latex,
+            },
             internal: self.internal.unwrap_or_default(),
         }
     }
@@ -175,19 +173,19 @@ impl CmdDeclBuilder {
 
 /// A command that accepts a single curly brace based argument and simply
 /// returns a cmd_call with such. 
-fn default_arg1_type() -> cmd_decl::VariableArguments {
-    arguments! {
-        for (internal, metadata, cmd_payload) match {
-            ({xs}) => {
-                Node::Cmd(CmdCall {
-                    identifier: cmd_payload.identifier,
-                    attributes: cmd_payload.attributes.unwrap_or_default(),
-                    arguments: vec![xs]
-                })
-            },
-        }
-    }
-}
+// fn default_arg1_type() -> cmd_decl::VariableArguments {
+//     arguments! {
+//         for (internal, metadata, cmd_payload) match {
+//             ({xs}) => {
+//                 Node::Cmd(CmdCall {
+//                     identifier: cmd_payload.identifier,
+//                     attributes: cmd_payload.attributes.unwrap_or_default(),
+//                     arguments: vec![xs]
+//                 })
+//             },
+//         }
+//     }
+// }
 
 /// A command that accepts no arguments. 
 fn default_no_arg_type() -> cmd_decl::VariableArguments {

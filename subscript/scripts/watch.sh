@@ -8,6 +8,6 @@ WORKING_DIR="$RUST_DIR/.."
 
 cd $WORKING_DIR
 
-watchexec --exts scss,ss --ignore target/ --ignore node_modules/ -- "$BUILD_SCRIPT_PATH && cd $RUST_DIR && cargo run && echo '\n==reloaded==\n'"
+watchexec --exts scss,ss --ignore target/ --ignore node_modules/ -- "$BUILD_SCRIPT_PATH && cd $RUST_DIR && cargo build && time cargo build && echo '\n==reloaded==\n'"
 
 

@@ -1,0 +1,1663 @@
+<h1>Miscellaneous</h1>
+<h2>Functional Utilities & Notation Conveniences</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Right to Left Evaluation</h3>
+        <equation>
+            f \triangleleft x &= f(x)
+        </equation>
+        <equation>
+            f \circ g \triangleleft x
+                    &= f(g(x)) \\
+                    &= f \triangleleft g \triangleleft x
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Left to Right Evaluation</h3>
+        <equation>
+            x \triangleright f &= f(x)
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Derivative Shorthand</h3>
+        <equation>
+            \delta f(x) &= \frac{\mathrm{d}}{\mathrm{d}x} f(x) = f^\prime(x)
+        </equation>
+        <p>For this notation, the derivative with respect to a given variable, is implicit.</p>
+    </note>
+</layout>
+<h2>Radians & Radian Conversion</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Constants</h3>
+        <equation>
+            \tau &= 2\pi = 360^{\circ} \\
+            \pi &= \frac{1}{2}\tau = 180^{\circ}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Conversion</h3>
+        <equation>
+            \text{Given}\\
+            \textcolor{blue}{1}^{\circ} &= \frac{\textcolor{blue}{1}}{360} \tau \; {\displaystyle {\mathrm{rad}}} \\
+            \textcolor{blue}{1} \; \mathrm{rad} &= \frac{\textcolor{blue}{1}}{\tau} \cdot 360^{\circ} = \textcolor{blue}{1} \cdot \frac{360^{\circ}}{\tau} \\
+            \\\text{Degrees to Radians}\\
+            \textcolor{blue}{x^{\circ}} &= \frac{\textcolor{blue}{x}}{360} \tau \; {\displaystyle {\mathrm{rad}}} \\
+            \\\text{Radians to Degrees}\\
+            \textcolor{blue}{x} \; \mathrm{rad}
+                &= \frac{\textcolor{blue}{x}}{\tau} \cdot 360^{\circ} \\
+                &= \textcolor{blue}{x} \cdot \frac{360^{\circ}}{\tau} \\
+                &= \textcolor{blue}{x} \cdot \frac{180^{\circ}}{\pi} \\
+        </equation>
+    </note>
+</layout>
+
+<h1>Constants</h1>
+<layout cols="2">
+    <note boxed>
+        <h2>ℯ (Euler's number)</h2>
+        <equation>
+            \mathrm{e}
+                &= \sum_{n = 0}^\infty \frac{1}{n!} \\
+                &= \lim_{n\to\infty} \left(1 + \frac{1}{n}\right)^n \\
+                &= \lim_{t \to 0} \left(1 + t\right)^{\frac{1}{t}}
+        </equation>
+        <hr>
+        <equation>
+            \mathrm{e}^x
+                &= 1 + \frac{x}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots \\
+                &= \sum_{n = 0}^\infty \frac{x^n}{n!} \\
+                &= \lim_{n\to\infty} \left(1 + \frac{x}{n}\right)^n
+        </equation>
+    </note>
+</layout>
+
+<h1>Algebra</h1>
+<h2>Properties</h2>
+<layout cols="3">
+    <equation>
+        a^m \cdot b^n &= a^{m+n}\\
+        \left(a^m\right)^n &= a^{m\cdot\,n} = \left(a^n\right)^m\\
+        \left(a\cdot\,b\right)^n &= a^n \cdot b^n\\
+        \left(\frac{a}{b}\right)^{-n} &= \left(\frac{b}{a}\right)^n\\
+        \frac{x^n}{y^n} &= \left(\frac{x}{y}\right)^n\\
+        x^{y^z} &= x^{\left(y ^ z\right)} \neq \left(x^y\right)^z
+    </equation>
+    <equation>
+        |x| &= \sqrt{x^2} \neq x
+    </equation>
+    <equation>
+        \log_{\beta}(\alpha) &= \gamma\\
+        \beta^{\gamma} &= \alpha\\
+        \beta^{\log_{\beta}(N)} &= N\;\text{for all $N > 0$}\\
+        \log_{\beta}(\beta^x) &= x
+    </equation>
+</layout>
+
+<h1>Trigonometry</h1>
+<h2>Trigonometric Identities</h2>
+<layout cols="2">
+<note boxed>
+    <h3>Pythagorean Identities</h3>
+    <equation>\cos^2(\theta) + \sin^2(\theta) = 1</equation>
+    <layout cols="2">
+        <equation>
+            \sec^2(\theta) - \tan^2(\theta) &= 1 \\
+            \sec^2(\theta) &= 1 + \tan^2(\theta)
+        </equation>
+        <equation>
+            \csc^2(\theta) - \cot^2(\theta) &= 1 \\
+            \csc^2(\theta) &= 1 + \cot^2(\theta)
+        </equation>
+    </layout>
+</note>
+<note boxed>
+    <h3>Sum and Difference Identities</h3>
+    <texblock>
+         \begin{equation}
+        \begin{split}
+            \cos(\alpha - \beta) &= \cos(\alpha) \cdot \cos(\beta) + \sin(\alpha) \cdot \sin(\beta) \\
+            \cos(\alpha + \beta) &= \cos(\alpha) \cdot \cos(\beta) - \sin(\alpha) \cdot \sin(\beta) \\
+            &\\
+            \sin(\alpha - \beta) &= \sin(\alpha) \cdot \cos(\beta) - \cos(\alpha) \cdot \sin(\beta) \\
+            \sin(\alpha + \beta) &= \sin(\alpha) \cdot \cos(\beta) + \cos(\alpha) \cdot \sin(\beta) \\
+            &\\
+            \tan(\alpha + \beta) &= \frac{\tan(\alpha) + \tan(\beta)}{1 - \tan(\alpha) \cdot \tan(\beta)} \\
+            \tan(\alpha - \beta) &= \frac{\tan(\alpha) - \tan(\beta)}{1 + \tan(\alpha) \cdot \tan(\beta)}
+        \end{split}
+        \end{equation} 
+    </texblock>
+</note>
+<note boxed>
+    <h3>Cofunction Identities</h3>
+    <layout cols="2">
+        <equation>\sin(\theta) = \cos(\frac{1}{4}\tau - \theta)</equation>
+        <equation>\cos(\theta) = \sin(\frac{1}{4}\tau - \theta)</equation>
+        <equation>\tan(\theta) = \cot(\frac{1}{4}\tau - \theta)</equation>
+        <equation>\cot(\theta) = \tan(\frac{1}{4}\tau - \theta)</equation>
+        <equation>\csc(\theta) = \sec(\frac{1}{4}\tau - \theta)</equation>
+        <equation>\sec(\theta) = \csc(\frac{1}{4}\tau - \theta)</equation>
+    </layout>
+</note>
+<note boxed>
+    <h3>Ratio Identities</h3>
+    <texblock>
+        \begin{equation}
+        \begin{split}
+            \tan(90^\circ - x) & = \frac{\sin(90^\circ - x)}{\cos(90^\circ - x)} = \frac{\cos(x)}{\sin(x)} = \cot(x) \\
+            \\
+            \cot(90^\circ - x) & = \frac{\cos(90^\circ - x)}{\sin(90^\circ - x)} = \frac{\sin(x)}{\cos(x)} = \tan(x) \\
+        \end{split}
+        \end{equation}
+    </texblock>
+</note>
+<note boxed>
+    <h3>Double-Angle Identities</h3>
+    <texblock>
+         \begin{equation}
+        \begin{split}
+            \sin(2\alpha) &= 2\sin(\alpha)\cos(\alpha) \\
+            \cos(2\alpha) &= \cos^2(\alpha) - \sin^2(\alpha) \\
+                        &= 1 - 2\sin^2(\alpha) \\
+                        &= 2\cos^2(\alpha) - 1 \\
+            &\\
+            \tan(2\alpha) &= \frac{2\tan(\alpha)}{1 - \tan^2(\alpha)}
+        \end{split}
+        \end{equation}
+    </texblock>
+</note>
+<note boxed>
+    <h3>Half-Angle Identities</h3>
+    <texblock>
+         \begin{equation}
+        \begin{split}
+            \sin \frac{\alpha}{2} &= \pm \sqrt{\frac{1 - \cos(\alpha)}{2}} \\
+            \cos \frac{\alpha}{2} &= \pm \sqrt{\frac{1 + \cos(\alpha)}{2}} \\
+            \tan \frac{\alpha}{2} &= \pm \sqrt{\frac{1 - \cos(\alpha)}{1 + \cos(\alpha)}} \\
+                &= \frac{sin(\alpha)}{1 + \cos(\alpha)} \\
+                &= \frac{1 - \cos(\alpha)}{sin(\alpha)}
+        \end{split}
+        \end{equation} 
+    </texblock>
+</note>
+<note boxed>
+    <h3>Power-Reducing Identities</h3>
+    <texblock>
+         \begin{equation}
+        \begin{split}
+            \sin^2(\alpha) &= \frac{1 - \cos(2\alpha)}{2} \\
+            &\\
+            \cos^2(\alpha) &= \frac{1 + \cos(2\alpha)}{2} \\
+            &\\
+            \tan^2(\alpha) &= \frac{1 - \cos(2\alpha)}{1 + \cos(2\alpha)}
+        \end{split}
+        \end{equation} 
+    </texblock>
+    <hr/>
+    <equation>
+        \sin\alpha\cdot\cos\alpha &= \frac{1}{2}\sin(2\alpha)
+    </equation>
+</note>
+<note boxed>
+    <h3>Product-to-Sum Identities</h3>
+    <texblock>
+        \begin{equation}
+        \begin{split}
+            \sin(\alpha) \cdot \cos(\beta) &= \frac{1}{2} \Big[ \sin(\alpha + \beta) + \sin(\alpha - \beta) \Big] \\
+            \cos(\alpha) \cdot \sin(\beta) &= \frac{1}{2} \Big[ \sin(\alpha + \beta) - \sin(\alpha - \beta) \Big] \\
+            \cos(\alpha) \cdot \cos(\beta) &= \frac{1}{2} \Big[ \cos(\alpha + \beta) + \cos(\alpha - \beta) \Big] \\
+            \sin(\alpha) \cdot \sin(\beta) &= \frac{1}{2} \Big[ \cos(\alpha - \beta) - \cos(\alpha + \beta) \Big]
+        \end{split}
+        \end{equation}
+    </texblock>
+</note>
+<note boxed>
+    <h3>Sum-to-Product-Identities</h3>
+    <texblock>
+         \begin{equation}
+        \begin{split}
+            \sin(x) + \sin(y) &= 2 \cdot \sin\left( \frac{x + y}{2} \right) \cdot \cos\left( \frac{x - y}{2} \right) \\
+            \cos(x) + \cos(y) &= 2 \cdot \cos\left( \frac{x + y}{2} \right) \cdot \cos\left( \frac{x - y}{2} \right) \\
+            \sin(x) - \sin(y) &= 2 \cdot \cos\left( \frac{x + y}{2} \right) \cdot \sin\left( \frac{x - y}{2} \right) \\
+            \cos(x) - \cos(y) &= -2 \sin \cos\left( \frac{x + y}{2} \right) \cdot \sin\left( \frac{x - y}{2} \right)
+        \end{split}
+        \end{equation}
+    </texblock>
+</note>
+</layout>
+<h2>Trigonometric Equations</h2>
+<layout cols="2">
+<note boxed>
+    <h3>Euler's Formula</h3>
+    <equation>
+        e^{i x} &= \cos(x) + \mathrm{i}\sin(x)
+    </equation>
+    <hr>
+    <equation>
+        \mathrm{e}
+            &= \sum_{n = 0}^\infty \frac{1}{n!} \\
+            &= \lim_{n\to\infty} \left(1 + \frac{1}{n}\right)^n \\
+            &= \lim_{t \to 0} \left(1 + t\right)^{\frac{1}{t}}
+    </equation>
+    <hr>
+    <equation>
+        \mathrm{e}^x
+            &= 1 + \frac{x}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots \\
+            &= \sum_{n = 0}^\infty \frac{x^n}{n!} \\
+            &= \lim_{n\to\infty} \left(1 + \frac{x}{n}\right)^n
+    </equation>
+</note>
+</layout>
+
+<h1>Coordinate & Number Systems</h1>
+<layout cols="3">
+    <note boxed>
+        <equation>
+            x &= r \cdot \cos\,\theta \\
+            y &= r \cdot \sin\,\theta \\
+        </equation>
+        <hr>
+        <equation>
+            z &= x + \mathrm{i}y \\
+              &= r \left(\cos\, \theta + \mathrm{i}\sin\, \theta\right)\\
+              & = r\;\mathrm{cis}\; \theta \\
+        </equation>
+    </note>
+    <note boxed>
+        <equation>
+            e^{i x} &= \cos\, x + \mathrm{i}\sin\, x \\
+            e ^{i x} &= r \left(\cos\, \theta + \mathrm{i}\sin\, \theta\right) \\
+            \left(\cos\, x + \mathrm{i}\sin\, x\right)^n &= \cos(n x) + \mathrm{i}\sin(n x) \\
+        </equation>
+    </note>
+    <note boxed>
+        <equation>
+            r &= |z| = |x + \mathrm{i}y| = \sqrt{x^2 + y^2} \\
+            r^2 &= x^2 + y^2 \\
+            \tan \theta &= \frac{y}{x} \\
+            \theta &= \arctan\left(\frac{y}{x}\right)
+        </equation>
+    </note>
+</layout>
+<layout cols="2">
+    <note boxed>
+        <h2>Polar Coordinate System</h2>
+        <p>Given</p>
+        <equation>
+            \tan \theta &= \frac{y}{x} \\
+            r^2 &= x^2 + y^2 \\
+        </equation>
+        <p>Then</p>
+        <equation>
+            x &= r \cdot \cos\,\theta \\
+            y &= r \cdot \sin\,\theta \\
+        </equation>
+    </note>
+    <note boxed>
+        <h2>Properties</h2>
+        <p>Given</p>
+        <equation>
+            z_1 &= r_1\;\mathrm{cis}\;\theta_1 \\
+            z_2 &= r_1\;\mathrm{cis}\;\theta_1
+        </equation>
+        <p>Then</p>
+        <equation>
+            z_1 \cdot z_2 &= r_1 \cdot r_2 \;\mathrm{cis}\;\left(\theta_1 + \theta_2\right) \\
+            \frac{z_1}{z_2} &= \frac{r_1}{r_2} \;\mathrm{cis}\;\left(\theta_1 - \theta_2\right) \\
+        </equation>
+        <hr>
+        <p>De Moivre’s Theorem</p>
+        <equation>
+            z^n &= r^n \;\mathrm{cis}\;\;n\theta
+        </equation>
+        <p>De Moivre’s Theorem For Finding Roots</p>
+        <equation>
+            \underbrace{w_k = r^{\frac{1}{n}}\;\mathrm{cis}\;\frac{\theta + \tau\cdot{k}}{n}}
+            _{\begin{split}\forall\; k &= 0,1,2\cdots,n-1\\ n &\geq 1\end{split}}
+        </equation>
+    </note>
+    <note boxed>
+        <h2><small>Trigonometric form of a complex number</small></h2>
+        <equation>
+            z &= x + \mathrm{i}y \\
+              &= r \left(\cos\, \theta + \mathrm{i}\sin\, \theta\right)\\
+              & = r\;\mathrm{cis}\;\theta \\
+        </equation>
+    </note>
+</layout>
+
+<h1>Vectors</h1>
+<note>
+<h2>Quick Facts</h2>
+<ul>
+    <li><p>Two vectors are equal if they share the same magnitude and direction. <note inline>Initial points don't matter.</note></p></li>
+    <li>
+        <note>
+            <p>You can define a vector with two points.</p>
+            <img width="300px" center src="../static/drawings/matrix/trinagle-def-of-a-vector.png">
+        </note>
+    </li>
+    <li><p><b>Do not divide vectors!</b></p></li>
+    <li><tex>\vec{v} \cdot \vec{v} = ||\vec{v}||^2 \implies \text{constant}</tex></li>
+    <li><tex>\vec{v} \cdot \left(\vec{v}\right)^\prime = 0</tex></li>
+</ul>
+</note>
+<h2>Vector Operations</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Dot Product</h3>
+        <equation>
+            \vec{a}\cdot\vec{b}
+            &=  \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}
+                \cdot
+                \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix}
+            =  a_1b_1 + a_2b_2 + a_3b_3\\\\
+            \vec{a}\cdot\vec{b}
+            &=  \begin{bmatrix} a_1 \\ a_2 \end{bmatrix}
+                \cdot
+                \begin{bmatrix} b_1 \\ b_2 \end{bmatrix}
+            =  a_1b_1 + a_2b_2
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Cross Product</h3>
+        <equation>
+            \vec{a}\times\vec{b}
+            &=
+            \begin{bmatrix} a_1 & a_2 & a_3 \end{bmatrix}\times\begin{bmatrix} b_1 & b_2 & b_3 \end{bmatrix}\\
+            &=
+            \mathrm{det}
+            \begin{pmatrix}
+            \mathrm{\hat{i}} & \mathrm{\hat{j}} & \mathrm{\hat{k}}\\
+            a_1 & a_2 & a_3\\
+            b_1 & b_2 & b_3
+            \end{pmatrix}\\
+            &=
+            \mathrm{\hat{i}}
+            \begin{vmatrix}
+            e & f\\
+            h & i
+            \end{vmatrix}
+            -
+            \mathrm{\hat{j}}
+            \begin{vmatrix}
+            d & f\\
+            g & i
+            \end{vmatrix}
+            +
+            \mathrm{\hat{k}}
+            \begin{vmatrix}
+            d & e\\
+            g & h
+            \end{vmatrix}\\
+            &= \mathrm{\hat{i}}\left(e i - f h\right)
+             - \mathrm{\hat{j}}\left(d i - f g\right)
+             + \mathrm{\hat{k}}\left(d h - e g\right)\\
+            &=
+            \begin{bmatrix}
+                e i - f h &
+                d i - f g &
+                d h - e g
+            \end{bmatrix}\\
+            &= \vec{c}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Length of a Vector</h3>
+        <equation>
+            |a| &= \sqrt{(a_1)^2 + (a_2)^2} \\
+            |a| &= \sqrt{(a_1)^2 + (a_2)^2 + (a_3)^2}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Definition of Vector Addition</h3>
+        <p>If <tex>\vec{u}</tex> and <tex>\vec{v}</tex> are positioned so the initial point of <tex>\vec{v}</tex> is at the terminal point of <tex>\vec{u}</tex>, then the sum <tex>\vec{u} + \vec{v}</tex> is the vector from the initial point of <tex>\vec{u}</tex> to the terminal point of <tex>\vec{v}</tex>.</p>
+        <img width="300px" center src="../static/drawings/matrix/Definition-of-Vector-Addition.png">
+        <hr>
+        <p>Given some vectors <tex>\vec{u}</tex> and <tex>\vec{v}</tex>, the vector <tex>\vec{u} - \vec{v}</tex> is the vector that points from the head of <tex>\vec{v}</tex> to the head of <tex>\vec{u}</tex></p>
+        <img width="200px" center src="../static/drawings/matrix/vector-u-v.png">
+        
+    </note>
+</layout>
+<layout cols="3">
+    <note boxed>
+        <h3>Standard Basis Vectors</h3>
+        <equation>
+            \mathrm{\hat{i}} &= \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}\\
+            \mathrm{\hat{j}} &= \begin{bmatrix} 0 & 1 & 0 \end{bmatrix}\\
+            \mathrm{\hat{k}} &= \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+        </equation>
+        <hr>
+        <img width="200px" center src="../static/drawings/matrix/unit-vectors.png">
+    </note>
+    <note boxed>
+        <h3>Orthogonal</h3>
+        <p>Two vectors are orthogonal if and only if</p>
+        <equation>
+            \vec{a}\cdot\vec{b} = 0
+        </equation>
+    </note>
+    <note boxed>
+        <h3>The Unit Vector</h3>
+        <equation>
+            \hat{u} &= \frac{\vec{a}}{|\vec{a}|} 
+        </equation>
+    </note>
+    <note boxed>
+        <h3><small>If <tex>\theta</tex> is the angle between the vectors <tex>\vec{a}</tex> and <tex>\vec{b}</tex>, then</small></h3>
+        <equation>
+            \vec{a} \cdot \vec{a} = |\vec{a}| \cdot |\vec{a}| \cos\theta
+        </equation>
+    </note>
+    <note boxed>
+        <h3><small>If <tex>\theta</tex> is the angle between the nonzero vectors <tex>\vec{a}</tex> and <tex>\vec{b}</tex>, then</small></h3>
+        <equation>
+            \cos\theta = \frac
+                {\vec{a}\cdot\vec{b}}
+                {|\vec{a}| |\vec{b}|}
+        </equation>
+    </note>
+    <note boxed>
+        <h3><small>Two nonzero vectors <tex>\vec{a}</tex> and <tex>\vec{b}</tex> are parallel if and only if</small></h3>
+        <equation>
+            \vec{a}\times\vec{b} = 0
+        </equation>
+    </note>
+</layout>
+<h3>Properties of the Dot Product</h3>
+<layout cols="3">
+    <note boxed>
+        <equation>
+            \vec{a} \cdot \vec{a} = |\vec{a}|^2
+        </equation>
+    </note>
+    <note boxed>
+        <equation>
+            \vec{a} \cdot \left(\vec{b} + \vec{c}\right) = \vec{a}\vec{b} + \vec{a}\vec{c}
+        </equation>
+    </note>
+    <note boxed>
+        <equation>
+            \vec{a} \cdot \vec{b} = \vec{b} \cdot \vec{a}
+        </equation>
+    </note>
+    <note boxed>
+        <equation>
+            \left(c \cdot \vec{a}\right) \cdot \vec{b} = c\left(\vec{a} \cdot \vec{b}\right)
+        </equation>
+    </note>
+</layout>
+<h2>Direction Cosines & Direction Angles of a Vector</h2>
+<note>
+    <img width="300px" center src="../static/drawings/matrix/Direction-Cosines-Direction-Angles-of-a-Vector.png">
+    <p center>Where</p>
+    <equation>
+        \vec{v} &= \begin{bmatrix} v_x & v_y & v_z \end{bmatrix}
+        \;\;\;\;
+        ||\vec{v}|| &= \sqrt{(v_x)^2 + (v_y)^2 + (v_z)^2}
+    </equation>
+</note>
+<layout cols="3">
+    <note boxed>
+        <h3>Direction Cosines</h3>
+        <equation>
+            \cos\alpha &= \frac{v_x}{||\vec{v}||}\\
+            \cos\beta &= \frac{v_y}{||\vec{v}||}\\
+            \cos\gamma &= \frac{v_z}{||\vec{v}||}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Direction Angles</h3>
+        <equation>
+            \alpha &= \arccos \left(\frac{v_x}{||\vec{v}||}\right)\\
+            \beta &= \arccos \left(\frac{v_y}{||\vec{v}||}\right)\\
+            \gamma &= \arccos \left(\frac{v_z}{||\vec{v}||}\right)
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Theorem</h3>
+        <equation>
+            \cos^2\alpha + \cos^2\beta + \cos^2\gamma = 1
+        </equation>
+        <hr>
+        <h5>Proof</h5>
+        <equation>
+            \vec{v} &= \hat{i}\cos\alpha + \hat{k}\cos\beta + \hat{k}\cos\gamma\\
+            ||\vec{v}|| &= || \hat{i}\cos\alpha + \hat{k}\cos\beta + \hat{k}\cos\gamma|| = 1
+        </equation>
+        <p>Given</p>
+        <equation>
+            \sqrt{\cos^2\alpha + \cos^2\beta + \cos^2\gamma} &= 1\\
+            \sqrt{\cos^2\alpha + \cos^2\beta + \cos^2\gamma}^2 &= 1^2\\
+            \cos^2\alpha + \cos^2\beta + \cos^2\gamma &= 1
+        </equation>
+        <p>Therefore</p>
+        <equation>
+            \cos^2\alpha + \cos^2\beta + \cos^2\gamma = 1\\
+        </equation>
+    </note>
+</layout>
+<h2>Vector Relations</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Parallel Vectors</h3>
+        <ul>
+            <li>When two vectors are parallel; they never intersect (duh).</li>
+        </ul>
+        <p>Given some vectors</p>
+        <equation>
+            \vec{a} &= \begin{bmatrix} a_x & a_y & a_z \end{bmatrix}\\
+            \vec{b} &= \begin{bmatrix} b_x & b_y & b_z \end{bmatrix}
+        </equation>
+        <p>The vectors <tex>\vec{a}</tex> and <tex>\vec{b}</tex> are parallel if and only if they are scalar multiples of one another.</p>
+        <equation>
+            \vec{a} &= k\;\vec{b} \;\;\;\;\forall k \neq 0
+        </equation>
+        <h4>Alternatively</h4>
+        <equation>
+            \frac{a_x}{b_x} = \frac{a_y}{b_y} = \frac{a_z}{b_z}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Orthogonal Vectors</h3>
+        <ul>
+            <li>When two vectors are orthogonal; they meet at right angles.</li>
+        </ul>
+        <p>Given some vectors</p>
+        <equation>
+            \vec{a} &= \begin{bmatrix} a_x & a_y & a_z \end{bmatrix}\\
+            \vec{b} &= \begin{bmatrix} b_x & b_y & b_z \end{bmatrix}
+        </equation>
+        <p>Two vectors are orthogonal if and only if</p>
+        <equation>
+            \vec{a}\times\vec{b} = 0
+        </equation>
+    </note>
+</layout>
+
+<h2>Reparameterization of the position vector <tex>\vec{v}(t)</tex> in terms of length <tex>S(t)</tex></h2>
+<ul>
+    <li><p>We can parametrize a curve <b>with respect to arc length</b>; because arc length arises naturally from the shape of the curve and <b>does not depend on any coordinate system</b>.</p></li>
+</ul>
+<layout cols="2">
+    <note boxed>
+        <h3>The Arc Length Function</h3>
+        <p>Given</p>
+        <equation>
+            \vec{v}
+                &= \begin{bmatrix} x & y & z \end{bmatrix}
+                = \begin{bmatrix} f(t) & g(t) & h(t) \end{bmatrix}
+        </equation>
+        <p>We can redefine <tex>\vec{v}</tex> in terms of arc length between two endpoints</p>
+        <texblock>
+            \newcommand{\Long}{
+                \int_a^t \sqrt{
+                    \left(f^\prime(u)\right)^2
+                    \left(g^\prime(u)\right)^2
+                    \left(h^\prime(u)\right)^2
+                }
+            }
+            \newcommand{\AltLong}{
+                \int_a^t \sqrt{
+                    \left(\frac{\mathrm{d}x}{\mathrm{d}u}\right)^2
+                    \left(\frac{\mathrm{d}y}{\mathrm{d}u}\right)^2
+                    \left(\frac{\mathrm{d}z}{\mathrm{d}u}\right)^2
+                }
+            }
+            \newcommand{\short}{
+                \int_a^t ||\left(v^\prime(u)\right)||
+            }
+            \begin{equation}
+            \begin{split}
+                S(t)
+                    &= \Long\\
+                    &= \AltLong\\
+                    &= \short
+            \end{split}
+            \end{equation}
+        </texblock>
+        <p>That is, <tex>S(t)</tex> is the length of the curve (<tex>C</tex>) between <tex>r(a)</tex> and <tex>r(b)</tex>.</p>
+        <hr>
+        <p>Furthermore from the adjacent definition; we can simply the above to</p>
+        <equation>
+            S(t) = \int_a^t \frac{\mathrm{d}S}{\mathrm{d}t}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>The Arc Length Function</h3>
+        <equation>
+            \frac{\mathrm{d}S}{\mathrm{d}t} \equiv || v^\prime(t) ||
+        </equation>
+        <p>That is</p>
+        <texblock>
+            \newcommand{\Long}{
+                \sqrt{
+                    \left(f^\prime(u)\right)^2
+                    \left(g^\prime(u)\right)^2
+                    \left(h^\prime(u)\right)^2
+                }
+            }
+            \newcommand{\AltLong}{
+                \sqrt{
+                    \left(\frac{\mathrm{d}x}{\mathrm{d}u}\right)^2
+                    \left(\frac{\mathrm{d}y}{\mathrm{d}u}\right)^2
+                    \left(\frac{\mathrm{d}z}{\mathrm{d}u}\right)^2
+                }
+            }
+            \newcommand{\short}{
+                ||\left(v^\prime(u)\right)||
+            }
+            \begin{equation}
+            \begin{split}
+                \frac{\mathrm{d}S}{\mathrm{d}t}
+                    &= \Long\\
+                    &= \AltLong\\
+                    &= \short
+            \end{split}
+            \end{equation}
+        </texblock>
+    </note>
+</layout>
+<h2>Vectors Derived From Some Curve Defined by <tex>\vec{v}</tex></h2>
+<layout cols="2">
+    <note boxed>
+        <img width="300px" center src="../static/drawings/matrix/curvature.png">
+    </note>
+    <note boxed>
+        <h3>The Unit Vector</h3>
+        <equation>
+            \hat{U} \equiv \frac{\vec{v}}{||\vec{v}||}
+        </equation>
+    </note>
+</layout>
+<layout cols="2">
+    <note boxed>
+        <h3>The Unit <b>Tangent</b> Vector</h3>
+        <equation>
+            \vec{T}
+                &\equiv \frac
+                    {v^\prime(t)}
+                    {||v^\prime(t)||}
+                &\equiv \frac
+                    {\mathrm{d}v}
+                    {\mathrm{d}S}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>The Unit <b>Normal</b> Vector</h3>
+        <equation>
+            \vec{N} \equiv \frac
+                {T^\prime}
+                {||T^\prime||}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>The Binormal Vector</h3>
+        <equation>
+            \vec{B} \equiv \vec{T}\times\vec{N}
+        </equation>
+        <ul>
+            <li><p>Therefore, the binormal vector is orthogonal to both the tangent vector and the normal vector.</p></li>
+            <li><p>The plane determined by the normal and binormal vectors N and B at a point P on a curve C is called the normal plane of C at P.</p></li>
+            <li><p>The plane determined by the vectors T and N is called the osculating plane of C at P. The name comes from the Latin osculum, meaning “kiss.” It is the plane that comes closest to containing the part of the curve near P. (For a plane curve, the osculating plane is simply the plane that contains the curve.)</p></li>
+        </ul>
+    </note>
+    <note boxed>
+        <h3>Kappa - Curvature of a Vector</h3>
+        <equation>
+            \kappa
+                &\equiv \left|\frac{\mathrm{d}T}{\mathrm{d}S}\right|
+                &\equiv \frac
+                    {\left| T^\prime \right|}
+                    {\left| r^\prime \right|}
+                &\equiv \frac
+                    {\left| r^\prime \times r^{\prime\prime} \right|}
+                    {\left| r^\prime \right|^3}
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Tangential & Normal Components of the Acceleration Vector of the Curve</h3>
+        <p>When we study the motion of a particle, it is often useful to resolve the acceleration into two components, one in the direction of the tangent and the other in the direction of the normal.</p>
+        <equation>
+            a_{\vec{T}}
+                &= \frac{\mathrm{d}}{\mathrm{d}t} \left|\vec{v}\right|
+                = \frac{r^\prime \cdot r^{\prime\prime}}{|r^\prime|}\\
+            a_{\vec{N}}
+                &= \kappa \left|\vec{v}\right|^2
+                = \frac{\left|r^\prime \times r^{\prime\prime}\right|}{|r^\prime|}\\
+
+            \vec{a} &= a_{\vec{T}} \vec{T} + a_{\vec{N}} \vec{N}
+        </equation>
+        <p>Specifically</p>
+        <equation>
+            \left.\begin{aligned}
+            a_{\vec{T}}\\
+            a_{\vec{N}}
+            \end{aligned}\right\} \text{Tangential & Normal Components of $\vec{a}$}
+        </equation>
+    </note>
+</layout>
+<h2>Vector Calculus</h2>
+<layout cols="3">
+    <note boxed>
+        <h3><small>The Position Vector <tex>\vec{r}(t)</tex></small></h3>
+        <p center><small>(Original Function)</small></p>
+    </note>
+    <note boxed>
+        <h3><small>The Velocity Vector <tex>\vec{v}(t)</tex></small></h3>
+        <p center><small>(First Derivative)</small></p>
+        <ul>
+            <li>The velocity vector is also the tangent vector and points in the direction of the tangent line.</li>
+            <li>The <b>speed</b> of the particle <u>at time t</u> is the <b>magnitude</b> of the velocity vector, that is,
+                <equation>
+                    \underbrace{|\vec{v}(t)| = |(\vec{r})^\prime(t)| = \frac{\mathrm{d}s}{\mathrm{d}t}}
+                    _{\text{rate of change of distance with respect to time}}
+                </equation>
+            </li>
+        </ul>
+    </note>
+    <note boxed>
+        <h3><small>The Acceleration Vector <tex>\vec{a}(t)</tex></small></h3>
+        <p center><small>(Second Derivative)</small></p>
+    </note>
+</layout>
+
+
+<h1>Matrices</h1>
+<h2>Reference</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>The Determinant of A Matrix</h3>
+        <equation>
+            |A| &=
+            \begin{vmatrix}
+            a & b\\
+            c & d
+            \end{vmatrix} =
+            ad - bc\\\\
+            |A| &=
+            \begin{vmatrix}
+            a & b & c\\
+            d & e & f\\
+            g & h & i
+            \end{vmatrix}\\ &=
+            a 
+            \begin{vmatrix}
+            e & f\\
+            h & i
+            \end{vmatrix}
+            -
+            b
+            \begin{vmatrix}
+            d & f\\
+            g & i
+            \end{vmatrix}
+            +
+            c
+            \begin{vmatrix}
+            d & e\\
+            g & h
+            \end{vmatrix}
+        </equation>
+        <img center width='400px' src="../static/drawings/matrix/3x3-determinant.png">
+        <note boxed>
+            <p>Only works for square matrices.</p>
+        </note>
+    </note>
+    <note boxed>
+        <h3>The Cross Product</h3>
+        <equation>
+            \vec{a}\times\vec{b}
+            &=
+            \begin{bmatrix} a_1 & a_2 & a_3 \end{bmatrix}\times\begin{bmatrix} b_1 & b_2 & b_3 \end{bmatrix}\\
+            &=
+            \mathrm{det}
+            \begin{pmatrix}
+            \mathrm{\hat{i}} & \mathrm{\hat{j}} & \mathrm{\hat{k}}\\
+            a_1 & a_2 & a_3\\
+            b_1 & b_2 & b_3
+            \end{pmatrix}\\
+            &=
+            \mathrm{\hat{i}}
+            \begin{vmatrix}
+            e & f\\
+            h & i
+            \end{vmatrix}
+            -
+            \mathrm{\hat{j}}
+            \begin{vmatrix}
+            d & f\\
+            g & i
+            \end{vmatrix}
+            +
+            \mathrm{\hat{k}}
+            \begin{vmatrix}
+            d & e\\
+            g & h
+            \end{vmatrix}\\
+            &= \mathrm{\hat{i}}\left(e i - f h\right)
+             - \mathrm{\hat{j}}\left(d i - f g\right)
+             + \mathrm{\hat{k}}\left(d h - e g\right)\\
+            &=
+            \begin{bmatrix}
+                e i - f h &
+                d i - f g &
+                d h - e g
+            \end{bmatrix}\\
+            &= \vec{c}
+        </equation>
+    </note>
+</layout>
+
+<h1>Geometry</h1>
+<h2>Definition of a Line</h2>
+<img width="500px" center src="../static/drawings/matrix/vector-equation-of-a-line.png">
+<layout cols="3">
+    <note boxed>
+        <h3>Vector Equation of a Line</h3>
+        <p>Given</p>
+        <equation>
+            \colorB{P_1} &= \begin{bmatrix} \colorB{x_1} & \colorB{y_1} & \colorB{z_1} \end{bmatrix}\\
+            \colorC{P_2} &= \begin{bmatrix} \colorC{x_2} & \colorC{y_2} & \colorC{z_2} \end{bmatrix}\\
+        </equation>
+        <equation>
+            \colorB{P_1} &= \begin{bmatrix} \colorB{x_1} & \colorB{y_1} & \colorB{z_1} \end{bmatrix}\\
+            \colorC{P_2} &= \begin{bmatrix} \colorC{x_2} & \colorC{y_2} & \colorC{z_2} \end{bmatrix}\\
+        </equation>
+        <p>We can define a vector between <tex>\colorB{P_1}</tex> and <tex>\colorC{P_2}</tex></p>
+        <equation>
+            \colorA{\overrightarrow{\Delta\mathsf{v}}} &= 
+            \begin{bmatrix} \colorC{x_2} \\ \colorC{y_2} \\ \colorC{z_2} \end{bmatrix} -
+            \begin{bmatrix} \colorB{x_1} \\ \colorB{y_1} \\ \colorB{z_1} \end{bmatrix} =
+            \begin{bmatrix} \colorC{x_2}-\colorB{x_1} \\ \colorC{y_2}-\colorB{y_1} \\ \colorC{z_2}-\colorB{z_1} \end{bmatrix} =
+            \begin{bmatrix} \colorA{\Delta_x} \\ \colorA{\Delta_y} \\ \colorA{\Delta_z} \end{bmatrix}
+        </equation>
+        <h4>Therefore</h4>
+        <p>The equation of a line in 3D space or <tex>\mathbb{R}^3</tex> can be defined VIA the following options</p>
+        <equation>
+            L &= \colorB{P_1} + t\cdot\colorA{\overrightarrow{\Delta\mathsf{v}}} \\
+            \begin{bmatrix} x \\ y \\ z \end{bmatrix} &= 
+            \begin{bmatrix} \colorB{x_1} \\ \colorB{y_1} \\ \colorB{z_1} \end{bmatrix} +
+            t\begin{bmatrix} \colorA{\Delta_x} \\ \colorA{\Delta_y} \\ \colorA{\Delta_z} \end{bmatrix} =
+            \begin{bmatrix} \colorB{x_1} \\ \colorB{y_1} \\ \colorB{z_1} \end{bmatrix} +
+            \begin{bmatrix} t\;\colorA{\Delta_x} \\ t\;\colorA{\Delta_y} \\ t\;\colorA{\Delta_z} \end{bmatrix} \\
+            &= 
+            \begin{bmatrix} \colorB{x_1} + t\;\colorA{\Delta_x} \\ \colorB{y_1} + t\;\colorA{\Delta_y} \\ \colorB{z_1} + t\;\colorA{\Delta_z} \end{bmatrix}\\
+            &= 
+            \begin{bmatrix} \colorB{x_1} + t(\colorC{x_2}-\colorB{x_1}) \\ \colorC{x_2} + t(\colorC{x_2}-\colorB{x_1}) \\ x_3 + t(\colorC{x_2}-\colorB{x_1}) \end{bmatrix}
+        </equation>
+        <p>That is</p>
+        <equation>
+            L &= \colorB{P_1} + t\cdot\colorA{\overrightarrow{\Delta\mathsf{v}}}\\
+            \begin{bmatrix} x \\ y \\ z \end{bmatrix} &=
+            \begin{bmatrix} \colorB{x_1} + t\;\colorA{\Delta_x} \\ \colorB{y_1} + t\;\colorA{\Delta_y} \\ \colorB{z_1} + t\;\colorA{\Delta_z} \end{bmatrix}
+                = \begin{bmatrix} \colorB{x_1} + t(\colorC{x_2}-\colorB{x_1}) \\ \colorB{y_1} + t(\colorC{y_2}-\colorB{y_1}) \\ \colorB{z_1} + t(\colorC{z_2}-\colorB{z_1}) \end{bmatrix}
+        </equation>
+    </note>
+    <layout>
+        <note boxed>
+            <h3>Parametric Equation of a Line</h3>
+            <equation>
+                \underbrace{\begin{split}
+                    x &= \colorB{x_1} + t(\colorC{x_2}-\colorB{x_1}) = \colorB{x_1} + t\;\colorA{\Delta_x}\\
+                    y &= \colorB{x_1} + t(\colorC{y_2}-\colorB{y_1}) = \colorB{y_1} + t\;\colorA{\Delta_y}\\
+                    z &= \colorB{x_1} + t(\colorC{z_2}-\colorB{z_1}) = \colorB{z_1} + t\;\colorA{\Delta_z}
+                \end{split}}_{
+                    r \;=\; r_0 \;+\; a \;=\; r_0 \;+\; t\,v
+                }
+            </equation>
+        </note>
+        <note boxed>
+            <h3>Essentially</h3>
+            <equation>
+                L &= \colorB{P_1} + t\cdot\colorA{\overrightarrow{\Delta\mathsf{v}}}\;\;\forall t\in\mathbb{R}
+            </equation>
+            <p>That is, <tex>t</tex> is the scaling factor. In a way, it's like it's a function of <tex>t</tex>, but also similar to the slope (<tex>m</tex>) in <tex>y = mx + b</tex>, except <tex>m</tex> (i.e. <tex>t</tex>) is parameterized.</p>
+            <hr>
+            <p>Sometimes this will be (confusingly) denoted as</p>
+            <equation>
+                \vec{r} &= \vec{r_0} + \vec{a} = \vec{r_0} + t\vec{v}\\
+            </equation>
+        </note>
+    </layout>
+    <note boxed>
+        <h3>Symmetric Equation of a Line</h3>
+        <equation>
+            t &= \frac{x - \colorB{x_1}}{\colorC{x_2}-\colorB{x_1}} = \frac{x - \colorB{x_1}}{\colorA{\Delta_x}}\\
+            t &= \frac{y - \colorB{y_1}}{\colorC{y_2}-\colorB{y_1}} = \frac{y - \colorB{y_1}}{\colorA{\Delta_y}}\\
+            t &= \frac{z - \colorB{z_1}}{\colorC{z_2}-\colorB{z_1}} = \frac{z - \colorB{z_1}}{\colorA{\Delta_z}}
+        </equation>
+        <p>Therefore</p>
+        <equation>
+                  \frac{x - \colorB{x_1}}{\colorA{\Delta_x}}
+               &= \frac{y - \colorB{y_1}}{\colorA{\Delta_y}}
+                = \frac{z - \colorB{z_1}}{\colorA{\Delta_z}}
+            \\\\
+                  \frac{x - \colorB{x_1}}{\colorC{x_2}-\colorB{x_1}}
+               &= \frac{y - \colorB{y_1}}{\colorC{y_2}-\colorB{y_1}}
+               =  \frac{z - \colorB{z_1}}{\colorC{z_2}-\colorB{z_1}}
+        </equation>
+        <hr>
+        <h4>Rationale</h4>
+        <p>We rewrite <tex>r = r_0 + a = r_0 + t v</tex> in terms of <tex>t</tex>.</p>
+        <p>That is</p>
+        <equation>
+            x &= \colorB{x_1} + t(\colorC{x_2}-\colorB{x_1}) = \colorB{x_1} + t\;\colorA{\Delta_x}\\
+            t\;\colorA{\Delta_x}  &= x - \colorB{x_1} = t(\colorC{x_2}-\colorB{x_1})\\
+            t &= \frac{x - \colorB{x_1}}{\colorC{x_2}-\colorB{x_1}} = \frac{x - \colorB{x_1}}{\colorA{\Delta_x}} \\\\
+            y &= \colorB{y_1} + t(\colorC{y_2}-\colorB{y_1}) = \colorB{y_1} + t\;\colorA{\Delta_y}\\
+            t\;\colorA{\Delta_y}  &= y - \colorB{y_1} = t(\colorC{y_2}-\colorB{y_1})\\
+            t &= \frac{y - \colorB{y_1}}{\colorC{y_2}-\colorB{y_1}} = \frac{y - \colorB{y_1}}{\colorA{\Delta_y}} \\\\
+            z &= \colorB{z_1} + t(\colorC{z_2}-\colorB{z_1}) = \colorB{z_1} + t\;\colorA{\Delta_z}\\
+            t\;\colorA{\Delta_z} &= z - \colorB{z_1} = t(\colorC{z_2}-\colorB{z_1}) \\
+            t &= \frac{z - \colorB{z_1}}{\colorC{z_2}-\colorB{z_1}} = \frac{z - \colorB{z_1}}{\colorA{\Delta_z}}
+        </equation>
+    </note>
+</layout>
+<h2>Parameterizations of a curve</h2>
+<dl>
+    <dt>Parametrized curve</dt>
+    <dd>A curve in the plane is said to be parameterized if the set of coordinates on the curve, (x,y), are represented as functions of a variable t.</dd>
+    <dd>A parametrized Curve is a path in the xy-plane traced out by the point <tex>\left(x(t), y(t)\right)</tex> as the parameter <tex>t</tex> ranges over an interval <tex>I</tex>.</dd>
+    <dd>A parametrized Curve is a path in the xyz-plane traced out by the point <tex>\left(x(t), y(t), z(t)\right)</tex> as the parameter <tex>t</tex> ranges over an interval <tex>I</tex>.</dd>
+</dl>
+<h2>Curvature Properties</h2>
+<layout cols="3">
+    <note boxed>
+        <h3>Length of a Curve</h3>
+        <texblock>
+            \newcommand{\Long}{
+                \int_a^b \sqrt{
+                    \left(f^\prime(t)\right)^2
+                    \left(g^\prime(t)\right)^2
+                    \left(h^\prime(t)\right)^2
+                }
+            }
+            \newcommand{\AltLong}{
+                \int_a^b \sqrt{
+                    \left(\frac{\mathrm{d}x}{\mathrm{d}t}\right)^2
+                    \left(\frac{\mathrm{d}y}{\mathrm{d}t}\right)^2
+                    \left(\frac{\mathrm{d}z}{\mathrm{d}t}\right)^2
+                }
+            }
+            \newcommand{\short}{
+                \int_a^b ||\left(r^\prime(t)\right)||
+            }
+            \begin{equation}
+            \begin{split}
+                L &= \Long\\
+                  &= \AltLong\\
+                  &= \short\\
+                  &\implies \text{some constant}
+            \end{split}
+            \end{equation}
+        </texblock>
+    </note>
+    <note boxed>
+        <h3>The Arc Length Function</h3>
+        <p>Suppose</p>
+        <ul>
+            <li><p>Given some curve <tex>C</tex> defined by some vector <tex>\vec{r}</tex> in <tex>\mathbb{R}^3</tex></p></li>
+            <li><p>where <tex>r^\prime</tex> is continuous and <tex>C</tex> is traversed exactly once as <tex>t</tex> increases from <tex>a</tex> to <tex>b</tex></p></li>
+        </ul>
+        <p>We can define it's arc length function VIA</p>
+        <texblock>
+            \newcommand{\Long}{
+                \int_a^t \sqrt{
+                    \left(f^\prime(u)\right)^2
+                    \left(g^\prime(u)\right)^2
+                    \left(h^\prime(u)\right)^2
+                }
+            }
+            \newcommand{\AltLong}{
+                \int_a^t \sqrt{
+                    \left(\frac{\mathrm{d}x}{\mathrm{d}u}\right)^2
+                    \left(\frac{\mathrm{d}y}{\mathrm{d}u}\right)^2
+                    \left(\frac{\mathrm{d}z}{\mathrm{d}u}\right)^2
+                }
+            }
+            \newcommand{\short}{
+                \int_a^t ||\left(r^\prime(u)\right)||
+            }
+            \begin{equation}
+            \begin{split}
+                S(t)
+                    &= \Long\\
+                    &= \AltLong\\
+                    &= \short
+            \end{split}
+            \end{equation}
+        </texblock>
+    </note>
+</layout>
+
+
+<h1>Limits</h1>
+<layout cols="2">
+    <note boxed>
+        <h2>L’Hospital’s Rule</h2>
+        <equation>
+            \lim_{x\to{a}}\frac{f(x)}{g(x)} &= \lim_{x\to{a}}\frac{f^\prime(x)}{g^\prime(x)}\\
+            \text{if}\;\lim_{x\to{a}}\frac{f(x)}{g(x)} = \frac{0}{0}
+            \;&\text{or}\;\lim_{x\to{a}}\frac{f(x)}{g(x)} = \frac{\infty}{\infty}
+        </equation>
+        <p>In other words, if L’Hospital’s Rule applies to indeterminate forms.</p>
+    </note>
+</layout>
+<h2>Limit Laws</h2>
+<layout cols="3">
+    <equation>\lim_{x \to a} \Big[ f(x) + g(x) \Big] &= \lim_{x \to a} f(x) + \lim_{x \to a} g(x)</equation>
+    <equation>\lim_{x \to a} \Big[ f(x) - g(x) \Big] &= \lim_{x \to a} f(x) - \lim_{x \to a} g(x)</equation>
+    <equation>\lim_{x \to a} \Big[ c \cdot f(x) \Big] &= c \cdot \lim_{x \to a} f(x)</equation>
+    <equation>\lim_{x \to a} \Big[ f(x) \cdot g(x) \Big] &= \lim_{x \to a} f(x) \cdot \lim_{x \to a} g(x)</equation>
+    <equation>\lim_{x \to a} \frac{f(x)}{g(x)} &= \frac{\lim_{x \to a} f(x)}{\lim_{x \to a}g(x)} \; \text{if} \lim_{x \to a}g(x) \neq 0</equation>
+    <equation>\lim_{x \to a} \Big[ f(x) \Big]^n = \Big[ \lim_{x \to a} f(x) \Big]^n\;\text{if}\;n\in\mathbb{Z}^+</equation>
+    <equation>\underbrace{\lim_{x \to a} \sqrt[n]{f(x)} = \sqrt[n]{\lim_{x \to a} f(x)}\;\text{if}\;n\in\mathbb{Z}^+}_{\text{if $n$ is even we assume $\lim_{x \to a} f(x) > 0$}}</equation>
+    <equation>\lim_{x\to{c}}\, \left(f \circ g\right)(x) &= f\left(\lim_{x\to{c}}\, g(x)\right)</equation>
+</layout>
+<h2>Limit Formulas</h2>
+<layout cols="3">
+    <equation>\lim_{x\to\infty} \frac{1}{x^r} &= 0\;,\;\forall r > 0</equation>
+    <equation>\lim_{x\to\infty} \frac{x^n}{!n} &= 0\;,\;\forall n \in \mathbb{R}</equation>
+</layout>
+<h2>Growth Rates</h2>
+<ol>
+    <li><u>Factorial functions</u> grow faster than <u>exponential functions</u>.</li>
+    <li><u>Exponential functions</u> grow faster than <u>polynomials</u>.</li>
+</ol>
+
+<h1>Calculus</h1>
+<note>
+    <h2>Derivative Tables</h2>
+    <layout cols="3" boxed>
+        <equation>
+            \delta\sin(x) &= \cos(x) \\
+            \delta\csc(x) &= -\cot(x) \cdot \csc(x)
+        </equation>
+        <equation>
+            \delta\cos(x) &= -\sin(x) \\
+            \delta\sec(x) &= \tan(x) \cdot \sec(x)
+        </equation>
+        <equation>
+            \delta\tan(x) &= \sec^2(x) \\
+            \delta\cot(x) &= -\csc^2(x)
+        </equation>
+    </layout>
+    <layout cols="3" boxed>
+        <equation>
+            \delta\sin^{-1}(x) &= \frac{1}{\sqrt{1 - x^2}}
+        </equation>
+        <equation>
+            \delta\cos^{-1}(x) &= -\frac{1}{\sqrt{1 - x^2}}
+        </equation>
+        <equation>
+            \delta\tan^{-1}(x) &= \frac{1}{1 + x^2}
+        </equation>
+    </layout>
+</note>
+<note>
+    <h2>Integration Tables</h2>
+    <layout cols="3" boxed>
+        <equation>
+            \int\sin(x)\;\mathrm{d}x &= -\cos x \\
+            \int\csc^2(x)\;\mathrm{d}x &= -\cot x \\
+            \int\csc(x)\cdot\cot(x)\;\mathrm{d}x &= -\csc x \\
+            \int\csc(x)\;\mathrm{d}x &= \ln\left|\csc x - \cot x\right| \\
+            \int\sinh(x)\;\mathrm{d}x &= \cosh(x) \\
+        </equation>
+        <equation>
+            \int\cos(x)\;\mathrm{d}x &= \sin x \\
+            \int\sec^2(x)\;\mathrm{d}x &= \tan x \\
+            \int\sec(x)\cdot\tan(x)\;\mathrm{d}x &= \sec x \\
+            \int\sec(x)\;\mathrm{d}x &= \ln\left|\sec x + \tan x\right| \\
+            \int\cosh(x)\;\mathrm{d}x &= \sinh(x) \\
+        </equation>
+        <equation>
+            \int\tan(x)\;\mathrm{d}x &= \ln| \sec x | \\
+            \int\cot(x)\;\mathrm{d}x &= \ln| \sin x | \\
+        </equation>
+    </layout>
+    <layout cols="3" boxed>
+        <equation>
+            \int b^x\;\mathrm{d}x &= \frac{b^x}{\ln(b)}
+        </equation>
+        <equation>
+            \int\frac{1}{x^2 + a^2}\;\mathrm{d}x &= \frac{1}{a}\tan^{-1}\left(\frac{x}{a}\right)
+        </equation>
+        <equation>
+            \int\frac{1}{x^2 - a^2}\;\mathrm{d}x &= \frac{1}{2a}\ln\left|\frac{x-a}{x+a}\right|
+        </equation>
+        <equation>
+            \int\frac{1}{\sqrt{a^2 - x^2}}\;\mathrm{d}x &= \sin^{-1}\left(\frac{x}{a}\right),\;a>0
+        </equation>
+        <equation>
+            \int\frac{1}{\sqrt{x^2 \pm a^2}}\;\mathrm{d}x &= \ln\left|x+\sqrt{x^2\pm a^2}\right|
+        </equation>
+    </layout>
+</note>
+<note boxed>
+    <h2>Riemann Sums</h2>
+    <p center>Given</p>
+    <equation>
+        A &= \int_{a}^{b} f(x) = \lim_{n\to\infty}\sum_{i=1}^{n} \Delta{x} \cdot f(x) \;\text{where}\;
+            \left\{\begin{array}{ll}
+                \Delta{x} = \frac{b - a}{n}
+            \end{array}\right.
+    </equation>
+    <layout cols="2">
+        <note boxed>
+            <h3>Left Riemann Sum</h3>
+            <equation>
+                A &= \int_{a}^{b} f(x) \;\mathrm{d}x \approx L_n = \sum_{i = 0}^{n-1}\, \Delta{x}\cdot f\left(a + i\cdot\Delta{x}\right)
+            </equation>
+        </note>
+        <note boxed>
+            <h3>Right Riemann Sum</h3>
+            <equation>
+                A &= \int_{a}^{b} f(x) \;\mathrm{d}x \approx R_n = \sum_{i = 1}^{n}\, \Delta{x}\cdot f\left(a + i\cdot\Delta{x}\right)
+            </equation>
+        </note>
+    </layout>
+    <note boxed>
+        <h3>Midpoint Riemann Sum</h3>
+        <texblock>
+            \newcommand{\generalFormat}{
+                \sum_{\small{\cdots}}^{\small{\cdots}}\, \Delta{x}\cdot f\left(a + \text{“avg. of $x_i$ and $x_{i-1}$”} \cdot \Delta{x}\right)
+            }
+            \newcommand{\SigmaExampleOne}{
+                \sum_{i = 1}^{n}\, \Delta{x}\cdot f\left(a + \frac{x_{i - 1} + x_i}{2} \cdot \Delta{x}\right)
+            }
+            \newcommand{\SigmaExampleTwo}{
+                \sum_{i = 0}^{n-1}\, \Delta{x}\cdot f\left(a + \frac{x_{i + 1} + x_i}{2} \cdot \Delta{x}\right)
+            }
+            \begin{equation}
+            \begin{split}
+                A = \int_{a}^{b} f(x) \;\mathrm{d}x &\approx \generalFormat\\
+                    &\approx \SigmaExampleOne\\
+                    \text{or alternatively}&\\
+                    A &\approx \SigmaExampleTwo
+            \end{split}
+            \end{equation}
+        </texblock>
+        <hr/>
+        <p center>We can also do away with the index notation and simplify things.</p>
+        <texblock>
+            \newcommand{\SigmaExampleOne}{
+                \sum_{i = 1}^{n}\, \Delta{x}\cdot f\left(a + \frac{(i - 1) + i}{2} \cdot \Delta{x}\right) =
+                \sum_{i = 1}^{n}\, \Delta{x}\cdot f\left(a + \frac{2i - 1}{2} \cdot \Delta{x}\right)
+            }
+            \newcommand{\SigmaExampleTwo}{
+                \sum_{i = 0}^{n-1}\, \Delta{x}\cdot f\left(a + \frac{(i + 1) + i}{2} \cdot \Delta{x}\right) =
+                \sum_{i = 0}^{n-1}\, \Delta{x}\cdot f\left(a + \frac{2i + 1}{2} \cdot \Delta{x}\right)
+            }
+            \begin{equation}
+            \begin{split}
+                A = \int_{a}^{b} f(x) \;\mathrm{d}x
+                    &\approx \SigmaExampleOne\\
+                    &\approx \SigmaExampleTwo
+            \end{split}
+            \end{equation}
+        </texblock>
+    </note>
+    <note boxed>
+        <h3>Trapezoidal Riemann Sum</h3>
+        <!-- TODO: REWRITE IN TEMRS OF a_{i,n} where a = {1 if i == 1 or i == n, 2 if ...} -->
+        <texblock>
+            \dots
+        </texblock>
+    </note>
+    <note boxed>
+        <h3>Simpson's Rule</h3>
+        <!-- TODO: REWRITE IN TEMRS OF a_{i,n} where a = {1 if i == 1 or i == n, 2 if ...} -->
+        <equation>
+            \dots
+        </equation>
+    </note>
+</note>
+<layout cols="2">
+    <note>
+        <h2>Improper Integrals</h2>
+        <equation>
+            \text{Given}&\;L = \int_{a}^{\infty} f(x) \;\mathrm{d}x = \lim_{t\to\infty} \int_{a}^{\infty} f(x) \;\mathrm{d}x = \lim_{t\to\infty} F(x)\\
+            \text{If}&\;L\;\text{“exists”}\;\text{then $L$ is}\;\mathbf{\text{convergent}}\\
+            \text{If}&\;L\;\text{“does not exists”}\;\text{then $L$ is}\;\mathbf{\text{divergent}}
+        </equation>
+    </note>
+</layout>
+
+<h2>Infinite Sequences</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Infinite Sequence</h3>
+        <equation>
+            \text{Given}&\\
+            &S_n = \{a_n\}_{n=1}^{\infty}\\
+            \text{Tests}&\\
+            &\text{If}\;\lim_{n\to\infty}\,S_n \text{“exists”}\;\text{then}\;\mathbf{\text{$S_n$ is convergent}}\\
+            &\text{If}\;\lim_{n\to\infty}\,S_n \text{“does not exists”}\;\text{then}\;\mathbf{\text{$S_n$ is Divergent}}\\
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Helpful Theorem</h3>
+        <equation>
+            \text{If}&\\
+            \lim_{x\to\infty}\,|a_n| &= 0\\
+            \text{Then}&\\
+            \lim_{x\to\infty}\,a_n &= 0\\
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Example</h3>
+        <equation>
+        \text{Given}\\
+            S_n &= \{\cos\left(\frac{n\pi}{2}\right)\}\\
+            L &=\lim_{n\to\infty}\,\cos\left(\frac{n\pi}{2}\right)\\
+            &= \cos\left(\lim_{n\to\infty}\,\frac{n\pi}{2}\right) \\
+            &= \cos\left(\infty\right) \\
+            &= \text{undefined} \\
+        \text{Therefore}\\
+        \therefore\;&\text{$S_n$ is Divergent}&
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Example</h3>
+        <equation>
+        \text{Given}\\
+            S_n &= \{\sin\left(\frac{\pi}{n}\right)\}\\
+            L &= \lim_{n\to\infty}\,\sin\left(\frac{\pi}{n}\right)\\
+                &= \sin\left(\lim_{n\to\infty}\,\frac{\pi}{n}\right) \\
+                &= \sin\left(0\right) \\
+                &= 0\\
+        \text{Therefore}\\
+        \therefore\;&\text{$S_n$ is Convergent}
+        </equation>
+    </note>
+</layout>
+
+<h2>Infinite Series</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Infinite Series</h3>
+        <equation>
+            \text{Given}&\\
+            &S_n = \sum_{n = 1}^{\infty}\,a_n\\
+            \text{Tests}&\\
+            &\text{If}\;\lim_{n\to\infty}\,a_n = 0\;\text{then}\;\text{$S_n$ may be $\mathbf{\text{convergent}}$}\\
+            &\text{If}\;\lim_{n\to\infty}\,a_n \neq 0\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
+            &\text{If}\;\lim_{n\to\infty}\,a_n \text{“does not exists”}\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
+        </equation>
+        <p>Note that the limit of every <b>convergent</b> series is equal to zero. But the inverse isn't always true. If the limit is equal to zero, it <u>may not be convergent</u>.</p>
+        <p>For example, <tex>\sum_{n=1}^\infty \frac{1}{n}</tex> does diverge; <u>but it's limit is equal to zero</u>.</p>
+        <note inline><p>If the limit is equal to zero; the <u>test is <b>inconclusive</b></u>.</p></note>
+    </note>
+    <note boxed>
+        <h3>Geometric Series</h3>
+        <equation>
+            \text{Given}&\\
+            &S_n = \sum_{n = 1}^{\infty}\,a_n = \sum_{n = 1}^{\infty}\,a\cdot r^{n - 1}\;\text{where}\;
+                    \left\{\begin{array}{ll}
+                    \begin{split}
+                    a &= a_1\\
+                    r &= \frac{S_2}{S_1}
+                    \end{split}
+                    \end{array}\right.\\
+            \text{Alternatively}&\\
+            &S_n = \sum_{n=0}^{\infty}\,a_n = \sum_{n=0}^{\infty}\,a\cdot r^{n}\\
+            \text{Tests}&\\
+            &\text{If}\;|r|\geq{1}\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
+            &\text{If}\;|r|<1\;\text{then}\;\mathbf{\text{$S_n$ is convergent}}\\
+            \text{Furthermore}&\\
+            &\sum_{n = 1}^{\infty}\,a_n = \sum_{n = 1}^{\infty}\,a\cdot r^{n - 1} = \frac{a}{1 - r}\;\text{for all}\;|r|<1
+        </equation>
+    </note>
+    <note boxed>
+        <h3>The Integral Test</h3>
+        <equation>
+            &\text{Given}\\
+            &\;\;\;\;a_n = f(n)\;\text{$\forall$n on}\;[1,n)\\
+            &\;\;\;\;S_n = \sum_{n = 1}^{\infty}\,a_n\\
+            &\;\;\;\;F(x) = \int_{1}^{\infty}f(x)\;\mathrm{d}x\\
+            &\text{Where}\\
+            &\;\;\;\;f(x) > 0, \forall\,x\in\,[1, \infty)\\
+            &\;\;\;\;f^\prime(x) < 0, \forall\,x\in\,[1, \infty)\\
+            &\text{Tests}\\
+            &\;\;\;\;\text{If $S_n$ convergent; then $F(x)$ is $\mathbf{convergent}$}\\
+            &\;\;\;\;\text{If $S_n$ divergent; then $F(x)$ is $\mathbf{divergent}$}
+        </equation>
+        <note>
+            <h4>Constraints on <tex>[1,n)</tex></h4>
+            <ul>
+                <li>Continuous</li>
+                <li>Positive</li>
+                <li>Decreasing (i.e. use derivative test)</li>
+            </ul>
+        </note>
+    </note>
+    <note boxed style="display: grid;">
+        <h3>P-Series -or- Harmonic Series</h3>
+        <equation>
+            &\text{Given}\\
+            &\;\;\;\;S_n=\sum_{n=1}^{\infty}\frac{1}{n^p}\\
+            &\text{Tests}\\
+            &\;\;\;\;\text{If $p>1$ then $S_n$ is $\mathbf{convergent}$}\\
+            &\;\;\;\;\text{If $0 < p \leq{1}$ then $S_n$ is $\mathbf{divergent}$}
+        </equation>
+        <note boxed style="align-self: flex-end;">
+            <p>Note: the <u>Harmonic series</u> is the special case where <tex>p=1</tex></p>
+        </note>
+    </note>
+    <note boxed>
+        <h3>Comparison Test</h3>
+        <equation>
+            &\text{Given}\\
+            &\;\;\;\;A_n = \sum_{n=1}^\infty\,a_n\\
+            &\;\;\;\;B_n = \sum_{n=1}^\infty\,b_n\\
+            &\text{Where}\\
+            &\;\;\;\;a_n, b_n \geq 0\\
+            &\;\;\;\;a_n \leq b_n\\
+            &\text{Tests}\\
+            &\;\;\;\;\text{If $B_n$ converges $\implies A_n$ converges}\\
+            &\;\;\;\;\text{If $A_n$ diverges $\implies B_n$ diverges}\\
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Limit Comparison Test</h3>
+        <equation>
+            &\text{Given}\\
+            &\;\;\;\;A_n = \sum_{n=1}^\infty\,a_n\\
+            &\;\;\;\;B_n = \sum_{n=1}^\infty\,b_n\\
+            &\;\;\;\; L = \lim_{n\to\infty}\frac{a_n}{b_n}\\
+            &\text{Where}\\
+            &\;\;\;\;L > 0,\;L \neq \pm \infty\\
+            &\text{Therefore either both converge or diverge}\\
+            &\;\;\;\;\text{$A_n$ converges $\Longleftrightarrow B_n$ converges}\\
+            &\;\;\;\;\text{$A_n$ diverges $\Longleftrightarrow B_n$ diverges}
+        </equation>
+        <note>
+            <h4>Warning</h4>
+            <ul>
+                <li>If <tex>L > 0</tex>, this only means that the limit comparison test <u>can be used</u>. You <u>still need to determine if either</u> <tex>A_n</tex> or <tex>B_b</tex> converges or diverges.</li>
+                <li>Therefore, this does not apply to any arbitrary rational function.</li>
+            </ul>
+        </note>
+        <note>
+            <h4>Notes</h4>
+            <ul>
+                <li>For many series, we find a suitable comparison, <tex>B_n</tex>, by keeping only the <u>highest powers in the numerator and denominator</u> of <tex>A_n</tex>.</li>
+            </ul>
+        </note>
+    </note>
+    <note boxed>
+        <h3>Estimating Infinite Series</h3>
+        <equation>\cdots</equation>
+        <!-- <equation>
+            &\text{For some infinite sum “$S$”}\\
+            &\;\;\;\;S = \text{“infinite sum we will estimate”}\\
+            &\text{Given}\\
+            &\;\;\;\;S_k + \int_{k+1}^\infty f(x)\mathrm{d}x\leq\,S\leq\,S_k + \int_{k}^\infty f(x)\mathrm{d}x\\
+            &\text{Where}\\
+            &\;\;\;\;\text{$S$ is $\mathbf{\text{convergent}}$}\\
+            &\;\;\;\;\text{$\forall x$ in $f(x)$, f is $\mathbf{\text{continuous}}$}\\
+            &\;\;\;\;\text{$\forall x$ in $f(x)$, f is $\mathbf{\text{positive}}$}\\
+            &\;\;\;\;\text{$\forall x$ in $f(x)$, f is $\mathbf{\text{decreasing}}$}\\
+            &\;\;\;\;\text{$\forall x$ in $f(x)$, $\mathbf{x \geq k}$}\\
+            &\text{Or alternatively}\\
+            &\;\;\;\;\int_{k+1}^\infty f(x)\mathrm{d}x \leq S - S_k \leq\ \int_{k}^\infty f(x)\mathrm{d}x\\
+            &\text{Step #$1$}\\
+            &\;\;\;\;\text{set value for $k$}\\
+            &\text{Step #2, evaluate the following}\\
+            &\;\;\;\;\text{lower} = S_k + \int_{k+1}^\infty f(x)\mathrm{d}x\\
+            &\;\;\;\;\text{upper} = S_k + \int_{k}^\infty f(x)\mathrm{d}x\\
+            &\text{Therefore}\\
+            &\;\;\;\;\therefore\;\underbrace{\text{lower}\;\leq\,S\leq\;\text{upper}}_{\text{this is our estimate}}\\
+        </equation> -->
+    </note>
+</layout>
+
+<h2>Differential Equations</h2>
+<layout cols="2">
+    <note boxed>
+        <h3>Separable Differential Equations</h3>
+        <equation>
+            \text{Given}\\
+            \frac{\mathrm{d}y}{\mathrm{d}x}
+                &= g(x) \cdot f(y)\\
+                &= \frac{g(x)}{\frac{1}{f(y)}}\\
+                &= \frac{g(x)}{h(y)}\;\text{where}\;h(x) = \frac{1}{f(y)}\\
+            \\\text{Therefore (restated)}\\
+            \frac{\mathrm{d}y}{\mathrm{d}x} &= \frac{g(x)}{h(y)}\\
+            \\\text{Multiply reciprocals}\\
+            h(y)\;\mathrm{d}y &= g(x)\;\mathrm{d}x\\
+            \\\text{Integrate}\\
+            \int h(y)\;\mathrm{d}y &= \int g(x)\;\mathrm{d}x\\
+            \\\text{Differentiate}\\
+            \frac{d}{dx} \left(\int h(y)\;\mathrm{d}y\right) &= \frac{d}{dx} \left(\int g(x)\;\mathrm{d}x\right)\\
+            \\\text{Given}\\
+            \frac{\mathrm{d}}{dx}
+                &= \frac{\mathrm{d}}{dx} \cdot \frac{\mathrm{d}y}{\mathrm{d}y}
+                = \textcolor{blue}{\frac{\mathrm{d}}{dy}} \cdot \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}\\
+            \\\text{Therefore the LHS is equal to}\\
+            \frac{\mathrm{d}}{dx} \left(\int h(y) \mathrm{d}y\right)
+                &= \textcolor{blue}{\frac{\mathrm{d}}{dy}} \left(\int h(y) \mathrm{d}y\right) \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}\\
+                &= h(y) \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}
+            \\\text{Therefore (in conclusion)}\\
+            \therefore \; h(y)\;\frac{\mathrm{d}y}{dx} &= g(x)
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Growth and Decay Models</h3>
+        <equation>
+            \text{Given}\\
+            \frac{\mathrm{d}y}{\mathrm{d}t} &= \textcolor{Periwinkle}{k} y\\
+            \text{Proof}\\
+            \frac{1}{y}\;\mathrm{d}y &= \textcolor{Periwinkle}{k}\;\mathrm{d}t \\
+            \int \frac{1}{y}\;\mathrm{d}y &= \int \textcolor{Periwinkle}{k}\;\mathrm{d}t \\
+            \ln(y) &=  \textcolor{Periwinkle}{k} t + \textcolor{SeaGreen}{C} \\
+            e^{\ln(y)} &= e^ {\textcolor{Periwinkle}{k} t + \textcolor{SeaGreen}{C}} \\
+            y &= e^{\textcolor{Periwinkle}{k} t} \cdot e^{\textcolor{SeaGreen}{C}} \\
+            y &= e^{\textcolor{Periwinkle}{k} t} \cdot \textcolor{SeaGreen}{C} \\
+            \text{Therefore}\\
+            y &= \textcolor{SeaGreen}{C} e^{\textcolor{Periwinkle}{k} t}
+        </equation>
+        <p>The above states that all solutions for <tex>y^\prime = k y</tex> are of the form <tex>y = C e^{k t}</tex>.</p>
+        <p>Where</p>
+        <equation>
+            \textcolor{SeaGreen}{C} &= \textcolor{SeaGreen}{\text{Initial value of $y$}}\\
+            \textcolor{Periwinkle}{k} &= \textcolor{Periwinkle}{\text{Proportionality constant}}\\
+        </equation>
+        <p>Exponential growth occurs when <tex>\textcolor{Periwinkle}{k > 0}</tex>, and exponential decay occurs when <tex>\textcolor{Periwinkle}{k < 0}</tex>.</p>
+        <hr>
+        <p>The Law of Natural Growth:</p>
+        <equation>
+            \frac{\mathrm{d}\textcolor{DarkOrchid}{P}}{\mathrm{d}t}
+                = \textcolor{Periwinkle}{k} \textcolor{DarkOrchid}P
+        </equation>
+        <p>The Logistic Model of Population Growth:</p>
+        <equation>
+            \frac{\mathrm{d}\textcolor{DarkOrchid}P}{\mathrm{d}t}
+                = \textcolor{Periwinkle}{k} \textcolor{DarkOrchid}P
+                    \left(1 - \frac{\textcolor{DarkOrchid}{P}}{\textcolor{Aquamarine}{L}}\right)
+        </equation>
+        <p>Where</p>
+        <equation>
+            \textcolor{Periwinkle}{k} &= \textcolor{Periwinkle}{\text{Constant of proportionality}}\\
+            \textcolor{DarkOrchid}{P} &= \textcolor{DarkOrchid}{\text{Population at time $t$}}\\
+            \textcolor{Aquamarine}{L} &= \textcolor{Aquamarine}{\text{Max size of population}}\\
+        </equation>
+    </note>
+    <note boxed>
+        <h3>Solving the Logistic Equation</h3>
+        <equation>
+            \D{P}{t} &= kP \parens{1 - \frac{P}{L}} \\
+            \s{d}P &= kP \parens{1 - \frac{P}{L}} \s{d}t \\
+            \reciprocal{P \parens{1 - \frac{P}{L}}} \s{d}P &= k \s{d}t
+        </equation>
+        <p>Via partial fraction decomposition</p>
+        <equation>
+            \reciprocal{P \parens{1 - \frac{P}{L}}} &= \frac{A}{P} + \frac{B}{\parens{1 - \frac{P}{L}}}\\
+            0P + 1 &= A\parens{1 - \frac{P}{L}} + BP\\
+            0P + 1 &= A - \frac{P A}{L} + BP\\
+            0P + 1 &= P\parens{B - \frac{A}{L}} + A \\
+            \text{Where}\\
+            \left.\begin{array}{ll}
+                B - \frac{A}{L} &= 0\\
+                A &= 1
+            \end{array}\right\}
+            \;\begin{array}{ll}
+            A &= 1\\
+            B &= \reciprocal{L}
+            \end{array}\\
+            \text{Therefore}\\
+            \reciprocal{P \parens{1 - \frac{P}{L}}} &= \frac{1}{P} + \frac{\reciprocal{L}}{\parens{1 - \frac{P}{L}}}
+        </equation>
+        <p>Rewriting the differential equation</p>
+        <equation>
+            \reciprocal{P \parens{1 - \frac{P}{L}}} \s{d}P
+                &= \frac{1}{P} + \frac{\reciprocal{L}}{\parens{1 - \frac{P}{L}}} \s{d}P\\
+                &= k \s{d}t \\
+            \int \frac{1}{P} + \frac{\reciprocal{L}}{\parens{1 - \frac{P}{L}}}
+                &= \int k \s{d}t \\
+            \ln\; P - \reciprocal{L} \ln\parens{1 - \frac{P}{L}} &= k t + C\\
+            \ln\parens{\frac
+                {P}
+                {L \cdot \parens{1 - \frac{P}{L}}}
+            }
+        </equation>
+    </note>
+</layout>
+
+<h2>Second Order Homogeneous Linear Differential Equations with Constant Coefficients</h2>
+<layout cols="2">
+    <note>
+        <h3>Properties</h3>
+        <ul>
+            <li><p>If <tex>f(x)</tex> and <tex>g(x)</tex> are solutions; then <tex>f + g</tex> is also a solution. Therefore, the most general solution to some second order homogeneous linear differential equations with constant coefficients would be <tex>y = C_1 f(x) + C_2 g(x)</tex>.</p> <p>This is why, when you find two solutions to the characteristic equation <tex>r_1</tex> and <tex>r_2</tex> respectively, we write it like so.</p></li>
+        </ul>
+    </note>
+    <note>
+        <h3><tex>r_1 = r_2</tex></h3>
+        <p>Given some:</p>
+        <equation>
+            a y^{\prime\prime} + b y^\prime + c y = 0\;\text{where $a \neq 0$}\\
+        </equation>
+        <p>We can presume that <tex>y</tex> is of the form <tex>e^{r t}</tex>, and therefore:</p>
+        <equation>
+            \text{if}\\
+            y &= e^{r t}\\
+            \text{then}\\
+            y^{\prime} &= r e^{r t}\\
+            y^{\prime\prime} &= r^2 e^{r t}
+        </equation>
+        <p>Substituting this back into the original equation, we have:</p>
+        <equation>
+            0 &= a r^2 e^{r t} + b r e^{r t} + c e^{r t}\\
+              &= e^{r t} \left(a r^2 + b r + c\right)
+        </equation>
+        <p>Where:</p>
+        <equation>
+            &= \underbrace{e^{r t}}_\text{never $0$}
+               \underbrace{\left(a r^2 + b r + c\right)}_\text{?}
+        </equation>
+        <p>So therefore:</p>
+        <equation>
+            &\underbrace{a r^2 + b r + c = 0}
+            _\text{characteristic equation}\\
+            &r = \frac
+                {-b \pm \sqrt{b^2 - 4ac}}
+                {2a}
+              \implies r_1, r_2
+        </equation>
+        <p>Where the general solution is of the form:</p>
+        <equation>
+\left.
+\begin{array}{ll}
+    y &=\; &C_1\; e^{r_1 t} &+\; C_2\; e^{r_2 t}\\
+    y^\prime &=\; &C_1\; r_1\; e^{r_1 t} &+\; C_2\; r_2\; e^{r_2 t}\\
+    y^{\prime\prime} &=\; &C_1\; \left(r_1\right)^2\; e^{r_1 t} &+\; C_2\; \left(r_2\right)^2\; e^{r_2 t}
+\end{array}
+\right\}\text{$\forall r_1 \; r_2$ where $r_1 \neq r_2$}
+        </equation>
+    </note>
+</layout>
+<h2>Parametric Equations</h2>
+<layout cols="2">
+    <note>
+        <h3>First Derivative Formula</h3>
+        <p>To find the derivative of a given function defined parametrically by the equations <tex>x = u(t)</tex> and <tex>y = v(t)</tex>.</p>
+        <equation>
+            \text{Given}\\
+            x &= u(t)\\
+            y &= v(t)\\
+            \text{Therefore}\\
+            \frac{\mathrm{d}y}{\mathrm{d}x}
+                &= \frac
+                {\frac{\mathrm{d}y}{\mathrm{d}t}}
+                {\frac{\mathrm{d}x}{\mathrm{d}t}}
+                = \frac{v^\prime(t)}{u^\prime(t)}
+        </equation>
+    </note>
+    <note>
+        <h3>Second Derivative Formula</h3>
+        <p>To find the second derivative of a given function defined parametrically by the equations <tex>x = u(t)</tex> and <tex>y = v(t)</tex>.</p>
+        <equation>
+            \text{Given}\\
+            x &= u(t)\\
+            y &= v(t)\\
+            \text{Therefore}\\
+            \frac{\mathrm{d}{^2} y}{\mathrm{d}x^2}
+                &= \frac{\mathrm{d}}{\mathrm{d}x}\left(\frac{\mathrm{d}y}{\mathrm{d}x}\right)\\
+                &= \frac
+                {
+                    \frac{d}{\mathrm{d}t}\left( \frac{\mathrm{d}y}{\mathrm{d}x} \right)
+                }
+                {\frac{\mathrm{d}x}{\mathrm{d}t}}\\
+                &= \frac
+                    {
+                        \frac{\mathrm{d}}{\mathrm{d}t}
+                        \left(\frac{v^\prime(t)}{u^\prime(t)}\right)
+                    }
+                    {u^\prime(t)}\\
+                &=  \underbrace
+                        {
+                            \frac
+                            {
+                                \frac{\mathrm{d}}{\mathrm{d}t}
+                                \left(\frac{v^\prime(t)}{u^\prime(t)}\right)
+                            }
+                            {
+                                \frac{\mathrm{d}}{\mathrm{d}t}
+                                u(t)
+                            }
+                            = \frac
+                                {
+                                    \frac{\mathrm{d}}{\mathrm{d}t}
+                                }
+                                {
+                                    \frac{\mathrm{d}}{\mathrm{d}t}
+                                }
+                                \frac
+                                {
+                                    \left(\frac{v^\prime(t)}{u^\prime(t)}\right)
+                                }
+                                {
+                                    u(t)
+                                }
+                        }_{\text{notice the common $\frac{\mathrm{d}}{\mathrm{d}t}$}}
+                        
+        </equation>
+        <note inline>
+            <p>The above shows different ways of representing <tex>\frac{\mathrm{d}^{2}y}{\mathrm{d}x^2}</tex>. (I.e. it doesn't correspond to some final solution.)</p>
+        </note>
+    </note>
+    <note>
+        <h3>Arc Length</h3>
+        <p>Formula for the arc length of a parametric curve over the interval <tex>[a, b]</tex>.</p>
+        <equation>
+            \int_a^b \sqrt{
+                \left(\frac{\mathrm{d}x}{\mathrm{d}t}\right)^2 +
+                \left(\frac{\mathrm{d}y}{\mathrm{d}t}\right)^2
+            }
+            \mathrm{d}t
+        </equation>
+    </note>
+</layout>

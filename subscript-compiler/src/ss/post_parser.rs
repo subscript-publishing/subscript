@@ -2,6 +2,7 @@ use std::process::Command;
 use std::{collections::HashMap, path::PathBuf};
 use itertools::Itertools;
 use either::{Either, Either::Left, Either::Right};
+// use rayon::prelude::*;
 use crate::ss::{Node, Ann, Bracket, Ident, IdentInitError};
 use crate::ss::{CmdCall, BracketType, ToNode, AsNodeRef, Quotation};
 use crate::ss::cmd_decl::{
@@ -13,14 +14,15 @@ use crate::ss::cmd_decl::{
     IsRequired,
     ParentEnvNamespaceDecl,
     ChildEnvNamespaceDecl,
-    SimpleCodegen,
-    CmdCodegenRef,
     CmdCodegen,
+    // CmdCodegenRef,
+    // CmdCodegen,
     VariableArguments,
     ArgumentsDeclInstance,
     cmd_invocation,
     Override,
 };
+
 use crate::ss::{SemanticScope, ContentMode, SymbolicModeType, LayoutMode,};
 use crate::ss::ast_data::{Attribute, Attributes};
 use crate::ss::utils::{sep_by, partition};
@@ -137,6 +139,11 @@ fn apply_rewrites_to_children<'a>(
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl CmdDeclaration {
+    pub fn matches_cmd(&self, scope: &SemanticScope, cmd_call: &CmdCall) -> bool {
+        let match_ident = cmd_call.identifier.value == self.identifier;
+        let match_scope = scope.match_cmd(&self.parent_env);
+        match_ident && match_scope
+    }
     pub fn match_nodes<'a>(
         &self,
         scope: &SemanticScope,
@@ -146,7 +153,9 @@ impl CmdDeclaration {
         if let Some(ident) = nodes.first().and_then(Node::get_ident_ref) {
             index = index + 1;
             let match_ident = ident.value == self.identifier;
-            let match_scope = scope.match_cmd(&self.parent_env);
+            let match_scope = {
+                scope.match_cmd(&self.parent_env)
+            };
             if match_ident && match_scope {
                 while let Some(_) = nodes.get(index).and_then(Node::get_whitespace_ref) {
                     index = index + 1;
@@ -177,6 +186,7 @@ impl CmdDeclaration {
                 }
                 let start_of_args = index;
                 if let Some(arg_match) = self.arguments.match_instances(
+                    ident.value.as_str(),
                     scope,
                     &nodes[index..]
                 ) {
@@ -212,7 +222,7 @@ impl CmdDeclaration {
                         &mut intenral,
                         metadata,
                         cmd_payload,
-                    );
+                    ).unwrap();
                     if let Some(rewrites) = intenral.rewrites {
                         if self.internal.automatically_apply_rewrites {
                             cmd_call = cmd_call.apply_rewrite_rules(&rewrites);
@@ -220,6 +230,7 @@ impl CmdDeclaration {
                     }
                     let rest = &nodes[index..];
                     return Some((cmd_call, rest, index));
+                    // unimplemented!()
                 }
                 return None
             }
@@ -236,9 +247,9 @@ struct ArgumentMatch<'a> {
 }
 
 impl VariableArguments {
-    fn match_instances<'a>(&self, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
+    fn match_instances<'a>(&self, debug: &str, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
         for instance in self.0.iter() {
-            if let Some(res) = instance.match_instance(scope, nodes) {
+            if let Some(res) = instance.match_instance(debug, scope, nodes) {
                 return Some(res)
             }
         }
@@ -247,7 +258,7 @@ impl VariableArguments {
 }
 
 impl ArgumentsDeclInstance {
-    fn match_instance<'a>(&self, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
+    fn match_instance<'a>(&self, debug: &str, scope: &SemanticScope, nodes: &'a [Node]) -> Option<ArgumentMatch<'a>> {
         match &self.ty {
             Either::Left(Override::NoArguments) => {
                 return Some(ArgumentMatch{
@@ -281,6 +292,7 @@ impl ArgumentsDeclInstance {
             }
             Either::Right(ty_list) => {
                 let zip_result = crate::ss::utils::zip_nodes_all_match(
+                    debug,
                     nodes,
                     ty_list,
                     true,
@@ -333,23 +345,6 @@ fn apply_commands_to_children<'a>(
                 continue;
             }
         }
-        
-        // if let Some(Ann{value: ident, ..}) = next_node.clone().unwrap_ident() {
-        //     let mut matched = false;
-        //     if let Some(matching_cmds) = scope.cmds.get(&ident) {
-        //         for matching_cmd in matching_cmds {
-        //             if let Some((node, rest, skip_to_index)) = matching_cmd.match_nodes(env, scope, &nodes[ix..]) {
-        //                 processed.push(node);
-        //                 matched = true;
-        //                 index_skip = Some(ix + skip_to_index);
-        //             }
-        //         }
-        //     }
-        //     if !matched {
-        //         processed.push(next_node.clone());
-        //     }
-        // }
-
         if let Some((node, rest, skip_to_index)) = scope.to_matching_cmd_call(&nodes[ix..]) {
             processed.push(node);
             index_skip = Some(ix + skip_to_index);
@@ -379,7 +374,7 @@ impl Node {
         }
         match self {
             Node::Cmd(mut cmd_call) => {
-                let child_scope = scope.new_scope(cmd_call.identifier.value.clone());
+                let child_scope = scope.new_scope(&cmd_call);
                 cmd_call.arguments = {
                     process_children(&child_scope, cmd_call.arguments)
                 };
@@ -388,7 +383,7 @@ impl Node {
                     .map(|x| {
                         x.apply_commands(&child_scope)
                     })
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 Node::Cmd(cmd_call)
             }
             Node::Bracket(Ann{mut value, range}) => {
@@ -396,7 +391,7 @@ impl Node {
                 value.children = value.children
                     .into_iter()
                     .map(|x| x.apply_commands(scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 Node::Bracket(Ann{range, value})
             }
             Node::Quotation(Ann{mut value, range}) => {
@@ -404,7 +399,7 @@ impl Node {
                 value.children = value.children
                     .into_iter()
                     .map(|x| x.apply_commands(scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 Node::Quotation(Ann{range, value})
             }
             Node::Fragment(xs) => {
@@ -412,10 +407,12 @@ impl Node {
                 let xs = xs
                     .into_iter()
                     .map(|x| x.apply_commands(scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 Node::Fragment(xs)
             }
-            node @ Node::Ident(_) => node,
+            node @ Node::Ident(_) => {
+                Node::Fragment(process_children(&scope, vec![node])).defragment_node_tree()
+            },
             node @ Node::Text(_) => node,
             node @ Node::Symbol(_) => node,
             node @ Node::InvalidToken(_) => node,
@@ -435,7 +432,7 @@ impl Node {
                 cmd_call.arguments = cmd_call.arguments
                     .into_iter()
                     .map(|x| x.apply_rewrite_rules(rewrites))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 cmd_call.arguments = process_children(rewrites, cmd_call.arguments);
                 Node::Cmd(cmd_call)
             }
@@ -443,7 +440,7 @@ impl Node {
                 value.children = value.children
                     .into_iter()
                     .map(|x| x.apply_rewrite_rules(rewrites))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 value.children = process_children(rewrites, value.children);
                 Node::Bracket(Ann{range, value})
             }
@@ -459,7 +456,7 @@ impl Node {
                 let xs = xs
                     .into_iter()
                     .map(|x| x.apply_rewrite_rules(rewrites))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 let xs = process_children(rewrites, xs);
                 Node::Fragment(xs)
             }

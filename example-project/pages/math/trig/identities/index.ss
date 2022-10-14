@@ -1,1 +1,1 @@
-\h1{Trigonometric Identities}
+\h1[page-title]{Trigonometric Identities}

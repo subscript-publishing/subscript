@@ -17,7 +17,7 @@ use crate::html;
 
 pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> crate::html::ast::Node {
     let name = cmd.identifier.value.unwrap_remove_slash().to_string();
-    let child_scope = scope.new_scope(cmd.identifier.value.clone());
+    let child_scope = scope.new_scope(&cmd);
     let attributes = cmd.attributes
         .consume()
         .into_iter()
@@ -185,7 +185,11 @@ impl Node {
         match self {
             Node::Cmd(cmd) => {
                 // TODO
-                scope.cmd_call_to_latex(env, cmd).unwrap()
+                let result = scope.cmd_call_to_latex(env, cmd.clone());
+                if result.is_none() {
+                    println!("[{}] NO CODE-GEN {:?}", scope.cmd_decls.len(), cmd.identifier.value());
+                }
+                result.unwrap()
             }
             Node::Ident(Ann{value, ..}) => {
                 value.to_tex_ident().to_owned()

@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "ss-str-fmt",
+    "html-to-subscript",
     "ss-language-server",
     "ss-freeform-format",
     "subscript-compiler",
