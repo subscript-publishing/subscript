@@ -576,7 +576,7 @@ dependencies = [
  "serde",
  "serde_json",
  "structopt",
- "subscript_compiler",
+ "subscript-compiler",
  "toml",
  "wax",
 ]
@@ -1708,23 +1708,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "subscript"
-version = "0.1.0"
-dependencies = [
- "either",
- "itertools",
- "lazy_static",
- "rayon",
- "serde",
- "serde_json",
- "structopt",
- "subscript_compiler",
- "toml",
- "wax",
-]
-
-[[package]]
-name = "subscript_compiler"
+name = "subscript-compiler"
 version = "0.1.0"
 dependencies = [
  "either",

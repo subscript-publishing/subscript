@@ -5,7 +5,6 @@ members = [
     "ss-language-server",
     "ss-freeform-format",
     "subscript-compiler",
-    "subscript",
 ]
 
 exclude = [
