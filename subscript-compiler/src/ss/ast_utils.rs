@@ -12,9 +12,10 @@ use std::iter::FromIterator;
 use std::vec;
 use itertools::Itertools;
 use serde::{Serialize, Deserialize};
+use crate::compiler::low_level_api::CompilerError;
 use crate::ss::parser::IdentInitError;
 use crate::ss::ast_data::CmdCall;
-use crate::ss::SemanticScope;
+use crate::ss::{SemanticScope, ResourceEnv};
 use crate::ss::ast_data::{Node, Ann, Ident, Bracket, BracketType, Quotation};
 
 use super::{Attribute, Attributes};
@@ -40,6 +41,28 @@ impl Ident {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl Node {
+    pub fn from_str_text_mode(code: impl AsRef<str>) -> Result<Self, CompilerError> {
+        use crate::compiler::low_level_api::{parse_source, process_commands};
+        let mut env = ResourceEnv::default();
+        let scope = crate::ss::SemanticScope::default();
+        let nodes = parse_source(&scope, code.as_ref())?;
+        let nodes = process_commands(&mut env, &scope, nodes).defragment_node_tree();
+        assert!(env.is_empty());
+        Ok(nodes)
+    }
+    pub fn from_str_sym_mode(code: impl AsRef<str>) -> Result<Self, CompilerError> {
+        use crate::compiler::low_level_api::{parse_source, process_commands};
+        let mut env = ResourceEnv::default();
+        let scope = {
+            let mut scope = SemanticScope::default();
+            scope.content_mode = crate::ss::ContentMode::Symbolic(crate::ss::SymbolicModeType::All);
+            scope
+        };
+        let nodes = parse_source(&scope, code.as_ref())?;
+        let nodes = process_commands(&mut env, &scope, nodes).defragment_node_tree();
+        assert!(env.is_empty());
+        Ok(nodes)
+    }
     pub fn new_ident<T: Into<Ann<String>>>(str: T) -> Result<Self, IdentInitError> {
         let ann: Ann<Ident> = str.into().to_ident()?;
         Ok(Node::Ident(ann))
@@ -179,6 +202,12 @@ impl Node {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl Node {
+    pub fn get_cmd<'b>(&'b self) -> Option<&'b CmdCall> {
+        match self {
+            Node::Cmd(x) => Some(x),
+            _ => None,
+        }
+    }
     pub fn get_ident_ref<'b>(&'b self) -> Option<&'b Ann<Ident>> {
         match self {
             Node::Ident(x) => Some(x),

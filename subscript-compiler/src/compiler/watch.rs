@@ -8,7 +8,7 @@ use notify::event::ModifyKind;
 use notify::event::DataChange;
 use crate::html::toc::TocPageEntry;
 use crate::html::template::TemplateFile;
-use crate::ss::{SemanticScope, HtmlCodegenEnv};
+use crate::ss::{SemanticScope, HtmlCodegenEnv, ResourceEnv};
 use super::Compiler;
 
 
@@ -23,20 +23,20 @@ fn async_watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Resul
 }
 
 impl Compiler {
-    pub fn recompile(&self, source_path: impl AsRef<Path>) {
+    pub fn recompile(&self, resource_env: &mut ResourceEnv, source_path: impl AsRef<Path>) {
         let toc_entries = self.files
             .iter()
             .filter_map(|entry| {
                 if entry.matches_path(source_path.as_ref()) {
-                    println!("Recompiling: {:?}", entry.src_file);
-                    let toc_entry = self.compile_page_to_html(&entry);
+                    let toc_entry = self.compile_page_to_html(resource_env, &entry);
+                    println!("Recompiled: {:?}", entry.src_file);
                     return Some(toc_entry);
                 }
                 None
             })
             .collect_vec();
     }
-    async fn compile_watch_loop(self) -> notify::Result<()> {
+    async fn compile_watch_loop(self, mut resource_env: ResourceEnv) -> notify::Result<()> {
         let mut watching_files = Vec::new();
         for entry in self.files.iter() {
             watching_files.push(entry.src_file.clone());
@@ -59,7 +59,7 @@ impl Compiler {
                     match &event.kind {
                         EventKind::Modify(ModifyKind::Data(DataChange::Content)) => {
                             for path in event.paths.clone() {
-                                self.recompile(&path);
+                                self.recompile(&mut resource_env, &path);
                             }
                         }
                         _ => ()
@@ -71,8 +71,10 @@ impl Compiler {
         Ok(())
     }
     pub fn compile_html_watch_sources(self) {
+        let mut resource_env = ResourceEnv::default();
+        self.compile_pages_to_html(&mut resource_env);
         futures::executor::block_on(async {
-            if let Err(e) = self.compile_watch_loop().await {
+            if let Err(e) = self.compile_watch_loop(resource_env).await {
                 println!("error: {:?}", e)
             }
         });

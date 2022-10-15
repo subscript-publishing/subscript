@@ -4,6 +4,7 @@ use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
 use crate::ss::SymbolicModeType;
 use crate::ss::ast_traits::SyntacticallyEq;
+use crate::ss::ResourceEnv;
 
 use super::*;
 
@@ -78,7 +79,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&cmd);
+                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -110,7 +111,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&cmd);
+                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let preset = cmd.attributes
                     .get_str_value("preset")
@@ -231,7 +232,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     },
                 });
                 let is_unique = !scope.in_heading_scope();
-                let child_scope = scope.new_scope(&cmd);
+                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -263,7 +264,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&cmd);
+                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -299,7 +300,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&cmd);
+                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -328,23 +329,17 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
 }
 
 pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
-    // let test = CmdDeclBuilder::new(Ident::from("\\test").unwrap())
-    //     .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
-    //     .arguments(arguments! {
-    //         for (internal, metadata, cmd_payload) match {
-    //             ({den}) => {
-    //                 unimplemented!("HERE FOR TEST")
-    //             },
-    //             ({num}, {den}) => {
-    //                 unimplemented!("HERE FOR TEST")
-    //             },
-    //         }
-    //     })
-    //     .finish();
     let frac = CmdDeclBuilder::new(Ident::from("\\frac").unwrap())
         .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
         .arguments(arguments! {
             for (internal, metadata, cmd_payload) match {
+                ({num}, {den}) => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: cmd_payload.attributes.unwrap_or_default(),
+                        arguments: vec![num, den]
+                    })
+                },
                 ({den}) => {
                     Node::Cmd(CmdCall {
                         identifier: cmd_payload.identifier,
@@ -355,13 +350,6 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
                             ]),
                             den
                         ]
-                    })
-                },
-                ({num}, {den}) => {
-                    Node::Cmd(CmdCall {
-                        identifier: cmd_payload.identifier,
-                        attributes: cmd_payload.attributes.unwrap_or_default(),
-                        arguments: vec![num, den]
                     })
                 },
             }
@@ -384,10 +372,6 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
                 })
                 .to_latex(to_latex!{
                     fn (env, scope, cmd) {
-                        // if cmd.identifier.value == Ident::from("\\lbrace") {
-
-                        // }
-                        // panic!("HERE: [{}] {:?} YES!", cmd.attributes.has_truthy_option("inline"), cmd.identifier.value);
                         if cmd.attributes.has_truthy_option("inline") {
                             $token.to_string()
                         } else {
@@ -412,13 +396,8 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .to_latex(to_latex!{
-            fn (env, scope, cmd) {
-                let contents = cmd.arguments
-                    .into_iter()
-                    .flat_map(Node::unblock_root_curly_brace)
-                    .map(|x| x.to_latex(env, scope))
-                    .collect::<Vec<_>>()
-                    .join("");
+            // TODO
+            fn (env, scope, cmd, all contents) {
                 contents
             }
         })
@@ -437,13 +416,7 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .to_latex(to_latex!{
-            fn (env, scope, cmd) {
-                let contents = cmd.arguments
-                    .into_iter()
-                    .flat_map(Node::unblock_root_curly_brace)
-                    .map(|x| x.to_latex(env, scope))
-                    .collect::<Vec<_>>()
-                    .join("");
+            fn (env, scope, cmd, all contents) {
                 if cmd.attributes.has_truthy_option("left") {
                     let open = "\\begin{dcases}";
                     let close = "\\end{dcases}";
@@ -472,13 +445,7 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .to_latex(to_latex!{
-            fn (env, scope, cmd) {
-                let contents = cmd.arguments
-                    .into_iter()
-                    // .flat_map(Node::unblock_root_curly_brace)
-                    .map(|x| x.to_latex(env, scope))
-                    .collect::<Vec<_>>()
-                    .join("");
+            fn (env, scope, cmd, all contents) {
                 format!("\\small\\text{{{contents}}}\\normalsize")
             }
         })
@@ -497,13 +464,7 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .to_latex(to_latex!{
-            fn (env, scope, cmd) {
-                let contents = cmd.arguments
-                    .into_iter()
-                    .flat_map(Node::unblock_root_curly_brace)
-                    .map(|x| x.to_latex(env, scope))
-                    .collect::<Vec<_>>()
-                    .join("");
+            fn (env, scope, cmd, all contents) {
                 format!("\\tiny\\text{{{contents}}}\\normalsize")
             }
         })
@@ -522,13 +483,7 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .to_latex(to_latex!{
-            fn (env, scope, cmd) {
-                let contents = cmd.arguments
-                    .into_iter()
-                    .flat_map(Node::unblock_root_curly_brace)
-                    .map(|x| x.to_latex(env, scope))
-                    .collect::<Vec<_>>()
-                    .join("");
+            fn (env, scope, cmd, all contents) {
                 format!("\\small{{{contents}}}\\normalsize")
             }
         })
@@ -568,11 +523,39 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
                         attributes: cmd_payload.attributes.unwrap_or_default(),
                         arguments: vec![
                             arg1,
-                            "\\times10^",
                             arg2
                         ]
                     })
                 },
+            }
+        })
+        .to_latex(to_latex_cases!{
+            for (env, scope, attrs) match {
+                default contents => {{
+                    String::new()
+                }},
+                ({arg1}, {arg2}) => {
+                    format!("{{{arg1}}} \\times 10^{{{arg2}}}")
+                },
+            }
+        })
+        .finish();
+    let mol_unit = CmdDeclBuilder::new(Ident::from("\\mol").unwrap())
+        .parent_content_mode(ContentMode::Symbolic(SymbolicModeType::All))
+        .arguments(arguments! {
+            for (internal, metadata, cmd_payload) match {
+                () => {
+                    Node::Cmd(CmdCall {
+                        identifier: cmd_payload.identifier,
+                        attributes: Default::default(),
+                        arguments: vec![]
+                    })
+                },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd) {
+                String::from("\\pu{mol}")
             }
         })
         .finish();
@@ -584,13 +567,14 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
                     Node::Cmd(CmdCall {
                         identifier: cmd_payload.identifier,
                         attributes: cmd_payload.attributes.unwrap_or_default(),
-                        arguments: vec![
-                            Node::new_text("\\left"),
-                            Node::new_paren(vec![arg1]),
-                            Node::new_text("\\right"),
-                        ]
+                        arguments: vec![arg1]
                     })
                 },
+            }
+        })
+        .to_latex(to_latex!{
+            fn (env, scope, cmd, all children) {
+                format!("\\left({{{children}}}\\right)")
             }
         })
         .finish();
@@ -628,6 +612,7 @@ pub fn all_subscript_symbolic_mode_commands() -> Vec<cmd_decl::CmdDeclaration> {
         smaller,
         tinier,
         sci,
+        mol_unit,
         parens,
         reciprocal,
     ]

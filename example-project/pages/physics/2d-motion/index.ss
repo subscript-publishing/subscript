@@ -142,10 +142,8 @@
       }\p{Solutions}
       \equation{
          t_{\text{top}} &= \frac{v_0\cdot\sin\theta}{g}\\
-                     \Delta{y_{\text{max}}} &= \frac{v_0^2 + sin^2\theta}{2g}\\
-                     \text{Range} &= \frac
-                         {2 \cdot v_0^2 \cdot \sin\theta \cdot \cos\theta}
-                         {g}
+         \Delta{y_{\text{max}}} &= \frac{v_0^2 + sin^2\theta}{2g}\\
+         \text{Range} &= \frac{2 \cdot v_0^2 \cdot \sin\theta \cdot \cos\theta}{g}
       }
    }
    \note{
@@ -226,9 +224,8 @@
             }
             \h5{Deriving velocity}
             \equation{
-               v_y &= v_{0y} + a_y\cdot t
-                                       &= v_{0y} + g \cdot t\\
-                                       &= v_0\cdot\sin\theta - 9.8\frac{\mathrm{m}}{\mathrm{s^2}}
+               v_y &= v_{0y} + a_y\cdot t = v_{0y} + g \cdot t\\
+                   &= v_0\cdot\sin\theta - 9.8\frac{\mathrm{m}}{\mathrm{s^2}}
             }
          }
       }\hr\h4{In summary}
@@ -250,8 +247,7 @@
             \equation{
                y = y_0 + v_0\cdot\sin\theta\cdot t + \frac{1}{2}g t^2
             }
-            \p{Rearranging a bit and setting \{y = 0}, we can see that solving for \{t}
-                                will yield the time at which \{y = 0}.}
+            \p{Rearranging a bit and setting \{y = 0}, we can see that solving for \{t} will yield the time at which \{y = 0}.}
             \equation{
                0 = \underbrace{\frac{1}{2}g}_{\text{a}}\;t^2
                                    + \underbrace{v_0\cdot\sin\theta}_{\text{b}}\; t
@@ -260,12 +256,8 @@
             \p{Therefore}
             \equation{
                t &= \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\\
-                                   &= \frac
-                                       {-v_0\cdot\sin\theta\pm\sqrt{\left(v_0\cdot\sin\theta\right)^2 - 4\left(\frac{1}{2}g\right)y_0}}
-                                       {2\frac{1}{2}g}\\
-                                   &= \frac
-                                       {-v_0\cdot\sin\theta\pm\sqrt{\left(v_0\cdot\sin\theta\right)^2 - 2 g y_0}}
-                                       {g}
+                 &= \frac{-v_0\cdot\sin\theta\pm\sqrt{\left(v_0\cdot\sin\theta\right)^2 - 4\left(\frac{1}{2}g\right)y_0}}{2\frac{1}{2}g}\\
+                  &= \frac{-v_0\cdot\sin\theta\pm\sqrt{\left(v_0\cdot\sin\theta\right)^2 - 2 g y_0}}{g}
             }
             \p{Plugging the solution for \{t} (and ignoring the negative or non-real solutions for \{t})
                                 into \{x(t)} will yield the horizontal displacement (range) at the time \{y = 0}.
@@ -484,12 +476,11 @@
               \vec{a} &\perp \vec{v}\\
    }
    \equation{
-      \left.
-              \begin{array}{ll}
-              \vec{a} &\parallel \vec{r}\\
-              \vec{a} &\propto \vec{r}
-              \end{array}
-              \right\}\;\smallText{They are anti-parallel}
+      \hbrace[right]{
+         \vec{a} &\parallel \vec{r}\\
+         \vec{a} &\propto \vec{r}
+      }
+      \;\smallText{They are anti-parallel}
    }
 }
 \h2{Auxiliary Formula Reference}

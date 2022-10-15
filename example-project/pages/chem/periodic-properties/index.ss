@@ -5,7 +5,12 @@
 
 \h2{Terms}
 
-\dl{\dt{Isoelectronic}\dd{Atoms with the same number of electrons.}\dt{Ionization energy}\dt{Predict Metallic Character Based on Periodic Trends}}
+\dl{
+    \dt{Isoelectronic}
+    \dd{Atoms with the same number of electrons.}
+    \dt{Ionization energy}
+    \dt{Predict Metallic Character Based on Periodic Trends}
+}
 \h2{Expanded Octet (Exceptions to the Octet Rule)}
 
 \p[center]{All non-metals from period 3 to period 8 of the Periodic Table, can have expanded octets.}

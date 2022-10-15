@@ -126,7 +126,8 @@
          \int\tan(x)\;\mathrm{d}x &= \ln| \sec x | \\
                      \int\cot(x)\;\mathrm{d}x &= \ln| \sin x | \\
       }
-   }\grid[boxed, col="3"]{
+   }
+   \grid[boxed, col="3"]{
       \equation{
          \int b^x\;\mathrm{d}x &= \frac{b^x}{\ln(b)}
       }
@@ -150,9 +151,9 @@
    \p[center]{Given}
    \equation{
       A &= \int_{a}^{b} f(x) = \lim_{n\to\infty}\sum_{i=1}^{n} \Delta{x} \cdot f(x) \;\text{where}\;
-                  \left\{\begin{array}{ll}
-                      \Delta{x} = \frac{b - a}{n}
-                  \end{array}\right.
+         \hbrace[left]{
+            \Delta{x} = \frac{b - a}{n}
+         }
    }
    \grid[col="2"]{
       \note[boxed]{
@@ -237,45 +238,49 @@
       \h3{Infinite Sequence}
       \equation{
          \text{Given}&\\
-                     &S_n = \{a_n\}_{n=1}^{\infty}\\
-                     \text{Tests}&\\
-                     &\text{If}\;\lim_{n\to\infty}\,S_n \text{“exists”}\;\text{then}\;\mathbf{\text{$S_n$ is convergent}}\\
-                     &\text{If}\;\lim_{n\to\infty}\,S_n \text{“does not exists”}\;\text{then}\;\mathbf{\text{$S_n$ is Divergent}}\\
+         &S_n = \{a_n\}_{n=1}^{\infty}\\
+         \text{Tests}&\\
+         &\text{If}\;\lim_{n\to\infty}\,S_n \text{“exists”}\;\text{then}\;\mathbf{\text{$S_n$ is convergent}}\\
+         &\text{If}\;\lim_{n\to\infty}\,S_n \text{“does not exists”}\;\text{then}\;\mathbf{\text{$S_n$ is Divergent}}
       }
    }
    \note[boxed]{
       \h3{Helpful Theorem}
       \equation{
          \text{If}&\\
-                     \lim_{x\to\infty}\,|a_n| &= 0\\
-                     \text{Then}&\\
-                     \lim_{x\to\infty}\,a_n &= 0\\
+         \lim_{x\to\infty}\,|a_n| &= 0\\
+         \text{Then}&\\
+         \lim_{x\to\infty}\,a_n &= 0\\
       }
    }
    \note[boxed]{
       \h3{Example}
+      \p{Given}
       \equation{
-         \text{Given}\\
-                     S_n &= \{\cos\left(\frac{n\pi}{2}\right)\}\\
-                     L &=\lim_{n\to\infty}\,\cos\left(\frac{n\pi}{2}\right)\\
-                     &= \cos\left(\lim_{n\to\infty}\,\frac{n\pi}{2}\right) \\
-                     &= \cos\left(\infty\right) \\
-                     &= \text{undefined} \\
-                 \text{Therefore}\\
-                 \therefore\;&\text{$S_n$ is Divergent}&
+            S_n &= \{\cos\left(\frac{n\pi}{2}\right)\}\\
+            L &=\lim_{n\to\infty}\,\cos\left(\frac{n\pi}{2}\right)\\
+            &= \cos\left(\lim_{n\to\infty}\,\frac{n\pi}{2}\right) \\
+            &= \cos\left(\infty\right) \\
+            &= \text{undefined}
+      }
+      \p{Therefore}
+      \equation{
+         \therefore\;\text{$S_n$ is Divergent}
       }
    }
    \note[boxed]{
       \h3{Example}
+      \p{Given}
       \equation{
-         \text{Given}\\
-                     S_n &= \{\sin\left(\frac{\pi}{n}\right)\}\\
-                     L &= \lim_{n\to\infty}\,\sin\left(\frac{\pi}{n}\right)\\
-                         &= \sin\left(\lim_{n\to\infty}\,\frac{\pi}{n}\right) \\
-                         &= \sin\left(0\right) \\
-                         &= 0\\
-                 \text{Therefore}\\
-                 \therefore\;&\text{$S_n$ is Convergent}
+            S_n &= \{\sin\left(\frac{\pi}{n}\right)\}\\
+            L &= \lim_{n\to\infty}\,\sin\left(\frac{\pi}{n}\right)\\
+                  &= \sin\left(\lim_{n\to\infty}\,\frac{\pi}{n}\right) \\
+                  &= \sin\left(0\right) \\
+                  &= 0
+      }
+      \p{Therefore}
+      \equation{
+         \therefore\;\text{$S_n$ is Convergent}
       }
    }
 }
@@ -286,11 +291,11 @@
       \h3{Infinite Series}
       \equation{
          \text{Given}&\\
-                     &S_n = \sum_{n = 1}^{\infty}\,a_n\\
-                     \text{Tests}&\\
-                     &\text{If}\;\lim_{n\to\infty}\,a_n = 0\;\text{then}\;\text{$S_n$ may be $\mathbf{\text{convergent}}$}\\
-                     &\text{If}\;\lim_{n\to\infty}\,a_n \neq 0\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
-                     &\text{If}\;\lim_{n\to\infty}\,a_n \text{“does not exists”}\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
+         &S_n = \sum_{n = 1}^{\infty}\,a_n\\
+         \text{Tests}&\\
+         &\text{If}\;\lim_{n\to\infty}\,a_n = 0\;\text{then}\;\text{$S_n$ may be $\mathbf{\text{convergent}}$}\\
+         &\text{If}\;\lim_{n\to\infty}\,a_n \neq 0\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
+         &\text{If}\;\lim_{n\to\infty}\,a_n \text{“does not exists”}\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
       }
       \p{Note that the limit of every \b{convergent} series is equal to zero. But the inverse isn't always true. If the limit is equal to zero, it \u{may not be convergent}.}
       \p{For example, \{\sum_{n=1}^\infty \frac{1}{n}} does diverge; \u{but it's limit is equal to zero}.}
@@ -300,22 +305,22 @@
    }
    \note[boxed]{
       \h3{Geometric Series}
+      \p{Given}
       \equation{
-         \text{Given}&\\
-                     &S_n = \sum_{n = 1}^{\infty}\,a_n = \sum_{n = 1}^{\infty}\,a\cdot r^{n - 1}\;\text{where}\;
-                             \left\{\begin{array}{ll}
-                             \begin{split}
-                             a &= a_1\\
-                             r &= \frac{S_2}{S_1}
-                             \end{split}
-                             \end{array}\right.\\
-                     \text{Alternatively}&\\
-                     &S_n = \sum_{n=0}^{\infty}\,a_n = \sum_{n=0}^{\infty}\,a\cdot r^{n}\\
-                     \text{Tests}&\\
-                     &\text{If}\;|r|\geq{1}\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
-                     &\text{If}\;|r|<1\;\text{then}\;\mathbf{\text{$S_n$ is convergent}}\\
-                     \text{Furthermore}&\\
-                     &\sum_{n = 1}^{\infty}\,a_n = \sum_{n = 1}^{\infty}\,a\cdot r^{n - 1} = \frac{a}{1 - r}\;\text{for all}\;|r|<1
+         S_n = \sum_{n = 1}^{\infty}\,a_n = \sum_{n = 1}^{\infty}\,a\cdot r^{n - 1}\;\text{where}\;\hbrace[left]{a &= a_1\\ r &= \frac{S_2}{S_1}}
+      }
+      \p{Alternatively}
+      \equation{
+         S_n = \sum_{n=0}^{\infty}\,a_n = \sum_{n=0}^{\infty}\,a\cdot r^{n}
+      }
+      \p{Tests}
+      \equation{
+         \text{If}\;|r|\geq{1}\;\text{then}\;\mathbf{\text{$S_n$ is divergent}}\\
+         \text{If}\;|r|<1\;\text{then}\;\mathbf{\text{$S_n$ is convergent}}\\
+      }
+      \p{Furthermore}
+      \equation{
+         \sum_{n = 1}^{\infty}\,a_n = \sum_{n = 1}^{\infty}\,a\cdot r^{n - 1} = \frac{a}{1 - r}\;\text{for all}\;|r|<1
       }
    }
    \note[boxed]{
@@ -409,28 +414,28 @@
       \h3{Separable Differential Equations}
       \equation{
          \text{Given}\\
-                     \frac{\mathrm{d}y}{\mathrm{d}x}
-                         &= g(x) \cdot f(y)\\
-                         &= \frac{g(x)}{\frac{1}{f(y)}}\\
-                         &= \frac{g(x)}{h(y)}\;\text{where}\;h(x) = \frac{1}{f(y)}\\
-                     \\\text{Therefore (restated)}\\
-                     \frac{\mathrm{d}y}{\mathrm{d}x} &= \frac{g(x)}{h(y)}\\
-                     \\\text{Multiply reciprocals}\\
-                     h(y)\;\mathrm{d}y &= g(x)\;\mathrm{d}x\\
-                     \\\text{Integrate}\\
-                     \int h(y)\;\mathrm{d}y &= \int g(x)\;\mathrm{d}x\\
-                     \\\text{Differentiate}\\
-                     \frac{d}{dx} \left(\int h(y)\;\mathrm{d}y\right) &= \frac{d}{dx} \left(\int g(x)\;\mathrm{d}x\right)\\
-                     \\\text{Given}\\
-                     \frac{\mathrm{d}}{dx}
-                         &= \frac{\mathrm{d}}{dx} \cdot \frac{\mathrm{d}y}{\mathrm{d}y}
-                         = \textcolor{blue}{\frac{\mathrm{d}}{dy}} \cdot \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}\\
-                     \\\text{Therefore the LHS is equal to}\\
-                     \frac{\mathrm{d}}{dx} \left(\int h(y) \mathrm{d}y\right)
-                         &= \textcolor{blue}{\frac{\mathrm{d}}{dy}} \left(\int h(y) \mathrm{d}y\right) \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}\\
-                         &= h(y) \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}
-                     \\\text{Therefore (in conclusion)}\\
-                     \therefore \; h(y)\;\frac{\mathrm{d}y}{dx} &= g(x)
+         \frac{\mathrm{d}y}{\mathrm{d}x}
+               &= g(x) \cdot f(y)\\
+               &= \frac{g(x)}{\frac{1}{f(y)}}\\
+               &= \frac{g(x)}{h(y)}\;\text{where}\;h(x) = \frac{1}{f(y)}\\
+         \\\text{Therefore (restated)}\\
+         \frac{\mathrm{d}y}{\mathrm{d}x} &= \frac{g(x)}{h(y)}\\
+         \\\text{Multiply reciprocals}\\
+         h(y)\;\mathrm{d}y &= g(x)\;\mathrm{d}x\\
+         \\\text{Integrate}\\
+         \int h(y)\;\mathrm{d}y &= \int g(x)\;\mathrm{d}x\\
+         \\\text{Differentiate}\\
+         \frac{d}{dx} \left(\int h(y)\;\mathrm{d}y\right) &= \frac{d}{dx} \left(\int g(x)\;\mathrm{d}x\right)\\
+         \\\text{Given}\\
+         \frac{\mathrm{d}}{dx}
+               &= \frac{\mathrm{d}}{dx} \cdot \frac{\mathrm{d}y}{\mathrm{d}y}
+               = \textcolor{blue}{\frac{\mathrm{d}}{dy}} \cdot \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}\\
+         \\\text{Therefore the LHS is equal to}\\
+         \frac{\mathrm{d}}{dx} \left(\int h(y) \mathrm{d}y\right)
+               &= \textcolor{blue}{\frac{\mathrm{d}}{dy}} \left(\int h(y) \mathrm{d}y\right) \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}\\
+               &= h(y) \textcolor{JungleGreen}{\frac{\mathrm{d}y}{dx}}
+         \\\text{Therefore (in conclusion)}\\
+         \therefore \; h(y)\;\frac{\mathrm{d}y}{dx} &= g(x)
       }
    }
    \note[boxed]{
@@ -476,40 +481,37 @@
    \note[boxed]{
       \h3{Solving the Logistic Equation}
       \equation{
-         \D{P}{t} &= kP \parens{1 - \frac{P}{L}} \\
-                     \s{d}P &= kP \parens{1 - \frac{P}{L}} \s{d}t \\
-                     \reciprocal{P \parens{1 - \frac{P}{L}}} \s{d}P &= k \s{d}t
+         \frac{\mathrm{d}P}{\mathrm{d}t} &= kP \parens{1 - \frac{P}{L}} \\
+         \mathrm{d}P &= kP \parens{1 - \frac{P}{L}} \mathrm{d}t \\
+         \frac{1}{P \parens{1 - \frac{P}{L}}} \mathrm{d}P &= k \mathrm{d}t
       }
       \p{Via partial fraction decomposition}
       \equation{
-         \reciprocal{P \parens{1 - \frac{P}{L}}} &= \frac{A}{P} + \frac{B}{\parens{1 - \frac{P}{L}}}\\
+         \frac{1}{P \parens{1 - \frac{P}{L}}} &= \frac{A}{P} + \frac{B}{\parens{1 - \frac{P}{L}}}\\
                      0P + 1 &= A\parens{1 - \frac{P}{L}} + BP\\
                      0P + 1 &= A - \frac{P A}{L} + BP\\
                      0P + 1 &= P\parens{B - \frac{A}{L}} + A \\
                      \text{Where}\\
-                     \left.\begin{array}{ll}
-                         B - \frac{A}{L} &= 0\\
-                         A &= 1
-                     \end{array}\right\}
+                     \hbrace[right]{
+                        B - \frac{A}{L} &= 0\\
+                        A &= 1
+                     }
                      \;\begin{array}{ll}
                      A &= 1\\
-                     B &= \reciprocal{L}
+                     B &= \frac{1}{L}
                      \end{array}\\
                      \text{Therefore}\\
-                     \reciprocal{P \parens{1 - \frac{P}{L}}} &= \frac{1}{P} + \frac{\reciprocal{L}}{\parens{1 - \frac{P}{L}}}
+                     \frac{1}{P \parens{1 - \frac{P}{L}}} &= \frac{1}{P} + \frac{\frac{1}{L}}{\parens{1 - \frac{P}{L}}}
       }
       \p{Rewriting the differential equation}
       \equation{
-         \reciprocal{P \parens{1 - \frac{P}{L}}} \s{d}P
-                         &= \frac{1}{P} + \frac{\reciprocal{L}}{\parens{1 - \frac{P}{L}}} \s{d}P\\
-                         &= k \s{d}t \\
-                     \int \frac{1}{P} + \frac{\reciprocal{L}}{\parens{1 - \frac{P}{L}}}
-                         &= \int k \s{d}t \\
-                     \ln\; P - \reciprocal{L} \ln\parens{1 - \frac{P}{L}} &= k t + C\\
-                     \ln\parens{\frac
-                         {P}
-                         {L \cdot \parens{1 - \frac{P}{L}}}
-                     }
+         \frac{1}{P \parens{1 - \frac{P}{L}}} \mathrm{d}P
+                         &= \frac{1}{P} + \frac{\frac{1}{L}}{\parens{1 - \frac{P}{L}}} \mathrm{d}P\\
+                         &= k \mathrm{d}t \\
+                     \int \frac{1}{P} + \frac{\frac{1}{L}}{\parens{1 - \frac{P}{L}}}
+                         &= \int k \mathrm{d}t \\
+                     \ln\; P - \frac{1}{L} \ln\parens{1 - \frac{P}{L}} &= k t + C\\
+                     \ln\parens{\frac{P}{L \cdot \parens{1 - \frac{P}{L}}}}
       }
    }
 }
@@ -558,13 +560,12 @@
       }
       \p{Where the general solution is of the form:}
       \equation{
-         \left.
-         \begin{array}{ll}
-             y &=\; &C_1\; e^{r_1 t} &+\; C_2\; e^{r_2 t}\\
-             y^\prime &=\; &C_1\; r_1\; e^{r_1 t} &+\; C_2\; r_2\; e^{r_2 t}\\
-             y^{\prime\prime} &=\; &C_1\; \left(r_1\right)^2\; e^{r_1 t} &+\; C_2\; \left(r_2\right)^2\; e^{r_2 t}
-         \end{array}
-         \right\}\text{$\forall r_1 \; r_2$ where $r_1 \neq r_2$}
+         \hbrace[right]{
+            y &=\; &C_1\; e^{r_1 t} &+\; C_2\; e^{r_2 t}\\
+            y^\prime &=\; &C_1\; r_1\; e^{r_1 t} &+\; C_2\; r_2\; e^{r_2 t}\\
+            y^{\prime\prime} &=\; &C_1\; \left(r_1\right)^2\; e^{r_1 t} &+\; C_2\; \left(r_2\right)^2\; e^{r_2 t}
+         }
+         \text{$\forall r_1 \; r_2$ where $r_1 \neq r_2$}
       }
    }
 }
@@ -589,50 +590,22 @@
    \note{
       \h3{Second Derivative Formula}
       \p{To find the second derivative of a given function defined parametrically by the equations \{x = u(t)} and \{y = v(t)}.}
+      \p{Given}
       \equation{
-         \text{Given}\\
-                     x &= u(t)\\
-                     y &= v(t)\\
-                     \text{Therefore}\\
-                     \frac{\mathrm{d}{^2} y}{\mathrm{d}x^2}
-                         &= \frac{\mathrm{d}}{\mathrm{d}x}\left(\frac{\mathrm{d}y}{\mathrm{d}x}\right)\\
-                         &= \frac
-                         {
-                             \frac{d}{\mathrm{d}t}\left( \frac{\mathrm{d}y}{\mathrm{d}x} \right)
-                         }
-                         {\frac{\mathrm{d}x}{\mathrm{d}t}}\\
-                         &= \frac
-                             {
-                                 \frac{\mathrm{d}}{\mathrm{d}t}
-                                 \left(\frac{v^\prime(t)}{u^\prime(t)}\right)
-                             }
-                             {u^\prime(t)}\\
-                         &=  \underbrace
-                                 {
-                                     \frac
-                                     {
-                                         \frac{\mathrm{d}}{\mathrm{d}t}
-                                         \left(\frac{v^\prime(t)}{u^\prime(t)}\right)
-                                     }
-                                     {
-                                         \frac{\mathrm{d}}{\mathrm{d}t}
-                                         u(t)
-                                     }
-                                     = \frac
-                                         {
-                                             \frac{\mathrm{d}}{\mathrm{d}t}
-                                         }
-                                         {
-                                             \frac{\mathrm{d}}{\mathrm{d}t}
-                                         }
-                                         \frac
-                                         {
-                                             \left(\frac{v^\prime(t)}{u^\prime(t)}\right)
-                                         }
-                                         {
-                                             u(t)
-                                         }
-                                 }_{\text{notice the common $\frac{\mathrm{d}}{\mathrm{d}t}$}}
+            x &= u(t)\\
+            y &= v(t)\\
+      }
+      \p{Therefore}
+      \equation{
+      \frac{\mathrm{d}{^2} y}{\mathrm{d}x^2}
+            &= \frac{\mathrm{d}}{\mathrm{d}x}\left(\frac{\mathrm{d}y}{\mathrm{d}x}\right)\\
+            &= \frac{\frac{d}{\mathrm{d}t}\left( \frac{\mathrm{d}y}{\mathrm{d}x} \right)}{\frac{\mathrm{d}x}{\mathrm{d}t}}\\
+            &= \frac{\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{v^\prime(t)}{u^\prime(t)}\right)}{u^\prime(t)}\\
+            &= \underbrace{
+               \frac{\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{v^\prime(t)}{u^\prime(t)}\right)}{\frac{\mathrm{d}}{\mathrm{d}t}u(t)} = \frac{\frac{\mathrm{d}}{\mathrm{d}t}}{\frac{\mathrm{d}}{\mathrm{d}t}}\frac{\left(\frac{v^\prime(t)}{u^\prime(t)}\right)}{u(t)}
+         }_{
+            \text{notice the common $\frac{\mathrm{d}}{\mathrm{d}t}$}
+         }
       }
       \note[inline]{
          \p{The above shows different ways of representing \{\frac{\mathrm{d}^{2}y}{\mathrm{d}x^2}}. (I.e. it doesn't correspond to some final solution.)}

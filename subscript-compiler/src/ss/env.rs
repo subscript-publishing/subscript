@@ -62,6 +62,60 @@ impl CommandDeclarations {
     }
 }
 
+
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// ENVIRONMENT - RESOURCE-ENV
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+#[derive(Debug, Clone, Default)]
+pub struct ResourceEnv {
+    pub image_paths: Vec<ImagePath>
+}
+
+impl ResourceEnv {
+    pub fn is_empty(&self) -> bool {
+        self.image_paths.is_empty()
+    }
+    pub fn merge(mut self, other: ResourceEnv) -> ResourceEnv {
+        self.image_paths.extend(other.image_paths);
+        self
+    }
+    pub fn add_image(&mut self, scope: &SemanticScope, img_src: impl AsRef<Path>) -> Option<PathBuf> {
+        let abs_file_file = img_src.as_ref().canonicalize().ok()?;
+        let abs_base_path = scope.base_path.as_ref().unwrap();
+        let abs_base_path = abs_base_path.canonicalize().unwrap();
+        let rel_file_file = abs_file_file.strip_prefix(&abs_base_path).unwrap().to_path_buf();
+        let image_paths = ImagePath {
+            rel_path: rel_file_file.clone(),
+            abs_path: abs_file_file,
+        };
+        self.image_paths.push(image_paths);
+        Some(rel_file_file)
+    }
+    pub fn write_sym_links(&self, output_dir: impl AsRef<Path>) {
+        use std::os::unix::fs::symlink;
+        for ImagePath{rel_path, abs_path} in self.image_paths.iter() {
+            let mut out_img_path = output_dir.as_ref().to_path_buf().clone();
+            out_img_path.push(&rel_path);
+            if let Some(parent) = out_img_path.parent() {
+                std::fs::remove_dir_all(&parent).unwrap();
+            }
+            if !out_img_path.exists() {
+                symlink(abs_path, out_img_path);
+                println!("WROTE SYM LINKS");
+            } else {
+                println!("DID NOT WROTE SYM LINKS");
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ImagePath {
+    rel_path: PathBuf,
+    abs_path: PathBuf,
+}
+
 // impl Default for CommandDeclarations {
 //     fn default() -> Self {
 //         let list = crate::cmds::all_commands_list();
@@ -79,9 +133,14 @@ impl CommandDeclarations {
 //     }
 // }
 
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// ENVIRONMENT - SEMANTIC-SCOPE
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
 /// `SemanticScope` is used for storing environment information during AST traversals. 
 #[derive(Debug, Clone)]
 pub struct SemanticScope {
+    pub base_path: Option<PathBuf>,
     pub file_path: Option<PathBuf>,
     pub cmd_decls: CommandDeclarations,
     /// A list of parent command names that a given node is located under.
@@ -94,8 +153,9 @@ pub struct SemanticScope {
 }
 
 impl SemanticScope {
-    pub fn new<T: Into<PathBuf>>(
-        file_path: T,
+    pub fn new(
+        base_path: impl AsRef<Path>,
+        file_path: impl Into<PathBuf>,
         commands: Vec<crate::ss::cmd_decl::CmdDeclaration>
     ) -> Self {
         let mut map: HashMap<Ident, Vec<CmdDeclaration>> = HashMap::default();
@@ -109,6 +169,7 @@ impl SemanticScope {
         let cmd_decls = CommandDeclarations{map};
         let file_path = file_path.into();
         SemanticScope {
+            base_path: Some(base_path.as_ref().to_path_buf()),
             file_path: Some(file_path),
             cmd_decls,
             scope: Vec::default(),
@@ -121,6 +182,7 @@ impl SemanticScope {
     /// isn’t property configured this can break things. 
     pub fn test_mode_empty() -> Self {
         SemanticScope {
+            base_path: None,
             file_path: None,
             cmd_decls: CommandDeclarations { map: HashMap::default() },
             scope: Vec::default(),
@@ -131,8 +193,23 @@ impl SemanticScope {
     /// **WARNING**: This is for testing only. Depending on what you’re doing,
     /// if `SemanticScope` isn’t property configured this can break things. 
     pub fn test_mode_with_cmds(commands: Vec<crate::ss::cmd_decl::CmdDeclaration>) -> Self {
-        let mut scope = SemanticScope::new(".", commands);
-        scope.file_path = None;
+        let mut map: HashMap<Ident, Vec<CmdDeclaration>> = HashMap::default();
+        for cmd in commands {
+            if let Some(cmd_set) = map.get_mut(&cmd.identifier) {
+                cmd_set.push(cmd);
+                continue;
+            }
+            assert!(map.insert(cmd.identifier.clone(), vec![cmd]).is_none());
+        }
+        let cmd_decls = CommandDeclarations{map};
+        let scope = SemanticScope {
+            base_path: None,
+            file_path: None,
+            cmd_decls,
+            scope: Vec::default(),
+            content_mode: ContentMode::default(),
+            layout_mode: LayoutMode::default(),
+        };
         scope
     }
     pub fn in_inline_mode(&self) -> bool {
@@ -208,22 +285,22 @@ impl SemanticScope {
             .iter()
             .any(|x| x.is_heading_node())
     }
-    pub fn get_cmd_decl<'a>(&self, cmd_call: &CmdCall) -> Option<&CmdDeclaration> {
+    pub fn get_cmd_decl<'a>(&self, env: &mut ResourceEnv, cmd_call: &CmdCall) -> Option<&CmdDeclaration> {
         let cmd_set = self.cmd_decls.map.get(&cmd_call.identifier.value);
         if let Some(cmd_set) = cmd_set {
             for cmd_decl in cmd_set {
-                if cmd_decl.matches_cmd(&self, cmd_call) {
+                if cmd_decl.matches_cmd(env, &self, cmd_call) {
                     return Some(cmd_decl);
                 }
             }
         }
         None
     }
-    pub fn to_matching_cmd_call<'a>(&self, nodes: &'a [Node]) -> Option<(Node, &'a [Node], usize)> {
+    pub fn to_matching_cmd_call<'a>(&self, env: &mut ResourceEnv, nodes: &'a [Node]) -> Option<(Node, &'a [Node], usize)> {
         if let Some(Ann{value: ident, ..}) = nodes.first().and_then(Node::get_ident_ref) {
             if let Some(matching_cmds) = self.cmd_decls.map.get(&ident) {
                 for matching_cmd in matching_cmds {
-                    if let Some(payload) = matching_cmd.match_nodes(self, nodes) {
+                    if let Some(payload) = matching_cmd.match_nodes(env, self, nodes) {
                         return Some(payload)
                     }
                 }
@@ -251,14 +328,18 @@ impl SemanticScope {
         env: &mut LatexCodegenEnv,
         cmd_call: CmdCall,
     ) -> Option<String> {
-        let cmd_decl = self.get_cmd_decl(&cmd_call)?;
+        let cmd_decl = self.get_cmd_decl(&mut env.resource_env, &cmd_call)?;
         // let code_gen = cmd_decl.processors;
-        let sub_scope = self.new_scope(&cmd_call);
+        let sub_scope = self.new_scope(&mut env.resource_env, &cmd_call);
         return Some(cmd_decl.processors.to_latex(env, &sub_scope, cmd_call))
     }
-    pub fn new_scope(&self, cmd_call: &CmdCall) -> SemanticScope {
+    pub fn new_scope(
+        &self,
+        env: &mut ResourceEnv,
+        cmd_call: &CmdCall
+    ) -> SemanticScope {
         let mut new_env = self.clone();
-        let cmd_decl = self.get_cmd_decl(cmd_call).unwrap();
+        let cmd_decl = self.get_cmd_decl(env, cmd_call).unwrap();
         if let Some(child_meta) = cmd_decl.child_env.as_ref() {
             new_env.content_mode = child_meta.content_mode.clone();
             new_env.layout_mode = child_meta.layout_mode.clone();
@@ -277,6 +358,12 @@ impl SemanticScope {
     // pub fn new_
 }
 
+impl Default for SemanticScope {
+    fn default() -> Self {
+        let commands = crate::ss_v1_std::all_commands_list();
+        SemanticScope::test_mode_with_cmds(commands)
+    }
+}
 
 
 // ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -287,12 +374,13 @@ impl SemanticScope {
 #[derive(Default)]
 pub struct HtmlCodegenEnv {
     pub math_env: MathEnv,
+    pub resource_env: ResourceEnv,
 }
 
 impl HtmlCodegenEnv {
     pub fn from_scope(scope: &SemanticScope) -> Self {
         HtmlCodegenEnv {
-            math_env: Default::default()
+            ..Default::default()
         }
     }
 }
@@ -387,13 +475,13 @@ impl MathEnv {
                     .join(",");
                 let options = format!("{{{options}}}");
                 let render_code = if x.unique {
-                    format!("katex.render({code}, document.getElementById('{id}'), {options});")
+                    format!("katex.render({code}, document.getElementById('{id}'), {options});\n")
                 } else {
                     format!(
-                        "document.querySelectorAll('[data-math-target=\"{id}\"]').forEach(function(x){{katex.render({code}, x, {options});}})"
+                        "document.querySelectorAll('[data-math-target=\"{id}\"]').forEach(function(x){{katex.render({code}, x, {options});}})\n"
                     )
                 };
-                format!("try{{{render_code}}}catch(msg){{console.log(\"Error\", msg)}}")
+                format!("try{{\n{render_code}\n}}catch(msg){{console.log(\"Error\", msg)}}\n")
             })
             .join("\n")
     }
@@ -414,8 +502,9 @@ pub struct MathCodeEntry {
 // ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct LatexCodegenEnv {
+    pub resource_env: ResourceEnv,
     // pub commands: CommandDeclarations,
     // pub drawings: HashMap<String, crate::ss_drawing::Drawing>,
 }
@@ -423,7 +512,7 @@ pub struct LatexCodegenEnv {
 impl LatexCodegenEnv {
     pub fn from_scope(scope: &SemanticScope) -> Self {
         LatexCodegenEnv {
-            
+            ..Default::default()
         }
     }
 }

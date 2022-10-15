@@ -183,10 +183,11 @@ pub mod cmd_invocation {
         pub rewrites: Option<Vec<RewriteRule<Vec<Node>>>>,
     }
 
-    #[derive(Debug, Clone)]
+    #[derive(Debug)]
     pub struct Metadata<'a> {
         pub scope: &'a SemanticScope,
         pub cmd_decl: &'a CmdDeclaration,
+        pub resource_env: &'a mut ResourceEnv,
     }
 
     #[derive(Debug, Clone)]
@@ -205,6 +206,7 @@ pub mod cmd_invocation {
         }
     }
 }
+
 
 #[derive(Debug, Clone, Default)]
 pub struct VariableArguments(pub Vec<ArgumentsDeclInstance>);

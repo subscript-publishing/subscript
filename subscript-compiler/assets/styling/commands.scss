@@ -95,6 +95,35 @@
 // GRID
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
+@mixin grid-layout-for($col) {
+    [data-cmd="grid"][data-col="#{$col}"] {
+        display: grid;
+        grid-template-columns: repeat($col, 1fr);
+    }
+}
+
+@include grid-layout-for(1);
+@include grid-layout-for(2);
+@include grid-layout-for(3);
+@include grid-layout-for(4);
+
+
+// [data-cmd="grid"][data-col="1"] {
+//     display: grid;
+//     grid-template-columns: repeat(1, 1fr);
+// }
+// [data-cmd="grid"][data-col="2"] {
+//     display: grid;
+//     grid-template-columns: repeat(2, 1fr);
+// }
+// [data-cmd="grid"][data-col="3"] {
+//     display: grid;
+//     grid-template-columns: repeat(3, 1fr);
+// }
+// [data-cmd="grid"][data-col="4"] {
+//     display: grid;
+//     grid-template-columns: repeat(4, 1fr);
+// }
 
 
 // div[data-cmd="grid"] {

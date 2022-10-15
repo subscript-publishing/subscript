@@ -1,9 +1,35 @@
+use crate::ss::ResourceEnv;
 use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
 use crate::ss::SymbolicModeType;
 use crate::ss::ast_traits::SyntacticallyEq;
 
 use super::*;
+
+fn process_image(
+    env: &mut ResourceEnv,
+    scope: &SemanticScope,
+    mut img_cmd: CmdCall,
+) -> Node {
+    let file_path = img_cmd.attributes
+        .get_str_value("src")
+        .map(|src| PathBuf::from(src))
+        .and_then(|src| scope.normalize_file_path(src).ok())
+        .and_then(|src| {
+            let original = src.clone();
+            let result = env.add_image(scope, src);
+            if result.is_none() {
+                eprintln!("[Warning] failed to find src path: {original:?}");
+            }
+            result
+        });
+    if let Some(path) = file_path {
+        let src_str = path.to_str().unwrap();
+        img_cmd.attributes.insert("src", src_str);
+        return Node::Cmd(img_cmd);
+    }
+    Node::Cmd(img_cmd)
+}
 
 pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
     vec![
@@ -1164,7 +1190,19 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\img").unwrap())
-            .arguments(default_no_arg_type())
+            .arguments(
+                arguments! {
+                    for (internal, metadata, cmd_payload) match {
+                        () => {
+                            process_image(metadata.resource_env, metadata.scope, CmdCall {
+                                identifier: cmd_payload.identifier,
+                                attributes: cmd_payload.attributes.unwrap_or_default(),
+                                arguments: vec![]
+                            })
+                        },
+                    }
+                }
+            )
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\map").unwrap())

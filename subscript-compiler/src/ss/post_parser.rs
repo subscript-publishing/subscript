@@ -23,7 +23,7 @@ use crate::ss::cmd_decl::{
     Override,
 };
 
-use crate::ss::{SemanticScope, ContentMode, SymbolicModeType, LayoutMode,};
+use crate::ss::{SemanticScope, ResourceEnv, ContentMode, SymbolicModeType, LayoutMode};
 use crate::ss::ast_data::{Attribute, Attributes};
 use crate::ss::utils::{sep_by, partition};
 use crate::ss::RewriteRule;
@@ -139,13 +139,19 @@ fn apply_rewrites_to_children<'a>(
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl CmdDeclaration {
-    pub fn matches_cmd(&self, scope: &SemanticScope, cmd_call: &CmdCall) -> bool {
+    pub fn matches_cmd(
+        &self,
+        env: &mut ResourceEnv,
+        scope: &SemanticScope,
+        cmd_call: &CmdCall
+    ) -> bool {
         let match_ident = cmd_call.identifier.value == self.identifier;
         let match_scope = scope.match_cmd(&self.parent_env);
         match_ident && match_scope
     }
     pub fn match_nodes<'a>(
         &self,
+        env: &mut ResourceEnv,
         scope: &SemanticScope,
         nodes: &'a [Node]
     ) -> Option<(Node, &'a [Node], usize)> {
@@ -206,6 +212,7 @@ impl CmdDeclaration {
                     let metadata = cmd_invocation::Metadata {
                         scope: scope,
                         cmd_decl: self,
+                        resource_env: env,
                     };
                     let cmd_arguments = arg_match
                         .args
@@ -334,6 +341,7 @@ impl ArgumentsDeclInstance {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 fn apply_commands_to_children<'a>(
+    env: &mut ResourceEnv,
     scope: &SemanticScope,
     nodes: &'a [Node],
 ) -> (Vec<Node>, &'a [Node]) {
@@ -345,7 +353,7 @@ fn apply_commands_to_children<'a>(
                 continue;
             }
         }
-        if let Some((node, rest, skip_to_index)) = scope.to_matching_cmd_call(&nodes[ix..]) {
+        if let Some((node, rest, skip_to_index)) = scope.to_matching_cmd_call(env, &nodes[ix..]) {
             processed.push(node);
             index_skip = Some(ix + skip_to_index);
         } else {
@@ -361,12 +369,17 @@ fn apply_commands_to_children<'a>(
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl Node {
-    pub fn apply_commands(self, scope: &SemanticScope) -> Node {
+    pub fn apply_commands(
+        self,
+        env: &mut ResourceEnv,
+        scope: &SemanticScope
+    ) -> Node {
         fn process_children(
+            env: &mut ResourceEnv,
             scope: &SemanticScope,
             xs: Vec<Node>
         ) -> Vec<Node> {
-            let (processed, unprocessed) = apply_commands_to_children(scope, &xs[..]);
+            let (processed, unprocessed) = apply_commands_to_children(env, scope, &xs[..]);
             let mut xs = Vec::new();
             xs.extend(processed);
             xs.extend_from_slice(unprocessed);
@@ -374,44 +387,44 @@ impl Node {
         }
         match self {
             Node::Cmd(mut cmd_call) => {
-                let child_scope = scope.new_scope(&cmd_call);
+                let child_scope = scope.new_scope(env, &cmd_call);
                 cmd_call.arguments = {
-                    process_children(&child_scope, cmd_call.arguments)
+                    process_children(env, &child_scope, cmd_call.arguments)
                 };
                 cmd_call.arguments = cmd_call.arguments
                     .into_iter()
                     .map(|x| {
-                        x.apply_commands(&child_scope)
+                        x.apply_commands(env, &child_scope)
                     })
                     .collect::<Vec<_>>();
                 Node::Cmd(cmd_call)
             }
             Node::Bracket(Ann{mut value, range}) => {
-                value.children = process_children(scope, value.children);
+                value.children = process_children(env, scope, value.children);
                 value.children = value.children
                     .into_iter()
-                    .map(|x| x.apply_commands(scope))
+                    .map(|x| x.apply_commands(env, scope))
                     .collect::<Vec<_>>();
                 Node::Bracket(Ann{range, value})
             }
             Node::Quotation(Ann{mut value, range}) => {
-                value.children = process_children(scope, value.children);
+                value.children = process_children(env, scope, value.children);
                 value.children = value.children
                     .into_iter()
-                    .map(|x| x.apply_commands(scope))
+                    .map(|x| x.apply_commands(env, scope))
                     .collect::<Vec<_>>();
                 Node::Quotation(Ann{range, value})
             }
             Node::Fragment(xs) => {
-                let xs = process_children(scope, xs);
+                let xs = process_children(env, scope, xs);
                 let xs = xs
                     .into_iter()
-                    .map(|x| x.apply_commands(scope))
+                    .map(|x| x.apply_commands(env, scope))
                     .collect::<Vec<_>>();
                 Node::Fragment(xs)
             }
             node @ Node::Ident(_) => {
-                Node::Fragment(process_children(&scope, vec![node])).defragment_node_tree()
+                Node::Fragment(process_children(env, &scope, vec![node])).defragment_node_tree()
             },
             node @ Node::Text(_) => node,
             node @ Node::Symbol(_) => node,

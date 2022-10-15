@@ -96,31 +96,39 @@
                \th{Unit}
                \th{Value}
             }
-         }\tbody{
+         }
+         \tbody{
             \tr{
                \th{Speed of Light}
-               \td{\{\mathrm{c}}}\td{\{\v}}\td{\{\mathrm{c} = \sci{3.00}{8}\v}}
-            }\tr{
+               \td{\{\mathrm{c}}}
+               \td{\{\\frac{\\mathrm{m}}{\\mathrm{s}}}}
+               \td{\{\mathrm{c} = \sci{3.00}{8}\\frac{\\mathrm{m}}{\\mathrm{s}}}}
+            }
+            \tr{
                \th{Planck's constant}
-               \td{\{\mathrm{h}}}\td{\ul{
-                  \li{Energy multiplied by time}
-                  \li{joule-seconds}
-                  \li{\{\mathrm{J}\cdot\mathrm{s}}}
-               }}\td{\{\mathrm{h} = \sci{6.626}{-34}\;\mathrm{J}\cdot\mathrm{s}}}
+               \td{\{\mathrm{h}}}
+               \td{
+                  \ul{
+                     \li{Energy multiplied by time}
+                     \li{joule-seconds}
+                     \li{\{\mathrm{J}\cdot\mathrm{s}}}
+                  }
+               }
+               \td{\{\mathrm{h} = \sci{6.626}{-34}\;\mathrm{J}\cdot\mathrm{s}}}
             }
          }
       }
    }
    \note{
       \h4{Other Formulas}
-      \grid[boxed, col="2", compact]{
+      \grid[boxed, col="2"]{
          \note{
             \h5{de Broglie Relation}
             \equation{
                \lambda &= \frac{\mathrm{h}}{\mathrm{m}\mathrm{v}}\\
-                                   \text{where}&\\
-                                       m &= \text{mass}\\
-                                       v &= \text{velocity} \neq \nu\;\text{(nu)}
+               \text{where}&\\
+                  m &= \text{mass}\\
+                  v &= \text{velocity} \neq \nu\;\text{(nu)}
             }
          }
          \note{
@@ -151,8 +159,7 @@
             \p{Where \{\mathrm{Z}} is the atomic number of the given element.}
          }
          \note{
-            \h5{Change in Energy That Occurs in an Atom When It Undergoes a Transition between Levels
-                                \a[href="#atomic-spectroscopy-detailed"]{(Further Details)}}
+            \h5{Change in Energy That Occurs in an Atom When It Undergoes a Transition between Levels \a[href="#atomic-spectroscopy-detailed"]{(Further Details)}}
             \p[center]{\{n_{\small\text{initial}}} and \{n_{\small\text{final}}}}
             \equation{
                \Delta{E} &= \sci{-2.18}{-18} \mathrm{J} \left(\frac{1}{n^2_f} - \frac{1}{n^2_i}\right)
@@ -166,8 +173,8 @@
             \h5{Ionization Energy}
             \equation{
                \mathrm{IE}_{n,\smallText{Big Jump}} -1
-                                       &= \smallText{# of valance electrons}\\
-                                       &= \smallText{Element row #}
+                  &= \smallText{\# of valance electrons}\\
+                  &= \smallText{Element row \#}
             }
             \p{Where}
             \ul{
@@ -221,8 +228,8 @@
 }
 \h5{Examples}
 
-\grid[col="2", boxed, style="grid-template-areas:'a b' 'c b';"]{
-   \note[style="grid-area: a"]{
+\grid[col="2"]{
+   \note{
       \h6{Electron configuration for \{_{26}\mathrm{Fe}}}
       \equation{
          \ce{\underbrace{1s^2 2s^2 2p^6 3s^2 3p^6}_{\smallText{Equal to Argon}} 4s^2 3d^6}
@@ -233,7 +240,7 @@
          \ce{[Ar] = 1s^2 2s^2 2p^6 3s^2 3p^6}
       }
    }
-   \note[style="grid-area: b"]{
+   \note{
       \h6{Electron configuration for \{_{26}\mathrm{Fe}^{+2}}}
       \p{Beginning with the electron configuration for \{_{26}\mathrm{Fe}}}
       \equation{
@@ -271,22 +278,18 @@
             \p{Given \{\ce{4s^2}} and \{\ce{3d^6}}}
             \grid[col="2"]{
                \equation{
-                  \ce{4s^2}\;\left\{
-                                          \begin{array}{ll}
-                                          n &= 4\\
-                                          i &= 0\\
-                                          \therefore\; O_{\smallText{min}} &= 4
-                                          \end{array}
-                                          \right.
+                  \ce{4s^2}\;\hbrace[left]{
+                     n &= 4\\
+                     i &= 0\\
+                     \therefore\; O_{\smallText{min}} &= 4
+                  }
                }
                \equation{
-                  \ce{3d^6}\;\left\{
-                                          \begin{array}{ll}
-                                          n &= 3\\
-                                          i &= 2\\
-                                          \therefore\; O_{\smallText{min}} &= 5
-                                          \end{array}
-                                          \right.
+                  \ce{3d^6}\; \hbrace[left]{
+                     n &= 3\\
+                     i &= 2\\
+                     \therefore\; O_{\smallText{min}} &= 5
+                  }
                }
             }\p{NVM this is an exception to the rule...}
             \p{TODO move this somewhere else...}
@@ -320,7 +323,7 @@
                          &= \ce{[Ar] 3d^6}
       }
    }
-   \note[style="grid-area: c"]{
+   \note{
       \h6{Electron configuration for \{_{24}\mathrm{Cr}}}
       \p{It would appear that the electron configuration for \{_{24}\mathrm{Cr}} would be}
       \equation{
@@ -410,7 +413,7 @@
 }
 \h5{The Principle Quantum Number (\{\mathrm{n}})}
 
-\grid[col="2", style="max-width: 900px; margin: 0 auto; grid-template-columns: max-content;"]{
+\grid[col="2"]{
    \table{
       \thead{
          \tr{

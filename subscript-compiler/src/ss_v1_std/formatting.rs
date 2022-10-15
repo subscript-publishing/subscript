@@ -76,6 +76,13 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
                             arguments: vec![xs]
                         })
                     },
+                    () => {
+                        Node::Cmd(CmdCall {
+                            identifier: cmd_payload.identifier,
+                            attributes: cmd_payload.attributes.unwrap_or_default(),
+                            arguments: vec![]
+                        })
+                    },
                 }
             }
         )
@@ -97,8 +104,9 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
                 let col_value = cmd.attributes
                     .get("col")
                     .map(|x| x.value.clone().defragment_node_tree().trim_whitespace())
-                    .and_then(Node::into_text)
-                    .map(Ann::consume)
+                    .and_then(|x| {
+                        x.as_stringified_attribute_value_str("")
+                    })
                     .map(|value| {
                         attributes.insert(String::from("data-col"), value);
                     });
@@ -130,6 +138,13 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
                             identifier: cmd_payload.identifier,
                             attributes: cmd_payload.attributes.unwrap_or_default(),
                             arguments: vec![xs]
+                        })
+                    },
+                    () => {
+                        Node::Cmd(CmdCall {
+                            identifier: cmd_payload.identifier,
+                            attributes: cmd_payload.attributes.unwrap_or_default(),
+                            arguments: vec![]
                         })
                     },
                 }

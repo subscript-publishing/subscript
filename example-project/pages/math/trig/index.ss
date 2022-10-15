@@ -59,18 +59,18 @@
    \note[boxed]{
       \h3{Sum and Difference Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \cos(\alpha - \beta) &= \cos(\alpha) \cdot \cos(\beta) + \sin(\alpha) \cdot \sin(\beta) \\
-                     \cos(\alpha + \beta) &= \cos(\alpha) \cdot \cos(\beta) - \sin(\alpha) \cdot \sin(\beta) \\
-                     &\\
-                     \sin(\alpha - \beta) &= \sin(\alpha) \cdot \cos(\beta) - \cos(\alpha) \cdot \sin(\beta) \\
-                     \sin(\alpha + \beta) &= \sin(\alpha) \cdot \cos(\beta) + \cos(\alpha) \cdot \sin(\beta) \\
-                     &\\
-                     \tan(\alpha + \beta) &= \frac{\tan(\alpha) + \tan(\beta)}{1 - \tan(\alpha) \cdot \tan(\beta)} \\
-                     \tan(\alpha - \beta) &= \frac{\tan(\alpha) - \tan(\beta)}{1 + \tan(\alpha) \cdot \tan(\beta)}
-                 \end{split}
-                 \end{equation}
+         \begin{equation*}
+\begin{split}
+   \cos(\alpha - \beta) &= \cos(\alpha) \cdot \cos(\beta) + \sin(\alpha) \cdot \sin(\beta) \\
+   \cos(\alpha + \beta) &= \cos(\alpha) \cdot \cos(\beta) - \sin(\alpha) \cdot \sin(\beta) \\
+   &\\
+   \sin(\alpha - \beta) &= \sin(\alpha) \cdot \cos(\beta) - \cos(\alpha) \cdot \sin(\beta) \\
+   \sin(\alpha + \beta) &= \sin(\alpha) \cdot \cos(\beta) + \cos(\alpha) \cdot \sin(\beta) \\
+            &\\
+            \tan(\alpha + \beta) &= \frac{\tan(\alpha) + \tan(\beta)}{1 - \tan(\alpha) \cdot \tan(\beta)} \\
+            \tan(\alpha - \beta) &= \frac{\tan(\alpha) - \tan(\beta)}{1 + \tan(\alpha) \cdot \tan(\beta)}
+         \end{split}
+         \end{equation*}
       }
    }
    \note[boxed]{
@@ -99,84 +99,86 @@
    \note[boxed]{
       \h3{Ratio Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \tan(90^\circ - x) & = \frac{\sin(90^\circ - x)}{\cos(90^\circ - x)} = \frac{\cos(x)}{\sin(x)} = \cot(x) \\
-                     \\
-                     \cot(90^\circ - x) & = \frac{\cos(90^\circ - x)}{\sin(90^\circ - x)} = \frac{\sin(x)}{\cos(x)} = \tan(x) \\
-                 \end{split}
-                 \end{equation}
+         \begin{equation*}
+         \begin{split}
+            \tan(90^\circ - x) & = \frac{\sin(90^\circ - x)}{\cos(90^\circ - x)} = \frac{\cos(x)}{\sin(x)} = \cot(x) \\
+            \\
+            \cot(90^\circ - x) & = \frac{\cos(90^\circ - x)}{\sin(90^\circ - x)} = \frac{\sin(x)}{\cos(x)} = \tan(x) \\
+         \end{split}
+         \end{equation*}
       }
    }
    \note[boxed]{
       \h3{Double-Angle Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \sin(2\alpha) &= 2\sin(\alpha)\cos(\alpha) \\
-                     \cos(2\alpha) &= \cos^2(\alpha) - \sin^2(\alpha) \\
-                                 &= 1 - 2\sin^2(\alpha) \\
-                                 &= 2\cos^2(\alpha) - 1 \\
-                     &\\
-                     \tan(2\alpha) &= \frac{2\tan(\alpha)}{1 - \tan^2(\alpha)}
-                 \end{split}
-                 \end{equation}
+         \begin{equation*}
+         \begin{split}
+            \sin(2\alpha) &= 2\sin(\alpha)\cos(\alpha) \\
+            \cos(2\alpha) &= \cos^2(\alpha) - \sin^2(\alpha) \\
+                        &= 1 - 2\sin^2(\alpha) \\
+                        &= 2\cos^2(\alpha) - 1 \\
+            &\\
+            \tan(2\alpha) &= \frac{2\tan(\alpha)}{1 - \tan^2(\alpha)}
+         \end{split}
+         \end{equation*}
       }
    }
    \note[boxed]{
       \h3{Half-Angle Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \sin \frac{\alpha}{2} &= \pm \sqrt{\frac{1 - \cos(\alpha)}{2}} \\
-                     \cos \frac{\alpha}{2} &= \pm \sqrt{\frac{1 + \cos(\alpha)}{2}} \\
-                     \tan \frac{\alpha}{2} &= \pm \sqrt{\frac{1 - \cos(\alpha)}{1 + \cos(\alpha)}} \\
-                         &= \frac{sin(\alpha)}{1 + \cos(\alpha)} \\
-                         &= \frac{1 - \cos(\alpha)}{sin(\alpha)}
-                 \end{split}
-                 \end{equation}
+         \begin{equation*}
+         \begin{split}
+            \sin \frac{\alpha}{2} &= \pm \sqrt{\frac{1 - \cos(\alpha)}{2}} \\
+            \cos \frac{\alpha}{2} &= \pm \sqrt{\frac{1 + \cos(\alpha)}{2}} \\
+            \tan \frac{\alpha}{2} &= \pm \sqrt{\frac{1 - \cos(\alpha)}{1 + \cos(\alpha)}} \\
+                  &= \frac{sin(\alpha)}{1 + \cos(\alpha)} \\
+                  &= \frac{1 - \cos(\alpha)}{sin(\alpha)}
+         \end{split}
+         \end{equation*}
       }
    }
    \note[boxed]{
       \h3{Power-Reducing Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \sin^2(\alpha) &= \frac{1 - \cos(2\alpha)}{2} \\
-                     &\\
-                     \cos^2(\alpha) &= \frac{1 + \cos(2\alpha)}{2} \\
-                     &\\
-                     \tan^2(\alpha) &= \frac{1 - \cos(2\alpha)}{1 + \cos(2\alpha)}
-                 \end{split}
-                 \end{equation}
-      }\hr\equation{
+         \begin{equation*}
+         \begin{split}
+            \sin^2(\alpha) &= \frac{1 - \cos(2\alpha)}{2} \\
+            &\\
+            \cos^2(\alpha) &= \frac{1 + \cos(2\alpha)}{2} \\
+            &\\
+            \tan^2(\alpha) &= \frac{1 - \cos(2\alpha)}{1 + \cos(2\alpha)}
+         \end{split}
+         \end{equation*}
+      }
+      \hr
+      \equation{
          \sin\alpha\cdot\cos\alpha &= \frac{1}{2}\sin(2\alpha)
       }
    }
    \note[boxed]{
       \h3{Product-to-Sum Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \sin(\alpha) \cdot \cos(\beta) &= \frac{1}{2} \Big[ \sin(\alpha + \beta) + \sin(\alpha - \beta) \Big] \\
-                     \cos(\alpha) \cdot \sin(\beta) &= \frac{1}{2} \Big[ \sin(\alpha + \beta) - \sin(\alpha - \beta) \Big] \\
-                     \cos(\alpha) \cdot \cos(\beta) &= \frac{1}{2} \Big[ \cos(\alpha + \beta) + \cos(\alpha - \beta) \Big] \\
-                     \sin(\alpha) \cdot \sin(\beta) &= \frac{1}{2} \Big[ \cos(\alpha - \beta) - \cos(\alpha + \beta) \Big]
-                 \end{split}
-                 \end{equation}
+         \begin{equation*}
+         \begin{split}
+            \sin(\alpha) \cdot \cos(\beta) &= \frac{1}{2} \Big[ \sin(\alpha + \beta) + \sin(\alpha - \beta) \Big] \\
+            \cos(\alpha) \cdot \sin(\beta) &= \frac{1}{2} \Big[ \sin(\alpha + \beta) - \sin(\alpha - \beta) \Big] \\
+            \cos(\alpha) \cdot \cos(\beta) &= \frac{1}{2} \Big[ \cos(\alpha + \beta) + \cos(\alpha - \beta) \Big] \\
+            \sin(\alpha) \cdot \sin(\beta) &= \frac{1}{2} \Big[ \cos(\alpha - \beta) - \cos(\alpha + \beta) \Big]
+         \end{split}
+         \end{equation*}
       }
    }
    \note[boxed]{
       \h3{Sum-to-Product-Identities}
       \math{
-         \begin{equation}
-                 \begin{split}
-                     \sin(x) + \sin(y) &= 2 \cdot \sin\left( \frac{x + y}{2} \right) \cdot \cos\left( \frac{x - y}{2} \right) \\
-                     \cos(x) + \cos(y) &= 2 \cdot \cos\left( \frac{x + y}{2} \right) \cdot \cos\left( \frac{x - y}{2} \right) \\
-                     \sin(x) - \sin(y) &= 2 \cdot \cos\left( \frac{x + y}{2} \right) \cdot \sin\left( \frac{x - y}{2} \right) \\
-                     \cos(x) - \cos(y) &= -2 \sin \cos\left( \frac{x + y}{2} \right) \cdot \sin\left( \frac{x - y}{2} \right)
-                 \end{split}
-                 \end{equation}
+         \begin{equation*}
+         \begin{split}
+            \sin(x) + \sin(y) &= 2 \cdot \sin\left( \frac{x + y}{2} \right) \cdot \cos\left( \frac{x - y}{2} \right) \\
+            \cos(x) + \cos(y) &= 2 \cdot \cos\left( \frac{x + y}{2} \right) \cdot \cos\left( \frac{x - y}{2} \right) \\
+            \sin(x) - \sin(y) &= 2 \cdot \cos\left( \frac{x + y}{2} \right) \cdot \sin\left( \frac{x - y}{2} \right) \\
+            \cos(x) - \cos(y) &= -2 \sin \cos\left( \frac{x + y}{2} \right) \cdot \sin\left( \frac{x - y}{2} \right)
+         \end{split}
+         \end{equation*}
       }
    }
 }
@@ -188,13 +190,15 @@
       \equation{
          e^{i x} &= \cos(x) + \mathrm{i}\sin(x)
       }
-      \hr\equation{
+      \hr
+      \equation{
          \mathrm{e}
                      &= \sum_{n = 0}^\infty \frac{1}{n!} \\
                      &= \lim_{n\to\infty} \left(1 + \frac{1}{n}\right)^n \\
                      &= \lim_{t \to 0} \left(1 + t\right)^{\frac{1}{t}}
       }
-      \hr\equation{
+      \hr
+      \equation{
          \mathrm{e}^x
                      &= 1 + \frac{x}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots \\
                      &= \sum_{n = 0}^\infty \frac{x^n}{n!} \\
@@ -210,7 +214,8 @@
          x &= r \cdot \cos\,\theta \\
                      y &= r \cdot \sin\,\theta \\
       }
-      \hr\equation{
+      \hr
+      \equation{
          z &= x + \mathrm{i}y \\
                        &= r \left(\cos\, \theta + \mathrm{i}\sin\, \theta\right)\\
                        & = r\;\mathrm{cis}\; \theta \\
@@ -258,7 +263,8 @@
          z_1 \cdot z_2 &= r_1 \cdot r_2 \;\mathrm{cis}\;\left(\theta_1 + \theta_2\right) \\
                      \frac{z_1}{z_2} &= \frac{r_1}{r_2} \;\mathrm{cis}\;\left(\theta_1 - \theta_2\right) \\
       }
-      \hr\p{De Moivre’s Theorem}
+      \hr
+      \p{De Moivre’s Theorem}
       \equation{
          z^n &= r^n \;\mathrm{cis}\;\;n\theta
       }
@@ -287,7 +293,7 @@
       }}}
       \li{\note{
          \p{You can define a vector with two points.}
-         \img[width="300px", src="../static/drawings/matrix/trinagle-def-of-a-vector.png", center]
+         \img[width="300px", src="./old-images/matrix/trinagle-def-of-a-vector.png", center]
       }}
       \li{\p{\b{Do not divide vectors!}}}
       \li{\{\vec{v} \cdot \vec{v} = ||\vec{v}||^2 \implies \text{constant}}}
@@ -366,8 +372,9 @@
    \note[boxed]{
       \h3{Definition of Vector Addition}
       \p{If \{\vec{u}} and \{\vec{v}} are positioned so the initial point of \{\vec{v}} is at the terminal point of \{\vec{u}}, then the sum \{\vec{u} + \vec{v}} is the vector from the initial point of \{\vec{u}} to the terminal point of \{\vec{v}}.}
-      \img[width="300px", src="../static/drawings/matrix/Definition-of-Vector-Addition.png", center]\hr\p{Given some vectors \{\vec{u}} and \{\vec{v}}, the vector \{\vec{u} - \vec{v}} is the vector that points from the head of \{\vec{v}} to the head of \{\vec{u}}}
-      \img[center, width="200px", src="../static/drawings/matrix/vector-u-v.png"]
+      \img[width="300px", src="./old-images/matrix/Definition-of-Vector-Addition.png", center]\hr
+      \p{Given some vectors \{\vec{u}} and \{\vec{v}}, the vector \{\vec{u} - \vec{v}} is the vector that points from the head of \{\vec{v}} to the head of \{\vec{u}}}
+      \img[center, width="200px", src="./old-images/matrix/vector-u-v.png"]
    }
 }
 \grid[col="3"]{
@@ -378,7 +385,8 @@
                      \mathrm{\hat{j}} &= \begin{bmatrix} 0 & 1 & 0 \end{bmatrix}\\
                      \mathrm{\hat{k}} &= \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
       }
-      \hr\img[center, width="200px", src="../static/drawings/matrix/unit-vectors.png"]
+      \hr
+      \img[center, width="200px", src="./old-images/matrix/unit-vectors.png"]
    }
    \note[boxed]{
       \h3{Orthogonal}
@@ -402,9 +410,7 @@
    \note[boxed]{
       \h3{\small{If \{\theta} is the angle between the nonzero vectors \{\vec{a}} and \{\vec{b}}, then}}
       \equation{
-         \cos\theta = \frac
-                         {\vec{a}\cdot\vec{b}}
-                         {|\vec{a}| |\vec{b}|}
+         \cos\theta = \frac{\vec{a}\cdot\vec{b}}{|\vec{a}| |\vec{b}|}
       }
    }
    \note[boxed]{
@@ -441,11 +447,11 @@
 \h2{Direction Cosines & Direction Angles of a Vector}
 
 \note{
-   \img[center, src="../static/drawings/matrix/Direction-Cosines-Direction-Angles-of-a-Vector.png", width="300px"]\p[center]{Where}
+   \img[center, src="./old-images/matrix/Direction-Cosines-Direction-Angles-of-a-Vector.png", width="300px"]
+   \p[center]{Where}
    \equation{
-      \vec{v} &= \begin{bmatrix} v_x & v_y & v_z \end{bmatrix}
-              \;\;\;\;
-              ||\vec{v}|| &= \sqrt{(v_x)^2 + (v_y)^2 + (v_z)^2}
+      \vec{v} = \begin{bmatrix} v_x & v_y & v_z \end{bmatrix}
+      ||\vec{v}|| = \sqrt{(v_x)^2 + (v_y)^2 + (v_z)^2}
    }
 }
 
@@ -471,7 +477,8 @@
       \equation{
          \cos^2\alpha + \cos^2\beta + \cos^2\gamma = 1
       }
-      \hr\h5{Proof}
+      \hr
+      \h5{Proof}
       \equation{
          \vec{v} &= \hat{i}\cos\alpha + \hat{k}\cos\beta + \hat{k}\cos\gamma\\
                      ||\vec{v}|| &= || \hat{i}\cos\alpha + \hat{k}\cos\beta + \hat{k}\cos\gamma|| = 1
@@ -566,7 +573,8 @@
                      \end{split}
                      \end{equation}
       }\p{That is, \{S(t)} is the length of the curve (\{C}) between \{r(a)} and \{r(b)}.}
-      \hr\p{Furthermore from the adjacent definition; we can simply the above to}
+      \hr
+      \p{Furthermore from the adjacent definition; we can simply the above to}
       \equation{
          S(t) = \int_a^t \frac{\mathrm{d}S}{\mathrm{d}t}
       }
@@ -610,7 +618,7 @@
 
 \grid[col="2"]{
    \note[boxed]{
-      \img[src="../static/drawings/matrix/curvature.png", center, width="300px"]
+      \img[src="./old-images/matrix/curvature.png", center, width="300px"]
    }
    \note[boxed]{
       \h3{The Unit Vector}
@@ -624,20 +632,14 @@
       \h3{The Unit \b{Tangent} Vector}
       \equation{
          \vec{T}
-                         &\equiv \frac
-                             {v^\prime(t)}
-                             {||v^\prime(t)||}
-                         &\equiv \frac
-                             {\mathrm{d}v}
-                             {\mathrm{d}S}
+         \equiv \frac{v^\prime(t)}{||v^\prime(t)||}
+         \equiv \frac{\mathrm{d}v}{\mathrm{d}S}
       }
    }
    \note[boxed]{
       \h3{The Unit \b{Normal} Vector}
       \equation{
-         \vec{N} \equiv \frac
-                         {T^\prime}
-                         {||T^\prime||}
+         \vec{N} \equiv \frac{T^\prime}{||T^\prime||}
       }
    }
    \note[boxed]{
@@ -655,13 +657,9 @@
       \h3{Kappa - Curvature of a Vector}
       \equation{
          \kappa
-                         &\equiv \left|\frac{\mathrm{d}T}{\mathrm{d}S}\right|
-                         &\equiv \frac
-                             {\left| T^\prime \right|}
-                             {\left| r^\prime \right|}
-                         &\equiv \frac
-                             {\left| r^\prime \times r^{\prime\prime} \right|}
-                             {\left| r^\prime \right|^3}
+            \equiv \left|\frac{\mathrm{d}T}{\mathrm{d}S}\right|
+            \equiv \frac{\left| T^\prime \right|}{\left| r^\prime \right|}
+            \equiv \frac{\left| r^\prime \times r^{\prime\prime} \right|}{\left| r^\prime \right|^3}
       }
    }
    \note[boxed]{
@@ -679,10 +677,11 @@
       }
       \p{Specifically}
       \equation{
-         \left.\begin{aligned}
-                     a_{\vec{T}}\\
-                     a_{\vec{N}}
-                     \end{aligned}\right\} \text{Tangential & Normal Components of $\vec{a}$}
+         \hbrace[right]{
+            a_{\vec{T}}\\
+            a_{\vec{N}}
+         }
+         \text{Tangential \& Normal Components of $\vec{a}$}
       }
    }
 }
@@ -748,7 +747,7 @@
                      g & h
                      \end{vmatrix}
       }
-      \img[center, width="400px", src="../static/drawings/matrix/3x3-determinant.png"]\note[boxed]{
+      \img[center, width="400px", src="./old-images/matrix/3x3-determinant.png"]\note[boxed]{
          \p{Only works for square matrices.}
       }
    }
@@ -810,7 +809,7 @@
 
 \h2{Definition of a Line}
 
-\img[src="../static/drawings/matrix/vector-equation-of-a-line.png", center, width="500px"]
+\img[src="./old-images/matrix/vector-equation-of-a-line.png", center, width="500px"]
 \grid[col="3"]{
    \note[boxed]{
       \h3{Vector Equation of a Line}
@@ -873,7 +872,8 @@
             L &= \color[B]{P_1} + t\cdot\color[A]{\overrightarrow{\Delta\mathsf{v}}}\;\;\forall t\in\mathbb{R}
          }
          \p{That is, \{t} is the scaling factor. In a way, it's like it's a function of \{t}, but also similar to the slope (\{m}) in \{y = mx + b}, except \{m} (i.e. \{t}) is parameterized.}
-         \hr\p{Sometimes this will be (confusingly) denoted as}
+         \hr
+         \p{Sometimes this will be (confusingly) denoted as}
          \equation{
             \vec{r} &= \vec{r_0} + \vec{a} = \vec{r_0} + t\vec{v}\\
          }
@@ -895,7 +895,8 @@
                         &= \frac{y - \color[B]{y_1}}{\color[C]{y_2}-\color[B]{y_1}}
                         =  \frac{z - \color[B]{z_1}}{\color[C]{z_2}-\color[B]{z_1}}
       }
-      \hr\h4{Rationale}
+      \hr
+      \h4{Rationale}
       \p{We rewrite \{r = r_0 + a = r_0 + t v} in terms of \{t}.}
       \p{That is}
       \equation{
@@ -956,30 +957,30 @@
       }\p{We can define it's arc length function VIA}
       \math{
          \newcommand{\Long}{
-                         \int_a^t \sqrt{
-                             \left(f^\prime(u)\right)^2
-                             \left(g^\prime(u)\right)^2
-                             \left(h^\prime(u)\right)^2
-                         }
-                     }
-                     \newcommand{\AltLong}{
-                         \int_a^t \sqrt{
-                             \left(\frac{\mathrm{d}x}{\mathrm{d}u}\right)^2
-                             \left(\frac{\mathrm{d}y}{\mathrm{d}u}\right)^2
-                             \left(\frac{\mathrm{d}z}{\mathrm{d}u}\right)^2
-                         }
-                     }
-                     \newcommand{\short}{
-                         \int_a^t ||\left(r^\prime(u)\right)||
-                     }
-                     \begin{equation}
-                     \begin{split}
-                         S(t)
-                             &= \Long\\
-                             &= \AltLong\\
-                             &= \short
-                     \end{split}
-                     \end{equation}
-      }
-   }
+               \int_a^t \sqrt{
+                  \left(f^\prime(u)\right)^2
+                  \left(g^\prime(u)\right)^2
+                  \left(h^\prime(u)\right)^2
+               }
+         }
+         \newcommand{\AltLong}{
+               \int_a^t \sqrt{
+                  \left(\frac{\mathrm{d}x}{\mathrm{d}u}\right)^2
+                  \left(\frac{\mathrm{d}y}{\mathrm{d}u}\right)^2
+                  \left(\frac{\mathrm{d}z}{\mathrm{d}u}\right)^2
+               }
+         }
+         \newcommand{\short}{
+               \int_a^t ||\left(r^\prime(u)\right)||
+         }
+\begin{equation**}
+\begin{split}
+S(t)
+&= \Long\\
+&= \AltLong\\
+&= \short
+\end{split}
+\end{equation*}
 }
+}
+}*

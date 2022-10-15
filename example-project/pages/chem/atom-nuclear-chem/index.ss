@@ -21,8 +21,8 @@
       }
       \p{With the following unknown quantities}
       \equation{
-         \smallText{boron-11 % abundance} &= X_{\smallText{B-11}}\\
-                     \smallText{boron-10 % abundance} &= X_{\smallText{B-10}}
+         \smallText{boron-11 \% abundance} &= X_{\smallText{B-11}}\\
+         \smallText{boron-10 \% abundance} &= X_{\smallText{B-10}}
       }
       \p{And asked to find the percent abundance of boron-11 (\{X_{\smallText{B-11}}}). Therefore our equation is}
       \math{
@@ -62,15 +62,13 @@
          \begin{gather*}
                      \small
                      X_{\smallText{B-11}} =
-                     \left.
-                     \begin{array}{ll}
-                     \frac{
-                         \overbrace{10.81\;\mathrm{amu} - 10.012937\;\mathrm{amu}}^{\text{2 sig decimal places}}
-                     }{
-                         \underbrace{11.009306\;\mathrm{amu} - 10.012937\;\mathrm{amu}}_{\text{8 sig decimal places}}
-                     }\\
-                     \end{array}
-                     \right\}
+                     \hbrace[right]{
+                        \frac{
+                           \overbrace{10.81\;\mathrm{amu} - 10.012937\;\mathrm{amu}}^{\text{2 sig decimal places}}
+                        }{
+                           \underbrace{11.009306\;\mathrm{amu} - 10.012937\;\mathrm{amu}}_{\text{8 sig decimal places}}
+                        }\\
+                     }
                      \therefore\;\smallText{2 sig figs}
                      \end{gather*}
       }\p{Therefore, we round our answer to 2 sig figs, yielding \{80.\%}}

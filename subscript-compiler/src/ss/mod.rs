@@ -9,6 +9,7 @@ pub mod env;
 pub mod cmd_decl;
 pub mod codegen;
 pub mod post_parser;
+pub mod macros;
 
 pub use ast_data::*;
 pub use ast_utils::*;

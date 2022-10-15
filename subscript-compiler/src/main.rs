@@ -18,24 +18,24 @@ fn translate<P: AsRef<Path>>(input: P) -> String {
 }
 
 fn dev() {
-    {
-        let html_src_path = "../html-to-subscript/test2.html";
-        let ss_source = translate(html_src_path);
-        std::fs::write("output.ss", ss_source).unwrap();
-        println!("DONE!");
-    }
+    // {
+    //     let html_src_path = "../html-to-subscript/test2.html";
+    //     let ss_source = translate(html_src_path);
+    //     std::fs::write("output.ss", ss_source).unwrap();
+    //     println!("DONE!");
+    // }
     // println!("DONE!\n{ss_source}");
-    let source_path = "output.ss";
-    let source = std::fs::read_to_string(source_path).unwrap();
+    // let source_path = "output.ss";
+    // let source = std::fs::read_to_string(source_path).unwrap();
     // let scope = subscript_compiler::ss::SemanticScope::new(
     //     source_path,
     //     subscript_compiler::ss_v1_std::all_commands_list(),
     // );
     // let scope = subscript_compiler::ss::SemanticScope::test_mode_empty();
-    let scope = subscript_compiler::ss::SemanticScope::new(
-        source_path,
-        subscript_compiler::ss_v1_std::all_commands_list()
-    );
+    // let scope = subscript_compiler::ss::SemanticScope::new(
+    //     source_path,
+    //     subscript_compiler::ss_v1_std::all_commands_list()
+    // );
     // let ss_ast = subscript_compiler::ss::parser::parse_source(&scope, &source);
     // let (result, html) = subscript_compiler::compiler::compile_to_html_with_scripts(&scope).unwrap();
     // println!("{ss_ast:#?}");

@@ -1,10 +1,15 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 use std::{fmt::Display, path::{PathBuf, Path}, collections::HashMap};
 use itertools::Itertools;
 use rayon::prelude::*;
+use ss_freeform_format::PageEntryType;
 pub mod watch;
 use crate::html::toc::TocPageEntry;
 use crate::html::template::TemplateFile;
-use crate::ss::{SemanticScope, HtmlCodegenEnv};
+use crate::ss::{SemanticScope, HtmlCodegenEnv, ResourceEnv};
+
 
 pub mod low_level_api {
     use std::path::Path;
@@ -26,6 +31,13 @@ pub mod low_level_api {
             }
         }
     }
+    pub fn parse_source(
+        scope: &SemanticScope,
+        source: impl AsRef<str>
+    ) -> Result<crate::ss::Node, CompilerError> {
+        let node = crate::ss::parser::parse_source(scope, source.as_ref()).defragment_node_tree();
+        Ok(node)
+    }
     /// Make sure that `Scope::file_path` is set to the file you want to parse.
     pub fn parse_file(scope: &SemanticScope) -> Result<crate::ss::Node, CompilerError> {
         if let Some(file_path) = scope.file_path.clone() {
@@ -33,23 +45,30 @@ pub mod low_level_api {
                 return Err(CompilerError::FileNotFound { file_path: file_path.to_owned() });
             }
             let source = std::fs::read_to_string(file_path).unwrap();
-            let node = crate::ss::parser::parse_source(scope, source).defragment_node_tree();
+            let node = parse_source(scope, source)?;
             return Ok(node)
         }
         Err(CompilerError::NoFilePath)
     }
 
     /// Make sure that `Scope::file_path` is set to the file you want to parse.
-    pub fn process_commands(scope: &SemanticScope, ast: crate::ss::Node) -> crate::ss::Node {
-        let node = ast.apply_commands(&scope);
+    pub fn process_commands(
+        env: &mut ResourceEnv,
+        scope: &SemanticScope,
+        ast: crate::ss::Node
+    ) -> crate::ss::Node {
+        let node = ast.apply_commands(env, scope);
         node
     }
     
     /// Make sure that `Scope::file_path` is set to the file you want to parse.
-    pub fn parse_process(scope: &SemanticScope) -> Result<crate::ss::Node, CompilerError> {
+    pub fn parse_process(
+        env: &mut ResourceEnv,
+        scope: &SemanticScope
+    ) -> Result<crate::ss::Node, CompilerError> {
         let nodes = parse_file(&scope)?;
         // let start = std::time::Instant::now();
-        let nodes = process_commands(&scope, nodes);
+        let nodes = process_commands(env, scope, nodes);
         // scope.file_path.as_ref().map(|file| {
         //     let elapsed = start.elapsed();
         //     println!("Elapsed Time [{:?}]: {:.2?}", file, elapsed);
@@ -57,10 +76,19 @@ pub mod low_level_api {
         Ok(nodes)
     }
     pub fn compile_to_html(
-        scope: &SemanticScope
+        env: &mut ResourceEnv,
+        scope: &SemanticScope,
+        debug_settings: Option<&DebugSettings>,
     ) -> Result<(HtmlCodegenEnv, crate::html::Node), CompilerError> {
         // let start = std::time::Instant::now();
-        let ss_ast = parse_process(scope)?;
+        let ss_ast = parse_process(env, scope)?;
+        if debug_settings.map(|x| x.print_ast).unwrap_or(false) {
+            if let Some(path) = scope.file_path.as_ref() {
+                println!("[{:?}]: {ss_ast:#?}", path);
+            } else {
+                println!("{ss_ast:#?}");
+            }
+        }
         // scope.file_path.as_ref().map(|file| {
         //     let elapsed = start.elapsed();
         //     println!("Elapsed Time [{:?}]: {:.2?}", file, elapsed);
@@ -131,6 +159,13 @@ pub struct Compiler {
     pub files: Vec<FileIOEntry>,
     pub html_metadata: Option<HtmlMetadata>,
     pub template_file: Option<TemplateFile>,
+    pub debug_settings: Option<DebugSettings>,
+}
+
+
+#[derive(Debug, Clone, Default)]
+pub struct DebugSettings {
+    pub print_ast: bool,
 }
 
 
@@ -231,6 +266,10 @@ impl Compiler {
             .collect_vec();
         self
     }
+    pub fn with_debug_settings(mut self, debug_settings: DebugSettings) -> Self {
+        self.debug_settings = Some(debug_settings);
+        self
+    }
 }
 
 
@@ -253,30 +292,55 @@ impl Compiler {
         self.template_file = Some(template_file);
         self
     }
-    pub fn compile_pages_to_html(&self) {
+    pub fn compile_pages_to_html(&self, env: &mut ResourceEnv) {
         let mut nav_entries: Vec<TocPageEntry> = Default::default();
         let ref root_path = PathBuf::from("/");
         // let system_start = std::time::Instant::now();
-        let nav_entries = self.files
+        let (tocs, envs): (Vec<TocPageEntry>, Vec<ResourceEnv>) = self.files
             .par_iter()
             .map(|file_io_entry| {
-                self.compile_page_to_html(file_io_entry)
+                let mut env = env.clone();
+                let html = self.compile_page_to_html(&mut env, file_io_entry);
+                (html, env)
             })
-            .collect::<Vec<_>>();
+            .unzip();
+        let res_env = envs
+            .into_iter()
+            .fold(ResourceEnv::default(), |l, r| {
+                l.merge(r)
+            });
+        *env = env.clone().merge(res_env);
         // let elapsed = system_start.elapsed();
         // println!("\nTotal Elapsed Time: {:.2?}\n", elapsed);
     }
     fn compile_page_to_html(
         &self,
+        env: &mut ResourceEnv,
         file_io_entry: &FileIOEntry
     ) -> TocPageEntry {
         assert!(file_io_entry.out_file.extension().unwrap() == "html");
         let subscript_std = crate::ss_v1_std::all_commands_list();
+        let base_dir = file_io_entry.page_mode
+            .as_ref()
+            .map(|page_mode| {
+                page_mode.src_base_dir.clone()
+            })
+            .unwrap_or_else(|| {
+                crate::utils::file_path_union(
+                    file_io_entry.src_file.as_path(),
+                    file_io_entry.out_file.as_path(),
+                ).unwrap()
+            });
         let scope = crate::ss::SemanticScope::new(
+            &base_dir,
             &file_io_entry.src_file,
             subscript_std,
         );
-        let (html_env, page_html) = crate::compiler::low_level_api::compile_to_html(&scope).unwrap();
+        let (html_env, page_html) = crate::compiler::low_level_api::compile_to_html(
+            env,
+            &scope,
+            self.debug_settings.as_ref(),
+        ).unwrap();
         let page_script = crate::html::utils::math_env_to_html_script(&html_env.math_env);
         let mut toc_page_entry = TocPageEntry{
             used_ids: Default::default(),
@@ -290,17 +354,7 @@ impl Compiler {
             li_entries: Default::default(),
         };
         let page_html = crate::html::toc::toc_rewrites(
-            file_io_entry.page_mode
-                .as_ref()
-                .map(|page_mode| {
-                    page_mode.src_base_dir.clone()
-                })
-                .unwrap_or_else(|| {
-                    crate::utils::file_path_union(
-                        file_io_entry.src_file.as_path(),
-                        file_io_entry.out_file.as_path(),
-                    ).unwrap()
-                }),
+            base_dir.clone(),
             file_io_entry.src_file.clone(),
             page_html,
             &mut toc_page_entry

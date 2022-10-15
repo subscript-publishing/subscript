@@ -5,6 +5,7 @@ use std::{collections::HashMap, hash::Hash, path::PathBuf, rc::Rc};
 use crate::ss::ToNode;
 use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
+use crate::ss::ResourceEnv;
 use crate::ss::SymbolicModeType;
 use crate::ss::ast_traits::SyntacticallyEq;
 
@@ -141,6 +142,7 @@ fn process_ss1_composition(
 }
 
 fn handle_include(
+    env: &mut ResourceEnv,
     scope: &SemanticScope,
     attributes: &Option<Attributes>,
     rewrite_rules: Option<Vec<RewriteRule<Vec<Node>>>>,
@@ -169,7 +171,7 @@ fn handle_include(
     match ext {
         Some("ss") => {
             let sub_scope = scope.new_file(&src_path);
-            let mut nodes = crate::compiler::low_level_api::parse_process(&sub_scope).ok()?;
+            let mut nodes = crate::compiler::low_level_api::parse_process(env, &sub_scope).ok()?;
             if let Some(baseline) = baseline {
                 nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
             }
@@ -206,6 +208,7 @@ pub fn core_subscript_commands() -> Vec<cmd_decl::CmdDeclaration> {
             for (internal, metadata, cmd_payload) match {
                 () => {
                     let result = handle_include(
+                        metadata.resource_env,
                         &metadata.scope,
                         &cmd_payload.attributes,
                         internal.rewrites.clone()
