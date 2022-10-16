@@ -333,10 +333,6 @@ impl Compiler {
                 (html, env)
             })
             .unzip();
-        // if let Some(output_dir) = self.output_dir.as_ref() {
-        //     resource_env.write_sym_links(output_dir);
-        // }
-        time_stamps.push(system_start.elapsed());
     }
     fn compile_page_to_html(
         &self,
