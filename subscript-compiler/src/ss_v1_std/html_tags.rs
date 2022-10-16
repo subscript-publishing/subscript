@@ -483,7 +483,6 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
-            .parent_layout_mode(LayoutMode::Block)
             .child_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\ol").unwrap())
@@ -507,7 +506,6 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
-            .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\p").unwrap())
             .arguments(
@@ -530,7 +528,6 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
-            .parent_layout_mode(LayoutMode::Block)
             .child_layout_mode(LayoutMode::Inline)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\pre").unwrap())
@@ -577,7 +574,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
-            .parent_layout_mode(LayoutMode::Block)
+            .child_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\a").unwrap())
             .arguments(
@@ -1424,6 +1421,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             .parent_layout_mode(LayoutMode::Both)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1444,10 +1442,34 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
+            .to_html(to_html! {
+                fn (env, scope, cmd) {
+                    let sub_scope = scope.new_scope(&env.resource_env, &cmd);
+                    let children = cmd.arguments
+                        .into_iter()
+                        .flat_map(Node::unblock_root_curly_brace)
+                        .map(|x| x.to_html(env, &scope))
+                        .collect_vec();
+                    crate::html::Node::Element(crate::html::Element {
+                        name: String::from("div"),
+                        attributes: HashMap::from_iter([
+                            (String::from("data-table-wrapper"), String::from(""))
+                        ]),
+                        children: vec![
+                            crate::html::Node::Element(crate::html::Element {
+                                name: String::from("table"),
+                                attributes: HashMap::from_iter([
+                                    (String::from("data-wrapped-table"), String::from(""))
+                                ]),
+                                children: children,
+                            })
+                        ],
+                    })
+                }
+            })
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\caption").unwrap())
-            .parent(Ident::from("\\table").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1470,7 +1492,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\col").unwrap())
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1493,7 +1515,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\colgroup").unwrap())
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1516,8 +1538,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tbody").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1540,8 +1561,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\td").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1564,8 +1584,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tfoot").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1588,8 +1607,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\th").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1612,8 +1630,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\thead").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1636,8 +1653,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\tr").unwrap())
-            .parent_layout_mode(LayoutMode::Block)
-            .parent(Ident::from("\\table").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1660,6 +1676,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
             )
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\details").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1680,9 +1697,9 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
-            .parent_layout_mode(LayoutMode::Block)
             .finish(),
         CmdDeclBuilder::new(Ident::from("\\summary").unwrap())
+            .parent_layout_mode(LayoutMode::Both)
             .arguments(
                 arguments! {
                     for (internal, metadata, cmd_payload) match {
@@ -1703,7 +1720,6 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     }
                 }
             )
-            .parent_layout_mode(LayoutMode::Block)
             .child_layout_mode(LayoutMode::Block)
             .finish(),
     ]

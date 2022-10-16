@@ -20,6 +20,7 @@ use crate::data::Store;
 
 
 pub struct TocRewritesTraversal<'a> {
+    route_prefix: Option<String>,
     base_path: &'a PathBuf,
     current_file: &'a PathBuf,
     toc_entry: &'a Store<TocPageEntry>,
@@ -55,7 +56,10 @@ impl<'a> NodeElementMutTraversal for TocRewritesTraversal<'a> {
             path.set_extension("html");
             let path = path.to_str().unwrap().to_string();
             let _ = element.attributes.remove("source");
-            let href = (String::from("href"), format!("/{path}#{dashed_title}"));
+            let href = (String::from("href"), match self.route_prefix.as_ref() {
+                None => format!("/{path}#{dashed_title}"),
+                Some(prefix) => format!("/{prefix}/{path}#{dashed_title}"),
+            });
             let li_entry = Element {
                 name: String::from("li"),
                 attributes: HashMap::from_iter([
@@ -106,6 +110,7 @@ impl<'a> NodeElementMutTraversal for TocRewritesTraversal<'a> {
 }
 
 pub fn toc_rewrites(
+    route_prefix: Option<String>,
     base_path: &PathBuf,
     current_file: &PathBuf,
     toc_entry: &mut TocPageEntry,
@@ -113,6 +118,7 @@ pub fn toc_rewrites(
 ) -> Node {
     let toc_entry_ref = Store::new(toc_entry.clone());
     let visitor = TocRewritesTraversal {
+        route_prefix,
         base_path,
         current_file,
         toc_entry: &toc_entry_ref,
@@ -167,6 +173,8 @@ impl TocLiEntryType {
 #[derive(Default)]
 pub struct TocPageRenderingOptions {
     pub is_index_page: bool,
+    pub site_title: Option<String>,
+    pub route_prefix: Option<String>,
 }
 
 impl TocPageEntry {
@@ -191,29 +199,53 @@ impl TocPageEntry {
                 Node::Element(element)
             })
             .collect_vec();
+        let toc_ul_topics_children = self.li_entries
+            .iter()
+            .filter_map(|entry| {
+                if entry.node.has_truthy_attr("top-level") {
+                    Some(entry.clone())
+                } else {
+                    None
+                }
+            })
+            .map(|TocLiEntry{kind, node: element}| {
+                let mut element = element.clone();
+                match kind {
+                    TocLiEntryType::Local => {
+                        element.attributes.insert(String::from("data-source"), String::from("local"));
+                    },
+                    TocLiEntryType::External => {
+                        element.attributes.insert(String::from("data-source"), String::from("external"));
+                    }
+                }
+                Node::Element(element)
+            })
+            .collect_vec();
         let toc_list_wrapper = TagBuilder::new("div")
             .with_id("toc-list-wrapper")
-            // .push_child_if(
-            //     !is_topics_empty,
-            //     || {
-            //         TagBuilder::new("p")
-            //             .with_id("topic-list-info")
-            //             .push_child("Topics")
-            //             .finalize()
-            //     }
-            // )
-            // .push_child_if(
-            //     !is_topics_empty,
-            //     move || {
-            //         TagBuilder::new("div")
-            //             .with_id("topic-list-wrapper")
-            //             .with_children(self.topic_section.clone())
-            //             .finalize()
-            //     }
-            // )
+            .push_child_if(
+                !toc_ul_topics_children.is_empty(),
+                || {
+                    TagBuilder::new("p")
+                        .with_id("topic-list-info")
+                        .with_class("toc-info-banner")
+                        .push_child("Topics")
+                        .finalize()
+                }
+            )
+            .push_child_if(
+                !toc_ul_topics_children.is_empty(),
+                move || {
+                    TagBuilder::new("ul")
+                        .with_id("topic-list")
+                        .with_children(toc_ul_topics_children.clone())
+                        .finalize()
+                }
+            )
             .push_child(
                 TagBuilder::new("p")
                     .with_id("toc-list-info")
+                    .with_class("toc-info-banner")
                     .push_child("Table Of Contents")
                     .finalize()
             )
@@ -237,7 +269,10 @@ impl TocPageEntry {
                 || {
                     TagBuilder::new("a")
                         .with_class("left-link")
-                        .with_attr("href", "/")
+                        .with_attr("href", match options.route_prefix.as_ref() {
+                            None => String::from("/index.html"),
+                            Some(prefix) => format!("/{prefix}/index.html"),
+                        })
                         .push_child(
                             TagBuilder::new("span")
                                 .with_class("material-symbols-outlined")
@@ -247,15 +282,14 @@ impl TocPageEntry {
                         .finalize()
                 }
             )
-            .push_child(
-                TagBuilder::new("div")
+            .push_child_option(
+                options.site_title.as_ref(),
+                |title| TagBuilder::new("div")
                     .with_id("site-title-box")
                     .push_child(
                         TagBuilder::new("h1")
                             .with_attr_key("data-title")
-                            .push_child(
-                                "Colbyn's School Notes"
-                            )
+                            .push_child(title)
                             .finalize()
                     )
                     .finalize()
@@ -271,7 +305,10 @@ impl TocPageEntry {
                 || {
                     TagBuilder::new("a")
                         .with_class("left-link")
-                        .with_attr("href", "/")
+                        .with_attr("href", match options.route_prefix.as_ref() {
+                            None => String::from("/index.html"),
+                            Some(prefix) => format!("/{prefix}/index.html"),
+                        })
                         .push_child(
                             TagBuilder::new("span")
                                 .with_class("material-symbols-outlined")

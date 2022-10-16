@@ -106,7 +106,7 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
                     .get("col")
                     .map(|x| x.value.clone().defragment_node_tree().trim_whitespace())
                     .and_then(|x| {
-                        x.as_stringified_attribute_value_str("")
+                        x.as_stringified_attribute_value_str()
                     })
                     .map(|value| {
                         attributes.insert(String::from("data-col"), value);

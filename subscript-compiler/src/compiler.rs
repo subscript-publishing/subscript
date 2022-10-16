@@ -156,14 +156,21 @@ pub struct HtmlMetadata {
 
 #[derive(Debug, Clone, Default)]
 pub struct Compiler {
+    pub project_info: Option<ProjectInfo>,
     pub project_dir: Option<PathBuf>,
+    pub copy_images: Option<bool>,
     pub output_dir: Option<PathBuf>,
     pub files: Vec<FileIOEntry>,
     pub html_metadata: Option<HtmlMetadata>,
     pub template_file: Option<TemplateFile>,
+    pub route_prefix: Option<String>,
     pub debug_settings: Option<DebugSettings>,
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ProjectInfo {
+    pub title: Option<String>
+}
 
 #[derive(Debug, Clone, Default)]
 pub struct DebugSettings {
@@ -178,6 +185,18 @@ pub struct DebugSettings {
 impl Compiler {
     pub fn new() -> Self {
         Compiler::default()
+    }
+    pub fn with_project_info(mut self, info: ProjectInfo) -> Self {
+        self.project_info = Some(info);
+        self
+    }
+    pub fn with_route_prefix(mut self, prefix: String) -> Self {
+        self.route_prefix = Some(prefix);
+        self
+    }
+    pub fn copy_images(mut self, toggle: bool) -> Self {
+        self.copy_images = Some(toggle);
+        self
     }
     pub fn add_file<I, O>(
         mut self,
@@ -331,6 +350,17 @@ impl Compiler {
                 (html, env)
             })
             .unzip();
+        let result = self.output_dir
+            .as_ref()
+            .map(|out_dir| {
+                match self.copy_images.as_ref() {
+                    Some(true) => resource_env.write_file_paths(out_dir),
+                    _ => resource_env.write_sym_links(out_dir),
+                }
+            });
+        if !resource_env.empty_images() && result.is_none() {
+            eprintln!("[Warning] The Compiler has found images in your source code but no output dir has been specified.")
+        }
     }
     fn compile_page_to_html(
         &self,
@@ -355,6 +385,11 @@ impl Compiler {
             &file_io_entry.src_file,
             subscript_std,
         );
+        let scope = match self.route_prefix.as_ref() {
+            Some(route_prefix) => scope.with_route_prefix(route_prefix),
+            None => scope,
+        };
+        // let scope = scope.with_route_prefix()
         let (html_env, page_html) = crate::compiler::low_level_api::compile_to_html(
             env,
             &scope,
@@ -377,6 +412,7 @@ impl Compiler {
             li_entries: Default::default(),
         };
         let page_html = crate::html::toc::toc_rewrites(
+            self.route_prefix.clone(),
             &base_dir,
             &file_io_entry.src_file,
             &mut toc_page_entry,
@@ -391,10 +427,12 @@ impl Compiler {
             toc_page_entry.to_page_toc(
                 self.html_metadata.as_ref().and_then(|meta| meta.html_index_path.as_ref()),
                 crate::html::toc::TocPageRenderingOptions{
+                    route_prefix: self.route_prefix.clone(),
                     is_index_page: file_io_entry.page_mode
                         .as_ref()
                         .map(|page_mode| page_mode.is_root_index_page)
                         .unwrap_or(false),
+                    site_title: self.project_info.as_ref().and_then(|x| x.title.clone()),
                     ..Default::default()
                 }
             ),

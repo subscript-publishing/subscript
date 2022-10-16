@@ -84,7 +84,7 @@ pub struct ResourceEnvData {
 }
 
 impl ResourceEnv {
-    pub fn is_empty(&self) -> bool {
+    pub fn empty_images(&self) -> bool {
         self.0.map(|x| x.image_paths.is_empty())
     }
     // pub fn merge(mut self, other: ResourceEnv) {
@@ -106,13 +106,20 @@ impl ResourceEnv {
                     path
                 };
                 let image_paths = ImagePath {
+                    original: img_src.as_ref().to_path_buf(),
                     rel_path: rel_file_file.clone(),
                     abs_path: abs_file_file,
+                    route_prefix: scope.route_prefix.clone(),
                 };
                 self.0.map_mut(move |x| x.image_paths.push(image_paths.clone()));
                 Some({
                     let rel_file_file = rel_file_file.to_str().unwrap().to_owned();
-                    format!("/{rel_file_file}")
+                    if let Some(prefix) = scope.route_prefix.as_ref() {
+                        format!("/{prefix}/{rel_file_file}")
+                        // format!("/{rel_file_file}")
+                    } else {
+                        format!("/{rel_file_file}")
+                    }
                 })
             }
             Err(msg) => {
@@ -124,10 +131,22 @@ impl ResourceEnv {
     pub fn image_paths(&self) -> Vec<ImagePath> {
         self.0.map(|x| x.image_paths.clone())
     }
+    pub fn write_file_paths(&self, output_dir: impl AsRef<Path>) {
+        let image_paths = self.0.map(|x| x.image_paths.clone());
+        for ImagePath{original, rel_path, abs_path, route_prefix} in image_paths {
+            let mut out_img_path = output_dir.as_ref().to_path_buf().clone();
+            out_img_path.push(&rel_path);
+            if let Some(parent) = out_img_path.parent() {
+                std::fs::create_dir_all(&parent).unwrap();
+            }
+            let contents = std::fs::read(&abs_path).unwrap();
+            std::fs::write(out_img_path, contents).unwrap();
+        }
+    }
     pub fn write_sym_links(&self, output_dir: impl AsRef<Path>) {
         use std::os::unix::fs::symlink;
         let image_paths = self.0.map(|x| x.image_paths.clone());
-        for ImagePath{rel_path, abs_path} in image_paths {
+        for ImagePath{original, rel_path, abs_path, route_prefix} in image_paths {
             let mut out_img_path = output_dir.as_ref().to_path_buf().clone();
             out_img_path.push(&rel_path);
             if let Some(parent) = out_img_path.parent() {
@@ -169,8 +188,10 @@ impl ResourceEnv {
 
 #[derive(Debug, Clone)]
 pub struct ImagePath {
+    original: PathBuf,
     rel_path: PathBuf,
     abs_path: PathBuf,
+    route_prefix: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -204,6 +225,7 @@ pub struct IncludeCache {
 /// `SemanticScope` is used for storing environment information during AST traversals. 
 #[derive(Debug, Clone)]
 pub struct SemanticScope {
+    pub route_prefix: Option<String>,
     pub base_path: Option<PathBuf>,
     pub file_path: Option<PathBuf>,
     pub cmd_decls: CommandDeclarations,
@@ -233,6 +255,7 @@ impl SemanticScope {
         let cmd_decls = CommandDeclarations{map};
         let file_path = file_path.into();
         SemanticScope {
+            route_prefix: None,
             base_path: Some(base_path.as_ref().to_path_buf()),
             file_path: Some(file_path),
             cmd_decls,
@@ -241,11 +264,16 @@ impl SemanticScope {
             layout_mode: LayoutMode::default(),
         }
     }
+    pub fn with_route_prefix(mut self, route_prefix: impl AsRef<str>) -> Self {
+        self.route_prefix = Some(route_prefix.as_ref().to_owned());
+        self
+    }
     /// **Warning**: this will match against no commands, this is really only
     /// used for testing. Depending on what you’re doing, if `SemanticScope`
     /// isn’t property configured this can break things. 
     pub fn test_mode_empty() -> Self {
         SemanticScope {
+            route_prefix: None,
             base_path: None,
             file_path: None,
             cmd_decls: CommandDeclarations { map: HashMap::default() },
@@ -267,6 +295,7 @@ impl SemanticScope {
         }
         let cmd_decls = CommandDeclarations{map};
         let scope = SemanticScope {
+            route_prefix: None,
             base_path: None,
             file_path: None,
             cmd_decls,

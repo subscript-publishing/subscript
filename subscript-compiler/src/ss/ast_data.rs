@@ -184,7 +184,7 @@ impl Attributes {
                     .to_node()
                     .defragment_node_tree()
                     .trim_whitespace()
-                    .as_stringified_attribute_value_str("")
+                    .as_stringified_attribute_value_str()
                     .unwrap();
                 let key = Node::Text(key.into());
                 let value = value
@@ -241,7 +241,7 @@ impl Attributes {
     pub fn get_str_value(&self, key: impl AsNodeRef) -> Option<String> {
         self.get(key)
             .map(Attribute::value)
-            .and_then(|x| x.clone().as_stringified_attribute_value_str(""))
+            .and_then(|x| x.clone().as_stringified_attribute_value_str())
     }
     /// Returns true if the attribute key exists, and DOES NOT has a value that
     /// could be interpreted as ‘false’, i.e. isn’t `false` or `0`. 
@@ -261,7 +261,7 @@ impl Attributes {
         self.upsert_key_value(
             "style",
             |value| {
-                let mut value = value.as_stringified_attribute_value_str("").unwrap();
+                let mut value = value.as_stringified_attribute_value_str().unwrap();
                 if value.ends_with(";") {
                     value.push_str(style.as_ref());
                 } else {

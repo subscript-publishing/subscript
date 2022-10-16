@@ -5,6 +5,12 @@
 header#page-header {
     position: relative;
     margin-bottom: 20px;
+
+    @media (prefers-color-scheme: dark) {
+        background-color: #1d1f29;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #7e7e7e;
+    }
 }
 
 .site-header-row {
@@ -12,13 +18,6 @@ header#page-header {
     // column-gap: 20px;
     position: relative;
     transition: 0.8s ease-in-out;
-
-    &[col="2"] {
-        grid-template-columns: 100px 1fr
-    }
-    &[col="1"] {
-        grid-template-columns: 1fr
-    }
 
     a.left-link {
         position: relative;
@@ -53,7 +52,6 @@ header#page-header {
         }
     }
     @media (max-width: 45em) {
-        grid-template-columns: 60px 1fr;
         a.left-link {
             span {
                 font-size: 2em;
@@ -80,10 +78,7 @@ header#page-header {
     a.left-link {
         z-index: 2;
         overflow: hidden;
-    }
-    @media (max-width: 45em) {
-        grid-template-columns: unset;
-        grid-template-rows: 50px 1fr;
+        padding: 20px;
     }
 }
 
@@ -103,11 +98,9 @@ header#page-header {
     a.left-link {
         z-index: 1;
         align-items: flex-start;
-        padding-top: 20px;
+        display: none;
     }
     @media (max-width: 45em) {
-        grid-template-columns: unset;
-        grid-template-rows: 50px 1fr;
         @media (prefers-color-scheme: light) {
             a.left-link {
                 border-bottom: 1px solid #000;
@@ -116,24 +109,19 @@ header#page-header {
     }
 }
 
-
-// div#site-title-wrapper {
-
-// }
-
 #toc-list-wrapper {
     display: flex;
     flex-direction: column;
 }
 
-#toc-list-info {
+p.toc-info-banner {
     font-family: var(--toc-font);
     font-weight: bolder;
     text-align: center;
     font-size: 2em;
     margin: 0;
     border-bottom: 1px solid #000;
-    height: 50px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -141,7 +129,7 @@ header#page-header {
     margin-right: 20px;
 }
 
-#toc-list {
+@mixin toc-list-styling {
     list-style: none;
     margin: 0;
     padding: 20px;
@@ -164,7 +152,7 @@ header#page-header {
         }
     }
     li[top-level="true"] {
-        height: 90px;;
+        border-bottom: 2px solid #000;
     }
     li[data-level="h1"] {
         margin-left: 20px;
@@ -196,6 +184,14 @@ header#page-header {
         padding-left: calc(10px + min(25vw, 300px));
         font-size: 1.3em;
     }
+}
+
+#toc-list {
+    @include toc-list-styling;
+}
+
+#topic-list {
+    @include toc-list-styling;
 }
 
 

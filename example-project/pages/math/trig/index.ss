@@ -16,23 +16,23 @@
          \li{For values on the x-axis, anything over \{\frac{1}{4}\tau}
                          and under \{\frac{3}{4}\tau} will be negative}
          \li{For values on the y-axis, anything over \{\frac{1}{2}\tau} will be negative}
-         \li{\p{Diagonals will be \{\pm \frac{\sqrt{2}}{2}}}
-         \p{For ratios of \{\frac{1}{12}\tau} on the sides, i.e.
-                             \{\frac{1}{12}\tau},
-                             \{\frac{2}{12}\tau},
-                             \{\frac{4}{12}\tau},
-                             \{\frac{5}{12}\tau},
-                             \{\frac{7}{12}\tau},
-                             \{\frac{8}{12}\tau},
-                             \{\frac{10}{12}\tau}, and
-                             \{\frac{11}{12}\tau}. Draw a circle and dot the point where it occurs
-                             (which is pretty easy since the above are simple ratios of a circle
-                             when expressed in terms of \{\tau}).
-                             Then with regards to the \{x} and \{y} axis values:}
+         \li{
+            Diagonals will be \{\pm \frac{\sqrt{2}}{2}}, For ratios of \{\frac{1}{12}\tau} on the sides, i.e.
+               \{\frac{1}{12}\tau},
+               \{\frac{2}{12}\tau},
+               \{\frac{4}{12}\tau},
+               \{\frac{5}{12}\tau},
+               \{\frac{7}{12}\tau},
+               \{\frac{8}{12}\tau},
+               \{\frac{10}{12}\tau}, and
+               \{\frac{11}{12}\tau}.
+            Draw a circle and dot the point where it occurs (which is pretty easy since the above are simple ratios of a circle when expressed in terms of \{\tau}). Then with regards to the \{x} and \{y} axis values:
          \ul{
             \li{The longer size will be \{\pm \frac{\sqrt{3}}{2}}}
             \li{The shorter side will be \{\pm \frac{1}{2}}}
-         }\p{See the above examples.}}
+         }
+         See the above examples.
+         }
       }
    }
 }
@@ -534,7 +534,7 @@
 \h2{Reparameterization of the position vector \{\vec{v}(t)} in terms of length \{S(t)}}
 
 \ul{
-   \li{\p{We can parametrize a curve \b{with respect to arc length}; because arc length arises naturally from the shape of the curve and \b{does not depend on any coordinate system}.}}
+   \li{We can parametrize a curve \b{with respect to arc length}; because arc length arises naturally from the shape of the curve and \b{does not depend on any coordinate system}.}
 }
 \grid[col="2"]{
    \note[boxed]{
@@ -542,8 +542,8 @@
       \p{Given}
       \equation{
          \vec{v}
-                         &= \begin{bmatrix} x & y & z \end{bmatrix}
-                         = \begin{bmatrix} f(t) & g(t) & h(t) \end{bmatrix}
+            &= \begin{bmatrix} x & y & z \end{bmatrix}
+            = \begin{bmatrix} f(t) & g(t) & h(t) \end{bmatrix}
       }
       \p{We can redefine \{\vec{v}} in terms of arc length between two endpoints}
       \math{
@@ -648,9 +648,9 @@
          \vec{B} \equiv \vec{T}\times\vec{N}
       }
       \ul{
-         \li{\p{Therefore, the binormal vector is orthogonal to both the tangent vector and the normal vector.}}
-         \li{\p{The plane determined by the normal and binormal vectors N and B at a point P on a curve C is called the normal plane of C at P.}}
-         \li{\p{The plane determined by the vectors T and N is called the osculating plane of C at P. The name comes from the Latin osculum, meaning “kiss.” It is the plane that comes closest to containing the part of the curve near P. (For a plane curve, the osculating plane is simply the plane that contains the curve.)}}
+         \li{Therefore, the binormal vector is orthogonal to both the tangent vector and the normal vector.}
+         \li{The plane determined by the normal and binormal vectors N and B at a point P on a curve C is called the normal plane of C at P.}
+         \li{The plane determined by the vectors T and N is called the osculating plane of C at P. The name comes from the Latin osculum, meaning “kiss.” It is the plane that comes closest to containing the part of the curve near P. (For a plane curve, the osculating plane is simply the plane that contains the curve.)}
       }
    }
    \note[boxed]{
@@ -952,9 +952,10 @@
       \h3{The Arc Length Function}
       \p{Suppose}
       \ul{
-         \li{\p{Given some curve \{C} defined by some vector \{\vec{r}} in \{\mathbb{R}^3}}}
-         \li{\p{where \{r^\prime} is continuous and \{C} is traversed exactly once as \{t} increases from \{a} to \{b}}}
-      }\p{We can define it's arc length function VIA}
+         \li{Given some curve \{C} defined by some vector \{\vec{r}} in \{\mathbb{R}^3}}
+         \li{where \{r^\prime} is continuous and \{C} is traversed exactly once as \{t} increases from \{a} to \{b}}
+      }
+      \p{We can define it's arc length function VIA}
       \math{
          \newcommand{\Long}{
                \int_a^t \sqrt{

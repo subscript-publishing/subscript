@@ -47,7 +47,7 @@ impl Node {
         let scope = crate::ss::SemanticScope::default();
         let nodes = parse_source(&scope, code.as_ref())?;
         let nodes = process_commands(&mut env, &scope, nodes).defragment_node_tree();
-        assert!(env.is_empty());
+        assert!(env.empty_images());
         Ok(nodes)
     }
     pub fn from_str_sym_mode(code: impl AsRef<str>) -> Result<Self, CompilerError> {
@@ -60,7 +60,7 @@ impl Node {
         };
         let nodes = parse_source(&scope, code.as_ref())?;
         let nodes = process_commands(&mut env, &scope, nodes).defragment_node_tree();
-        assert!(env.is_empty());
+        assert!(env.empty_images());
         Ok(nodes)
     }
     pub fn new_ident<T: Into<Ann<String>>>(str: T) -> Result<Self, IdentInitError> {
@@ -313,7 +313,7 @@ impl Node {
     /// - `Node::Symbol`
     /// - `Node::Quotation` (with quotes removed)
     /// - `Node::Fragment`
-    pub fn as_stringified_attribute_value_str(self, join: &str) -> Option<String> {
+    pub fn as_stringified_attribute_value_str(self) -> Option<String> {
         match self {
             Node::Ident(Ann{value, ..}) => Some(value.to_tex_ident().to_string()),
             Node::Text(Ann{value, ..}) => Some(value),
@@ -321,16 +321,16 @@ impl Node {
             Node::Quotation(Ann{value: Quotation{children, ..}, ..}) => {
                 let mut contents: Vec<String> = Vec::new();
                 for child in children {
-                    contents.push(child.as_stringified_attribute_value_str(join)?);
+                    contents.push(child.as_stringified_attribute_value_str()?);
                 }
-                Some(contents.join(join))
+                Some(contents.join(""))
             }
             Node::Fragment(children) => {
                 let mut contents: Vec<String> = Vec::new();
                 for child in children {
-                    contents.push(child.as_stringified_attribute_value_str(join)?);
+                    contents.push(child.as_stringified_attribute_value_str()?);
                 }
-                Some(contents.join(join))
+                Some(contents.join(""))
             }
             _ => None,
         }
@@ -969,7 +969,7 @@ impl Attribute {
             .trim_whitespace()
             .into_text()?
             .consume();
-        let value: Option<String> = self.value.as_stringified_attribute_value_str(" ");
+        let value: Option<String> = self.value.as_stringified_attribute_value_str();
         Some((key, value))
     }
     pub fn value(&self) -> &Node {

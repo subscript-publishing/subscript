@@ -117,14 +117,17 @@ fn process_ss1_composition(
 
 struct NormalizeRefHeadings<'a> {
     scope: &'a SemanticScope,
-    decrement_amount: u8,
+    decrement_amount: Option<u8>,
 }
 
 impl<'a> NodeCmdCallTraversal for NormalizeRefHeadings<'a> {
     fn cmd(&self, cmd: &mut CmdCall) {
         if cmd.is_heading_node() {
             let heading_type = HeadingType::from_id(&cmd.identifier.value).unwrap();
-            let heading_type = heading_type.decrement_by(self.decrement_amount);
+            let heading_type = match self.decrement_amount {
+                Some(amount) => heading_type.decrement_by(amount),
+                None => heading_type,
+            };
             if !cmd.attributes.has_attr("source") {
                 self.scope.file_path
                     .clone()
@@ -140,10 +143,10 @@ impl<'a> NodeCmdCallTraversal for NormalizeRefHeadings<'a> {
 
 fn normalize_ref_headings(
     scope: &SemanticScope,
-    baseline: HeadingType,
+    baseline: Option<HeadingType>,
     mut node: Node
 ) -> Node {
-    let decrement_amount = baseline.to_u8();
+    let decrement_amount = baseline.map(|x| x.to_u8());
     let runner = NormalizeRefHeadings {scope, decrement_amount};
     node.node_cmd_call_traversal(&runner);
     node
@@ -276,7 +279,7 @@ fn handle_include(
     let no_toc = attributes.has_truthy_option("no-toc");
     let baseline = attributes
         .get("baseline")
-        .and_then(|x| x.value.clone().as_stringified_attribute_value_str(""))
+        .and_then(|x| x.value.clone().as_stringified_attribute_value_str())
         .and_then(|x| match x.as_str() {
             "h1" => Some(HeadingType::H1),
             "h2" => Some(HeadingType::H2),
@@ -290,7 +293,7 @@ fn handle_include(
         .get("src")?
         .value
         .clone()
-        .as_stringified_attribute_value_str("")?;
+        .as_stringified_attribute_value_str()?;
     let src_path = scope.normalize_file_path(&src_path_str)
         .unwrap_or_else(|()| PathBuf::from(&src_path_str));
     if let Some(cached) = env.get_include_cache(&src_path) {
@@ -301,10 +304,8 @@ fn handle_include(
         Some("ss") => {
             // println!("include for {:?}", scope.file_path);
             let sub_scope = scope.new_file(&src_path);
-            let mut nodes = crate::compiler::low_level_api::parse_process(env, &sub_scope).ok()?;
-            if let Some(baseline) = baseline {
-                nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
-            }
+            let nodes = crate::compiler::low_level_api::parse_process(env, &sub_scope).ok()?;
+            let nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
             // if toc_only {
             //     nodes = Node::Fragment(process_toc_only(&sub_scope, nodes));
             // }
@@ -323,10 +324,8 @@ fn handle_include(
         Some(ext) if ss_freeform_format::SS1FreeformSuite::is_ss1_composition_file_ext(ext) => {
             let sub_scope = scope.new_file(&src_path);
             let nodes = process_ss1_composition(&sub_scope, rewrite_rules);
-            let mut nodes = Node::Fragment(nodes).defragment_node_tree();
-            if let Some(baseline) = baseline {
-                nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
-            }
+            let nodes = Node::Fragment(nodes).defragment_node_tree();
+            let nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
             let nodes = nodes.defragment_node_tree();
             env.cache_include(&src_path, &nodes);
             return Some(nodes);

@@ -228,7 +228,7 @@
 }
 \h4{Examples}
 
-\grid[col="2"]{
+\grid[col="2" boxed]{
    \note{
       \h6{Electron configuration for \{_{26}\mathrm{Fe}}}
       \equation{
@@ -245,20 +245,20 @@
       \p{Beginning with the electron configuration for \{_{26}\mathrm{Fe}}}
       \equation{
          \underbrace{1s^2\; 2s^2\; 2p^6\; 3s^2\; 3p^6}_{\smallText{Equal to Argon}}\;
-                         \overbrace{4s^2\; 3d^6}^{\mathclap{
-                             \begin{gathered}
-                             \smallText{Which should we remove 2 $\mathrm{e}^{-}$ from?}\\
-                             \smallText{($4s^2$ or $3d^6$)?}\\
-                             \end{gathered}
-                         }}
-                         &= \ce{[Ar]
-                                 \underbrace{4s^2\; 3d^6}_{\mathclap{
-                                     \begin{gathered}
-                                     \smallText{Which should we remove 2 $\mathrm{e}^{-}$ from?}\\
-                                     \smallText{($4s^2$ or $3d^6$)?}\\
-                                     \end{gathered}
-                                 }}
-                             }
+         \overbrace{4s^2\; 3d^6}^{\mathclap{
+            \begin{gathered}
+            \smallText{Which should we remove 2 $\mathrm{e}^{-}$ from?}\\
+            \smallText{($4s^2$ or $3d^6$)?}\\
+            \end{gathered}
+         }}
+         &= \ce{[Ar]
+               \underbrace{4s^2\; 3d^6}_{\mathclap{
+                     \begin{gathered}
+                     \smallText{Which should we remove 2 $\mathrm{e}^{-}$ from?}\\
+                     \smallText{($4s^2$ or $3d^6$)?}\\
+                     \end{gathered}
+               }}
+            }
       }
       \p{Remove the electrons from the term with the higher electron state. 
                   \mark[font]{Warning!} Do not \u{just} remove the electrons
@@ -267,7 +267,8 @@
       \ul{
          \li{\{4s^2} is in a \mark[font]{higher} electron state}
          \li{\{3d^6} is in a \mark[font]{lower} electron state}
-      }\grid[boxed, col="1"]{
+      }
+      \grid[boxed, col="1"]{
          \note{
             \p{Alternatively, to compute the lowest energy orbital, add the principle quantum number (\{n})
                                 to the The angular momentum quantum number (\{l}) to get the orbital with the lowest energy.
@@ -294,7 +295,8 @@
             }\p{NVM this is an exception to the rule...}
             \p{TODO move this somewhere else...}
          }
-      }\p{As shown}
+      }
+      \p{As shown}
       \equation{
          \underbrace{1s^2\; 2s^2\; 2p^6\; 3s^2\; 3p^6}\;
                          \overbrace{4s^{\left(2 - 2\right)}}^{ \mathclap{

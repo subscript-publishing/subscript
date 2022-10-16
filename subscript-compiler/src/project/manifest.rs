@@ -112,8 +112,10 @@ pub mod manifest_format {
         #[serde(default)]
         pub project: Project
     }
-    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[derive(Debug, Clone, Serialize, Deserialize, Default)]
     pub struct Project {
+        #[serde(default)]
+        pub title: Option<String>,
         #[serde(alias = "location")]
         #[serde(default)]
         pub locations: ProjectLocations
@@ -126,14 +128,6 @@ pub mod manifest_format {
         pub pages: PathBuf,
         #[serde(default = "template_default_value")]
         pub template: PathBuf,
-    }
-
-    impl Default for Project {
-        fn default() -> Self {
-            Project{
-                locations: ProjectLocations::default()
-            }
-        }
     }
     impl Default for ProjectLocations {
         fn default() -> Self {

@@ -1,4 +1,5 @@
 [project]
+title = "Colbyn’s School Notes"
 
 [project.locations]
 output = "output"

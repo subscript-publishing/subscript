@@ -6,6 +6,12 @@
         "markdown",
         "latex",
         "plaintext",
-        "git-commit"
-    ]
+        "git-commit",
+        "subscript"
+    ],
+    "spellright.parserByClass": {
+        "subscript": {
+            "parser": "latex"
+        }
+    }
 }

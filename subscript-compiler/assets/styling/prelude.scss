@@ -1,44 +1,3 @@
-/* UNIVERSAL BOX SIZING WITH INHERITANCE */
-html {
-    box-sizing: border-box;
-}
-*, *:before, *:after {
-    box-sizing: inherit;
-}
-
-
-/* DARK/LIGHT MODE DRAWING TOGGLE */
-@media (prefers-color-scheme: dark) {
-    :root {
-    --color-bg: #2b303d;
-    --color-fg: #fff;
-    // --link-color: #18deff;
-    --link-color: #dba4f9;
-    }
-    svg[data-svg-color-scheme="dark-mode"] {
-        display: unset;
-    }
-    svg[data-svg-color-scheme="light-mode"] {
-        display: none;
-    }
-}
-@media (prefers-color-scheme: light) {
-    svg[data-svg-color-scheme="dark-mode"] {
-        display: none;
-    }
-    svg[data-svg-color-scheme="light-mode"] {
-        display: unset;
-    }
-}
-
-html, body {
-    background-color: var(--color-bg);
-    color: var(--color-fg);
-    font-family: var(--content-font);
-    shape-rendering: geometricPrecision;
-    image-rendering: optimizeQuality;
-}
-
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // CONTENT
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -47,6 +6,14 @@ p {
     hyphens: auto;
     text-align: justify;
     text-indent: 7px;
+}
+
+p[center] {
+    text-align: center;
+}
+
+p[justify] {
+    text-align: justify;
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -59,7 +26,7 @@ a {
 
 hr {
     @media (prefers-color-scheme: dark) {
-        border: 1px solid #000;
+        border: 1px solid var(--border-color);
         border-bottom: none;
     }
 }
@@ -67,11 +34,94 @@ hr {
 img {
     max-width: 100%;
     width: 100%;
+    display: block;
+    margin: 0 auto;
 }
 
 img[data-center] {
     display: block;
     margin: 0 auto;
+}
+
+[data-table-wrapper] {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    position: relative;
+    overflow-x: scroll;
+}
+
+table {
+    width: fit-content;
+    border-collapse: collapse;
+    border: none;
+    align-self: center;
+    display: block;
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    overflow-x: scroll;
+    width: fit-content;
+    th, td {
+        padding: 10px;
+        @media (prefers-color-scheme: light) {
+            border: 1px solid black;
+        }
+        @media (prefers-color-scheme: dark) {
+            border: 1px solid #616161;
+        }
+    }
+    tr:hover {
+        @media (prefers-color-scheme: light) {
+            background-color: #ebebeb;
+        }
+        @media (prefers-color-scheme: dark) {
+            background-color: #2c2c2c87;
+        }
+    }
+
+    span[data-table-list] {
+        display: flex;
+        justify-content: space-evenly;
+        column-gap: 8px;
+    }
+    span[data-table-list] > span {
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-weight: 100;
+    }
+    span[data-table-list][data-color] > span {
+        border: 1px solid #01ff5c;
+        color: #01ff5c;
+    }
+    span[data-table-list][data-color1] > span {
+        border: 1px solid #c1ff02;
+        color: #c1ff02;
+    }
+    span[data-table-list][data-color2] > span {
+        border: 1px solid #27fce2;
+        color: #27fce2;
+    }
+}
+
+mark[font] {
+    background-color: unset;
+    color: #0fffae;
+}
+mark[font][data-color] {
+    color: #01ff5c;
+}
+mark[font][data-color1] {
+    color: #c1ff02;
+}
+mark[font][data-color2] {
+    color: #27fce2;
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -103,27 +153,33 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     a {
         text-decoration: none;
-        color: var(--color-fg);
+        color: inherit;
     }
 }
 
 h1 {
     font-size: 2.8em;
+    color: var(--h1-color);
 }
 h2 {
     font-size: 2.5em;
+    color: var(--h2-color);
 }
 h3 {
     font-size: 2.2em;
+    color: var(--h3-color);
 }
 h4 {
     font-size: 1.9em;
+    color: var(--h4-color);
 }
 h5 {
     font-size: 1.6em;
+    color: var(--h5-color);
 }
 h6 {
     font-size: 1.3em;
+    color: var(--h6-color);
 }
 
 main > :is(h1, h2, h3, h4, h5, h6):first-child {
@@ -134,161 +190,76 @@ main > :is(h1, h2, h3, h4, h5, h6):first-child {
 // COLUM STYLING
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-@mixin multi-column-section-styling {
-    :is(h1, h2, h3, h4, h5, h6) {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        border-top: none;
-        border-bottom: none;
-        font-family: var(--section-font);
-    }
-    h1 {
-        font-size: 2.8em;
-    }
-    h2 {
-        font-size: 2.5em;
-    }
-    h3 {
-        font-size: 2.2em;
-    }
-    h4 {
-        font-size: 1.9em;
-    }
-    h5 {
-        font-size: 1.6em;
-    }
-    h6 {
-        font-size: 1.3em;
-    }
-    p {
-        padding: 0;
-    }
-}
-
-@mixin single-column-section-styling {
-    :is(h1, h2, h3, h4, h5, h6) {
-        border-bottom: 1px solid #000;
-        border-top: 1px solid #000;
+@mixin single-column-child-styling {
+    & > *:is(h1, h2, h3, h4, h5, h6) {
+        border-bottom: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
         padding-top: 5px;
         padding-bottom: 5px;
     }
-    :is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) {
+    & > *:is(h1, h2, h3, h4, h5, h6) + & > *:is(h1, h2, h3, h4, h5, h6) {
         border-top: unset;
     }
-    h1 {
+    & > h1 {
         padding-left: min(min(10px, 5vw), 100px);
         font-size: 2.8em;
     }
-    h2 {
+    & > h2 {
         padding-left: min(min(30px, 10vw), 150px);
         font-size: 2.5em;
     }
-    h3 {
+    & > h3 {
         padding-left: min(min(60px, 15vw), 200px);
         font-size: 2.2em;
     }
-    h4 {
+    & > h4 {
         padding-left: min(min(90px, 20vw), 250px);
         font-size: 1.9em;
     }
-    h5 {
+    & > h5 {
         padding-left: min(min(120px, 25vw), 300px);
         font-size: 1.6em;
     }
-    h6 {
+    & > h6 {
         padding-left: min(min(150px, 30vw), 350px);
         font-size: 1.3em;
     }
-    p {
-        padding: 0 40px;
+    & > *:not(:is(h1, h2, h3, h4, h5, h6)) {
+        text-align: justify;
+        padding: 0 20px;
     }
-    [data-math-node="block"] {
-        padding: 0 40px;
+    & > dl {
+        dt {
+            text-align: left;
+        }
+        dd {
+            text-align: justify;
+        }
     }
+    & > ul, ol {
+        padding-left: 30px;
+    }
+    & > hr {
+        width: 95%;
+    }
+    // & > [data-math-node="block"] {
+    //     // margin: 0 40px;
+    //     border-right: 1px solid #ccc;
+    //     border-left: 1px solid #ccc;
+    // }
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // PLEASE CLEAN ME UP
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-@media (min-width: $max-single-col) {
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) {
-        h1, h2, h3, h4, h5, h6 {
-            margin: 0;
-        }
-        p {
-            margin: 0;
-        }
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > :is(h1, h2, h3, h4, h5, h6) {
-        text-align: center;
-        font-family: var(--section-font);
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > h1 {
-        font-size: 2.8em;
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > h2 {
-        font-size: 2.5em;
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > h3 {
-        font-size: 2.2em;
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > h4 {
-        font-size: 1.9em;
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > h5 {
-        font-size: 1.6em;
-    }
-    section:not([data-cmd="layout"][data-col="1"]):not([data-cmd="layout"][data-col="1"] > [data-cmd="note"]):not([force-single-col="on"]) > h6 {
-        font-size: 1.3em;
-    }
-    [data-cmd="layout"][data-col]:not([data-col="1"]):not([force-single-col="on"]) {
-        @include multi-column-section-styling;
-        [data-cmd="note"] {
-            @include multi-column-section-styling;
-        }
-    }
-}
-
-
-@media (max-width: $max-single-col) {
-    section {
-        display: contents;
-    }
-}
-
-[data-cmd="layout"][data-col][force-single-col="on"] {
-    display: contents;
-    @include single-column-section-styling;
-    [data-cmd="note"] {
-        @include single-column-section-styling;
-    }
-}
-[data-cmd="layout"][data-col="1"] {
-    display: contents;
-    @include single-column-section-styling;
-    [data-cmd="note"] {
-        display: contents;
-        @include single-column-section-styling;
-    }
-}
-
-[data-cmd="layout"][data-col]:not([data-col="1"])[force-single-col="on"] {
-    display: contents;
-    @include single-column-section-styling;
-    [data-cmd="note"] {
-        @include single-column-section-styling;
-    }
-}
-
 
 main {
-    @include single-column-section-styling;
     display: flex;
     flex-direction: column;
     row-gap: 10px;
     padding-bottom: 20px;
+    @include single-column-child-styling;
 }
 
 

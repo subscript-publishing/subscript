@@ -1,13 +1,75 @@
-$max-single-col: 760px;
+$max-single-col: 800px;
 
 :root {
   --color-bg: #fff;
   --color-fg: #000;
   --link-color: #0059ff;
+  --border-color: #000;
   --headline-font: 'Sail', cursive;
+  --h1-color: #303233;
+  --h2-color: #303233;
+  --h3-color: #32403f;
+  --h4-color: #32403f;
+  --h5-color: #32403f;
+  --h6-color: #32403f;
   --section-font: 'Playfair Display', serif;
   --toc-font: 'Dancing Script', cursive;
   --content-font: 'Open Sans', sans-serif;
   --monospace-font: 'Inconsolata', monospace;
-  --force-single-column: 0;
 }
+
+
+/* UNIVERSAL BOX SIZING WITH INHERITANCE */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+
+/* DARK/LIGHT MODE DRAWING TOGGLE */
+@media (prefers-color-scheme: dark) {
+    :root {
+    --color-bg: #313036;
+    --color-fg: #f5f5f5;
+    --link-color: #09d9ff;
+    --border-color: #805b3c;
+    --h1-color: #dec3c3;
+    --h2-color: #dec3c3;
+    --h3-color: #dec3c3;
+    --h4-color: #dec3c3;
+    --h5-color: #dec3c3;
+    --h6-color: #dec3c3;
+    }
+    svg[data-svg-color-scheme="dark-mode"] {
+        display: unset;
+    }
+    svg[data-svg-color-scheme="light-mode"] {
+        display: none;
+    }
+}
+@media (prefers-color-scheme: light) {
+    svg[data-svg-color-scheme="dark-mode"] {
+        display: none;
+    }
+    svg[data-svg-color-scheme="light-mode"] {
+        display: unset;
+    }
+}
+
+html, body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--content-font);
+    shape-rendering: geometricPrecision;
+    image-rendering: optimizeQuality;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    width: 100vw;
+    max-width: 100%;
+    position: relative;
+    height: 100%;
+}
+
+

@@ -180,7 +180,8 @@
                \td{\span[data-table-list, data-color1]{\span{less than}}}\td{\span[data-table-list, data-color]{\span{-ite}}}\td{\span[data-color, data-table-list]{\span{Lowest #}}}\td{\{\ce{ClO^{-}}}}\td{\mark[data-color1, font]{Hypo}chlor\mark[font, data-color]{ite}}
             }
          }
-      }\h5{\mark[font, data-color]{Oxygen} vs \mark[font, data-color2]{No-Oxygen} Comparison}
+      }
+      \h5{\mark[font, data-color]{Oxygen} vs \mark[font, data-color2]{No-Oxygen} Comparison}
       \table{
          \thead{
             \tr{
@@ -190,27 +191,46 @@
                \th{Example}
                \th{Name}
             }
-         }\tbody{
+         }
+         \tbody{
             \tr{
                \th{\span[data-table-list, data-color1]{\span{Per-}}}
-               \td{\span[data-table-list, data-color]{\span{-ate}}}\td\td{\span[data-table-list]{\{\ce{SO_5^{2-}}}
-                                       or
-                                       \{\ce{S_2O_8^{2-}}}}}\td{\mark[data-color1, font]{Per}sulf\mark[data-color, font]{ate}}
-            }\tr{
-               \td\th{\span[data-color, data-table-list]{\span{-ate}}}
-               \td\td{\{\ce{SO_4^{2-}}}}\td{Sulf\mark[font, data-color]{ate}}
-            }\tr{
-               \td\th{\span[data-table-list, data-color]{\span{-ite}}}
-               \td\td{\{\ce{SO_3^{2-}}}}\td{Sulf\mark[font, data-color]{ite}}
-            }\tr{
-               \td{\span[data-table-list, data-color1]{\span{Hypo-}}}\th{\span[data-color, data-table-list]{\span{-ite}}}
-               \td\td{\{\ce{SO_2^{2-}}}}\td{\mark[font, data-color1]{Hypo}sulf\mark[font, data-color]{ite}}
-            }\tr{
-               \td\th{\span[data-color2, data-table-list]{\span{-ide}}}
-               \td{\span[data-table-list, data-color2]{\span{No oxygen}\span{non-metal}}}\td{\{\ce{S^{2-}}}}\td{Sulf\mark[font, data-color2]{ide}}
+               \td{\span[data-table-list, data-color]{\span{-ate}}}
+               \td{}
+               \td{\span[data-table-list]{\{\ce{SO_5^{2-}}} or \{\ce{S_2O_8^{2-}}}}}
+               \td{\mark[data-color1, font]{Per}sulf\mark[data-color, font]{ate}}
+            }
+            \tr{
+               \td{}
+               \th{\span[data-color, data-table-list]{\span{-ate}}}
+               \td{}
+               \td{\{\ce{SO_4^{2-}}}}
+               \td{Sulf\mark[font, data-color]{ate}}
+            }
+            \tr{
+               \td{}
+               \th{\span[data-table-list, data-color]{\span{-ite}}}
+               \td{}
+               \td{\{\ce{SO_3^{2-}}}}
+               \td{Sulf\mark[font, data-color]{ite}}
+            }
+            \tr{
+               \td{\span[data-table-list, data-color1]{\span{Hypo-}}}
+               \th{\span[data-color, data-table-list]{\span{-ite}}}
+               \td{}
+               \td{\{\ce{SO_2^{2-}}}}
+               \td{\mark[font, data-color1]{Hypo}sulf\mark[font, data-color]{ite}}
+            }
+            \tr{
+               \td{}
+               \th{\span[data-color2, data-table-list]{\span{-ide}}}
+               \td{\span[data-table-list, data-color2]{\span{No oxygen}\span{non-metal}}}
+               \td{\{\ce{S^{2-}}}}
+               \td{Sulf\mark[font, data-color2]{ide}}
             }
          }
-      }\p{In summary}
+      }
+      \p{In summary}
       \grid[boxed, col="4"]{
          \note[compact]{
             \p[center]{\mark[data-color1, font]{Per}\span{*}\mark[font, data-color]{ate}}

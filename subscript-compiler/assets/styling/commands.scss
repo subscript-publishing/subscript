@@ -9,6 +9,13 @@
 /* Compensate by reducing space around display math */
 .katex-display { margin: 0.5em 0; }
 
+
+[data-math-node] {
+    @media (prefers-color-scheme: dark) {
+        color: #ffb7e4;
+    }
+}
+
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // LAYOUT
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -16,13 +23,16 @@
 [data-cmd="layout"][show-rule="true"] {
     column-rule: 1px solid #ccc;
 }
-[data-cmd="layout"]:not([data-col="note"]) {
+[data-cmd="layout"] {
     column-gap: 20px;
     row-gap: 10px;
     padding: 0 20px;
     h1, h2, h3, h4, h5, h6 {
         margin: 0;
         break-after: avoid;
+        text-align: center;
+        border-top: none;
+        border-bottom: none;
     }
     p {
         margin: 0;
@@ -51,24 +61,14 @@
 }
 
 @mixin layout-base($col) {
-    [data-cmd="layout"][data-col="#{$col}"]:not([force-single-col="on"]) {
+    [data-cmd="layout"][data-col="#{$col}"] {
         column-count: $col;
-        @if $col == 1 {
-            display: contents;
-        }
-    }
-    [data-cmd="layout"][data-col="#{$col}"][force-single-col="on"] {
-        display: contents;
     }
 }
 @mixin layout-breakpoint($min, $for, $to) {
     @media (max-width: $min) {
         [data-cmd="layout"][data-col="#{$for}"] {
             column-count: $to;
-            @if $to == 1 {
-                display: contents;
-                @include single-column-section-styling;
-            }
         }
     }
 }
@@ -96,15 +96,24 @@
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 @mixin boxed-styling {
-    box-shadow: 0 0 3px 0px #000000;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #535353;
+    border-radius: 3px;
+    @media (prefers-color-scheme: light) {
+        border: 1px solid #535353;
+        box-shadow: 0 0 0px 1px #eeeeee;
+    }
+    @media (prefers-color-scheme: dark) {
+        border: 1px solid #755e45;
+        box-shadow: 0px 0px 1px 1px #0000005c;
+    }
 }
 
 [data-cmd="grid"][boxed] {
-    [data-cmd="note"] {
+    & > [data-cmd="note"] {
+        @include boxed-styling;
+    }
+    & > [data-math-node="block"] {
         @include boxed-styling;
     }
 }
@@ -118,19 +127,32 @@
     padding: 0 20px;
     row-gap: 10px;
     column-gap: 10px;
-    :is(h1, h2, h3, h4, h5, h6) {
+    width: 100%;
+    h1, h2, h3, h4, h5, h6 {
         border: none;
         border-top: none;
         border-bottom: none;
         padding: 0;
+        text-align: center;
     }
 }
 
 [data-cmd="note"] {
+    @include single-column-child-styling;
     display: flex;
     flex-direction: column;
     column-gap: 10px;
     row-gap: 10px;
+    overflow: hidden;
+    align-items: normal;
+    grid-row-gap: 12px;
+    h1, h2, h3, h4, h5, h6 {
+        border: none;
+        border-top: none;
+        border-bottom: none;
+        text-align: center;
+        padding: 0 10px;
+    }
     [data-cmd="note"] {
         margin: 10px;
     }
@@ -148,10 +170,27 @@
     }
 }
 
+@mixin grid-breakpoint($min, $for, $to) {
+    @media (max-width: $min) {
+        [data-cmd="grid"][data-col="#{$for}"] {
+            grid-template-columns: repeat($to, 1fr);
+        }
+    }
+}
+
 @include grid-layout-for(1);
 @include grid-layout-for(2);
 @include grid-layout-for(3);
 @include grid-layout-for(4);
+
+
+@include grid-breakpoint(1200px, 4, 3);
+@include grid-breakpoint(960px, 3, 2);
+@include grid-breakpoint(960px, 3, 2);
+@include grid-breakpoint(900px, 4, 2);
+@include grid-breakpoint($max-single-col, 4, 1);
+@include grid-breakpoint($max-single-col, 3, 1);
+@include grid-breakpoint($max-single-col, 2, 1);
 
 // [data-cmd="grid"][data-col="1"] {
 //     display: grid;

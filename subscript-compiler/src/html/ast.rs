@@ -95,6 +95,13 @@ impl TagBuilder {
         }
         self
     }
+    pub fn push_child_option<T, U: Into<Node>>(mut self, option: Option<T>, f: impl Fn(T) -> U) -> Self {
+        if let Some(x) = option {
+            self.children.push(f(x).into());
+
+        }
+        self
+    }
     pub fn finalize(self) -> Node {
         Node::Element(Element{
             name: self.name,
@@ -142,6 +149,15 @@ impl Element {
     }
     pub fn has_attr<T: AsRef<str>>(&self, key: T) -> bool {
         self.attributes.contains_key(key.as_ref())
+    }
+    pub fn has_truthy_attr<T: AsRef<str>>(&self, key: T) -> bool {
+        self.get_attr_value(key.as_ref())
+            .map(|val| match val.as_str() {
+                "0" => false,
+                "false" => false,
+                _ => true
+            })
+            .unwrap_or(false)
     }
     pub fn get_attr_value<T: AsRef<str>>(&self, key: T) -> Option<&String> {
         self.attributes.get(key.as_ref())
