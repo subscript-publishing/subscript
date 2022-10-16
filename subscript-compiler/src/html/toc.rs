@@ -282,14 +282,30 @@ impl TocPageEntry {
                         .finalize()
                 }
             )
-            .push_child_option(
-                options.site_title.as_ref(),
-                |title| TagBuilder::new("div")
-                    .with_id("site-title-box")
+            .push_child(
+                TagBuilder::new("div")
+                    .with_id("site-title-content")
+                    .push_child_option(
+                        options.site_title.as_ref(),
+                        |title| TagBuilder::new("div")
+                            .with_id("site-title-box")
+                            .push_child(
+                                TagBuilder::new("h1")
+                                    .with_attr_key("data-title")
+                                    .push_child(title)
+                                    .finalize()
+                            )
+                            .finalize()
+                    )
                     .push_child(
-                        TagBuilder::new("h1")
-                            .with_attr_key("data-title")
-                            .push_child(title)
+                        TagBuilder::new("a")
+                            .with_attr("href", "https://github.com/subscript-publishing/subscript")
+                            .push_child("Built with ")
+                            .push_child(
+                                TagBuilder::new("span")
+                                    .push_child("SubScript!")
+                                    .finalize()
+                            )
                             .finalize()
                     )
                     .finalize()

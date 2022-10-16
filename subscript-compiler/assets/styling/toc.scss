@@ -82,10 +82,45 @@ header#page-header {
     }
 }
 
+
+#site-title-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 90vw;
+    margin: 0 auto;
+    width: 100%;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    margin-top: 40px;
+    @media (max-width: 45em) {
+        grid-template-columns: unset;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+#site-title-content > a:last-child {
+    text-align: center;
+    font-size: 3em;
+    font-family: var(--toc-font);
+    text-decoration: none;
+    border: 1px solid var(--link-color);
+    padding: 10px;
+    border-radius: 3px;
+    span {
+        font-weight: bolder;
+        color: #ffa100;
+        // @media (prefers-color-scheme: dark) {
+        // }
+    }
+}
+
+
+// TODO RENAME
 #site-title-box {
     padding: 20px;
     margin: 0 20px;
-    border-bottom: 1px solid #000;
     h1 {
         font-family: var(--toc-font);
         margin: 0;
@@ -262,3 +297,5 @@ button#set-single-col-to-off-btn {
         visibility: hidden;
     }
 }
+
+

@@ -143,10 +143,42 @@ header#page-header {
   padding: 20px;
 }
 
+#site-title-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  max-width: 90vw;
+  margin: 0 auto;
+  width: 100%;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  margin-top: 40px;
+}
+@media (max-width: 45em) {
+  #site-title-content {
+    grid-template-columns: unset;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+#site-title-content > a:last-child {
+  text-align: center;
+  font-size: 3em;
+  font-family: var(--toc-font);
+  text-decoration: none;
+  border: 1px solid var(--link-color);
+  padding: 10px;
+  border-radius: 3px;
+}
+#site-title-content > a:last-child span {
+  font-weight: bolder;
+  color: #ffa100;
+}
+
 #site-title-box {
   padding: 20px;
   margin: 0 20px;
-  border-bottom: 1px solid #000;
 }
 #site-title-box h1 {
   font-family: var(--toc-font);

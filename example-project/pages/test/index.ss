@@ -15,6 +15,14 @@
         ||\vec{v}|| &= \sqrt{(v_x)^2 + (v_y)^2 + (v_z)^2}
 }
 
+\equation[tag="A"]{
+    A = \int_{a}^{b} f(x) \;\mathrm{d}x
+        &\approx \sum_{i = 1}^{n}\, \Delta{x}\cdot f\left(a + \frac{(i - 1) + i}{2} \cdot \Delta{x}\right) =
+            \sum_{i = 1}^{n}\, \Delta{x}\cdot f\left(a + \frac{2i - 1}{2} \cdot \Delta{x}\right)\\
+        &\approx \sum_{i = 0}^{n-1}\, \Delta{x}\cdot f\left(a + \frac{(i + 1) + i}{2} \cdot \Delta{x}\right) =
+            \sum_{i = 0}^{n-1}\, \Delta{x}\cdot f\left(a + \frac{2i + 1}{2} \cdot \Delta{x}\right)
+}
+
 \math {
     \hbrace[left] {
         a & x\\
@@ -32,32 +40,32 @@
 }
 
 \math[preset="equations"]{
-    2x - 5y &=  8 \\ 
+    2x - 5y &=  8 \\
     3x + 9y &=  -12
 }
 
 \math[preset="equations", num]{
-    2x - 5y &=  8 \\ 
+    2x - 5y &=  8 \\
     3x + 9y &=  -12
 }
 
 \math[preset="equations", tag="A"]{
-    2x - 5y &=  8 \\ 
+    2x - 5y &=  8 \\
     3x + 9y &=  -12
 }
 
 \math[preset="centered"]{
-    2x - 5y =  8 \\ 
+    2x - 5y =  8 \\
     3x^2 + 9y =  3a + c
 }
 
 \math[preset="centered", num]{
-    2x - 5y =  8 \\ 
+    2x - 5y =  8 \\
     3x^2 + 9y =  3a + c
 }
 
 \math[preset="centered", tag="B"]{
-    2x - 5y =  8 \\ 
+    2x - 5y =  8 \\
     3x^2 + 9y =  3a + c
 }
 
