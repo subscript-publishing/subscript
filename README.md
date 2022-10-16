@@ -46,10 +46,14 @@ The goal of Subscript is to be a **monolithic publishing platform** for everythi
 In theory, Markdown based content publishing tools has the same issue, I've seen platforms built upon markdown with extra features, but will your stock markdown syntax highlighter support such? Whereas e.g. if you see a LaTeX package, odds are it supports the entirety of (Xe)LaTeX syntax and whatnot.
 
 
-#### JavaScript Library Proposals
+#### JavaScript Library WIP
 
 - [Desmos](https://www.desmos.com/api/v1.7/docs/index.html)
 - [GeoGebra](https://wiki.geogebra.org/en/Reference:GeoGebra_Apps_Embedding)
+
+
+#### JavaScript Library Proposals
+
 - [Pts](https://ptsjs.org)
 - [Anime](https://animejs.com)
 - [Mafs](https://mafs.dev)
