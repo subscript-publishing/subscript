@@ -1448,7 +1448,7 @@ pub fn all_supported_html_tags() -> Vec<cmd_decl::CmdDeclaration> {
                     let children = cmd.arguments
                         .into_iter()
                         .flat_map(Node::unblock_root_curly_brace)
-                        .map(|x| x.to_html(env, &scope))
+                        .map(|x| x.to_html(env, &sub_scope))
                         .collect_vec();
                     crate::html::Node::Element(crate::html::Element {
                         name: String::from("div"),
