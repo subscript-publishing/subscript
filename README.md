@@ -52,6 +52,13 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 - [GeoGebra](https://wiki.geogebra.org/en/Reference:GeoGebra_Apps_Embedding)
 
 
+E.g. the basic API will be
+```
+\desmos{
+    \expr[line-style='dashed']{y=x^2}
+}
+```
+
 #### JavaScript Library Proposals
 
 - [Pts](https://ptsjs.org)
