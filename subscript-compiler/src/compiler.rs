@@ -306,7 +306,6 @@ impl Compiler {
     /// paths, so until dependency tracking is implemented, this heuristic is
     /// a quick and dirty alternative. 
     pub fn sort_files(mut self) -> Self {
-        println!("INP PAGE ORDER: {:#?}", self.files.iter().map(|x| x.src_file.clone()).collect_vec());
         self.files = self.files
             .into_iter()
             .sorted_by(|l, r| {
@@ -317,7 +316,6 @@ impl Compiler {
                 l.cmp(&r).reverse()
             })
             .collect_vec();
-        println!("OUT PAGE ORDER: {:#?}", self.files.iter().map(|x| x.src_file.clone()).collect_vec());
         self
     }
     pub fn compile_pages_to_html(&self) {
