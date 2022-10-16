@@ -74,6 +74,8 @@ Subscript is natively written is rust and can offer seamless integration to the 
 - [lingua](https://crates.io/crates/lingua)
 - [LNGCNV](https://crates.io/crates/lngcnv)
 - [etym](https://crates.io/crates/etym)
+- [gnverify](https://crates.io/crates/gnverify)
+- [Morsels](https://crates.io/crates/morsels_indexer)
 
 
 
