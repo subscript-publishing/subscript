@@ -321,34 +321,22 @@ impl Compiler {
         self
     }
     pub fn compile_pages_to_html(&self) {
-        let mut time_stamps = Vec::new();
-        for ix in (0..1) {
-            println!("Iteration {ix}");
-            let resource_env = ResourceEnv::default();
-            let mut nav_entries: Vec<TocPageEntry> = Default::default();
-            let ref root_path = PathBuf::from("/");
-            let system_start = std::time::Instant::now();
-            let (tocs, envs): (Vec<TocPageEntry>, Vec<ResourceEnv>) = self.files
-                .par_iter()
-                .map(|file_io_entry| {
-                    let mut env = resource_env.clone();
-                    let html = self.compile_page_to_html(&mut env, file_io_entry);
-                    (html, env)
-                })
-                .unzip();
-            // if let Some(output_dir) = self.output_dir.as_ref() {
-            //     resource_env.write_sym_links(output_dir);
-            // }
-            time_stamps.push(system_start.elapsed());
-        }
-        let time_stamps = time_stamps
-            .into_iter()
-            .map(|duration| {
-                duration.as_secs() as f64 + duration.subsec_nanos() as f64 * 1e-9
+        let resource_env = ResourceEnv::default();
+        let mut nav_entries: Vec<TocPageEntry> = Default::default();
+        let ref root_path = PathBuf::from("/");
+        let system_start = std::time::Instant::now();
+        let (tocs, envs): (Vec<TocPageEntry>, Vec<ResourceEnv>) = self.files
+            .par_iter()
+            .map(|file_io_entry| {
+                let mut env = resource_env.clone();
+                let html = self.compile_page_to_html(&mut env, file_io_entry);
+                (html, env)
             })
-            .collect_vec();
-        let adv = time_stamps.iter().sum::<f64>() as f64 / time_stamps.len() as f64;
-        println!("Average Elapsed Time {:.2?}s", adv);
+            .unzip();
+        // if let Some(output_dir) = self.output_dir.as_ref() {
+        //     resource_env.write_sym_links(output_dir);
+        // }
+        time_stamps.push(system_start.elapsed());
     }
     fn compile_page_to_html(
         &self,
