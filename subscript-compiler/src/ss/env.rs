@@ -223,6 +223,7 @@ pub struct IncludeCache {
 // ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 /// `SemanticScope` is used for storing environment information during AST traversals. 
+/// I'm thinking this should be renamed to `StaticEnv` or `StaticScope`. 
 #[derive(Debug, Clone)]
 pub struct SemanticScope {
     pub route_prefix: Option<String>,
