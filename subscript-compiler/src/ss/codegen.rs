@@ -1,5 +1,6 @@
 use std::{collections::HashMap, borrow::BorrowMut};
 use itertools::Itertools;
+use rayon::prelude::*;
 use crate::ss::ast_data::Attribute;
 use crate::ss::{Node, Ident, Ann, CmdCall};
 use crate::ss::cmd_decl::{CmdCodegen, CmdDeclaration};
@@ -15,9 +16,9 @@ use crate::html;
 // HTML - CODE-GEN
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> crate::html::ast::Node {
+pub fn default_cmd_html_cg(env: &HtmlCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> crate::html::ast::Node {
     let name = cmd.identifier.value.unwrap_remove_slash().to_string();
-    let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
+    let child_scope = scope.new_scope(&env.resource_env, &cmd);
     let attributes = cmd.attributes
         .consume()
         .into_iter()
@@ -28,7 +29,7 @@ pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd:
         .into_iter()
         .flat_map(Node::unblock_root_curly_brace)
         .map(|x| x.to_html(env, &child_scope))
-        .collect_vec();
+        .collect::<Vec<_>>();
     crate::html::ast::Node::Element(crate::html::ast::Element{
         name,
         attributes,
@@ -53,7 +54,7 @@ pub fn default_cmd_html_cg(env: &mut HtmlCodegenEnv, scope: &SemanticScope, cmd:
 // }
 
 impl Node {
-    pub fn to_html(self, env: &mut HtmlCodegenEnv, scope: &SemanticScope) -> crate::html::ast::Node {
+    pub fn to_html(self, env: &HtmlCodegenEnv, scope: &SemanticScope) -> crate::html::ast::Node {
         match self {
             Node::Cmd(cmd) => {
                 // TODO
@@ -67,7 +68,7 @@ impl Node {
                 let xs = value.children
                     .into_iter()
                     .map(|x| x.to_html(env, scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 match brackets {
                     Some((open, close)) => crate::html::ast::Node::Fragment({
                         let open = crate::html::ast::Node::Text(open.to_string());
@@ -100,7 +101,7 @@ impl Node {
                 let xs = value.children
                     .into_iter()
                     .map(|x| x.to_html(env, scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 match brackets {
                     Some((open, close)) => crate::html::ast::Node::Fragment({
                         let open = crate::html::ast::Node::Text(open.to_string());
@@ -144,7 +145,7 @@ impl Node {
                 crate::html::ast::Node::Fragment(
                     xs  .into_iter()
                         .map(|x| x.to_html(env, scope))
-                        .collect_vec()
+                        .collect::<Vec<_>>()
                 )
             }
         }
@@ -155,17 +156,17 @@ impl Node {
 // LaTeX - CODE-GEN
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-pub fn default_cmd_latex_cg(env: &mut LatexCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> String {
+pub fn default_cmd_latex_cg(env: &LatexCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> String {
     let name = cmd.identifier.value.to_tex_ident();
     let arguments = cmd.arguments
         .into_iter()
         .map(|x| x.to_latex(env, scope))
-        .collect_vec()
+        .collect::<Vec<_>>()
         .join("");
     format!("{name}{arguments}")
 }
 
-// fn apply_cmd(env: &mut LatexCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> Option<String> {
+// fn apply_cmd(env: &LatexCodegenEnv, scope: &SemanticScope, cmd: CmdCall) -> Option<String> {
 //     // let cmd_decl: CmdDeclaration = env.commands.get(&cmd.identifier.value)?.clone();
 //     // let code_gen: &dyn CmdCodegen = cmd_decl.processors.0.as_ref();
 //     // Some(code_gen.to_latex(env, cmd))
@@ -181,7 +182,7 @@ pub fn default_cmd_latex_cg(env: &mut LatexCodegenEnv, scope: &SemanticScope, cm
 // }
 
 impl Node {
-    pub fn to_latex(self, env: &mut LatexCodegenEnv, scope: &SemanticScope) -> String {
+    pub fn to_latex(self, env: &LatexCodegenEnv, scope: &SemanticScope) -> String {
         match self {
             Node::Cmd(cmd) => {
                 // TODO

@@ -1,6 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-
-\h1{Prelude}
+\h1[top-level]{Prelude}
 
 \h1{Constants}
 

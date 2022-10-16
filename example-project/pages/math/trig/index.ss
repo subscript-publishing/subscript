@@ -1,10 +1,10 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{Trigonometry}
+\h1[top-level]{Trigonometry}
 
 \grid[boxed]{
    \note{
       \h2{The Unit Circle & Special Angles In Trig}
-      \img[min-width="500px", max-width="1000px", src="../images/math/7.svg"]\grid[col="1", boxed]{
+      \img[min-width="500px", max-width="1000px", src="../../../assets/images/math/7.svg"]\grid[col="1", boxed]{
          \note{
             \h4{Warning}
             \p[center]{Never use Pi (\{\pi})! It makes (thinking in terms of) radians confusing, 
@@ -293,7 +293,7 @@
       }}}
       \li{\note{
          \p{You can define a vector with two points.}
-         \img[width="300px", src="./old-images/matrix/trinagle-def-of-a-vector.png", center]
+         \img[width="300px", src="./old-images/trinagle-def-of-a-vector.png", center]
       }}
       \li{\p{\b{Do not divide vectors!}}}
       \li{\{\vec{v} \cdot \vec{v} = ||\vec{v}||^2 \implies \text{constant}}}
@@ -372,9 +372,9 @@
    \note[boxed]{
       \h3{Definition of Vector Addition}
       \p{If \{\vec{u}} and \{\vec{v}} are positioned so the initial point of \{\vec{v}} is at the terminal point of \{\vec{u}}, then the sum \{\vec{u} + \vec{v}} is the vector from the initial point of \{\vec{u}} to the terminal point of \{\vec{v}}.}
-      \img[width="300px", src="./old-images/matrix/Definition-of-Vector-Addition.png", center]\hr
+      \img[width="300px", src="./old-images/Definition-of-Vector-Addition.png", center]\hr
       \p{Given some vectors \{\vec{u}} and \{\vec{v}}, the vector \{\vec{u} - \vec{v}} is the vector that points from the head of \{\vec{v}} to the head of \{\vec{u}}}
-      \img[center, width="200px", src="./old-images/matrix/vector-u-v.png"]
+      \img[center, width="200px", src="./old-images/vector-u-v.png"]
    }
 }
 \grid[col="3"]{
@@ -386,7 +386,7 @@
                      \mathrm{\hat{k}} &= \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
       }
       \hr
-      \img[center, width="200px", src="./old-images/matrix/unit-vectors.png"]
+      \img[center, width="200px", src="./old-images/unit-vectors.png"]
    }
    \note[boxed]{
       \h3{Orthogonal}
@@ -447,7 +447,7 @@
 \h2{Direction Cosines & Direction Angles of a Vector}
 
 \note{
-   \img[center, src="./old-images/matrix/Direction-Cosines-Direction-Angles-of-a-Vector.png", width="300px"]
+   \img[center, src="./old-images/Direction-Cosines-Direction-Angles-of-a-Vector.png", width="300px"]
    \p[center]{Where}
    \equation{
       \vec{v} = \begin{bmatrix} v_x & v_y & v_z \end{bmatrix}
@@ -618,7 +618,7 @@
 
 \grid[col="2"]{
    \note[boxed]{
-      \img[src="./old-images/matrix/curvature.png", center, width="300px"]
+      \img[src="./old-images/curvature.png", center, width="300px"]
    }
    \note[boxed]{
       \h3{The Unit Vector}
@@ -747,7 +747,7 @@
                      g & h
                      \end{vmatrix}
       }
-      \img[center, width="400px", src="./old-images/matrix/3x3-determinant.png"]\note[boxed]{
+      \img[center, width="400px", src="./old-images/3x3-determinant.png"]\note[boxed]{
          \p{Only works for square matrices.}
       }
    }
@@ -809,7 +809,7 @@
 
 \h2{Definition of a Line}
 
-\img[src="./old-images/matrix/vector-equation-of-a-line.png", center, width="500px"]
+\img[src="./old-images/vector-equation-of-a-line.png", center, width="500px"]
 \grid[col="3"]{
    \note[boxed]{
       \h3{Vector Equation of a Line}
@@ -973,14 +973,14 @@
          \newcommand{\short}{
                \int_a^t ||\left(r^\prime(u)\right)||
          }
-\begin{equation**}
-\begin{split}
-S(t)
-&= \Long\\
-&= \AltLong\\
-&= \short
-\end{split}
-\end{equation*}
-}
+         \begin{equation*}
+         \begin{split}
+         S(t)
+         &= \Long\\
+         &= \AltLong\\
+         &= \short
+         \end{split}
+         \end{equation*}
+   }
 }
 }*

@@ -7,7 +7,7 @@ use crate::ss::ast_traits::SyntacticallyEq;
 use super::*;
 
 fn process_image(
-    env: &mut ResourceEnv,
+    env: &ResourceEnv,
     scope: &SemanticScope,
     mut img_cmd: CmdCall,
 ) -> Node {
@@ -23,9 +23,20 @@ fn process_image(
             }
             result
         });
-    if let Some(path) = file_path {
-        let src_str = path.to_str().unwrap();
-        img_cmd.attributes.insert("src", src_str);
+    if let Some(src_str) = file_path {
+        let mut new_attrs = Attributes::default();
+        new_attrs.insert("src", src_str);
+        if let Some(value) = img_cmd.attributes.get_str_value("max-width") {
+            new_attrs.add_style(format!("max-width: {value};"));
+        } else {
+            if let Some(value) = img_cmd.attributes.get_str_value("width") {
+                new_attrs.add_style(format!("max-width: {value};"));
+            }
+        }
+        if let Some(value) = img_cmd.attributes.get_str_value("center") {
+            new_attrs.insert("data-center", "");
+        }
+        img_cmd.attributes = new_attrs;
         return Node::Cmd(img_cmd);
     }
     Node::Cmd(img_cmd)

@@ -1,8 +1,9 @@
+use rayon::prelude::*;
+
 use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
 use crate::ss::SymbolicModeType;
 use crate::ss::ast_traits::SyntacticallyEq;
-
 use super::*;
 
 pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
@@ -50,7 +51,7 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_html(env, scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 crate::html::Node::Element(crate::html::Element {
                     name: {
                         if is_section {
@@ -110,11 +111,14 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
                     .map(|value| {
                         attributes.insert(String::from("data-col"), value);
                     });
+                if cmd.attributes.has_truthy_option("boxed") {
+                    attributes.insert(String::from("boxed"), String::new());
+                }
                 let children = cmd.arguments
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_html(env, scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 crate::html::Node::Element(crate::html::Element {
                     name: {
                         if is_section {
@@ -154,11 +158,14 @@ pub fn all_block_formatting_commands() -> Vec<cmd_decl::CmdDeclaration> {
             fn (env, scope, cmd) {
                 let mut attributes = HashMap::default();
                 attributes.insert(String::from("data-cmd"), String::from("note"));
+                if cmd.attributes.has_truthy_option("boxed") {
+                    attributes.insert(String::from("boxed"), String::new());
+                }
                 let children = cmd.arguments
                     .into_iter()
                     .flat_map(Node::unblock_root_curly_brace)
                     .map(|x| x.to_html(env, scope))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 crate::html::Node::Element(crate::html::Element {
                     name: String::from("section"),
                     attributes,

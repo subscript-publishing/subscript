@@ -9,6 +9,7 @@ use std::{vec, panic};
 use itertools::Itertools;
 use serde::{Serialize, Deserialize};
 use unicode_segmentation::UnicodeSegmentation;
+use rayon::prelude::*;
 use crate::ss::SemanticScope;
 
 
@@ -322,7 +323,7 @@ impl ParserAst {
                 let children = node.children
                     .into_iter()
                     .map(ParserAst::to_node)
-                    .collect_vec();
+                    .collect();
                 ast_data::Node::Bracket(Ann::unannotated(ast_data::Bracket{
                     open: node.open,
                     close: node.close,
@@ -333,7 +334,7 @@ impl ParserAst {
                 let children = node.children
                     .into_iter()
                     .map(ParserAst::to_node)
-                    .collect_vec();
+                    .collect();
                 ast_data::Node::Quotation(Ann::unannotated(ast_data::Quotation{
                     open: node.open,
                     close: node.close,
@@ -959,7 +960,7 @@ pub fn parse_source<T: AsRef<str>>(scope: &SemanticScope, source: T) -> crate::s
     let ast = ast
         .into_iter()
         .map(ParserAst::to_node)
-        .collect_vec();
+        .collect();
     crate::ss::ast_data::Node::Fragment(ast).defragment_node_tree()
 }
 

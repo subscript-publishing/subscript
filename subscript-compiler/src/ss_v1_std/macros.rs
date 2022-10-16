@@ -126,7 +126,7 @@ macro_rules! arguments {
 macro_rules! to_html {
     (fn ($env:ident, $scope:ident, $cmd:ident) $block:block) => {{
         fn f(
-            $env: &mut $crate::ss::env::HtmlCodegenEnv,
+            $env: &$crate::ss::env::HtmlCodegenEnv,
             $scope: &$crate::ss::env::SemanticScope,
             $cmd: $crate::ss::CmdCall,
         ) -> $crate::html::ast::Node {
@@ -144,7 +144,7 @@ macro_rules! to_html {
 macro_rules! to_latex {
     (fn ($env:ident, $scope:ident, $cmd:ident) $block:block) => {{
         fn f(
-            $env: &mut $crate::ss::env::LatexCodegenEnv,
+            $env: &$crate::ss::env::LatexCodegenEnv,
             $scope: &$crate::ss::env::SemanticScope,
             $cmd: CmdCall,
         ) -> String {
@@ -154,7 +154,7 @@ macro_rules! to_latex {
     }};
     (fn ($env:ident, $scope:ident, $cmd:ident, all $children:ident) $block:block) => {{
         fn f(
-            $env: &mut $crate::ss::env::LatexCodegenEnv,
+            $env: &$crate::ss::env::LatexCodegenEnv,
             $scope: &$crate::ss::env::SemanticScope,
             $cmd: CmdCall,
         ) -> String {
@@ -170,7 +170,7 @@ macro_rules! to_latex {
     }};
     (fn ($env:ident, $scope:ident, $cmd:ident, args {$arg1:ident} {$arg2:ident}) $block:block) => {{
         fn f(
-            $env: &mut $crate::ss::env::LatexCodegenEnv,
+            $env: &$crate::ss::env::LatexCodegenEnv,
             $scope: &$crate::ss::env::SemanticScope,
             $cmd: CmdCall,
         ) -> String {
@@ -192,26 +192,26 @@ macro_rules! to_latex {
 #[derive(Default)]
 pub struct LatexHandlers {
     pub arg0: Option<fn(
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
         attrs: crate::ss::Attributes,
         arg0: (),
     ) -> String>,
     pub arg1: Option<fn(
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
         attrs: crate::ss::Attributes,
         arg1: crate::ss::Node,
     ) -> String>,
     pub arg2: Option<fn(
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
         attrs: crate::ss::Attributes,
         arg1: crate::ss::Node,
         arg2: crate::ss::Node,
     ) -> String>,
     pub arg3: Option<fn(
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
         attrs: crate::ss::Attributes,
         arg1: crate::ss::Node,
@@ -219,7 +219,7 @@ pub struct LatexHandlers {
         arg3: crate::ss::Node,
     ) -> String>,
     pub default: Option<fn(
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
         default: crate::ss::CmdCall,
     ) -> String>,
@@ -228,7 +228,7 @@ pub struct LatexHandlers {
 impl LatexHandlers {
     pub fn run(
         &self,
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &crate::ss::SemanticScope,
         cmd_call: crate::ss::CmdCall,
     ) -> String {
@@ -296,7 +296,7 @@ impl LatexHandlers {
 macro_rules! to_latex_case_impl {
     ($handlers:ident, $env:ident, $scope:ident, $attrs:ident, (), $body:block) => {{
         fn handler(
-            $env: &mut crate::ss::LatexCodegenEnv,
+            $env: &crate::ss::LatexCodegenEnv,
             $scope: &SemanticScope,
             $attrs: crate::ss::Attributes,
             arg0: (),
@@ -309,7 +309,7 @@ macro_rules! to_latex_case_impl {
         {$arg1:ident}
     ), $body:block) => {{
         fn handler(
-            $env: &mut crate::ss::LatexCodegenEnv,
+            $env: &crate::ss::LatexCodegenEnv,
             $scope: &SemanticScope,
             $attrs: crate::ss::Attributes,
             arg1: crate::ss::Node,
@@ -323,7 +323,7 @@ macro_rules! to_latex_case_impl {
         {$arg1:ident}, {$arg2:ident}
     ), $body:block) => {{
         fn handler(
-            $env: &mut crate::ss::LatexCodegenEnv,
+            $env: &crate::ss::LatexCodegenEnv,
             $scope: &SemanticScope,
             $attrs: crate::ss::Attributes,
             arg1: Node,
@@ -339,7 +339,7 @@ macro_rules! to_latex_case_impl {
         {$arg1:ident}, {$arg2:ident}, {$arg3:ident}
     ), $body:block) => {{
         fn handler(
-            $env: &mut crate::ss::LatexCodegenEnv,
+            $env: &crate::ss::LatexCodegenEnv,
             $scope: &SemanticScope,
             $attrs: crate::ss::Attributes,
             arg1: Node,
@@ -360,7 +360,7 @@ macro_rules! to_latex_cases {
         default $def_args:ident => $default_handler:block, $($args:tt => $body:block),* $(,)?
     }) => {{
         fn to_latex(
-            env: &mut crate::ss::LatexCodegenEnv,
+            env: &crate::ss::LatexCodegenEnv,
             scope: &SemanticScope,
             cmd_call: CmdCall
         ) -> String {
@@ -368,7 +368,7 @@ macro_rules! to_latex_cases {
             use $crate::ss::cmd_decl::cmd_invocation;
             let mut handlers = $crate::ss_v1_std::macros::LatexHandlers::default();
             fn default_handler(
-                $env: &mut crate::ss::LatexCodegenEnv,
+                $env: &crate::ss::LatexCodegenEnv,
                 $scope: &SemanticScope,
                 def_cmd: crate::ss::CmdCall,
             ) -> String {

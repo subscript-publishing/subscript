@@ -1,7 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-
-
-\h1{Two-dimensional Projectile Motion}
+\h1[top-level]{Two-dimensional Projectile Motion}
 
 \grid[boxed, col="1"]{
    \note{
@@ -12,11 +10,11 @@
    \note{
       \h2{Summary}
       \grid[col="2"]{
-         \img[max-width="900px", src="../images/physics/17.svg"]\note{
-            \img[max-width="900px", src="../images/physics/18.svg"]\p[justify]{It's easy to see in the above visualization that \{t}
+         \img[max-width="900px", src="../../../assets/images/physics/17.svg"]\note{
+            \img[max-width="900px", src="../../../assets/images/physics/18.svg"]\p[justify]{It's easy to see in the above visualization that \{t}
                                 and \{x} increase linearly, while \{y} is non-linear.}
          }
-         \img[max-width="900px", src="../images/physics/20.svg"]\img[max-width="900px", src="../images/physics/21.svg"]
+         \img[max-width="900px", src="../../../assets/images/physics/20.svg"]\img[max-width="900px", src="../../../assets/images/physics/21.svg"]
       }
    }
 }
@@ -95,7 +93,7 @@
 \grid[boxed, col="1"]{
    \note{
       \h3{Projectile Motion}
-      \img[max-width="600px", src="../images/physics/23.svg"]\grid[col="2"]{
+      \img[max-width="600px", src="../../../assets/images/physics/23.svg"]\grid[col="2"]{
          \note{
             \h4{In terms of the \{x} axis}
             \p{TODO}
@@ -148,7 +146,7 @@
    }
    \note{
       \h3{Projectile Motion from an initial height, with given initial velocity and angle}
-      \img[src="../images/physics/22.svg", max-width="800px"]\p{Given}
+      \img[src="../../../assets/images/physics/22.svg", max-width="800px"]\p{Given}
       \ul{
          \li{A projectile angle \{\theta}}
          \li{The initial height \{y_0}}
@@ -332,14 +330,14 @@
                          _{\small{\text{start/end elevation must be the same}}}
       }
       \p{Only applies in situations where the projectile lands at the same elevation from which it was fired.}
-      \img[max-width="100%", src="../images/physics/13.svg"]
+      \img[max-width="100%", src="../../../assets/images/physics/13.svg"]
    }
 }
 \h1{Reasoning About Projectile Motion}
 
 \grid[boxed, col="2"]{
    \note{
-      \img[max-width="500px", src="../images/physics/12.svg", min-width="100px"]\img[min-width="100px", max-width="500px", src="../images/physics/15.svg"]
+      \img[max-width="500px", src="../../../assets/images/physics/12.svg", min-width="100px"]\img[min-width="100px", max-width="500px", src="../../../assets/images/physics/15.svg"]
    }
    \note{
       \h2{Notes}
@@ -348,7 +346,7 @@
       }
    }
    \note{
-      \img[max-width="500px", src="../images/physics/24.svg", min-width="100px"]\h2{Question}
+      \img[max-width="500px", src="../../../assets/images/physics/24.svg", min-width="100px"]\h2{Question}
       \p{Based on the figure, for which trajectory was the object in the air for the greatest amount of time?}
       \h2{Answer}
       \p{\mark[font]{Trajectory A}}
@@ -363,7 +361,7 @@
 
 \grid[boxed, col="2"]{
    \note{
-      \img[max-width="600px", src="../images/physics/14.svg"]\p{The function in this graph represents an object that is speeding up,
+      \img[max-width="600px", src="../../../assets/images/physics/14.svg"]\p{The function in this graph represents an object that is speeding up,
                   or accelerating at a constant rate.}
    }
    \note{
@@ -541,7 +539,7 @@
                                     \underbrace{\smallText{Central angle}}_{\theta}\\
                             S &= r\cdot\theta\\
          }
-         \img[max-width="200px", src="../images/physics/arc-length-formula.svg"]
+         \img[max-width="200px", src="../../../assets/images/physics/arc-length-formula.svg"]
       }\equation{
          \underbrace{\smallText{Linear displacement}}_{\Delta{x}}
                          &= \underbrace{\smallText{Angular displacement}}_{\theta}

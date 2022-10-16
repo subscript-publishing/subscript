@@ -88,8 +88,8 @@ pub struct CmdCodegen {
 }
 
 type ToCmdFnType = fn(&SemanticScope, &CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall;
-type ToHtmlFnType = fn(&mut crate::ss::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node;
-type ToLatexFnType = fn(&mut crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String;
+type ToHtmlFnType = fn(&crate::ss::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node;
+type ToLatexFnType = fn(&crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String;
 
 impl CmdCodegen {
     // pub fn to_cmd(mut self, f: ToCmdFnType) -> Self {
@@ -109,7 +109,7 @@ impl CmdCodegen {
 impl CmdCodegen {
     pub fn to_html(
         &self,
-        env: &mut crate::ss::HtmlCodegenEnv,
+        env: &crate::ss::HtmlCodegenEnv,
         scope: &SemanticScope,
         cmd: CmdCall
     ) -> crate::html::ast::Node {
@@ -120,7 +120,7 @@ impl CmdCodegen {
     }
     pub fn to_latex(
         &self,
-        env: &mut crate::ss::LatexCodegenEnv,
+        env: &crate::ss::LatexCodegenEnv,
         scope: &SemanticScope,
         cmd: CmdCall
     ) -> String {
@@ -187,7 +187,7 @@ pub mod cmd_invocation {
     pub struct Metadata<'a> {
         pub scope: &'a SemanticScope,
         pub cmd_decl: &'a CmdDeclaration,
-        pub resource_env: &'a mut ResourceEnv,
+        pub resource_env: &'a ResourceEnv,
     }
 
     #[derive(Debug, Clone)]

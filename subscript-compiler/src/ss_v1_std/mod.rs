@@ -49,8 +49,8 @@ pub struct CmdDeclBuilder {
     to_cmd: Option<
         fn(&SemanticScope, &cmd_decl::CmdDeclaration, Ann<Ident>, Option<Attributes>, &[Node]) -> CmdCall,
     >,
-    to_html: Option<fn(&mut crate::ss::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node>,
-    to_latex: Option<fn(&mut crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String>,
+    to_html: Option<fn(&crate::ss::HtmlCodegenEnv, &SemanticScope, CmdCall) -> crate::html::ast::Node>,
+    to_latex: Option<fn(&crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String>,
     internal: Option<cmd_decl::InternalCmdDeclOptions>,
 }
 
@@ -111,7 +111,7 @@ impl CmdDeclBuilder {
     pub fn to_html(
         mut self,
         f: fn(
-            &mut crate::ss::HtmlCodegenEnv,
+            &crate::ss::HtmlCodegenEnv,
             &SemanticScope,
             CmdCall,
         ) -> crate::html::ast::Node,
@@ -121,7 +121,7 @@ impl CmdDeclBuilder {
     }
     pub fn to_latex(
         mut self,
-        f: fn(&mut crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String,
+        f: fn(&crate::ss::LatexCodegenEnv, &SemanticScope, CmdCall) -> String,
     ) -> Self {
         self.to_latex = Some(f);
         self

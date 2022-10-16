@@ -38,7 +38,11 @@ impl SubscriptCompilerCommand {
             SubscriptCompilerCommand::Build { project_dir, filter, watch } => {
                 let project_settings = ProjectSettings::parse_subscript_toml_file(&project_dir)
                     .expect("Should be a valid Subscript.toml file");
-                let compiler = project_settings.init_compiler();
+                let compiler = project_settings
+                    .init_compiler()
+                    .with_output_dir(&project_settings.manifest.project.locations.output)
+                    .with_project_dir(&project_settings.project_dir)
+                    .sort_files();
                 println!("filter: {filter:?}");
                 let compiler = match filter {
                     Some(pattern) => compiler.filter_matching_files(
@@ -48,16 +52,17 @@ impl SubscriptCompilerCommand {
                     None => compiler,
                 };
                 if watch {
-                    compiler.compile_html_watch_sources()
+                    compiler.compile_html_watch_sources();
                 } else {
-                    let mut resource_env = ResourceEnv::default();
-                    compiler.compile_pages_to_html(&mut resource_env);
-                    println!("resource_env: {resource_env:#?}");
+                    compiler.compile_pages_to_html();
                 }
             }
             SubscriptCompilerCommand::CompileFile { source, output, watch, debug_print_ast } => {
                 let compiler = crate::compiler::Compiler::new()
-                    .add_file(&source, &output);
+                    .add_file(&source, &output)
+                    .with_output_dir(&output.parent().unwrap())
+                    .with_project_dir(source.parent().unwrap())
+                    .sort_files();
                 let compiler = {
                     if debug_print_ast {
                         compiler.with_debug_settings(crate::compiler::DebugSettings{
@@ -71,10 +76,7 @@ impl SubscriptCompilerCommand {
                 if watch {
                     compiler.compile_html_watch_sources();
                 } else {
-                    let mut resource_env = ResourceEnv::default();
-                    compiler.compile_pages_to_html(&mut resource_env);
-                    println!("resource_env: {resource_env:#?}");
-                    resource_env.write_sym_links(output.parent().unwrap());
+                    compiler.compile_pages_to_html();
                 }
             }
         }

@@ -2,7 +2,7 @@ use std::borrow::BorrowMut;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
-
+use rayon::prelude::*;
 use itertools::Itertools;
 
 impl<T: Into<String>> From<T> for Node {
@@ -323,6 +323,38 @@ impl Node {
             },
             Node::Text(value) => pack(value),
             Node::Drawing(x) => String::default(),
+        }
+    }
+}
+
+
+pub trait NodeElementMutTraversal {
+    fn element(&self, element: &mut Element);
+}
+
+impl Node {
+    pub fn node_element_traversal<V: NodeElementMutTraversal + std::marker::Sync>(
+        &mut self,
+        visitor: &V
+    ) {
+        match self {
+            Node::Element(element) => {
+                element.children
+                    .iter_mut()
+                    .for_each(|x: &mut Node|{
+                        x.node_element_traversal(visitor)
+                    });
+                visitor.element(element);
+            }
+            Node::Fragment(children) => {
+                children
+                    .iter_mut()
+                    .for_each(|x: &mut Node|{
+                        x.node_element_traversal(visitor)
+                    });
+            }
+            Node::Text(_) => (),
+            Node::Drawing(_) => (),
         }
     }
 }

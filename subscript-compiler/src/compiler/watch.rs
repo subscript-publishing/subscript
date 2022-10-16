@@ -36,7 +36,7 @@ impl Compiler {
             })
             .collect_vec();
     }
-    async fn compile_watch_loop(self, mut resource_env: ResourceEnv) -> notify::Result<()> {
+    async fn compile_watch_loop(self) -> notify::Result<()> {
         let mut watching_files = Vec::new();
         for entry in self.files.iter() {
             watching_files.push(entry.src_file.clone());
@@ -59,6 +59,7 @@ impl Compiler {
                     match &event.kind {
                         EventKind::Modify(ModifyKind::Data(DataChange::Content)) => {
                             for path in event.paths.clone() {
+                                let mut resource_env = ResourceEnv::default();
                                 self.recompile(&mut resource_env, &path);
                             }
                         }
@@ -71,10 +72,9 @@ impl Compiler {
         Ok(())
     }
     pub fn compile_html_watch_sources(self) {
-        let mut resource_env = ResourceEnv::default();
-        self.compile_pages_to_html(&mut resource_env);
+        self.compile_pages_to_html();
         futures::executor::block_on(async {
-            if let Err(e) = self.compile_watch_loop(resource_env).await {
+            if let Err(e) = self.compile_watch_loop().await {
                 println!("error: {:?}", e)
             }
         });

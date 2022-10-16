@@ -2,7 +2,7 @@ use std::process::Command;
 use std::{collections::HashMap, path::PathBuf};
 use itertools::Itertools;
 use either::{Either, Either::Left, Either::Right};
-// use rayon::prelude::*;
+use rayon::prelude::*;
 use crate::ss::{Node, Ann, Bracket, Ident, IdentInitError};
 use crate::ss::{CmdCall, BracketType, ToNode, AsNodeRef, Quotation};
 use crate::ss::cmd_decl::{
@@ -59,16 +59,16 @@ fn parse_where_block(nodes: &[Node]) -> Option<Vec<RewriteRule<Vec<Node>>>> {
                     .filter_map(|x| x.get_curly_brace_children())
                     .flat_map(|x| x)
                     .map(Clone::clone)
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 let target = target
                     .into_iter()
                     .filter_map(|x| x.get_curly_brace_children())
                     .flat_map(|x| x)
                     .map(Clone::clone)
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 RewriteRule{pattern, target}
             })
-            .collect_vec();
+            .collect::<Vec<_>>();
         groups
     }
     let ref where_id = Ident::from("\\where!").unwrap();
@@ -141,7 +141,7 @@ fn apply_rewrites_to_children<'a>(
 impl CmdDeclaration {
     pub fn matches_cmd(
         &self,
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         scope: &SemanticScope,
         cmd_call: &CmdCall
     ) -> bool {
@@ -151,7 +151,7 @@ impl CmdDeclaration {
     }
     pub fn match_nodes<'a>(
         &self,
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         scope: &SemanticScope,
         nodes: &'a [Node]
     ) -> Option<(Node, &'a [Node], usize)> {
@@ -341,7 +341,7 @@ impl ArgumentsDeclInstance {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 fn apply_commands_to_children<'a>(
-    env: &mut ResourceEnv,
+    env: &ResourceEnv,
     scope: &SemanticScope,
     nodes: &'a [Node],
 ) -> (Vec<Node>, &'a [Node]) {
@@ -371,11 +371,11 @@ fn apply_commands_to_children<'a>(
 impl Node {
     pub fn apply_commands(
         self,
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         scope: &SemanticScope
     ) -> Node {
         fn process_children(
-            env: &mut ResourceEnv,
+            env: &ResourceEnv,
             scope: &SemanticScope,
             xs: Vec<Node>
         ) -> Vec<Node> {
@@ -424,7 +424,8 @@ impl Node {
                 Node::Fragment(xs)
             }
             node @ Node::Ident(_) => {
-                Node::Fragment(process_children(env, &scope, vec![node])).defragment_node_tree()
+                let children = process_children(env, &scope, vec![node]);
+                Node::Fragment(children).defragment_node_tree()
             },
             node @ Node::Text(_) => node,
             node @ Node::Symbol(_) => node,
@@ -461,7 +462,7 @@ impl Node {
                 value.children = value.children
                     .into_iter()
                     .map(|x| x.apply_rewrite_rules(rewrites))
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 value.children = process_children(rewrites, value.children);
                 Node::Quotation(Ann{range, value})
             }

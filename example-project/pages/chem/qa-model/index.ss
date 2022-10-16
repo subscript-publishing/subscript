@@ -1,10 +1,10 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h2{Quantum Mechanical Models of the Atom}
+\h1[top-level]{Quantum Mechanical Models of the Atom}
 
-\h3{The Electromagnetic Spectrum}
+\h2{The Electromagnetic Spectrum}
 
-\img[src="../../images/chem/5.svg", max-width="100%"]
-\h3{Terms}
+\img[src="../../../assets/images/chem/5.svg", max-width="100%"]
+\h2{Terms}
 
 \dl{\dt{Pauli Exclusion Principle}\dd{No two electrons in an atom can have the same four quantum numbers.}\dd{Pauli’s Principle prevents two electrons with the same spin from existing in the same subshell,
         each subshell will be filled with one spin direction before they are filled with the opposite spin.
@@ -16,15 +16,15 @@
 }}}
 \grid[col="2", boxed]{
    \note{
-      \h4{Aufbau Principle}
-      \img[src="../../images/chem/18.svg", max-width="900px"]
+      \h3{Aufbau Principle}
+      \img[src="../../../assets/images/chem/18.svg", max-width="900px"]
    }
    \note{
-      \h4{Hund’s rule}
-      \img[max-width="900px", src="../../images/chem/19.svg"]
+      \h3{Hund’s rule}
+      \img[max-width="900px", src="../../../assets/images/chem/19.svg"]
    }
    \note{
-      \h4{Pauli's Exclusion Principle}
+      \h3{Pauli's Exclusion Principle}
       \p{Each election has a unique set of four quantum numbers (i.e. see quantum numbers).
                   They are}
       \ul{
@@ -35,12 +35,12 @@
       }
    }
 }
-\h3{Overview}
+\h2{Overview}
 
-\img[max-width="500px", src="../../images/chem/4.svg"]
+\img[max-width="500px", src="../../../assets/images/chem/4.svg"]
 \grid[col="1"]{
    \note{
-      \h4{Formulas}
+      \h3{Formulas}
       \grid[col="3"]{
          \equation{
             \mathrm{f} = \nu &= \frac{c}{\lambda}
@@ -62,7 +62,7 @@
       }
    }
    \note{
-      \h4{Values}
+      \h3{Values}
       \table{
          \thead{
             \tr{
@@ -87,7 +87,7 @@
       }
    }
    \note{
-      \h4{Constants}
+      \h3{Constants}
       \table{
          \thead{
             \tr{
@@ -120,10 +120,10 @@
       }
    }
    \note{
-      \h4{Other Formulas}
+      \h3{Other Formulas}
       \grid[boxed, col="2"]{
          \note{
-            \h5{de Broglie Relation}
+            \h4{de Broglie Relation}
             \equation{
                \lambda &= \frac{\mathrm{h}}{\mathrm{m}\mathrm{v}}\\
                \text{where}&\\
@@ -132,7 +132,7 @@
             }
          }
          \note{
-            \h5{Heisenberg's Uncertainty Principle}
+            \h4{Heisenberg's Uncertainty Principle}
             \equation{
                \Delta{x} \times \mathrm{m} \Delta{v} \geq \frac{\mathrm{h}}{4\pi}
             }
@@ -146,20 +146,20 @@
                                 the less you know about it's velocity.}
          }
          \note{
-            \h5{Energy of an Electron in an Orbital with Quantum Number \{\mathrm{n}} in a Hydrogen Atom}
+            \h4{Energy of an Electron in an Orbital with Quantum Number \{\mathrm{n}} in a Hydrogen Atom}
             \equation{
                E_n &= \sci{-2.18}{-18} \mathrm{J} \left(\frac{1}{n^2}\right)
             }
          }
          \note{
-            \h5{Energy of an Electron in an Orbital with Quantum Number \{\mathrm{n}} for any atom}
+            \h4{Energy of an Electron in an Orbital with Quantum Number \{\mathrm{n}} for any atom}
             \equation{
                E_n &= \sci{-2.18}{-18} \mathrm{J} \left(\frac{1}{n^2}\right) \cdot \mathrm{Z}^2
             }
             \p{Where \{\mathrm{Z}} is the atomic number of the given element.}
          }
          \note{
-            \h5{Change in Energy That Occurs in an Atom When It Undergoes a Transition between Levels \a[href="#atomic-spectroscopy-detailed"]{(Further Details)}}
+            \h4{Change in Energy That Occurs in an Atom When It Undergoes a Transition between Levels \a[href="#atomic-spectroscopy-detailed"]{(Further Details)}}
             \p[center]{\{n_{\small\text{initial}}} and \{n_{\small\text{final}}}}
             \equation{
                \Delta{E} &= \sci{-2.18}{-18} \mathrm{J} \left(\frac{1}{n^2_f} - \frac{1}{n^2_i}\right)
@@ -170,7 +170,7 @@
             }
          }
          \note{
-            \h5{Ionization Energy}
+            \h4{Ionization Energy}
             \equation{
                \mathrm{IE}_{n,\smallText{Big Jump}} -1
                   &= \smallText{\# of valance electrons}\\
@@ -185,11 +185,11 @@
       }
    }
 }
-\h4{Atomic Spectroscopy}
+\h3{Atomic Spectroscopy}
 
 \grid[col="2", boxed]{
    \note[id="atomic-spectroscopy-detailed"]{
-      \h5{The Principal Quantum Number (n) (Hydrogen Atom)}
+      \h4{The Principal Quantum Number (n) (Hydrogen Atom)}
       \p{For the hydrogen atom, the energy of an electron in an orbital with quantum number \{n} is given by}
       \equation{
          E_n = \sci{-2.18}{-18}\mathrm{J}\;\frac{1}{n^2}
@@ -205,7 +205,7 @@
       }
    }
    \note[id="atomic-spectroscopy-detailed"]{
-      \h5{The Principal Quantum Number (n) (Any Atom)}
+      \h4{The Principal Quantum Number (n) (Any Atom)}
       \p{For the hydrogen atom, the energy of an electron in an orbital with quantum number \{n} is given by}
       \p{TODO}
       \equation{
@@ -214,19 +214,19 @@
       \p{Where \{\mathrm{Z}} is the atomic number of the given element.}
    }
 }
-\h4{Electron Configuration}
+\h3{Electron Configuration}
 
 \grid[col="2", boxed]{
    \note{
-      \h5{Traditional Chart}
-      \img[src="../../images/chem/8.svg", max-width="600px"]\img[src="../../images/chem/20.svg", max-width="600px"]
+      \h4{Traditional Chart}
+      \img[src="../../../assets/images/chem/8.svg", max-width="600px"]\img[src="../../../assets/images/chem/20.svg", max-width="600px"]
    }
    \note{
-      \h5{Better Method}
-      \img[max-width="600px", src="../../images/chem/9.svg"]
+      \h4{Better Method}
+      \img[max-width="600px", src="../../../assets/images/chem/9.svg"]
    }
 }
-\h5{Examples}
+\h4{Examples}
 
 \grid[col="2"]{
    \note{
@@ -341,7 +341,7 @@
       }
    }
 }
-\h5{How-tos}
+\h4{How-tos}
 
 \h6{What are the valence electrons?}
 
@@ -383,9 +383,9 @@
       \p{Therefore there are \{4} valence electrons.}
    }
 }
-\h4{Quantum Numbers}
+\h3{Quantum Numbers}
 
-\h5{Overview}
+\h4{Overview}
 
 \grid[col="2", style="max-width: 900px; margin: 0 auto; grid-template-columns: max-content;"]{
    \table{
@@ -411,7 +411,7 @@
       }
    }
 }
-\h5{The Principle Quantum Number (\{\mathrm{n}})}
+\h4{The Principle Quantum Number (\{\mathrm{n}})}
 
 \grid[col="2"]{
    \table{
@@ -441,7 +441,7 @@
       }
    }
 }
-\h5{Angular Momentum Quantum Number}
+\h4{Angular Momentum Quantum Number}
 
 \grid[col="2", style="max-width: 900px; margin: 0 auto; grid-template-columns: max-content;"]{
    \table{
@@ -488,7 +488,7 @@
       }
    }
 }
-\h5{Summary}
+\h4{Summary}
 
 \grid[col="3", boxed]{
    \equation{
@@ -498,7 +498,7 @@
       -l \leq \mathrm{m_l} \leq l
    }
 }
-\h5{Useful Formulas}
+\h4{Useful Formulas}
 
 \grid[col="2", boxed]{
    \note{
@@ -515,22 +515,22 @@
       }
    }
 }
-\h5{Examples}
+\h4{Examples}
 
 \grid[boxed, col="2"]{
    \note{
-      \img[max-width="600px", src="../../images/chem/10.svg"]
+      \img[max-width="600px", src="../../../assets/images/chem/10.svg"]
    }
    \note{
-      \img[src="../../images/chem/12.svg", max-width="600px"]
+      \img[src="../../../assets/images/chem/12.svg", max-width="600px"]
    }
    \note{
-      \img[src="../../images/chem/11.svg", max-width="600px"]
+      \img[src="../../../assets/images/chem/11.svg", max-width="600px"]
    }
 }
-\h4{Light}
+\h3{Light}
 
-\h5{Interference and Diffraction}
+\h4{Interference and Diffraction}
 
 \grid[boxed, col="2"]{
    \note{
@@ -538,13 +538,13 @@
       \p{If two waves of equal amplitude are in phase when they interact—that is, they
                   align with overlapping crests—a wave with \mark[font]{twice the amplitude} results. This is
                   called \mark[font]{constructive interference}.}
-      \img[max-width="800px", src="../../images/chem/6.svg"]
+      \img[max-width="800px", src="../../../assets/images/chem/6.svg"]
    }
    \note{
       \h6{Destructive Interference}
       \p{If two waves are \mark[font]{completely out of phase} when they interact—that is, they
                   align so that the crest from one overlaps with the trough from the other—the waves
                   cancel by \mark[font]{destructive interference}.}
-      \img[max-width="800px", src="../../images/chem/7.svg"]
+      \img[max-width="800px", src="../../../assets/images/chem/7.svg"]
    }
 }

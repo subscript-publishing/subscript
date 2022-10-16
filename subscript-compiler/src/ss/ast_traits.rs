@@ -8,6 +8,7 @@ use std::iter::FromIterator;
 use std::vec;
 use itertools::Itertools;
 use serde::{Serialize, Deserialize};
+use rayon::prelude::*;
 use crate::ss::parser::IdentInitError;
 use crate::ss::ast_data::CmdCall;
 use crate::ss::SemanticScope;
@@ -360,6 +361,64 @@ impl StrictlyEq for Vec<Node> {
                 .all(|(l, r)| l.strictly_eq_to(&r))
         }
         false
+    }
+}
+
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// TRAVERSAL
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+pub trait NodeCmdCallTraversal {
+    fn cmd(&self, cmd: &mut CmdCall);
+    // fn ident(Ident) -> Ident {}
+    // fn bracket(Bracket) -> Bracket {}
+    // fn quotation(Quotation) -> Quotation {}
+    // fn text(String) -> String {}
+    // fn symbol(String) -> String {}
+    // fn invalid_token(String) -> String {}
+    // fn drawing(ss_freeform_format::DrawingDataModel) -> ss_freeform_format::DrawingDataModel {}
+    // fn fragment(Vec<Node>) -> Vec<Node> {}
+}
+
+impl Node {
+    pub fn node_cmd_call_traversal<V: NodeCmdCallTraversal + std::marker::Sync>(&mut self, visitor: &V) {
+        match self {
+            Node::Cmd(cmd_call) => {
+                cmd_call.arguments
+                    .iter_mut()
+                    .for_each(|x: &mut Node|{
+                        x.node_cmd_call_traversal(visitor)
+                    });
+                visitor.cmd(cmd_call);
+            }
+            Node::Fragment(children) => {
+                children
+                    .iter_mut()
+                    .for_each(|x: &mut Node|{
+                        x.node_cmd_call_traversal(visitor)
+                    });
+            }
+            Node::Bracket(node) => {
+                node.value.children
+                    .iter_mut()
+                    .for_each(|x: &mut Node|{
+                        x.node_cmd_call_traversal(visitor)
+                    });
+            }
+            Node::Quotation(node) => {
+                node.value.children
+                    .iter_mut()
+                    .for_each(|x: &mut Node|{
+                        x.node_cmd_call_traversal(visitor)
+                    });
+            }
+            Node::Ident(_) => (),
+            Node::Text(_) => (),
+            Node::Symbol(_) => (),
+            Node::InvalidToken(_) => (),
+            Node::Drawing(_) => (),
+        }
     }
 }
 

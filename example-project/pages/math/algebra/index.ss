@@ -1,6 +1,7 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{Miscellaneous}
+\h1[top-level]{Algebra}
 
+\h2{Miscellaneous}
 \h2{Functional Utilities & Notation Conveniences}
 
 \grid[col="2"]{

@@ -361,6 +361,16 @@ a {
   }
 }
 
+img {
+  max-width: 100%;
+  width: 100%;
+}
+
+img[data-center] {
+  display: block;
+  margin: 0 auto;
+}
+
 main {
   display: flex;
   flex-direction: column;
@@ -1037,23 +1047,58 @@ main [data-math-node=block] {
     padding: 0 40px;
   }
 }
-[data-cmd=grid][data-col="1"] {
+[data-cmd=grid][boxed] [data-cmd=note] {
+  box-shadow: 0 0 3px 0px #000000;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #535353;
+}
+
+[data-cmd=note][boxed] {
+  box-shadow: 0 0 3px 0px #000000;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #535353;
+}
+
+[data-cmd=grid] {
   display: grid;
+  padding: 0 20px;
+  row-gap: 10px;
+  column-gap: 10px;
+}
+[data-cmd=grid] :is(h1, h2, h3, h4, h5, h6) {
+  border: none;
+  border-top: none;
+  border-bottom: none;
+  padding: 0;
+}
+
+[data-cmd=note] {
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+[data-cmd=note] [data-cmd=note] {
+  margin: 10px;
+}
+
+[data-cmd=grid][data-col="1"] {
   grid-template-columns: repeat(1, 1fr);
 }
 
 [data-cmd=grid][data-col="2"] {
-  display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
 
 [data-cmd=grid][data-col="3"] {
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
 
 [data-cmd=grid][data-col="4"] {
-  display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
 
@@ -1107,4 +1152,4 @@ function setForceSingleColumnToOn() {
     updateColumns();
 }
 
-</script></head><body><header id="page-header"><div data-col="2" id="site-title-wrapper" class="site-header-row"><a href="/" class="left-link"><span class="material-symbols-outlined">house</span></a><div id="site-title-box"><h1 data-title="">Colbyn's School Notes</h1></div></div><nav id="site-nav-wrapper" class="site-header-row two-col"><a href="/" class="left-link"><span class="material-symbols-outlined">arrow_circle_left</span></a><div id="toc-list-wrapper"><p id="toc-list-info">Table Of Contents</p><ul id="toc-list"><li data-level="h1" data-source="local"><a href="/sample.html#helloimage">Hello Image</a></li></ul></div></nav><div id="site-settings-wrapper"><button onclick="setForceSingleColumnToOff()" id="set-single-col-to-off-btn" class="pill"><span>Force Single Column</span><span>On</span></button><button onclick="setForceSingleColumnToOn()" id="set-single-col-to-on-btn" class="pill"><span>Force Single Column</span><span>Off</span></button></div></header><main><h1 id="helloimage"><a href="/sample.html#helloimage">Hello Image</a></h1><img src="tests/3x3-determinant.png"></img></main><script></script></body></html>
+</script></head><body><header id="page-header"><div class="site-header-row" data-col="2" id="site-title-wrapper"><a class="left-link" href="/"><span class="material-symbols-outlined">house</span></a><div id="site-title-box"><h1 data-title="">Colbyn's School Notes</h1></div></div><nav class="site-header-row two-col" id="site-nav-wrapper"><a class="left-link" href="/"><span class="material-symbols-outlined">arrow_circle_left</span></a><div id="toc-list-wrapper"><p id="toc-list-info">Table Of Contents</p><ul id="toc-list"><li data-level="h2" data-source="external"><a href="/tests/sub-page.html#subpagetitle">Sub-page title</a></li><li data-level="h3" data-source="external"><a href="/tests/sub-page.html#subpagesubtitle">Sub-page sub-title</a></li></ul></div></nav><div id="site-settings-wrapper"><button onclick="setForceSingleColumnToOff()" class="pill" id="set-single-col-to-off-btn"><span>Force Single Column</span><span>On</span></button><button class="pill" onclick="setForceSingleColumnToOn()" id="set-single-col-to-on-btn"><span>Force Single Column</span><span>Off</span></button></div></header><main><h2 id="subpagetitle"><a href="/tests/sub-page.html#subpagetitle">Sub-page title</a></h2><h3 id="subpagesubtitle"><a href="/tests/sub-page.html#subpagesubtitle">Sub-page sub-title</a></h3><p>Hello world</p></main><script></script></body></html>

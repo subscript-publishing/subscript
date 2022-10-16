@@ -53,7 +53,7 @@ pub mod low_level_api {
 
     /// Make sure that `Scope::file_path` is set to the file you want to parse.
     pub fn process_commands(
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         scope: &SemanticScope,
         ast: crate::ss::Node
     ) -> crate::ss::Node {
@@ -63,7 +63,7 @@ pub mod low_level_api {
     
     /// Make sure that `Scope::file_path` is set to the file you want to parse.
     pub fn parse_process(
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         scope: &SemanticScope
     ) -> Result<crate::ss::Node, CompilerError> {
         let nodes = parse_file(&scope)?;
@@ -76,7 +76,7 @@ pub mod low_level_api {
         Ok(nodes)
     }
     pub fn compile_to_html(
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         scope: &SemanticScope,
         debug_settings: Option<&DebugSettings>,
     ) -> Result<(HtmlCodegenEnv, crate::html::Node), CompilerError> {
@@ -156,6 +156,8 @@ pub struct HtmlMetadata {
 
 #[derive(Debug, Clone, Default)]
 pub struct Compiler {
+    pub project_dir: Option<PathBuf>,
+    pub output_dir: Option<PathBuf>,
     pub files: Vec<FileIOEntry>,
     pub html_metadata: Option<HtmlMetadata>,
     pub template_file: Option<TemplateFile>,
@@ -270,6 +272,14 @@ impl Compiler {
         self.debug_settings = Some(debug_settings);
         self
     }
+    pub fn with_output_dir(mut self, out: impl AsRef<Path>) -> Self {
+        self.output_dir = Some(out.as_ref().to_path_buf());
+        self
+    }
+    pub fn with_project_dir(mut self, root_dir: impl AsRef<Path>) -> Self {
+        self.project_dir = Some(root_dir.as_ref().to_path_buf());
+        self
+    }
 }
 
 
@@ -292,30 +302,57 @@ impl Compiler {
         self.template_file = Some(template_file);
         self
     }
-    pub fn compile_pages_to_html(&self, env: &mut ResourceEnv) {
-        let mut nav_entries: Vec<TocPageEntry> = Default::default();
-        let ref root_path = PathBuf::from("/");
-        // let system_start = std::time::Instant::now();
-        let (tocs, envs): (Vec<TocPageEntry>, Vec<ResourceEnv>) = self.files
-            .par_iter()
-            .map(|file_io_entry| {
-                let mut env = env.clone();
-                let html = self.compile_page_to_html(&mut env, file_io_entry);
-                (html, env)
-            })
-            .unzip();
-        let res_env = envs
+    /// Files with longer paths tend to be dependencies of files with shorter
+    /// paths, so until dependency tracking is implemented, this heuristic is
+    /// a quick and dirty alternative. 
+    pub fn sort_files(mut self) -> Self {
+        println!("INP PAGE ORDER: {:#?}", self.files.iter().map(|x| x.src_file.clone()).collect_vec());
+        self.files = self.files
             .into_iter()
-            .fold(ResourceEnv::default(), |l, r| {
-                l.merge(r)
-            });
-        *env = env.clone().merge(res_env);
-        // let elapsed = system_start.elapsed();
-        // println!("\nTotal Elapsed Time: {:.2?}\n", elapsed);
+            .sorted_by(|l, r| {
+                let l = l.src_file.canonicalize().unwrap();
+                let l = l.to_str().unwrap().len();
+                let r = r.src_file.canonicalize().unwrap();
+                let r = r.to_str().unwrap().len();
+                l.cmp(&r).reverse()
+            })
+            .collect_vec();
+        println!("OUT PAGE ORDER: {:#?}", self.files.iter().map(|x| x.src_file.clone()).collect_vec());
+        self
+    }
+    pub fn compile_pages_to_html(&self) {
+        let mut time_stamps = Vec::new();
+        for ix in (0..1) {
+            println!("Iteration {ix}");
+            let resource_env = ResourceEnv::default();
+            let mut nav_entries: Vec<TocPageEntry> = Default::default();
+            let ref root_path = PathBuf::from("/");
+            let system_start = std::time::Instant::now();
+            let (tocs, envs): (Vec<TocPageEntry>, Vec<ResourceEnv>) = self.files
+                .par_iter()
+                .map(|file_io_entry| {
+                    let mut env = resource_env.clone();
+                    let html = self.compile_page_to_html(&mut env, file_io_entry);
+                    (html, env)
+                })
+                .unzip();
+            // if let Some(output_dir) = self.output_dir.as_ref() {
+            //     resource_env.write_sym_links(output_dir);
+            // }
+            time_stamps.push(system_start.elapsed());
+        }
+        let time_stamps = time_stamps
+            .into_iter()
+            .map(|duration| {
+                duration.as_secs() as f64 + duration.subsec_nanos() as f64 * 1e-9
+            })
+            .collect_vec();
+        let adv = time_stamps.iter().sum::<f64>() as f64 / time_stamps.len() as f64;
+        println!("Average Elapsed Time {:.2?}s", adv);
     }
     fn compile_page_to_html(
         &self,
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         file_io_entry: &FileIOEntry
     ) -> TocPageEntry {
         assert!(file_io_entry.out_file.extension().unwrap() == "html");
@@ -332,7 +369,7 @@ impl Compiler {
                 ).unwrap()
             });
         let scope = crate::ss::SemanticScope::new(
-            &base_dir,
+            self.project_dir.as_ref().unwrap(),
             &file_io_entry.src_file,
             subscript_std,
         );
@@ -341,23 +378,27 @@ impl Compiler {
             &scope,
             self.debug_settings.as_ref(),
         ).unwrap();
-        let page_script = crate::html::utils::math_env_to_html_script(&html_env.math_env);
+        let page_script = crate::html::utils::math_env_to_html_script(
+            &html_env.math_env_clone()
+        );
         let mut toc_page_entry = TocPageEntry{
             used_ids: Default::default(),
             src_path: file_io_entry.src_file.clone(),
             out_path: file_io_entry.out_file.clone(),
-            math_entries: html_env.math_env.entries
-                .into_iter()
+            math_entries: html_env
+                .math_env_clone()
+                .entries
+                .into_par_iter()
                 .filter(|x| !x.unique)
-                .collect_vec(),
+                .collect(),
             page_title: None,
             li_entries: Default::default(),
         };
         let page_html = crate::html::toc::toc_rewrites(
-            base_dir.clone(),
-            file_io_entry.src_file.clone(),
+            &base_dir,
+            &file_io_entry.src_file,
+            &mut toc_page_entry,
             page_html,
-            &mut toc_page_entry
         );
         let main = crate::html::Node::Element(crate::html::Element{
             name: String::from("main"),

@@ -2,6 +2,7 @@
 //! Some of the values here are incomplete.
 use std::path::PathBuf;
 use std::borrow::Cow;
+use std::sync::{Arc, Mutex};
 use std::collections::{HashSet, VecDeque, LinkedList};
 use std::iter::FromIterator;
 use lazy_static::lazy_static;
@@ -82,3 +83,54 @@ pub static ALLOWED_HTML_TAGS: &[&'static str] = &[
     "details",
     "summary",
 ];
+
+
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// MISCELLANEOUS
+// ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+pub struct Store<T>(Arc<Mutex<T>>);
+
+unsafe impl<T> Send for Store<T> {}
+unsafe impl<T> Sync for Store<T> {}
+
+impl<T: Default> Default for Store<T> {
+    fn default() -> Self {
+        Store::new(T::default())
+    }
+}
+impl<T> Clone for Store<T> {
+    fn clone(&self) -> Self {Store(self.0.clone())}
+}
+
+
+impl<T> std::fmt::Debug for Store<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let output_ty_name = std::any::type_name::<T>();
+        f.debug_struct(&format!("Store(\"{}\")", output_ty_name)).finish()
+    }
+}
+
+impl<T> Store<T> {
+    pub fn new(x: T) -> Store<T> {
+        Store(Arc::new(Mutex::new(x)))
+    }
+    pub fn map<U>(&self, f: impl Fn(&T)->U) -> U {
+        use std::ops::DerefMut;
+        let mut lock = self.0.lock().unwrap();
+        f(lock.deref_mut())
+    }
+    pub fn map_mut<U>(&self, mut f: impl FnOnce(&mut T)->U) -> U {
+        use std::ops::DerefMut;
+        let mut lock = self.0.lock().unwrap();
+        f(lock.deref_mut())
+    }
+    pub fn into_inner(self) -> Arc<Mutex<T>> {
+        self.0
+    }
+    pub fn into_clone(&self) -> T where T: Clone {
+        self.map(|x| x.clone())
+    }
+}
+
+

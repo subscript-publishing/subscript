@@ -1,3 +1,4 @@
+use std::borrow::BorrowMut;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::path::Path;
@@ -9,42 +10,46 @@ use itertools::Itertools;
 use super::Element;
 use super::Node;
 use super::TagBuilder;
+use super::NodeElementMutTraversal;
 use crate::ss::ast_data::HeadingType;
+use crate::data::Store;
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // MISCELLANEOUS
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-pub fn toc_rewrites(
-    base_path: PathBuf,
-    current_file: PathBuf,
-    node: Node,
-    toc_entry: &mut TocPageEntry,
-) -> Node {
-    match node {
-        Node::Element(mut element) if element.is_heading_node() => {
+
+pub struct TocRewritesTraversal<'a> {
+    base_path: &'a PathBuf,
+    current_file: &'a PathBuf,
+    toc_entry: &'a Store<TocPageEntry>,
+}
+
+impl<'a> NodeElementMutTraversal for TocRewritesTraversal<'a> {
+    fn element(&self, element: &mut Element) {
+        if element.is_heading_node() {
             let mut dashed_title = element.children
                 .iter()
                 .map(Node::to_dashed_title)
                 .collect::<String>();
             let mut original_title = dashed_title.clone();
             let mut ix = 1;
-            while toc_entry.used_ids.contains(&dashed_title) {
+            while {self.toc_entry.map(|x| x.used_ids.contains(&dashed_title))} {
                 dashed_title = format!("{original_title}{ix}");
                 ix = ix + 1;
             }
             std::mem::drop(original_title);
-            toc_entry.used_ids.insert(dashed_title.clone());
+            self.toc_entry.map_mut(|x| x.used_ids.insert(dashed_title.clone()));
             let mut is_local = false;
             let path = element
                 .get_attr_value("source")
                 .map(PathBuf::from)
                 .unwrap_or_else(|| {
                     is_local = true;
-                    current_file.clone()
+                    self.current_file.clone()
                 });
             let mut path = path
-                .strip_prefix(&base_path)
+                .strip_prefix(&self.base_path)
                 .map(Path::to_path_buf)
                 .unwrap_or(path);
             path.set_extension("html");
@@ -61,6 +66,13 @@ pub fn toc_rewrites(
                         HeadingType::H4 => String::from("h4"),
                         HeadingType::H5 => String::from("h5"),
                         HeadingType::H6 => String::from("h6"),
+                    }),
+                    (String::from("top-level"), {
+                        if element.has_attr("top-level") {
+                            String::from("true")
+                        } else {
+                            String::from("false")
+                        }
                     })
                 ]),
                 children: vec![
@@ -78,44 +90,36 @@ pub fn toc_rewrites(
                     TocLiEntryType::External
                 }
             };
-            toc_entry.li_entries.push(TocLiEntry {node: li_entry, kind: source_type });
+            self.toc_entry.map_mut(move |entry| {
+                entry.li_entries.push(TocLiEntry {node: li_entry, kind: source_type })
+            });
             element.attributes.insert(String::from("id"), dashed_title);
             element.children = vec![
                 Node::Element(Element {
                     name: String::from("a"),
                     attributes: HashMap::from_iter([href]),
-                    children: element.children
+                    children: element.children.drain(..).collect_vec(),
                 })
             ];
-            Node::Element(element)
         }
-        Node::Element(mut element) => {
-            element.children = element.children
-                .into_iter()
-                .map(|x| toc_rewrites(
-                    base_path.clone(),
-                    current_file.clone(),
-                    x,
-                    toc_entry
-                ))
-                .collect::<Vec<_>>();
-            Node::Element(element)
-        }
-        Node::Fragment(mut children) => {
-            children = children
-                .into_iter()
-                .map(|x| toc_rewrites(
-                    base_path.clone(),
-                    current_file.clone(),
-                    x,
-                    toc_entry
-                ))
-                .collect();
-            Node::Fragment(children)
-        }
-        node @ Node::Text(_) => node,
-        node @ Node::Drawing(_) => node,
     }
+}
+
+pub fn toc_rewrites(
+    base_path: &PathBuf,
+    current_file: &PathBuf,
+    toc_entry: &mut TocPageEntry,
+    mut node: Node,
+) -> Node {
+    let toc_entry_ref = Store::new(toc_entry.clone());
+    let visitor = TocRewritesTraversal {
+        base_path,
+        current_file,
+        toc_entry: &toc_entry_ref,
+    };
+    node.node_element_traversal(&visitor);
+    *toc_entry = toc_entry_ref.into_clone();
+    node
 }
 
 
@@ -171,7 +175,8 @@ impl TocPageEntry {
         root_index: Option<&PathBuf>,
         options: TocPageRenderingOptions,
     ) -> Node {
-        let ul_children = self.li_entries
+        // let is_topics_empty = self.topic_section.is_empty();
+        let toc_ul_children = self.li_entries
             .iter()
             .map(|TocLiEntry{kind, node: element}| {
                 let mut element = element.clone();
@@ -188,6 +193,24 @@ impl TocPageEntry {
             .collect_vec();
         let toc_list_wrapper = TagBuilder::new("div")
             .with_id("toc-list-wrapper")
+            // .push_child_if(
+            //     !is_topics_empty,
+            //     || {
+            //         TagBuilder::new("p")
+            //             .with_id("topic-list-info")
+            //             .push_child("Topics")
+            //             .finalize()
+            //     }
+            // )
+            // .push_child_if(
+            //     !is_topics_empty,
+            //     move || {
+            //         TagBuilder::new("div")
+            //             .with_id("topic-list-wrapper")
+            //             .with_children(self.topic_section.clone())
+            //             .finalize()
+            //     }
+            // )
             .push_child(
                 TagBuilder::new("p")
                     .with_id("toc-list-info")
@@ -197,7 +220,7 @@ impl TocPageEntry {
             .push_child(
                 TagBuilder::new("ul")
                     .with_id("toc-list")
-                    .with_children(ul_children)
+                    .with_children(toc_ul_children)
                     .finalize()
             )
             .finalize();

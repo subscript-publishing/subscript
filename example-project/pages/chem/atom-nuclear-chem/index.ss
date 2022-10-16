@@ -1,5 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{The Atom and Nuclear Chemistry}
+\h1[top-level]{The Atom and Nuclear Chemistry}
 
 \h2{Isotopes and Subatomic Particles}
 

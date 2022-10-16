@@ -1,4 +1,4 @@
-\h1[page-title]{Test Page}
+\h1[top-level]{Test Page}
 
 \h1{Hello world}
 \h2{Hello world}

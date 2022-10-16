@@ -163,7 +163,9 @@ header#page-header {
             }
         }
     }
-
+    li[top-level="true"] {
+        height: 90px;;
+    }
     li[data-level="h1"] {
         margin-left: 20px;
         padding-left: 10px;

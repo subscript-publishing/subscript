@@ -1,43 +1,16 @@
 use either::{Either, Either::Left, Either::Right};
 use itertools::Itertools;
 use std::{collections::HashMap, hash::Hash, path::PathBuf, rc::Rc};
+use rayon::prelude::*;
 
 use crate::ss::ToNode;
 use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
 use crate::ss::ResourceEnv;
 use crate::ss::SymbolicModeType;
-use crate::ss::ast_traits::SyntacticallyEq;
-
+use crate::ss::ast_traits::*;
 use super::*;
 
-fn normalize_ref_headings(
-    scope: &SemanticScope,
-    baseline: HeadingType,
-    node: Node
-) -> Node {
-    let decrement_amount = baseline.to_u8();
-    let f = |node: Node| -> Node {
-        match node {
-            Node::Cmd(mut cmd) if cmd.is_heading_node() => {
-                let heading_type = HeadingType::from_id(&cmd.identifier.value).unwrap();
-                let heading_type = heading_type.decrement_by(decrement_amount);
-                if !cmd.attributes.has_attr("source") {
-                    scope.file_path
-                        .clone()
-                        .and_then(|x| x.to_str().map(ToString::to_string))
-                        .map(|path| {
-                            cmd.attributes.insert("source", path)
-                        });
-                }
-                cmd.identifier = Ann::unannotated(heading_type.into_ident());
-                Node::Cmd(cmd)
-            }
-            node => node,
-        }
-    };
-    node.transform(Rc::new(f))
-}
 
 fn process_ss1_drawing(
     file_path: &PathBuf,
@@ -141,13 +114,166 @@ fn process_ss1_composition(
     Vec::new()
 }
 
+
+struct NormalizeRefHeadings<'a> {
+    scope: &'a SemanticScope,
+    decrement_amount: u8,
+}
+
+impl<'a> NodeCmdCallTraversal for NormalizeRefHeadings<'a> {
+    fn cmd(&self, cmd: &mut CmdCall) {
+        if cmd.is_heading_node() {
+            let heading_type = HeadingType::from_id(&cmd.identifier.value).unwrap();
+            let heading_type = heading_type.decrement_by(self.decrement_amount);
+            if !cmd.attributes.has_attr("source") {
+                self.scope.file_path
+                    .clone()
+                    .and_then(|x| x.to_str().map(ToString::to_string))
+                    .map(|path| {
+                        cmd.attributes.insert("source", path)
+                    });
+            }
+            cmd.identifier = Ann::unannotated(heading_type.into_ident());
+        }
+    }
+}
+
+fn normalize_ref_headings(
+    scope: &SemanticScope,
+    baseline: HeadingType,
+    mut node: Node
+) -> Node {
+    let decrement_amount = baseline.to_u8();
+    let runner = NormalizeRefHeadings {scope, decrement_amount};
+    node.node_cmd_call_traversal(&runner);
+    node
+}
+
+// struct ProcessTocOnly<'a> {
+//     scope: &'a SemanticScope
+// }
+
+// impl<'a> NodeCmdCallTraversal for NormalizeRefHeadings<'a> {
+//     fn cmd(&self, cmd: &mut CmdCall) {
+//         let heading_type = HeadingType::from_id(&cmd.identifier.value).unwrap();
+//         let heading_type = heading_type.decrement_by(self.decrement_amount);
+//         if !cmd.attributes.has_attr("source") {
+//             self.scope.file_path
+//                 .clone()
+//                 .and_then(|x| x.to_str().map(ToString::to_string))
+//                 .map(|path| {
+//                     cmd.attributes.insert("source", path)
+//                 });
+//         }
+//         cmd.identifier = Ann::unannotated(heading_type.into_ident());
+//     }
+// }
+
+fn process_toc_only(
+    scope: &SemanticScope,
+    node: Node,
+) -> Vec<Node> {
+    match node {
+        Node::Cmd(mut cmd) if cmd.is_heading_node() => {
+            if !cmd.attributes.has_attr("source") {
+                scope.file_path
+                    .clone()
+                    .and_then(|x| x.to_str().map(ToString::to_string))
+                    .map(|path| {
+                        cmd.attributes.insert("source", path)
+                    });
+            }
+            cmd.attributes.insert("toc-only", "");
+            vec![Node::Cmd(cmd)]
+        }
+        Node::Cmd(mut node) => {
+            node.arguments
+                .into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Fragment(node) => {
+            node.into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Bracket(node) => {
+            node.value.children
+                .into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Quotation(node) => {
+            node.value.children
+                .into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Ident(node) => Vec::new(),
+        Node::Text(_) => Vec::new(),
+        Node::Symbol(_) => Vec::new(),
+        Node::InvalidToken(_) => Vec::new(),
+        Node::Drawing(_) => Vec::new(),
+    }
+}
+
+fn process_no_toc(
+    scope: &SemanticScope,
+    node: Node,
+) -> Vec<Node> {
+    match node {
+        Node::Cmd(mut cmd) if cmd.is_heading_node() => {
+            if !cmd.attributes.has_attr("source") {
+                scope.file_path
+                    .clone()
+                    .and_then(|x| x.to_str().map(ToString::to_string))
+                    .map(|path| {
+                        cmd.attributes.insert("source", path)
+                    });
+            }
+            cmd.attributes.insert("no-toc", "");
+            vec![Node::Cmd(cmd)]
+        }
+        Node::Cmd(mut node) => {
+            node.arguments
+                .into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Fragment(node) => {
+            node.into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Bracket(node) => {
+            node.value.children
+                .into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Quotation(node) => {
+            node.value.children
+                .into_iter()
+                .flat_map(|x| process_toc_only(scope, x))
+                .collect_vec()
+        }
+        Node::Ident(node) => Vec::new(),
+        Node::Text(_) => Vec::new(),
+        Node::Symbol(_) => Vec::new(),
+        Node::InvalidToken(_) => Vec::new(),
+        Node::Drawing(_) => Vec::new(),
+    }
+}
+
 fn handle_include(
-    env: &mut ResourceEnv,
+    env: &ResourceEnv,
     scope: &SemanticScope,
     attributes: &Option<Attributes>,
     rewrite_rules: Option<Vec<RewriteRule<Vec<Node>>>>,
 ) -> Option<Node> {
     let attributes = attributes.as_ref()?;
+    let toc_only = attributes.has_truthy_option("toc-only");
+    let no_toc = attributes.has_truthy_option("no-toc");
     let baseline = attributes
         .get("baseline")
         .and_then(|x| x.value.clone().as_stringified_attribute_value_str(""))
@@ -167,19 +293,32 @@ fn handle_include(
         .as_stringified_attribute_value_str("")?;
     let src_path = scope.normalize_file_path(&src_path_str)
         .unwrap_or_else(|()| PathBuf::from(&src_path_str));
+    if let Some(cached) = env.get_include_cache(&src_path) {
+        return Some(cached.contents);
+    }
     let ext = src_path.extension()?.to_str();
     match ext {
         Some("ss") => {
+            // println!("include for {:?}", scope.file_path);
             let sub_scope = scope.new_file(&src_path);
             let mut nodes = crate::compiler::low_level_api::parse_process(env, &sub_scope).ok()?;
             if let Some(baseline) = baseline {
                 nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
             }
+            // if toc_only {
+            //     nodes = Node::Fragment(process_toc_only(&sub_scope, nodes));
+            // }
+            // if no_toc {
+            //     nodes = Node::Fragment(process_no_toc(&sub_scope, nodes));
+            // }
+            env.cache_include(&src_path, &nodes);
             return Some(nodes);
         }
         Some(ext) if ss_freeform_format::SS1FreeformSuite::is_ss1_drawing_file_ext(ext) => {
             let nodes = process_ss1_drawing(&src_path, rewrite_rules);
-            return Some(Node::Fragment(nodes));
+            let nodes = Node::Fragment(nodes);
+            env.cache_include(&src_path, &nodes);
+            return Some(nodes);
         }
         Some(ext) if ss_freeform_format::SS1FreeformSuite::is_ss1_composition_file_ext(ext) => {
             let sub_scope = scope.new_file(&src_path);
@@ -188,7 +327,9 @@ fn handle_include(
             if let Some(baseline) = baseline {
                 nodes = normalize_ref_headings(&sub_scope, baseline, nodes);
             }
-            return Some(nodes.defragment_node_tree());
+            let nodes = nodes.defragment_node_tree();
+            env.cache_include(&src_path, &nodes);
+            return Some(nodes);
         }
         _ => None,
     }
@@ -221,6 +362,34 @@ pub fn core_subscript_commands() -> Vec<cmd_decl::CmdDeclaration> {
             }
         })
         .finish();
+    // fn process_topics(node: Node) -> Node {
+    //     match node {
+    //         Node::Cmd(mut cmd_call) if cmd_call.has_name("include") => {
+    //             cmd_call.attributes.insert("no-toc", "");
+    //             Node::Cmd(cmd_call)
+    //         }
+    //         node => node
+    //     }
+    // }
+    // let topics = CmdDeclBuilder::new(Ident::from("\\topics").unwrap())
+    //     .internal_cmd_options(cmd_decl::InternalCmdDeclOptions {
+    //         automatically_apply_rewrites: false,
+    //     })
+    //     .arguments(
+    //         arguments! {
+    //             for (internal, metadata, cmd_payload) match {
+    //                 ({xs}) => {
+    //                     let node = Node::Cmd(CmdCall {
+    //                         identifier: cmd_payload.identifier,
+    //                         attributes: cmd_payload.attributes.unwrap_or_default(),
+    //                         arguments: vec![xs]
+    //                     });
+    //                     process_topics(node)
+    //                 },
+    //             }
+    //         }
+    //     )
+    //     .finish();
     vec![
         include,
     ]

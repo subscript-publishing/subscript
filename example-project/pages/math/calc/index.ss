@@ -1,5 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{Limits}
+\h1[top-level]{Limits}
 
 
 \grid[col="2"]{
@@ -57,15 +57,15 @@
 \grid[col="2", boxed]{
    \note{
       \h4{Example}
-      \img[max-width="600px", src="../images/math/9.svg"]
+      \img[max-width="600px", src="../../../assets/images/math/9.svg"]
    }
    \note{
       \h4{Example}
-      \img[max-width="600px", src="../images/math/10.svg"]
+      \img[max-width="600px", src="../../../assets/images/math/10.svg"]
    }
    \note{
       \h4{Example}
-      \img[max-width="600px", src="../images/math/11.svg"]
+      \img[max-width="600px", src="../../../assets/images/math/11.svg"]
    }
 }
 

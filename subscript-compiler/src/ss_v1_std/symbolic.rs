@@ -1,11 +1,12 @@
 //! All Subscript STEM related notation typesetting. 
+use rayon::prelude::*;
+
 use crate::html;
 use crate::ss::ast_data::HeadingType;
 use crate::ss::SemanticScope;
 use crate::ss::SymbolicModeType;
 use crate::ss::ast_traits::SyntacticallyEq;
 use crate::ss::ResourceEnv;
-
 use super::*;
 
 // enum MathMode {
@@ -79,7 +80,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
+                let child_scope = scope.new_scope(&env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -87,7 +88,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .map(|x| x.to_latex(&mut latex_env, &child_scope))
                     .collect::<String>();
                 let is_unique = !scope.in_heading_scope();
-                let mut html_node = env.math_env.add_inline_entry(latex_code, is_unique);
+                let mut html_node = env.add_inline_math_entry(latex_code, is_unique);
                 html_node.attributes.insert(String::from("data-cmd"), String::from("inline-math"));
                 html::Node::Element(html_node)
             }
@@ -111,7 +112,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
+                let child_scope = scope.new_scope(&env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let preset = cmd.attributes
                     .get_str_value("preset")
@@ -189,7 +190,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     Some((open, close)) => format!("{open}{latex_code}{close}"),
                     _ => latex_code
                 };
-                let mut html_node = env.math_env.add_block_entry(latex_code, is_unique);
+                let mut html_node = env.add_block_entry(latex_code, is_unique);
                 html_node.attributes.insert(String::from("data-cmd"), String::from("math"));
                 html::Node::Element(html_node)
             }
@@ -232,7 +233,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     },
                 });
                 let is_unique = !scope.in_heading_scope();
-                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
+                let child_scope = scope.new_scope(&env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -240,7 +241,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                     .map(|x| x.to_latex(&mut latex_env, &child_scope))
                     .collect::<String>();
                 let latex_code = format!("{start}{latex_code}{end}");
-                let mut html_node = env.math_env.add_block_entry(latex_code, is_unique);
+                let mut html_node = env.add_block_entry(latex_code, is_unique);
                 html_node.attributes.insert(String::from("data-cmd"), String::from("equation"));
                 html::Node::Element(html_node)
 
@@ -264,7 +265,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
+                let child_scope = scope.new_scope(&env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -274,9 +275,9 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                 let latex_code = format!("\\ce{{{latex_code}}}");
                 let is_unique = !scope.in_heading_scope();
                 let mut html_node = if scope.in_inline_mode() {
-                    env.math_env.add_inline_entry(latex_code, is_unique)
+                    env.add_inline_math_entry(latex_code, is_unique)
                 } else {
-                    env.math_env.add_block_entry(latex_code, is_unique)
+                    env.add_block_entry(latex_code, is_unique)
                 };
                 html_node.attributes.insert(String::from("data-cmd"), String::from("chem"));
                 html::Node::Element(html_node)
@@ -300,7 +301,7 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
         )
         .to_html(to_html! {
             fn (env, scope, cmd) {
-                let child_scope = scope.new_scope(&mut env.resource_env, &cmd);
+                let child_scope = scope.new_scope(&env.resource_env, &cmd);
                 let mut latex_env = crate::ss::env::LatexCodegenEnv::from_scope(&child_scope);
                 let latex_code = cmd.arguments
                     .into_iter()
@@ -310,9 +311,9 @@ pub fn all_subscript_symbolic_environments() -> Vec<cmd_decl::CmdDeclaration> {
                 let latex_code = format!("\\pu{{{latex_code}}}");
                 let is_unique = !scope.in_heading_scope();
                 let mut html_node = if scope.in_inline_mode() {
-                    env.math_env.add_inline_entry(latex_code, is_unique)
+                    env.add_inline_math_entry(latex_code, is_unique)
                 } else {
-                    env.math_env.add_block_entry(latex_code, is_unique)
+                    env.add_block_entry(latex_code, is_unique)
                 };
                 html_node.attributes.insert(String::from("data-cmd"), String::from("unit"));
                 html::Node::Element(html_node)

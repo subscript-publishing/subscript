@@ -183,7 +183,10 @@ impl Attributes {
                 let key = key
                     .to_node()
                     .defragment_node_tree()
-                    .trim_whitespace();
+                    .trim_whitespace()
+                    .as_stringified_attribute_value_str("")
+                    .unwrap();
+                let key = Node::Text(key.into());
                 let value = value
                     .to_node()
                     .defragment_node_tree()
@@ -253,6 +256,24 @@ impl Attributes {
                 check2
             })
             .unwrap_or(false)
+    }
+    pub fn add_style(&mut self, style: impl AsRef<str>) {
+        self.upsert_key_value(
+            "style",
+            |value| {
+                let mut value = value.as_stringified_attribute_value_str("").unwrap();
+                if value.ends_with(";") {
+                    value.push_str(style.as_ref());
+                } else {
+                    value.push(';');
+                    value.push_str(style.as_ref());
+                }
+                value
+            },
+            || {
+                Some(style.as_ref().to_string())
+            }
+        )
     }
     pub fn update_value<V: ToNode>(
         &mut self,

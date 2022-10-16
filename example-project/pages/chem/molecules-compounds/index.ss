@@ -1,5 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{Molecules and Compounds}
+\h1[top-level]{Molecules and Compounds}
 
 \h2{Terms}
 
@@ -278,19 +278,19 @@
       }\grid[col="2", boxed]{
          \note{
             \h4{Example for \mark[font]{Nitrate}}
-            \img[src="../../images/chem/13.svg", max-width="600px"]
+            \img[src="../../../assets/images/chem/13.svg", max-width="600px"]
          }
          \note{
             \h4{Example for \mark[font]{Cyanide}}
-            \img[src="../../images/chem/14.svg", max-width="600px"]
+            \img[src="../../../assets/images/chem/14.svg", max-width="600px"]
          }
          \note{
             \h4{Example for \mark[font]{Oxalate}}
-            \img[src="../../images/chem/15.svg", max-width="600px"]
+            \img[src="../../../assets/images/chem/15.svg", max-width="600px"]
          }
          \note{
             \h4{Example for \mark[font]{Hydrogen Carbonate}}
-            \img[max-width="600px", src="../../images/chem/16.svg"]
+            \img[max-width="600px", src="../../../assets/images/chem/16.svg"]
          }
       }\table[style="width: 100%;"]{
          \tbody{
@@ -310,7 +310,7 @@
 \grid[col="1", boxed]{
    \note{
       \h6{Lewis structure for sulfate ion}
-      \img[max-width="900px", src="../../images/chem/17.svg"]
+      \img[max-width="900px", src="../../../assets/images/chem/17.svg"]
    }
 }
 \h2{Notes}

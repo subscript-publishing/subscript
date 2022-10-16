@@ -1,5 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{Basics}
+\h1[top-level]{Basics}
 
 \grid[col="4", boxed]{
    \note[compact]{
@@ -107,17 +107,17 @@
 \grid[col="1", boxed]{
    \note{
       \h3{Overview}
-      \img[max-width="900px", src="../../images/chem/1.svg"]\h4{Mixtures}
+      \img[max-width="900px", src="../../../assets/images/chem/1.svg"]\h4{Mixtures}
       \grid[col="2"]{
          \note{
             \h5{\mark[font]{Hetero}geneous mixture}
             \p[center]{Where the prefix \mark[font]{Hetero-} means \mark[font]{different}}
-            \img[max-width="300px", src="../../images/chem/2.svg"]
+            \img[max-width="300px", src="../../../assets/images/chem/2.svg"]
          }
          \note{
             \h5{\mark[font]{Homo}geneous mixture}
             \p[center]{Where the prefix \mark[font]{Homo-} means \mark[font]{same}}
-            \img[src="../../images/chem/3.svg", max-width="300px"]
+            \img[src="../../../assets/images/chem/3.svg", max-width="300px"]
          }
       }
    }

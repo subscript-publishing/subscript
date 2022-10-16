@@ -1,14 +1,21 @@
+use std::sync::{Arc, Mutex};
 use std::borrow::Cow;
 use std::collections::HashSet;
 use std::path::Path;
 use std::{collections::{HashMap, VecDeque}, path::PathBuf, fmt::Debug, rc::Rc};
 use either::{Either, Either::Left, Either::Right};
+use html5ever::Attribute;
 use itertools::Itertools;
+use rayon::prelude::*;
 use crate::ss::{Ident, Ann, Node};
 use crate::ss::cmd_decl::CmdDeclaration;
 use crate::ss::cmd_decl::ParentEnvNamespaceDecl;
 use crate::ss::CmdCall;
 use crate::ss::cmd_decl::CmdCodegen;
+use crate::data::Store;
+
+use super::Attributes;
+
 
 
 // ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -68,45 +75,95 @@ impl CommandDeclarations {
 // ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 #[derive(Debug, Clone, Default)]
-pub struct ResourceEnv {
-    pub image_paths: Vec<ImagePath>
+pub struct ResourceEnv(Store<ResourceEnvData>);
+
+#[derive(Debug, Clone, Default)]
+pub struct ResourceEnvData {
+    pub image_paths: Vec<ImagePath>,
+    pub includes: HashMap<PathBuf, IncludeCache>,
 }
 
 impl ResourceEnv {
     pub fn is_empty(&self) -> bool {
-        self.image_paths.is_empty()
+        self.0.map(|x| x.image_paths.is_empty())
     }
-    pub fn merge(mut self, other: ResourceEnv) -> ResourceEnv {
-        self.image_paths.extend(other.image_paths);
-        self
-    }
-    pub fn add_image(&mut self, scope: &SemanticScope, img_src: impl AsRef<Path>) -> Option<PathBuf> {
+    // pub fn merge(mut self, other: ResourceEnv) {
+    //     // let left = self.0.into_clone().image_paths;
+    //     // let right = other.0.into_clone().image_paths;
+    //     // self
+    //     unimplemented!()
+    // }
+    pub fn add_image(&self, scope: &SemanticScope, img_src: impl AsRef<Path>) -> Option<String> {
         let abs_file_file = img_src.as_ref().canonicalize().ok()?;
         let abs_base_path = scope.base_path.as_ref().unwrap();
         let abs_base_path = abs_base_path.canonicalize().unwrap();
-        let rel_file_file = abs_file_file.strip_prefix(&abs_base_path).unwrap().to_path_buf();
-        let image_paths = ImagePath {
-            rel_path: rel_file_file.clone(),
-            abs_path: abs_file_file,
-        };
-        self.image_paths.push(image_paths);
-        Some(rel_file_file)
+        let rel_file_file = abs_file_file.strip_prefix(&abs_base_path);
+        match rel_file_file {
+            Ok(rel_file_file) => {
+                let rel_file_file = {
+                    let mut path = PathBuf::from("static-assets");
+                    path.push(rel_file_file);
+                    path
+                };
+                let image_paths = ImagePath {
+                    rel_path: rel_file_file.clone(),
+                    abs_path: abs_file_file,
+                };
+                self.0.map_mut(move |x| x.image_paths.push(image_paths.clone()));
+                Some({
+                    let rel_file_file = rel_file_file.to_str().unwrap().to_owned();
+                    format!("/{rel_file_file}")
+                })
+            }
+            Err(msg) => {
+                println!("WHAT? {abs_base_path:?} / {abs_file_file:?}: {msg}");
+                None
+            }
+        }
+    }
+    pub fn image_paths(&self) -> Vec<ImagePath> {
+        self.0.map(|x| x.image_paths.clone())
     }
     pub fn write_sym_links(&self, output_dir: impl AsRef<Path>) {
         use std::os::unix::fs::symlink;
-        for ImagePath{rel_path, abs_path} in self.image_paths.iter() {
+        let image_paths = self.0.map(|x| x.image_paths.clone());
+        for ImagePath{rel_path, abs_path} in image_paths {
             let mut out_img_path = output_dir.as_ref().to_path_buf().clone();
             out_img_path.push(&rel_path);
             if let Some(parent) = out_img_path.parent() {
-                std::fs::remove_dir_all(&parent).unwrap();
+                std::fs::create_dir_all(&parent).unwrap();
             }
             if !out_img_path.exists() {
-                symlink(abs_path, out_img_path);
-                println!("WROTE SYM LINKS");
-            } else {
-                println!("DID NOT WROTE SYM LINKS");
+                symlink(abs_path, out_img_path).unwrap();
             }
         }
+    }
+    pub fn get_include_cache(&self, path: impl AsRef<Path>) -> Option<IncludeCache> {
+        self.0.map(move |data| {
+            data.includes.get(path.as_ref()).map(Clone::clone)
+        })
+    }
+    pub fn cache_include(
+        &self,
+        path: impl AsRef<Path>,
+        contents: &Node,
+    ) {
+        use crate::ss::StrictlyEq;
+        self.0.map_mut(move |data| {
+            // let contents_copy = contents.clone();
+            if !data.includes.contains_key(path.as_ref()) {
+                let result = data.includes.insert(path.as_ref().to_path_buf(), IncludeCache {
+                    contents: contents.clone(),
+                });
+                // if let Some(result) = result {
+                //     assert!(result.contents.strictly_eq_to(&contents_copy));
+                // }
+            }
+            // else {
+            //     let result = data.includes.get(path.as_ref()).map(Clone::clone).unwrap();
+            //     assert!(result.contents.strictly_eq_to(&contents_copy));
+            // }
+        })
     }
 }
 
@@ -114,6 +171,13 @@ impl ResourceEnv {
 pub struct ImagePath {
     rel_path: PathBuf,
     abs_path: PathBuf,
+}
+
+#[derive(Debug, Clone)]
+pub struct IncludeCache {
+    // pub path: PathBuf,
+    // pub attributes: Attributes,
+    pub contents: Node,
 }
 
 // impl Default for CommandDeclarations {
@@ -285,7 +349,7 @@ impl SemanticScope {
             .iter()
             .any(|x| x.is_heading_node())
     }
-    pub fn get_cmd_decl<'a>(&self, env: &mut ResourceEnv, cmd_call: &CmdCall) -> Option<&CmdDeclaration> {
+    pub fn get_cmd_decl<'a>(&self, env: &ResourceEnv, cmd_call: &CmdCall) -> Option<&CmdDeclaration> {
         let cmd_set = self.cmd_decls.map.get(&cmd_call.identifier.value);
         if let Some(cmd_set) = cmd_set {
             for cmd_decl in cmd_set {
@@ -296,7 +360,7 @@ impl SemanticScope {
         }
         None
     }
-    pub fn to_matching_cmd_call<'a>(&self, env: &mut ResourceEnv, nodes: &'a [Node]) -> Option<(Node, &'a [Node], usize)> {
+    pub fn to_matching_cmd_call<'a>(&self, env: &ResourceEnv, nodes: &'a [Node]) -> Option<(Node, &'a [Node], usize)> {
         if let Some(Ann{value: ident, ..}) = nodes.first().and_then(Node::get_ident_ref) {
             if let Some(matching_cmds) = self.cmd_decls.map.get(&ident) {
                 for matching_cmd in matching_cmds {
@@ -310,7 +374,7 @@ impl SemanticScope {
     }
     pub fn cmd_call_to_html(
         &self,
-        env: &mut HtmlCodegenEnv,
+        env: &HtmlCodegenEnv,
         cmd: CmdCall,
     ) -> Option<crate::html::ast::Node> {
         let cmd_decl_set: Vec<CmdDeclaration> = self.cmd_decls.map.get(&cmd.identifier.value)?.clone();
@@ -325,17 +389,17 @@ impl SemanticScope {
     }
     pub fn cmd_call_to_latex(
         &self,
-        env: &mut LatexCodegenEnv,
+        env: &LatexCodegenEnv,
         cmd_call: CmdCall,
     ) -> Option<String> {
-        let cmd_decl = self.get_cmd_decl(&mut env.resource_env, &cmd_call)?;
+        let cmd_decl = self.get_cmd_decl(&env.resource_env, &cmd_call)?;
         // let code_gen = cmd_decl.processors;
-        let sub_scope = self.new_scope(&mut env.resource_env, &cmd_call);
+        let sub_scope = self.new_scope(&env.resource_env, &cmd_call);
         return Some(cmd_decl.processors.to_latex(env, &sub_scope, cmd_call))
     }
     pub fn new_scope(
         &self,
-        env: &mut ResourceEnv,
+        env: &ResourceEnv,
         cmd_call: &CmdCall
     ) -> SemanticScope {
         let mut new_env = self.clone();
@@ -373,7 +437,7 @@ impl Default for SemanticScope {
 
 #[derive(Default)]
 pub struct HtmlCodegenEnv {
-    pub math_env: MathEnv,
+    pub math_env: Store<MathEnv>,
     pub resource_env: ResourceEnv,
 }
 
@@ -382,6 +446,27 @@ impl HtmlCodegenEnv {
         HtmlCodegenEnv {
             ..Default::default()
         }
+    }
+    pub fn add_inline_math_entry<'a>(
+        &self,
+        code: String,
+        unique: bool,
+    ) -> crate::html::Element {
+        self.math_env.map_mut(move |math_env| {
+            math_env.add_inline_entry(code.clone(), unique)
+        })
+    }
+    pub fn add_block_entry<'a>(
+        &self,
+        code: String,
+        unique: bool,
+    ) -> crate::html::Element {
+        self.math_env.map_mut(move |math_env| {
+            math_env.add_block_entry(code.clone(), unique)
+        })
+    }
+    pub fn math_env_clone(&self) -> MathEnv {
+        self.math_env.into_clone()
     }
 }
 

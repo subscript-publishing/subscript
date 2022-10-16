@@ -1,5 +1,5 @@
 /// This file was auto-translated from the original HTML source, it is pretty messy. 
-\h1{Kinematic Equations in 1D}
+\h1[top-level]{Kinematic Equations in 1D}
 
 \grid[boxed, col="1"]{
    \note{
@@ -8,15 +8,15 @@
             \h2{Conventions}
             \equation{
                \bar{v} &= \text{Average velocity}\\
-                                   \bar{a} &= \text{Average acceleration}\\
-                                   \text{Time} = \Delta{t} &= t_2 - t_1\\
-                                   \text{Displacement} = \Delta{x} &= x_2 - x_1\\
-                                   \Delta{v} &= v_2 - v_1\\
+               \bar{a} &= \text{Average acceleration}\\
+               \text{Time} = \Delta{t} &= t_2 - t_1\\
+               \text{Displacement} = \Delta{x} &= x_2 - x_1\\
+               \Delta{v} &= v_2 - v_1
             }
          }
          \note{
             \h5{Graphical Representation}
-            \img[src="../images/physics/4.svg", max-width="900px", min-width="600px"]
+            \img[src="../../../assets/images/physics/4.svg", max-width="900px", min-width="600px"]
          }
       }
    }
@@ -33,35 +33,34 @@
          }
          \equation{
             \Delta{x} &= v_1 \Delta{t} + \frac{1}{2}a\Delta{t^2}\\
-                                      &= v_2\Delta{t} - \frac{1}{2}a\Delta{t^2}\\
-                                      &= \left(\frac{v_2 + v_1}{2}\right)\Delta{t}
+                      &= v_2\Delta{t} - \frac{1}{2}a\Delta{t^2}\\
+                      &= \left(\frac{v_2 + v_1}{2}\right)\Delta{t}
          }
-      }\h2{Summary}
-      \div[table-wrapper]{
-         \table{
-            \thead{
-               \tr{
-                  \th{Formula}
-                  \th{Missing}
-                  \th{Quantities Present}
-               }
-            }\tbody{
-               \tr{
-                  \th{\{v_2 = v_1 + a\Delta{t}}}
-                  \td{\{\Delta{x}}}\td{\span[style="display: flex; justify-content: space-between;"]{\{v_1}\{v_2}\{a}\{\Delta{t}}}}
-               }\tr{
-                  \th{\{\Delta{x} = \left(\frac{v_2 + v_1}{2}\right)\Delta{t}}}
-                  \td{\{a}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_1}\{\Delta{t}}\{v_2}}}
-               }\tr{
-                  \th{\{\Delta{x} = v_1 \Delta{t} + \frac{1}{2}a\Delta{t^2}}}
-                  \td{\{v_2}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_1}\{\Delta{t}}\{a}}}
-               }\tr{
-                  \th{\{\Delta{x} = v_2\Delta{t} - \frac{1}{2}a\Delta{t^2}}}
-                  \td{\{v_1}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_2}\{\Delta{t}}\{a}}}
-               }\tr{
-                  \th{\{(v_2)^2 = (v_1)^2 + 2a\Delta{x}}}
-                  \td{\{\Delta{t}}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_1}\{v_2}\{a}}}
-               }
+      }
+      \h2{Summary}
+      \table{
+         \thead{
+            \tr{
+               \th{Formula}
+               \th{Missing}
+               \th{Quantities Present}
+            }
+         }\tbody{
+            \tr{
+               \th{\{v_2 = v_1 + a\Delta{t}}}
+               \td{\{\Delta{x}}}\td{\span[style="display: flex; justify-content: space-between;"]{\{v_1}\{v_2}\{a}\{\Delta{t}}}}
+            }\tr{
+               \th{\{\Delta{x} = \left(\frac{v_2 + v_1}{2}\right)\Delta{t}}}
+               \td{\{a}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_1}\{\Delta{t}}\{v_2}}}
+            }\tr{
+               \th{\{\Delta{x} = v_1 \Delta{t} + \frac{1}{2}a\Delta{t^2}}}
+               \td{\{v_2}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_1}\{\Delta{t}}\{a}}}
+            }\tr{
+               \th{\{\Delta{x} = v_2\Delta{t} - \frac{1}{2}a\Delta{t^2}}}
+               \td{\{v_1}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_2}\{\Delta{t}}\{a}}}
+            }\tr{
+               \th{\{(v_2)^2 = (v_1)^2 + 2a\Delta{x}}}
+               \td{\{\Delta{t}}}\td{\span[style="display: flex; justify-content: space-between;"]{\{\Delta{x}}\{v_1}\{v_2}\{a}}}
             }
          }
       }
@@ -103,14 +102,14 @@
    \note{
       \h3{Displacement when object moves with constant velocity}
       \h4{Deriving \{\Delta{x} = \bar{v}\Delta{t}}}
-      \img[max-width="500px", src="../images/physics/1.svg"]\equation{
+      \img[max-width="500px", src="../../../assets/images/physics/1.svg"]\equation{
          \Delta{x} &= \bar{v}\Delta{t}
       }
    }
    \note{
       \h3{Displacement when object accelerates from rest}
       \h4{Deriving \{\Delta{x} = \frac{1}{2}\bar{a}\Delta{t^2}}}
-      \img[src="../images/physics/2.svg", min-width="500px", max-width="900px"]\equation{
+      \img[src="../../../assets/images/physics/2.svg", min-width="500px", max-width="900px"]\equation{
          \Delta{x} &= \frac{1}{2}\Delta{v}\Delta{t}\\
                                &= \frac{1}{2}\bar{a}\Delta{t^2}
       }
@@ -120,7 +119,7 @@
    \note{
       \h3{Displacement when object accelerates with initial velocity}
       \h4{Deriving \{\Delta{x} = v_1\Delta{t} + \frac{1}{2}\bar{a}\Delta{t^2}}}
-      \img[src="../images/physics/4.svg", max-width="900px", min-width="500px"]\equation{
+      \img[src="../../../assets/images/physics/4.svg", max-width="900px", min-width="500px"]\equation{
          \Delta{x} &= v_1\Delta{t} + \frac{1}{2}\Delta{v}\Delta{t} \\
                                &= v_1\Delta{t} + \frac{1}{2}\bar{a}\Delta{t^2}
       }

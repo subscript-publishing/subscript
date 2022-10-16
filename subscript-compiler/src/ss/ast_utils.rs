@@ -12,13 +12,13 @@ use std::iter::FromIterator;
 use std::vec;
 use itertools::Itertools;
 use serde::{Serialize, Deserialize};
+use rayon::prelude::*;
 use crate::compiler::low_level_api::CompilerError;
 use crate::ss::parser::IdentInitError;
 use crate::ss::ast_data::CmdCall;
 use crate::ss::{SemanticScope, ResourceEnv};
 use crate::ss::ast_data::{Node, Ann, Ident, Bracket, BracketType, Quotation};
-
-use super::{Attribute, Attributes};
+use crate::ss::{Attribute, Attributes};
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -412,7 +412,7 @@ impl Node {
                 let xs = xs
                     .into_iter()
                     .map(|x| x.transform(f.clone()))
-                    .collect();
+                    .collect::<Vec<_>>();
                 let node = Node::Fragment(xs);
                 f(node)
             }
@@ -730,7 +730,7 @@ impl Node {
                     .flat_map(|x| {
                         x.unfragment_root()
                     })
-                    .collect_vec();
+                    .collect();
                 Node::Cmd(cmd)
             },
             Node::Bracket(mut node) => {
@@ -739,7 +739,7 @@ impl Node {
                     .flat_map(|x| {
                         x.unfragment_root()
                     })
-                    .collect_vec();
+                    .collect();
                 Node::Bracket(node)
             },
             Node::Quotation(mut node) => {
@@ -748,7 +748,7 @@ impl Node {
                     .flat_map(|x| {
                         x.unfragment_root()
                     })
-                    .collect_vec();
+                    .collect();
                 Node::Quotation(node)
             },
             Node::Fragment(xs) => {
@@ -757,7 +757,7 @@ impl Node {
                     .flat_map(|x| {
                         x.unfragment_root()
                     })
-                    .collect_vec();
+                    .collect::<Vec<_>>();
                 if xs.len() == 1 {
                     return xs[0].clone()
                 }
@@ -931,10 +931,10 @@ impl Attributes {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl CmdCall {
-    fn has_name(&self, ident: &str) -> bool {
+    pub fn has_name(&self, ident: &str) -> bool {
         self.identifier.value == ident
     }
-    fn has_attr(&self, key: impl crate::ss::ast_traits::AsNodeRef) -> bool {
+    pub fn has_attr(&self, key: impl crate::ss::ast_traits::AsNodeRef) -> bool {
         self.attributes.has_attr(key)
     }
     pub fn is_heading_node(&self) -> bool {
