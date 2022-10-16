@@ -58,6 +58,7 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 - [ChemDoodle](https://web.chemdoodle.com)
 - [Smiles Drawer](https://github.com/reymond-group/smilesDrawer)
 - [biojs](https://biojs.net/#/)
+- [VexFlow](https://www.vexflow.com)
 
 #### **Content publishing VIA the Rust Ecosystem
 
