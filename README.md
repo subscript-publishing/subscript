@@ -83,6 +83,7 @@ Subscript is natively written is rust and can offer seamless integration to the 
 - [Morsels](https://crates.io/crates/morsels_indexer)
     + SubScript definitely needs static site search.
 
+Until I figure out how to make SpellRight aware of Subscript Syntax, I'm thinking a CLI feature for warning about miss-spelling would be the simplest solution, and editor independent.
 
 
 ### Subscript Markup Language
