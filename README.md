@@ -46,7 +46,7 @@ The goal of Subscript is to be a **monolithic publishing platform** for everythi
 In theory, Markdown based content publishing tools has the same issue, I've seen platforms built upon markdown with extra features, but will your stock markdown syntax highlighter support such? Whereas e.g. if you see a LaTeX package, odds are it supports the entirety of (Xe)LaTeX syntax and whatnot.
 
 
-#### JavaScript Lib WIP List
+#### JavaScript Library Proposals
 
 - [Desmos](https://www.desmos.com/api/v1.7/docs/index.html)
 - [GeoGebra](https://wiki.geogebra.org/en/Reference:GeoGebra_Apps_Embedding)
@@ -64,7 +64,7 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 Subscript is natively written is rust and can offer seamless integration to the growing collection of rust libraries for compile-time transformations and functionality. 
 
 
-#### Rust Lib WIP List
+#### Rust Library Proposals
 
 - [stanza](https://crates.io/crates/stanza)
 - [voikko-rs](https://crates.io/crates/voikko-rs)
