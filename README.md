@@ -60,7 +60,7 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 - [biojs](https://biojs.net/#/)
 - [VexFlow](https://www.vexflow.com)
 
-#### **Content publishing VIA the Rust Ecosystem
+### **Content publishing VIA the Rust Ecosystem
 
 Subscript is natively written is rust and can offer seamless integration to the growing collection of rust libraries for compile-time transformations and functionality. 
 
