@@ -61,11 +61,19 @@ In theory, Markdown based content publishing tools has the same issue, I've seen
 
 #### **Content publishing VIA the Rust Ecosystem
 
-Subscript is natively written is rust and can offer seamless integration to the growing collection of rust libraries. 
+Subscript is natively written is rust and can offer seamless integration to the growing collection of rust libraries for compile-time transformations and functionality. 
+
 
 #### Rust Lib WIP List
 
-- (stanza)[https://crates.io/crates/stanza]
+- [stanza](https://crates.io/crates/stanza)
+- [voikko-rs](https://crates.io/crates/voikko-rs)
+- [typos](https://crates.io/crates/typos)
+- [varcon](https://crates.io/crates/varcon)
+- [analiticcl](https://crates.io/crates/analiticcl)
+- [lingua](https://crates.io/crates/lingua)
+- [LNGCNV](https://crates.io/crates/lngcnv)
+- [etym](https://crates.io/crates/etym)
 
 
 
