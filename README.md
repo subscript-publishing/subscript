@@ -235,8 +235,10 @@ Regarding the pen list:
 Note that this was produced VIA an older version of the app (and therefore e.g. had no support for light/dark mode), 
 
 - My old chem notes:
-    + [E.g. 1](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-6:-the-language-of-chemistry.html)
-    + [E.g. 2](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-7---chemical-reactions-and-stoichiometry.html)
+    + [E.g. 1](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-14-acids-and-bases.html)
+    + [E.g. 2](https://content.subscript.app/dev/chemistry-1010---fall-2021/overview.html)
+    + [E.g. 3](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-6:-the-language-of-chemistry.html)
+    + [E.g. 4](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-7---chemical-reactions-and-stoichiometry.html)
     + [Everything](https://content.subscript.app/dev/chemistry-1010---fall-2021/index.html)
 
 
