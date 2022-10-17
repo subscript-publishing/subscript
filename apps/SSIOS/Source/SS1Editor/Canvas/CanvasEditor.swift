@@ -468,7 +468,17 @@ extension SS1 {
                                 customScrollerCoordinator.customScrollerViewController.embeddedViewCtl.view.setNeedsUpdateConstraints()
                             }
                         )
+                            .navigationViewStyle(StackNavigationViewStyle())
+                            .navigationBarTitle("")
+                            .navigationBarHidden(true)
+                            .navigationBarBackButtonHidden(true)
+                            .navigationBarTitleDisplayMode(.inline)
                     }
+                    .navigationViewStyle(StackNavigationViewStyle())
+                    .navigationBarTitle("")
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarTitleDisplayMode(.inline)
                 }
                 .sheet(isPresented: $showPenEditor, content: {
                     SS1.Drawing.PenSettingsView(runtimeModel: runtimeModel, drawingModel: canvasModel)
