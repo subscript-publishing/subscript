@@ -223,9 +223,21 @@ Regarding the pen list:
 - The `Foreground`/`Background` feature allows you to underline and highlight things and have such highlights render ‘underneath’ foreground strokes (it just looks nicer). 
 
 #### Page Layout Editor Overview
+
+> Note that the above was produced VIA an older version of the app that e.g. had no support for light/dark mode.
+
 > This feature is specific to the ‘SubscriptComposition’ app.
 
 ![IOS freeform/drawing UI Overview](assets/preview-images/ss-composition-ios-ui-info.jpeg)
+
+#### Real World Example
+
+Note that this was produced VIA an older version of the app (and therefore e.g. had no support for light/dark mode), 
+
+- My old chem notes:
+    + [E.g. 1](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-6:-the-language-of-chemistry.html)
+    + [E.g. 2](https://content.subscript.app/dev/chemistry-1010---fall-2021/week-7---chemical-reactions-and-stoichiometry.html)
+    + [Everything](https://content.subscript.app/dev/chemistry-1010---fall-2021/index.html)
 
 
 ## Lots more planned! 
