@@ -25,256 +25,114 @@ extension SS1 {
 // DRAWING RUNTIME STATE
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-fileprivate func defaultPenList() -> Array<SS1.RuntimeDataModel.Pen> {
-    typealias ColorMap = SS1.Stroke.Options.ColorMap
-    typealias PrimaryColorSchemeMode = SS1.RuntimeDataModel.Pen.PrimaryColorSchemeMode
-    let defaulColorList: Array<(SS1.Stroke.Options.ColorMap, PrimaryColorSchemeMode)> = [
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.3306372166, green: 0.3306372166, blue: 0.3306372166, alpha: 0.8210225611), darkUIMode: #colorLiteral(red: 0.8077382445, green: 0.8077382445, blue: 0.8077382445, alpha: 0.8152429959)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0, blue: 0, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.5555444637, blue: 0, alpha: 1), darkUIMode: #colorLiteral(red: 1, green: 0.9087574811, blue: 0, alpha: 1)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.3515071338, green: 1, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.7728719971, blue: 0, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.5448406202, alpha: 1), darkUIMode: #colorLiteral(red: 0, green: 1, blue: 0.5448406202, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.8468232216, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0, green: 1, blue: 0.8468232216, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.8208826725, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0, green: 0.8208826725, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.2191386359, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0, green: 0.2191386359, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.2523259827, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.2523259827, green: 0, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.4992633515, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4992633515, green: 0, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0.9402033476, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0, blue: 0.9402033476, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0.5167398384, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0, blue: 0.5167398384, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.2240143539, blue: 0.236947448, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.2240143539, blue: 0.236947448, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.5137268299, blue: 0.1420599709, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.5137268299, blue: 0.1420599709, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.7728719971, blue: 0, alpha: 0.93), darkUIMode: #colorLiteral(red: 1, green: 0.8071567184, blue: 0.1509488961, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.342746343, green: 1, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.433911352, green: 1, blue: 0.1387059745, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.1437019026, green: 1, blue: 0.1875252066, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.1437019026, green: 1, blue: 0.1875252066, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.1624330333, green: 1, blue: 0.6187735389, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.1624330333, green: 1, blue: 0.6187735389, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.2043766505, green: 1, blue: 0.8781289785, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.2043766505, green: 1, blue: 0.8781289785, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.272520325, green: 0.4319392286, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.272520325, green: 0.4319392286, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.4648627396, green: 0.2842639332, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4648627396, green: 0.2842639332, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.6414011498, green: 0.2838573904, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.6414011498, green: 0.2838573904, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.2358020191, blue: 0.954303519, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.2358020191, blue: 0.954303519, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.772871997, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.8864359985, blue: 0.5, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.8440355411, green: 1, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.875283665, green: 1, blue: 0.2003541329, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.3427463431, green: 1, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.6575437492, green: 1, blue: 0.4789587746, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.05117762614, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4948470425, green: 1, blue: 0.5206995717, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.5448406202, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4925926817, green: 1, blue: 0.7690487997, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.8468232216, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4918868374, green: 1, blue: 0.9221688627, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.8208826724, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.5, green: 0.9104413362, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.6109374522, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4759099539, green: 0.7960961914, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.2191386358, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4928677698, green: 0.6040000349, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.2523259828, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.6067544452, green: 0.4740414328, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.4992633514, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.748245313, green: 0.4972313536, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.703415194, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.8473270163, green: 0.485229922, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0.9402033476, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.5, blue: 0.9701016738, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0.5167398383, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.4845291639, blue: 0.7508934804, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0.01666666667, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.7005116638, blue: 0.705503136, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.4332084368, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.832351172, blue: 0.7042143199, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.7728719969, blue: 0, alpha: 1), darkUIMode: #colorLiteral(red: 1, green: 0.933354508, blue: 0.7065729849, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.7476659175, blue: 0, alpha: 1), darkUIMode: #colorLiteral(red: 0.9559898487, green: 1, blue: 0.7178193571, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.3427463431, green: 1, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.8576844253, green: 1, blue: 0.78346933, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.05117762629, alpha: 1), darkUIMode: #colorLiteral(red: 0.7356720687, green: 1, blue: 0.7491997448, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.5448406203, alpha: 1), darkUIMode: #colorLiteral(red: 0.7688084992, green: 1, blue: 0.8947710199, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.8468232215, alpha: 1), darkUIMode: #colorLiteral(red: 0.7630801492, green: 1, blue: 0.9637093805, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.2352792803, green: 0.7024758084, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.7414549348, green: 0.8994097982, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.2191386357, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.7333147649, green: 0.7917558035, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.2523259827, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.8189585316, green: 0.7578604255, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.703415194, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.8473270163, green: 0.485229922, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.1465652537, blue: 0.5875689865, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.7692172628, blue: 0.8884718971, alpha: 0.9308121501)), PrimaryColorSchemeMode.dark)
-    ]
-    let thickColorExtraList: Array<(SS1.Stroke.Options.ColorMap, PrimaryColorSchemeMode)> = [
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0, blue: 0, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0, blue: 0, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.5555444637, blue: 0, alpha: 1), darkUIMode: #colorLiteral(red: 1, green: 0.9087574811, blue: 0, alpha: 1)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 1, blue: 0.2643320075, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.342746343, green: 1, blue: 0, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0, green: 0.6109374522, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0, green: 0.6109374522, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.4992633515, green: 0, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.4992633515, green: 0, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 0.6414011498, green: 0.2838573904, blue: 1, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 0.6414011498, green: 0.2838573904, blue: 1, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.2358020191, blue: 0.954303519, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.2358020191, blue: 0.954303519, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-        (ColorMap(lightUIMode: #colorLiteral(red: 1, green: 0.2636250241, blue: 0.6441393101, alpha: 0.9308121501), darkUIMode: #colorLiteral(red: 1, green: 0.2636250241, blue: 0.6441393101, alpha: 0.9308121501)), PrimaryColorSchemeMode.both),
-    ]
-//    var leftPens: Array<SS1.RuntimeDataModel.Pen> = []
-//    var rightPens: Array<SS1.RuntimeDataModel.Pen> = []
-    var pens: Array<SS1.RuntimeDataModel.Pen> = []
-    for (colorMap, primaryColorSchemeMode) in defaulColorList {
-        let pen1 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultExtraThinPenSize
-            ),
-            layer: SS1.Stroke.Layer.foreground,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        let pen2 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultExtraThinPenSize
-            ),
-            layer: SS1.Stroke.Layer.background,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        pens.append(contentsOf: [pen1, pen2])
+
+fileprivate func penSet(
+    color: SS1.Stroke.Options.ColorMap,
+    penSet: SS1.RuntimeDataModel.Pen.PenSet = SS1.RuntimeDataModel.Pen.PenSet.set1,
+    fgPen1Map: Optional<(inout SS1.Stroke.Options) -> ()> = .none,
+    fgPen2Map: Optional<(inout SS1.Stroke.Options) -> ()> = .none,
+    bgPen1Map: Optional<(inout SS1.Stroke.Options) -> ()> = .none,
+    bgPen2Map: Optional<(inout SS1.Stroke.Options) -> ()> = .none
+) -> Array<SS1.RuntimeDataModel.Pen> {
+    let highlightColor = SS1.Stroke.Options.ColorMap(
+        lightUIMode: color.lightUIMode.withAlpha(0.6),
+        darkUIMode: color.darkUIMode.withAlpha(0.6)
+    )
+    var pen1Options = SS1.Stroke.Options(color: color, size: SS1.RuntimeDataModel.Pen.defaultFgThinPenSize)
+    if case let .some(f) = fgPen1Map {
+        f(&pen1Options)
     }
-    for (colorMap, primaryColorSchemeMode) in defaulColorList {
-        let pen1 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultThinPenSize
-            ),
-            layer: SS1.Stroke.Layer.foreground,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        let pen2 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultThinPenSize
-            ),
-            layer: SS1.Stroke.Layer.background,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        pens.append(contentsOf: [pen1, pen2])
+    let pen1 = SS1.RuntimeDataModel.Pen(
+        options: pen1Options,
+        layer: SS1.Stroke.Layer.foreground,
+        penSet: penSet
+    )
+    var pen2Options = SS1.Stroke.Options(color: color, size: SS1.RuntimeDataModel.Pen.defaultFgThickPenSize)
+    if case let .some(f) = fgPen2Map {
+        f(&pen2Options)
     }
-    for (colorMap, primaryColorSchemeMode) in defaulColorList {
-        let pen1 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultThickPenSize
-            ),
-            layer: SS1.Stroke.Layer.foreground,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        let pen2 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultThickPenSize
-            ),
-            layer: SS1.Stroke.Layer.background,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        pens.append(contentsOf: [pen1, pen2])
+    let pen2 = SS1.RuntimeDataModel.Pen(
+        options: pen2Options,
+        layer: SS1.Stroke.Layer.foreground,
+        penSet: penSet
+    )
+    var pen3Options = SS1.Stroke.Options(color: highlightColor, size: SS1.RuntimeDataModel.Pen.defaultBgThinPenSize)
+    if case let .some(f) = bgPen1Map {
+        f(&pen3Options)
     }
-    for (colorMap, primaryColorSchemeMode) in thickColorExtraList {
-        let pen1 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultExtraThickPenSize
-            ),
-            layer: SS1.Stroke.Layer.foreground,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        let pen2 = SS1.RuntimeDataModel.Pen(
-            options: SS1.Stroke.Options(
-                color: colorMap,
-                size: SS1.RuntimeDataModel.Pen.defaultExtraThickPenSize
-            ),
-            layer: SS1.Stroke.Layer.background,
-            primaryColorSchemeMode: primaryColorSchemeMode
-        )
-        pens.append(contentsOf: [pen1, pen2])
+    defaultBgMarkerConfig(&pen3Options)
+    let pen3 = SS1.RuntimeDataModel.Pen(
+        options: pen3Options,
+        layer: SS1.Stroke.Layer.background,
+        penSet: penSet
+    )
+    var pen4Options = SS1.Stroke.Options(color: highlightColor, size: SS1.RuntimeDataModel.Pen.defaultBgThickPenSize)
+    defaultBgMarkerConfig(&pen4Options)
+    if case let .some(f) = bgPen2Map {
+        f(&pen4Options)
     }
-//    for (colorMap, primaryColorSchemeMode) in defaulColorList {
-//        let pen1 = SS1.RuntimeDataModel.Pen(
-//            options: SS1.Stroke.Options(
-//                color: colorMap,
-//                size: SS1.RuntimeDataModel.Pen.defaultThinPenSize,
-//                simulatePressure: true
-//            ),
-//            layer: SS1.Stroke.Layer.foreground,
-//            primaryColorSchemeMode: primaryColorSchemeMode
-//        )
-//        let pen2 = SS1.RuntimeDataModel.Pen(
-//            options: SS1.Stroke.Options(
-//                color: colorMap,
-//                size: SS1.RuntimeDataModel.Pen.defaultThickPenSize,
-//                simulatePressure: true
-//            ),
-//            layer: SS1.Stroke.Layer.foreground,
-//            primaryColorSchemeMode: primaryColorSchemeMode
-//        )
-//        leftPens.append(pen1)
-//        rightPens.append(pen2)
-//    }
-//    return [leftPens, rightPens].flatMap({$0})
-    return pens
+    let pen4 = SS1.RuntimeDataModel.Pen(
+        options: pen4Options,
+        layer: SS1.Stroke.Layer.background,
+        penSet: penSet
+    )
+    return [pen1, pen2, pen3, pen4]
 }
 
-//fileprivate func testPens() -> Array<SS1.RuntimeDataModel.Pen> {
-//    var pens: Array<SS1.RuntimeDataModel.Pen> = []
-//    let base = SS1.RuntimeDataModel.Pen(
-//        options: SS1.Stroke.Options(
-//            color: SS1.Stroke.Options.ColorMap(
-//                lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
-//                darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
-//            ),
-//            size: 30,
-//            thinning: 0,
-//            smoothing: 0.5,
-//            streamline: 0.5,
-//            easing: SS1.Stroke.Options.Easing.easeInSine,
-//            simulatePressure: false,
-//            start: SS1.Stroke.Options.StartCap(
-//                cap: false,
-//                taper: 0.0,
-//                easing: SS1.Stroke.Options.Easing.easeInSine
-//            ),
-//            end: SS1.Stroke.Options.EndCap(
-//                cap: false,
-//                taper: 0.0,
-//                easing: SS1.Stroke.Options.Easing.easeInSine
-//            )
-//        )
-//    )
-//    let easings = [
-//        SS1.Stroke.Options.Easing.linear,
-//        SS1.Stroke.Options.Easing.easeInQuad,
-//        SS1.Stroke.Options.Easing.easeOutQuad,
-//        SS1.Stroke.Options.Easing.easeInOutQuad,
-//        SS1.Stroke.Options.Easing.easeInCubic,
-//        SS1.Stroke.Options.Easing.easeOutCubic,
-//        SS1.Stroke.Options.Easing.easeInOutCubic,
-//        SS1.Stroke.Options.Easing.easeInQuart,
-//        SS1.Stroke.Options.Easing.easeOutQuart,
-//        SS1.Stroke.Options.Easing.easeInOutQuart,
-//        SS1.Stroke.Options.Easing.easeInQuint,
-//        SS1.Stroke.Options.Easing.easeOutQuint,
-//        SS1.Stroke.Options.Easing.easeInOutQuint,
-//        SS1.Stroke.Options.Easing.easeInSine,
-//        SS1.Stroke.Options.Easing.easeOutSine,
-//        SS1.Stroke.Options.Easing.easeInOutSine,
-//        SS1.Stroke.Options.Easing.easeInExpo,
-//        SS1.Stroke.Options.Easing.easeOutExpo,
-//    ]
-//    for e in easings {
-//        var base1 = base
-//        base1.id = UUID()
-//        base1.options.thinning = 0
-//        base1.options.streamline = 1
-//        base1.options.smoothing = 1
-//        base1.options.easing = e
-//        base1.options.start.easing = e
-//        base1.options.end.easing = e
-//        pens.append(base1)
-//
-//        var base2 = base
-//        base2.id = UUID()
-//        base2.options.thinning = 0.5
-//        base2.options.streamline = 0.5
-//        base2.options.smoothing = 0.5
-//        base2.options.easing = e
-//        base2.options.start.easing = e
-//        base2.options.end.easing = e
-//        pens.append(base2)
-//
-//        var base3 = base
-//        base3.id = UUID()
-//        base3.options.thinning = 0
-//        base3.options.streamline = -1
-//        base3.options.smoothing = -1
-//        base3.options.easing = e
-//        base3.options.start.easing = e
-//        base3.options.end.easing = e
-//        pens.append(base3)
-//    }
-//    return pens
-//}
+fileprivate func concat<T>(
+    _ value: Array<Array<T>>
+) -> Array<T> {
+    Array(value.joined())
+}
+fileprivate func defaultBgMarkerConfig(_ withSize: CGFloat) -> (_ opt: inout SS1.Stroke.Options) -> () {
+    return {opt in
+        opt.size = withSize
+        opt.thinning = 0.0
+        opt.smoothing = 1.0
+        opt.streamline = 1.0
+        opt.start.cap = false
+        opt.end.cap = false
+    }
+}
+fileprivate func defaultBgMarkerConfig(_ opt: inout SS1.Stroke.Options) {
+    opt.thinning = 0.0
+    opt.smoothing = 1.0
+    opt.streamline = 1.0
+    opt.start.cap = false
+    opt.end.cap = false
+}
+fileprivate func defaultFgExtraThinConfig(_ opt: inout SS1.Stroke.Options) {
+    opt.size = SS1.RuntimeDataModel.Pen.defaultExtraThinPenSize
+    opt.thinning = 0.0
+    opt.smoothing = 1.0
+    opt.streamline = 1.0
+    opt.start.cap = false
+    opt.end.cap = false
+}
+fileprivate func defaultBgExtraThinConfig(_ opt: inout SS1.Stroke.Options) {
+    opt.size = SS1.RuntimeDataModel.Pen.defaultExtraThinPenSize
+    opt.thinning = 0.0
+    opt.smoothing = 1.0
+    opt.streamline = 1.0
+    opt.start.cap = false
+    opt.end.cap = false
+}
+fileprivate func defaultFgExtraThickConfig(_ opt: inout SS1.Stroke.Options) {
+    opt.size = SS1.RuntimeDataModel.Pen.defaultExtraThickPenSize
+    opt.thinning = 0.0
+    opt.smoothing = 1.0
+    opt.streamline = 1.0
+    opt.start.cap = false
+    opt.end.cap = false
+}
+fileprivate func defaultBgExtraThickConfig(_ opt: inout SS1.Stroke.Options) {
+    opt.size = SS1.RuntimeDataModel.Pen.defaultExtraThickPenSize
+    opt.thinning = 0.0
+    opt.smoothing = 1.0
+    opt.streamline = 1.0
+    opt.start.cap = false
+    opt.end.cap = false
+}
 
 extension SS1 {
     class RuntimeDataModel: ObservableObject, Codable {
@@ -283,119 +141,284 @@ extension SS1 {
         
         @Published var currentToolType: CurrentToolType = CurrentToolType.pen
 //        @Published var pens: Array<Pen> = defaultPenList()
-        @Published var pens: Array<Pen> = [
-            // DEFAULT THIN PENS
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
-                    ),
-                    size: Pen.defaultThinPenSize
+        @Published var pens: Array<Pen> = concat([
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
-                    ),
-                    size: Pen.defaultThinPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9480085944)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
-                    ),
-                    size: Pen.defaultThinPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.3562028628, blue: 0.3234998193, alpha: 0.9536794495)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.4533152416, blue: 0.4255452278, alpha: 0.9335713892))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
-                    ),
-                    size: Pen.defaultThinPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.8595820573, blue: 0, alpha: 0.9599663519)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.9853975177, green: 0.9960361123, blue: 0, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1))
-                    ),
-                    size: Pen.defaultThinPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.1820927858, green: 0.9942755103, blue: 0.008088083938, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.4050822258, green: 0.9107592702, blue: 0.3064689636, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1))
-                    ),
-                    size: Pen.defaultThinPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.03801821545, green: 0.7668590459, blue: 0.9436975718, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.1981527805, green: 0.9152255654, blue: 0.9221068621, alpha: 1))
                 )
             ),
-            // DEFAULT THICK PENS
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9361161474)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9308121501))
-                    ),
-                    size: Pen.defaultThickPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.0006549843238, green: 0.1723237932, blue: 0.9950235486, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.4912772218, green: 0.5628710919, blue: 0.911735177, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
-                    ),
-                    size: Pen.defaultThickPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.5818830132, green: 0.2156915367, blue: 1, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.8881010415, green: 0.6503296282, blue: 1, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
-                    ),
-                    size: Pen.defaultThickPenSize
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.2187052982, blue: 0.7401167801, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1))
                 )
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
-                    ),
-                    size: Pen.defaultThickPenSize
-                )
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.9836834073, green: 0.01610323042, blue: 0.01610323042, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.923746407, green: 0.5437585418, blue: 0.5513613933, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1))
-                    ),
-                    size: Pen.defaultThickPenSize
-                )
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.9836834073, green: 0.4915673948, blue: 0.01610323042, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.923746407, green: 0.598991043, blue: 0.4473902994, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
             ),
-            Pen(
-                options: Stroke.Options(
-                    color: ColorMap(
-                        lightUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
-                        darkUIMode: CodableColor(color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1))
-                    ),
-                    size: Pen.defaultThickPenSize
-                )
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.9836834073, green: 0.8120082, blue: 0.01610323042, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.923746407, green: 0.8480549868, blue: 0.5567146521, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
             ),
-            // OTHER
-        ]
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.6896855942, green: 0.923746407, blue: 0.2139444053, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.7753242077, green: 0.923746407, blue: 0.4892397564, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.1930225866, green: 0.9836834073, blue: 0.01610323042, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.6009957053, green: 0.9836834073, blue: 0.5153649771, alpha: 0.9529471683))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.3484312771, green: 1, blue: 0, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.5998694567, green: 1, blue: 0.385896638, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0, green: 1, blue: 0.5583703604, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.385896638, green: 1, blue: 0.8693810537, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0, green: 0.8359576278, blue: 1, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.385896638, green: 0.9012365223, blue: 1, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0, green: 0.5678111642, blue: 1, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.385896638, green: 0.7952249831, blue: 1, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.01610323042, green: 0.9836834073, blue: 0.9756202392, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.4918417037, green: 0.9836834073, blue: 0.9795847264, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.7612673015, green: 0.6585746401, blue: 0.9686274529, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.4572930815, green: 0, blue: 1, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.7858035736, green: 0.5667474595, blue: 1, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.08712213245, green: 0, blue: 1, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.5528893269, green: 0.6628325972, blue: 1, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.8194490579, green: 0, blue: 1, alpha: 0.94)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.9275795289, green: 0.385896638, blue: 1, alpha: 0.9308121501))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(color: ColorMap(
+                lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0, blue: 0.5195422284, alpha: 0.94)),
+                darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.5, blue: 0.8799946326, alpha: 0.9308121501))
+            )),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.3132912363, blue: 0.7992954836, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.2615669501, blue: 0.744681838, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set2
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.1522153874, green: 0.1522153874, blue: 0.1522153874, alpha: 0.9480085944)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.3562028628, blue: 0.3234998193, alpha: 0.9536794495)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.4533152416, blue: 0.4255452278, alpha: 0.9335713892))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.8595820573, blue: 0, alpha: 0.9599663519)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.9853975177, green: 0.9960361123, blue: 0, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.1820927858, green: 0.9942755103, blue: 0.008088083938, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.4050822258, green: 0.9107592702, blue: 0.3064689636, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.03801821545, green: 0.7668590459, blue: 0.9436975718, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.1981527805, green: 0.9152255654, blue: 0.9221068621, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.0006549843238, green: 0.1723237932, blue: 0.9950235486, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.4912772218, green: 0.5628710919, blue: 0.911735177, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 0.5818830132, green: 0.2156915367, blue: 1, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 0.8881010415, green: 0.6503296282, blue: 1, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+            penSet(
+                color: ColorMap(
+                    lightUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.2187052982, blue: 0.7401167801, alpha: 1)),
+                    darkUIMode: CodableColor(color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1))
+                ),
+                penSet: Pen.PenSet.set3,
+                fgPen1Map: defaultFgExtraThinConfig,
+                fgPen2Map: defaultFgExtraThickConfig,
+                bgPen1Map: defaultBgExtraThinConfig,
+                bgPen2Map:defaultBgExtraThickConfig
+            ),
+        ])
         
         @Published var templatePen: Pen = Pen(
             options: SS1.Stroke.Options(),
@@ -481,10 +504,13 @@ extension SS1 {
             var active: Bool = false
             var layer: SS1.Stroke.Layer = SS1.Stroke.Layer.foreground
             var primaryColorSchemeMode: PrimaryColorSchemeMode = PrimaryColorSchemeMode.both
-            static let defaultExtraThinPenSize: CGFloat = 2.5
-            static let defaultThinPenSize: CGFloat = 5
-            static let defaultThickPenSize: CGFloat = 10
-            static let defaultExtraThickPenSize: CGFloat = 15
+            var penSet: PenSet = PenSet.set1
+            static let defaultFgThinPenSize: CGFloat = 3
+            static let defaultFgThickPenSize: CGFloat = 6
+            static let defaultBgThinPenSize: CGFloat = 5
+            static let defaultBgThickPenSize: CGFloat = 10
+            static let defaultExtraThinPenSize: CGFloat = 1
+            static let defaultExtraThickPenSize: CGFloat = 50
             /// This option defines what pens get filtered out based on the current color scheme.
             ///
             /// For instance regarding the toolbar and specifically the pen list therein:
@@ -502,6 +528,12 @@ extension SS1 {
                 case both
                 case light
                 case dark
+            }
+            enum PenSet: String, Equatable, Codable {
+                case set1
+                case set2
+                case set3
+                case set4
             }
         }
         

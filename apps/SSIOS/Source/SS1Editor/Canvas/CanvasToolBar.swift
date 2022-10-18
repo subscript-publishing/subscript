@@ -40,13 +40,21 @@ fileprivate struct PenSettingsPanel: View {
         }
         .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 25))
     }
-    @ViewBuilder private var primaryColorSchemeMode: some View {
+    @ViewBuilder private var penUISettings: some View {
         VStack(alignment: .center, spacing: 10) {
             Text("Primary Color Scheme Mode")
             Picker("primary Color Scheme Mode", selection: $pen.primaryColorSchemeMode) {
                 Text("Both").tag(SS1.RuntimeDataModel.Pen.PrimaryColorSchemeMode.both)
                 Text("Light").tag(SS1.RuntimeDataModel.Pen.PrimaryColorSchemeMode.light)
                 Text("Dark").tag(SS1.RuntimeDataModel.Pen.PrimaryColorSchemeMode.dark)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            Text("Pen Set")
+            Picker("Pen Set", selection: $pen.penSet) {
+                Text("Set 1").tag(SS1.RuntimeDataModel.Pen.PenSet.set1)
+                Text("Set 2").tag(SS1.RuntimeDataModel.Pen.PenSet.set2)
+                Text("Set 3").tag(SS1.RuntimeDataModel.Pen.PenSet.set3)
+                Text("Set 4").tag(SS1.RuntimeDataModel.Pen.PenSet.set4)
             }
             .pickerStyle(SegmentedPickerStyle())
         }
@@ -672,7 +680,7 @@ fileprivate struct PenSettingsPanel: View {
                     Divider().padding([.top], 10)
                 }
                 Group {
-                    primaryColorSchemeMode.padding([.top, .bottom], 10)
+                    penUISettings.padding([.top, .bottom], 10)
                     Divider().padding([.top], 10)
                 }
                 Group {
@@ -929,7 +937,6 @@ fileprivate struct PenView: View {
                 let invertToggle = runtimeModel.invertPenColors
                 let penColor = pen.options.color
                     .getUIColorFor(invertToggle: invertToggle, colorScheme)
-                    .withAlphaComponent(0.8)
                 Top(active: pen.active)
                     .foregroundColor(Color(backColor))
                 Top(active: pen.active)
@@ -1030,6 +1037,7 @@ extension SS1.Drawing {
         @State private var usingSelectionTool: Bool = false
         @Environment(\.colorScheme) private var colorScheme
         @State private var layerViewToggle: LayerViewToggle = .both
+        @State private var penSetViewToggle = SS1.RuntimeDataModel.Pen.PenSet.set1
         
         var body: some View {
             HStack(alignment: .center, spacing: 0) {
@@ -1074,6 +1082,26 @@ extension SS1.Drawing {
                             case .foreground: Image(systemName: foreground)
                             case .background: Image(systemName: background)
                             case .both: Image(systemName: both)
+                            }
+                        })
+                    }
+                )
+                Button(
+                    action: {
+                        switch self.penSetViewToggle {
+                        case .set1: self.penSetViewToggle = SS1.RuntimeDataModel.Pen.PenSet.set2
+                        case .set2: self.penSetViewToggle = SS1.RuntimeDataModel.Pen.PenSet.set3
+                        case .set3: self.penSetViewToggle = SS1.RuntimeDataModel.Pen.PenSet.set4
+                        case .set4: self.penSetViewToggle = SS1.RuntimeDataModel.Pen.PenSet.set1
+                        }
+                    },
+                    label: {
+                        RoundedLabel(label: {
+                            switch self.penSetViewToggle {
+                            case .set1: Text("{1}")
+                            case .set2: Text("{2}")
+                            case .set3: Text("{3}")
+                            case .set4: Text("{4}")
                             }
                         })
                     }
@@ -1128,7 +1156,9 @@ extension SS1.Drawing {
         private func getPenSize(_ pen: SS1.RuntimeDataModel.Pen) -> CGFloat {
             var sizes: Array<CGFloat> = []
             for pen in runtimeModel.pens {
-                sizes.append(pen.options.size)
+                if pen.penSet == penSetViewToggle {
+                    sizes.append(pen.options.size)
+                }
             }
             let min: CGFloat = sizes.min()!
             let max: CGFloat = sizes.max()!
@@ -1196,15 +1226,19 @@ extension SS1.Drawing {
                                 }
                             }
                         }
-                        if runtimeModel.invertPenColors {
-                            view()
-                        } else {
-                            switch (colorScheme.toBinaryOption(), pen.primaryColorSchemeMode) {
-                            case (.dark, .dark): view()
-                            case (.light, .light): view()
-                            case (_, .both): view()
-                            case (_, _): EmptyView()
+                        if pen.penSet == self.penSetViewToggle {
+                            if runtimeModel.invertPenColors {
+                                view()
+                            } else {
+                                switch (colorScheme.toBinaryOption(), pen.primaryColorSchemeMode) {
+                                case (.dark, .dark): view()
+                                case (.light, .light): view()
+                                case (_, .both): view()
+                                case (_, _): EmptyView()
+                                }
                             }
+                        } else {
+                            EmptyView()
                         }
                     }
                 }
@@ -1225,6 +1259,14 @@ extension SS1.Drawing {
         @State private var showInsertNewPenMenu: Bool = false
         @State private var insertNewPenOrder: InsertNewPenOrder = InsertNewPenOrder.back
         @State private var settingsLock: Bool = true
+        enum PenListFilter: String, Equatable, Codable {
+            case showAll
+            case showSet1
+            case showSet2
+            case showSet3
+            case showSet4
+        }
+        @State private var penListFilter = PenListFilter.showAll
         @ViewBuilder private var insertPenBtn: some View {
             let lotsOfPens = self.runtimeModel.pens.count > 10
             Button(action: {
@@ -1351,7 +1393,15 @@ extension SS1.Drawing {
         @ViewBuilder private var penList: some View {
             List {
                 ForEach(Array(runtimeModel.pens.enumerated()), id: \.1.id) {(ix, pen) in
-                    penListEntry(pen: Binding.proxy($runtimeModel.pens[ix]))
+                    let view = penListEntry(pen: Binding.proxy($runtimeModel.pens[ix]))
+                    switch (penListFilter, pen.penSet) {
+                    case (.showAll, _): view
+                    case (.showSet1, .set1): view
+                    case (.showSet2, .set2): view
+                    case (.showSet3, .set3): view
+                    case (.showSet4, .set4): view
+                    default: EmptyView()
+                    }
                 }
                 .onMove(perform: onMove)
                 .onDelete(perform: onDelete)
@@ -1404,6 +1454,19 @@ extension SS1.Drawing {
                             }
                             .padding(10)
                         })
+                    }
+                    HStack(alignment: .center, spacing: 10) {
+                        Spacer()
+                        Text("Show")
+                        Picker("Filter", selection: $penListFilter) {
+                            Text("All Pens").tag(PenListFilter.showAll)
+                            Text("{1}").tag(PenListFilter.showSet1)
+                            Text("{2}").tag(PenListFilter.showSet2)
+                            Text("{3}").tag(PenListFilter.showSet3)
+                            Text("{4}").tag(PenListFilter.showSet4)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        Spacer()
                     }
                     let list = penList
                     if editMode {
@@ -1466,7 +1529,7 @@ extension SS1.Drawing {
                     )
                         .disabled(settingsLock)
                 })
-//                .navigationBarHidden(true)
+                .navigationBarHidden(false)
 //                .edgesIgnoringSafeArea(.all)
             }
         }

@@ -482,6 +482,11 @@ extension SS1 {
                 }
                 .sheet(isPresented: $showPenEditor, content: {
                     SS1.Drawing.PenSettingsView(runtimeModel: runtimeModel, drawingModel: canvasModel)
+                        .navigationViewStyle(StackNavigationViewStyle())
+                        .navigationBarTitle("Pen List Editor")
+                        .navigationBarHidden(false)
+                        .navigationBarBackButtonHidden(false)
+                        .navigationBarTitleDisplayMode(.inline)
                 })
                 .background(colorScheme == .dark ? SS1.StaticSettings.DarkMode.Canvas.BG : SS1.StaticSettings.LightMode.Canvas.BG)
             }

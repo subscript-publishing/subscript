@@ -643,6 +643,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SSIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = CV5FXG5P92;
 				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SSIOS/SubscriptDrawInfo.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -717,6 +718,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SSIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = CV5FXG5P92;
 				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SSIOS/SubscriptCompositionInfo.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";

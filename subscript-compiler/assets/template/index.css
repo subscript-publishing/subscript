@@ -932,6 +932,11 @@ main > hr {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+[data-drawing] {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
 body {
   margin: 0;
 }

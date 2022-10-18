@@ -6,5 +6,5 @@ pub mod stroke_points;
 pub mod utils;
 
 fn main() {
-    api::dev();
+    
 }

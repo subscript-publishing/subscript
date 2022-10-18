@@ -33,15 +33,21 @@ pub mod stroke {
         pub color: ColorMap,
     }
     impl OutlinedStroke {
-        pub fn to_svg_path(self, for_color_scheme: &ColorScheme) -> String {
+        pub fn to_svg_path(&self, for_color_scheme: &ColorScheme) -> String {
             let path_points = self.points
-                .into_iter()
+                .iter()
                 .enumerate()
                 .map(|(ix, (x, y))| {
+                    let x = *x;
+                    let y = *y;
                     if ix == 0 {
-                        format!("M {} {}", x, y)
+                        format!("M {x} {y}")
+                    } else if let Some((nx, ny)) = self.points.get(ix + 1) {
+                        let ax = (x + nx) / 2.0;
+                        let ay = (y + ny) / 2.0;
+                        format!("Q {x} {y} {ax} {ay}")
                     } else {
-                        format!("L {} {}", x, y)
+                        format!("L {x} {y}")
                     }
                 })
                 .collect_vec()
@@ -78,40 +84,48 @@ pub mod stroke {
                 color: self.options.color.clone(),
             }
         }
-        pub fn to_svg_path(
-            &self,
-            for_color_scheme: &ColorScheme,
-            mut f: impl FnMut(f64, f64) -> ()
-        ) -> String {
-            let path_points = vector_outline_points(self.clone())
-                .into_iter()
-                .enumerate()
-                .map(|(ix, [x, y])| {
-                    let x = x;
-                    let y = y;
-                    f(x, y);
-                    if ix == 0 {
-                        format!("M {} {}", x, y)
-                    } else {
-                        format!("L {} {}", x, y)
-                    }
-                })
-                .collect_vec()
-                .join(" ");
-            let rgba_css_color = {
-                match for_color_scheme {
-                    ColorScheme::Dark => {
-                        self.options.color.dark_ui_mode.to_svg_rgba_color()
-                    }
-                    ColorScheme::Light => {
-                        self.options.color.light_ui_mode.to_svg_rgba_color()
-                    }
-                }
-            };
-            let fill_attr = format!("fill=\"{rgba_css_color}\"");
-            let path_attr = format!("d=\"{}Z\"", path_points);
-            format!("<path {fill_attr} {path_attr} />")
-        }
+        // pub fn to_svg_path(
+        //     &self,
+        //     for_color_scheme: &ColorScheme,
+        //     mut f: impl FnMut(f64, f64) -> ()
+        // ) -> String {
+        //     let path_points = vector_outline_points(self.clone());
+        //     let path_points = path_points
+        //         .iter()
+        //         .enumerate()
+        //         .map(|(ix, [x, y])| {
+        //             let x = *x;
+        //             let y = *y;
+        //             if ix == 0 {
+        //                 f(x, y);
+        //                 format!("M {x} {y}")
+        //             } else if let Some([nx, ny]) = path_points.get(ix + 1) {
+        //                 f(x, y);
+        //                 let ax = (x + nx) / 2.0;
+        //                 let ay = (y + ny) / 2.0;
+        //                 f(ax, ay);
+        //                 format!("q {ax} {ay} {x} {y}")
+        //             } else {
+        //                 f(x, y);
+        //                 format!("L {x} {y}")
+        //             }
+        //         })
+        //         .collect_vec()
+        //         .join(" ");
+        //     let rgba_css_color = {
+        //         match for_color_scheme {
+        //             ColorScheme::Dark => {
+        //                 self.options.color.dark_ui_mode.to_svg_rgba_color()
+        //             }
+        //             ColorScheme::Light => {
+        //                 self.options.color.light_ui_mode.to_svg_rgba_color()
+        //             }
+        //         }
+        //     };
+        //     let fill_attr = format!("fill=\"{rgba_css_color}\"");
+        //     let path_attr = format!("d=\"{}Z\"", path_points);
+        //     format!("<path {fill_attr} {path_attr} />")
+        // }
     }
     #[derive(Debug, Clone, Serialize, Deserialize)]
     pub struct Color {

@@ -151,7 +151,21 @@ fileprivate func renderPenStroke(
         invertToggle: invertColor,
         displayMode
     ))
-    context.addLines(between: points)
+    for (ix, point) in points.enumerated() {
+        if ix == 0 {
+            context.move(to: point)
+            continue
+        }
+        if case let .some(next) = points.get(index: ix + 1) {
+            let ax = (point.x + next.x) / 2.0
+            let ay = (point.y + next.y) / 2.0
+            let control = CGPoint(x: ax, y: ay)
+            context.addQuadCurve(to: control, control: point)
+            continue
+        }
+        context.addLine(to: point)
+    }
+//    context.addLines(between: points)
     context.closePath()
     if isHighlighted {
         let overrideColor = stroke.options.color
