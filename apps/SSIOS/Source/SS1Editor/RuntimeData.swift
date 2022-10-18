@@ -505,7 +505,7 @@ extension SS1 {
             var layer: SS1.Stroke.Layer = SS1.Stroke.Layer.foreground
             var primaryColorSchemeMode: PrimaryColorSchemeMode = PrimaryColorSchemeMode.both
             var penSet: PenSet = PenSet.set1
-            static let defaultFgThinPenSize: CGFloat = 3
+            static let defaultFgThinPenSize: CGFloat = 2.5
             static let defaultFgThickPenSize: CGFloat = 6
             static let defaultBgThinPenSize: CGFloat = 5
             static let defaultBgThickPenSize: CGFloat = 10
