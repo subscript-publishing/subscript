@@ -22,10 +22,7 @@ extension SS1 {
             return pageTitle.replacingOccurrences(of: " ", with: "-")
         }
         @Published
-        var entries: Array<PageEntry> = [
-            PageEntry.newTitleEntry(type: .h1, text: "Hello World"),
-            PageEntry.newDrawingEntry(type: .h2, text: "Hello Drawing")
-        ]
+        var entries: Array<PageEntry> = []
         
         enum CodingKeys: CodingKey {
             case pageTitle, entries

@@ -1267,8 +1267,22 @@ extension SS1.Drawing {
             case showSet4
         }
         @State private var penListFilter = PenListFilter.showAll
+        func hasLotsOfPens() -> Bool {
+            var penCounter = 0
+            for pen in self.runtimeModel.pens {
+                switch (penListFilter, pen.penSet) {
+                case (.showAll, _): penCounter = penCounter + 1
+                case (.showSet1, .set1): penCounter = penCounter + 1
+                case (.showSet2, .set2): penCounter = penCounter + 1
+                case (.showSet3, .set3): penCounter = penCounter + 1
+                case (.showSet4, .set4): penCounter = penCounter + 1
+                default: ()
+                }
+            }
+            return penCounter > 10
+        }
         @ViewBuilder private var insertPenBtn: some View {
-            let lotsOfPens = self.runtimeModel.pens.count > 10
+            let lotsOfPens = hasLotsOfPens()
             Button(action: {
                 if !lotsOfPens {
                     var newPen = runtimeModel.templatePen
@@ -1339,6 +1353,14 @@ extension SS1.Drawing {
                 let lightColor = Color(pen.options.color.wrappedValue.lightUIMode.cgColor)
                 let darkIcon = Image(systemName: "moon")
                 let lightIcon = Image(systemName: "sun.min")
+                RoundedLabel(inactive: true, label: {
+                    switch pen.penSet.wrappedValue {
+                    case .set1: Text("{1}")
+                    case .set2: Text("{2}")
+                    case .set3: Text("{3}")
+                    case .set4: Text("{4}")
+                    }
+                })
                 Text(String(format: "%.1fpx", pen.options.size.wrappedValue))
                 Spacer()
                 if pen.active.wrappedValue {

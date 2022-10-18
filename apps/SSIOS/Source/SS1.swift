@@ -104,15 +104,25 @@ struct SS1 {
         @StateObject private var document = SS1.CompositionFileDocument()
         @StateObject private var runtimeModel: SS1.RuntimeDataModel = SS1.RuntimeDataModel.loadDefault()
         @StateObject private var pageModel: SS1.PageDataModel = SS1.PageDataModel()
-        @State private var documentFilePath: Optional<URL> = .none
+        @State private var documentFilePath: URL? = nil
         @State private var loaded: Bool = false
         @State private var displayStyle: ColorScheme = ColorScheme.dark
         private func load(with file: FileDocumentConfiguration<SS1.CompositionFileDocument>) -> () -> () {
             return {
+                if documentFilePath != nil {
+                    // DO SOMETHING TO TRY TO FORCE SWIFTUI TO RE-FRESH
+                    self.pageModel.entries = []
+                    self.pageModel.pageTitle = ""
+                    runtimeModel.objectWillChange.send()
+                    pageModel.objectWillChange.send()
+                }
                 documentFilePath = file.fileURL!
                 if let model = SS1.PageDataModel.load(path: file.fileURL!) {
+                    print("model.entries [\(model.pageTitle)]: \(model.entries.count)")
                     self.pageModel.entries = model.entries
                     self.pageModel.pageTitle = model.pageTitle
+                    runtimeModel.objectWillChange.send()
+                    pageModel.objectWillChange.send()
                 } else {
                     if SS1.DEBUG_MODE {
                         print("[ERROR] Page Model Load Failed")
@@ -195,14 +205,14 @@ struct SS1 {
             DocumentGroup(newDocument: document) { file in
                 entrypoint(file: file)
                     .colorScheme(displayStyle)
-                    .onAppear(perform: self.load(with: file))
-                    .onAppear(perform: self.syncColorScheme)
                     .navigationViewStyle(StackNavigationViewStyle())
                     .navigationBarTitle("")
                     .navigationBarHidden(true)
                     .environment(\.colorScheme, displayStyle)
                     .preferredColorScheme(displayStyle)
                     .colorScheme(displayStyle)
+                    .onAppear(perform: self.load(with: file))
+                    .onAppear(perform: self.syncColorScheme)
             }
         }
     }
@@ -216,6 +226,12 @@ struct SS1 {
         @State private var displayStyle: ColorScheme = ColorScheme.dark
         private func load(with file: FileDocumentConfiguration<SS1.DrawingFileDocument>) -> () -> () {
             return {
+                if documentFilePath != nil {
+                    // DO SOMETHING TO TRY TO FORCE SWIFTUI TO RE-FRESH
+                    self.canvasModel.entries = SS1.CanvasDataModel().entries
+                    runtimeModel.objectWillChange.send()
+                    canvasModel.objectWillChange.send()
+                }
                 documentFilePath = file.fileURL!
                 if case let .some(model) = SS1.CanvasDataModel.load(filePath: file.fileURL!) {
                     self.canvasModel.entries = model.entries
@@ -273,18 +289,29 @@ struct SS1 {
         }
         var body: some Scene {
             DocumentGroup(newDocument: document) { file in
-                entrypoint
-                    .onAppear(perform: self.load(with: file))
-                    .onAppear(perform: self.syncColorScheme)
-                    .environment(\.colorScheme, displayStyle)
-                    .preferredColorScheme(displayStyle)
-                    .colorScheme(displayStyle)
-                    .navigationViewStyle(StackNavigationViewStyle())
-                    .navigationBarTitle("")
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationViewStyle(StackNavigationViewStyle())
+                NavigationView {
+                    entrypoint
+                        .onAppear(perform: self.load(with: file))
+                        .onAppear(perform: self.syncColorScheme)
+                        .environment(\.colorScheme, displayStyle)
+                        .preferredColorScheme(displayStyle)
+                        .colorScheme(displayStyle)
+                        .navigationViewStyle(StackNavigationViewStyle())
+                        .navigationBarTitle("")
+                        .navigationBarHidden(true)
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationViewStyle(StackNavigationViewStyle())
+                }
+                .environment(\.colorScheme, displayStyle)
+                .preferredColorScheme(displayStyle)
+                .colorScheme(displayStyle)
+                .navigationViewStyle(StackNavigationViewStyle())
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }
