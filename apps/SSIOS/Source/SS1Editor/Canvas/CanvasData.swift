@@ -13,12 +13,10 @@ import UIKit
 extension SS1 {
     typealias StrokeBucket = Array<SS1.Stroke>
     class DrawingDataModel: ObservableObject, Codable {
-        private(set) var id = UUID()
+        private(set) var id = UUID.init()
         /// Drawn strokes
         var foregroundStrokes: Array<Stroke> = []
         var backgroundStrokes: Array<Stroke> = []
-//        @Published
-//        var isTitle: Set<UUID> = []
         /// Active stroke
         var active: Stroke = Stroke()
         var activeLayer: SS1.Stroke.Layer = SS1.Stroke.Layer.foreground
@@ -27,16 +25,19 @@ extension SS1 {
         @Published
         var visible: Bool = true
         @Published
+        var visibilityToggleable: Bool = false
+        @Published
         var highlights: Set<UUID> = []
         
         enum CodingKeys: CodingKey {
-            case foregroundStrokes, backgroundStrokes, height
+            case foregroundStrokes, backgroundStrokes, height, visible
         }
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try! container.encode(foregroundStrokes, forKey: .foregroundStrokes)
             try! container.encode(backgroundStrokes, forKey: .backgroundStrokes)
             try! container.encode(height, forKey: .height)
+            try! container.encode(visible, forKey: .visible)
         }
         init() {}
         required init(from decoder: Decoder) throws {
@@ -44,6 +45,7 @@ extension SS1 {
             foregroundStrokes = try container.decode(Array.self, forKey: .foregroundStrokes)
             backgroundStrokes = try container.decode(Array.self, forKey: .backgroundStrokes)
             height = try container.decode(CGFloat.self, forKey: .height)
+            visible = (try? container.decode(Bool.self, forKey: .visible)) ?? true
         }
         
         func updateHighlights(withinRegion region: SSBoundingBox) {

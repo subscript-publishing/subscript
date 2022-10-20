@@ -171,6 +171,8 @@ struct SS1 {
                         pageModel: pageModel,
                         toggleColorScheme: toggleColorScheme,
                         goBack: {
+                            self.pageModel.save(filePath: documentFilePath!)
+                            self.runtimeModel.saveDefault()
                             if case let .some(window) = self.getWindow() {
                                 window.rootViewController?.dismiss(animated: true, completion: nil)
                             }
@@ -276,6 +278,8 @@ struct SS1 {
                 runtimeModel: runtimeModel,
                 toggleColorScheme: toggleColorScheme,
                 goBack: {
+                    self.canvasModel.save(filePath: documentFilePath!)
+                    self.runtimeModel.saveDefault()
                     UIApplication.shared.windows
                         .first?
                         .rootViewController?

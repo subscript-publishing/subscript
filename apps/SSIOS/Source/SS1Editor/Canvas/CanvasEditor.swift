@@ -39,7 +39,7 @@ fileprivate struct DrawingRootView: View {
     let toggleVisibility: () -> ()
     let updateLayouts: () -> ()
     
-    @ViewBuilder private var header: some View {
+    @ViewBuilder private var gutter: some View {
         HStack(alignment: .center, spacing: 0) {Spacer()}
             .background(Rectangle().foregroundColor(
                 colorScheme == .dark
@@ -48,6 +48,40 @@ fileprivate struct DrawingRootView: View {
             ))
             .padding([.top, .bottom], 4)
             .border(edges: [.top, .bottom])
+    }
+    
+    @ViewBuilder private var header: some View {
+        gutter
+//        VStack(alignment: .center, spacing: 0) {
+//            gutter
+//            SegmentedViewWrapper(
+//                left: {
+//                    Spacer()
+//                },
+//                center: {
+//                    HStack(alignment: .center, spacing: 0) {
+//                        Button(
+//                            action: {
+//                                drawingModel.visible.toggle()
+//                            },
+//                            label: {
+//                                let showIcon = "eye"
+//                                let hiddenIcon = "eye.slash"
+//                                RoundedLabel(label: {
+//                                    Image(systemName: drawingModel.visible ? showIcon : hiddenIcon)
+//                                })
+//                            }
+//                        )
+//                        Spacer()
+//                    }
+//                    .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+//                },
+//                right: {
+//                    Spacer()
+//                }
+//            )
+//            gutter
+//        }
     }
     
     @ViewBuilder private var canvas: some View {
@@ -96,14 +130,12 @@ fileprivate struct DrawingRootView: View {
         updateLayouts()
     }
     
-    @ViewBuilder
-    private var bottomMenu: some View {
+    @ViewBuilder private var bottomMenu: some View {
         HStack(alignment: .center, spacing: 0) {
             let spacing: CGFloat = 12
-            let width: CGFloat = drawingModel.visible ? 40 : 25
-            let height: CGFloat = drawingModel.visible ? 40 : 25
+            let width: CGFloat = drawingModel.visible ? 40 : 35
+            let height: CGFloat = drawingModel.visible ? 40 : 35
             let fontSizeScale: CGFloat = drawingModel.visible ? 0.75 : 0.5
-            
             HStack(alignment: .center, spacing: spacing) {
                 Button(action: self.decDrawingHeight, label: {
                     let color = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
@@ -154,32 +186,25 @@ fileprivate struct DrawingRootView: View {
             .frame(width: 100, alignment: .leading)
             Spacer()
             HStack(alignment: .center, spacing: spacing) {
-                Button(action: toggleVisibility, label: {
-                    let bgColor = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
-                    let background = Circle()
-                        .foregroundColor(Color(bgColor))
-                    Image(systemName: "eye")
-                        .font(.system(size: 18 * fontSizeScale))
-                        .frame(width: width, height: height, alignment: .center)
-                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                        .background(background)
-                })
-            }
-            .frame(width: 100, alignment: .trailing)
-            .hidden()
-            Spacer()
-            HStack(alignment: .center, spacing: spacing) {
-                Button(action: deleteMe, label: {
-                    let bgColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
-                    let background = Circle()
-                        .foregroundColor(Color(bgColor))
-                    Image(systemName: "trash")
-                        .font(.system(size: 20 * fontSizeScale))
-                        .frame(width: width, height: height, alignment: .center)
-                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                        .background(background)
-                })
-                .hidden(!drawingModel.visible)
+                Button(
+                    action: {
+                        withAnimation {
+                            drawingModel.visible.toggle()
+                        }
+                    },
+                    label: {
+                        let showIcon = "eye"
+                        let hiddenIcon = "eye.slash"
+                        let bgColor = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
+                        let background = Circle()
+                            .foregroundColor(Color(bgColor))
+                        Image(systemName: drawingModel.visible ? showIcon : hiddenIcon)
+                            .font(.system(size: 20 * fontSizeScale))
+                            .frame(width: width, height: height, alignment: .center)
+                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                            .background(background)
+                    }
+                )
                 Button(action: insertNewPaper, label: {
                     let bgColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
                     let background = Circle()
@@ -190,7 +215,16 @@ fileprivate struct DrawingRootView: View {
                         .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
                         .background(background)
                 })
-                .hidden(!drawingModel.visible)
+                Button(action: deleteMe, label: {
+                    let bgColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+                    let background = Circle()
+                        .foregroundColor(Color(bgColor))
+                    Image(systemName: "trash")
+                        .font(.system(size: 20 * fontSizeScale))
+                        .frame(width: width, height: height, alignment: .center)
+                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                        .background(background)
+                })
             }
             .frame(width: 100, alignment: .center)
             
@@ -204,7 +238,7 @@ fileprivate struct DrawingRootView: View {
         VStack(alignment: .center, spacing: 0) {
             header
             if drawingModel.visible {
-                canvas
+                canvas.hidden(!drawingModel.visible)
             }
             bottomMenu
         }
@@ -551,9 +585,6 @@ extension SS1 {
                         runtimeModel: runtimeModel,
                         canvasModel: canvasModel,
                         updateLayouts: updateLayouts
-//                        updateLayouts: {
-//                            customScrollerCoordinator.customScrollerViewController.embeddedViewCtl.view.setNeedsUpdateConstraints()
-//                        }
                     )
                     .navigationBarTitle("")
                     .navigationBarHidden(true)

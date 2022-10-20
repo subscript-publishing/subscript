@@ -300,6 +300,7 @@ pub mod canvas_data_model {
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct CanvasDataModel {
+        pub id: String,
         pub entries: Vec<DrawingDataModel>
     }
     impl CanvasDataModel {
@@ -346,12 +347,15 @@ pub mod canvas_data_model {
         pub foreground_strokes: Vec<stroke::Stroke>,
         pub background_strokes: Vec<stroke::Stroke>,
         pub height: f64,
+        #[serde(default = "const_true")]
+        pub visible: bool,
     }
+    fn const_true() -> bool {true}
     impl DrawingDataModel {
         pub fn is_empty(&self) -> bool {
             self.foreground_strokes.is_empty() && self.background_strokes.is_empty()
         }
-        pub fn to_svg(&self, for_color_scheme: &ColorScheme) -> String {
+        pub fn to_svg(&self, for_color_scheme: &ColorScheme) -> CompiledSvg {
             let mut xs: Vec<f64> = Vec::new();
             let mut ys: Vec<f64> = Vec::new();
             let mut outlines_foreground_strokes = self.foreground_strokes
@@ -431,12 +435,11 @@ pub mod canvas_data_model {
                 .map(|(k, v)| format!("{k}=\"{v}\""))
                 .collect_vec()
                 .join(" ");
-            format!(
-                "<svg {attrs}>{paths}</svg>",
-            )
+            let svg = format!("<svg {attrs}>{paths}</svg>");
+            CompiledSvg{svg, visible: self.visible}
         }
         pub fn to_pdf(&self, for_color_scheme: &ColorScheme) -> Vec<u8> {
-            let svg = self.to_svg(for_color_scheme);
+            let CompiledSvg{svg,..} = self.to_svg(for_color_scheme);
             let pdf = svg2pdf::convert_str(&svg, svg2pdf::Options::default()).unwrap();
             pdf
         }
@@ -445,6 +448,11 @@ pub mod canvas_data_model {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "DrawingDataModel(…)")
         }
+    }
+    #[derive(Debug, Clone)]
+    pub struct CompiledSvg {
+        pub svg: String,
+        pub visible: bool,
     }
 }
 

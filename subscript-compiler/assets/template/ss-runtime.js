@@ -39,3 +39,13 @@ function setForceSingleColumnToOn() {
     updateColumns();
 }
 
+function expandDiv(id) {
+    const div = document.getElementById(id);
+    div.setAttribute("data-visible", "true");
+}
+
+function collapseDiv(id) {
+    const div = document.getElementById(id);
+    div.setAttribute("data-visible", "false");
+}
+

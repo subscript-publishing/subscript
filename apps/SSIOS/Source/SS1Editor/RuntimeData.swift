@@ -506,7 +506,7 @@ extension SS1 {
             var primaryColorSchemeMode: PrimaryColorSchemeMode = PrimaryColorSchemeMode.both
             var penSet: PenSet = PenSet.set1
             static let defaultFgThinPenSize: CGFloat = 2.5
-            static let defaultFgThickPenSize: CGFloat = 6
+            static let defaultFgThickPenSize: CGFloat = 4.5
             static let defaultBgThinPenSize: CGFloat = 5
             static let defaultBgThickPenSize: CGFloat = 10
             static let defaultExtraThinPenSize: CGFloat = 1

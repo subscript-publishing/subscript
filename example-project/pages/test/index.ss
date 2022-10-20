@@ -74,6 +74,11 @@
 
 \include[src="./test-smooth-strokes.ss1-drawing"]
 
+\h2{Toggle Visivility}
+
+\include[src="./toggle-vis-test.ss1-drawing"]
+
+
 \h2{Compositions}
 
 \include[src="Sample.ss1-composition", baseline="h2"]

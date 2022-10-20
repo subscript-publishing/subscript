@@ -937,6 +937,56 @@ main > hr {
   margin: 0 auto;
 }
 
+.toggle-visibility header {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+}
+.toggle-visibility button {
+  padding: 0;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  display: none;
+  font-size: 3em;
+}
+.toggle-visibility button span {
+  font-size: 0.7em;
+  margin-top: -5px;
+  margin-bottom: -5px;
+}
+.toggle-visibility div.toggle-visibility-content {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+@media (prefers-color-scheme: dark) {
+  .toggle-visibility button {
+    background-color: rgba(57, 57, 57, 0.3607843137);
+    border: 1px solid #000;
+    color: #fff;
+  }
+  .toggle-visibility button:hover {
+    box-shadow: 0 0 1px 1px #0083ff;
+    color: #0083ff;
+  }
+}
+
+.toggle-visibility[data-visible=false] button[class=expand] {
+  display: flex;
+}
+
+.toggle-visibility[data-visible=true] button[class=collapse] {
+  display: flex;
+}
+.toggle-visibility[data-visible=true] div.toggle-visibility-content {
+  display: flex;
+}
+
 body {
   margin: 0;
 }

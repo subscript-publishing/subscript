@@ -429,16 +429,6 @@ class DrawingRendererView: UIView {
         ) {
             let isDrawingPen = runtimeModel.currentToolType.isPen
             let isEditorTool = runtimeModel.currentToolType.isAnyEditToolType
-            if !drawingPaper.active.isEmpty && drawingPaper.activeLayer == .background && isDrawingPen {
-                renderPenStroke(
-                    displayMode: displayMode,
-                    size: size,
-                    context: context,
-                    stroke: drawingPaper.active,
-                    isHighlighted: false,
-                    invertColor: runtimeModel.invertPenColors
-                )
-            }
             for stroke in drawingPaper.backgroundStrokes {
                 let isHighlighted = drawingPaper.highlights.contains(stroke.uid)
                 renderPenStroke(
@@ -447,6 +437,16 @@ class DrawingRendererView: UIView {
                     context: context,
                     stroke: stroke,
                     isHighlighted: isHighlighted
+                )
+            }
+            if !drawingPaper.active.isEmpty && drawingPaper.activeLayer == .background && isDrawingPen {
+                renderPenStroke(
+                    displayMode: displayMode,
+                    size: size,
+                    context: context,
+                    stroke: drawingPaper.active,
+                    isHighlighted: false,
+                    invertColor: runtimeModel.invertPenColors
                 )
             }
             for stroke in drawingPaper.foregroundStrokes {

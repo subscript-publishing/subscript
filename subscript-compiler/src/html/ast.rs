@@ -10,6 +10,11 @@ impl<T: Into<String>> From<T> for Node {
         Node::Text(val.into())
     }
 }
+impl From<TagBuilder> for Node {
+    fn from(val: TagBuilder) -> Self {
+        val.finalize()
+    }
+}
 
 #[derive(Debug, Clone)]
 pub enum LayoutKind {
@@ -259,9 +264,52 @@ impl Node {
                 children
             }
             Node::Drawing(model) => {
-                let dark_ui_mode = model.to_svg(&ss_freeform_format::ColorScheme::Dark);
-                let light_ui_mode = model.to_svg(&ss_freeform_format::ColorScheme::Light);
-                vec![dark_ui_mode, light_ui_mode].join("\n")
+                use ss_freeform_format::format::canvas_data_model::CompiledSvg;
+                let CompiledSvg{visible: v1, svg: dark_ui_mode} = model
+                    .to_svg(&ss_freeform_format::ColorScheme::Dark);
+                let CompiledSvg{visible: v2, svg: light_ui_mode} = model
+                    .to_svg(&ss_freeform_format::ColorScheme::Light);
+                assert!(v1 == v2);
+                if v1 && v2 {
+                    vec![dark_ui_mode, light_ui_mode].join("\n")
+                } else {
+                    let id = crate::utils::random_str_id();
+                    let wrapper = TagBuilder::new("div")
+                        .with_class("toggle-visibility")
+                        .with_id(&id)
+                        .with_attr("data-visible", "false")
+                        .push_child(
+                            TagBuilder::new("header")
+                                .push_child(
+                                    TagBuilder::new("button")
+                                        .with_class("expand")
+                                        .with_attr("onclick", format!("expandDiv('{}')", id))
+                                        .push_child(
+                                            TagBuilder::new("span")
+                                                .with_class("material-symbols-outlined")
+                                                .push_child("expand_more")
+                                        )
+                                )
+                                .push_child(
+                                    TagBuilder::new("button")
+                                        .with_attr("onclick", format!("collapseDiv('{}')", id))
+                                        .with_class("collapse")
+                                        .push_child(
+                                            TagBuilder::new("span")
+                                                .with_class("material-symbols-outlined")
+                                                .push_child("expand_less")
+                                        )
+                                )
+                        )
+                        .push_child(
+                            TagBuilder::new("div")
+                                .with_class("toggle-visibility-content")
+                                .push_child(Node::Text(dark_ui_mode))
+                                .push_child(Node::Text(light_ui_mode))
+                        )
+                        .finalize();
+                    wrapper.to_html_fragment_str()
+                }
             }
         }
     }

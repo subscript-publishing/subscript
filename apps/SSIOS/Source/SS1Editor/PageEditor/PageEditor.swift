@@ -501,9 +501,13 @@ extension SS1 {
                             },
                             right: {
                                 NavigationLink(isActive: $showChildView, destination: destination, label: {
-                                    Image(systemName: "chevron.forward")
-                                        .btnLabelTheme()
-                                        .font(.system(size: 20))
+                                    VStack(alignment: .center, spacing: 0) {
+                                        Image(systemName: "chevron.forward")
+                                            .btnLabelTheme()
+                                            .font(.system(size: 20))
+                                            .padding(.top, 20)
+                                        Spacer()
+                                    }
                                 })
                             }
                         )

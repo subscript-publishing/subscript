@@ -1287,6 +1287,13 @@ extension SS1.Drawing {
                 if !lotsOfPens {
                     var newPen = runtimeModel.templatePen
                     newPen.id = UUID()
+                    switch self.penListFilter {
+                    case .showSet1: newPen.penSet = .set1
+                    case .showSet2: newPen.penSet = .set2
+                    case .showSet3: newPen.penSet = .set3
+                    case .showSet4: newPen.penSet = .set4
+                    case .showAll: ()
+                    }
                     runtimeModel.pens.append(newPen)
                 } else {
                     showInsertNewPenMenu = true
@@ -1322,6 +1329,13 @@ extension SS1.Drawing {
                             action: {
                                 var newPen = runtimeModel.templatePen
                                 newPen.id = UUID()
+                                switch self.penListFilter {
+                                case .showSet1: newPen.penSet = .set1
+                                case .showSet2: newPen.penSet = .set2
+                                case .showSet3: newPen.penSet = .set3
+                                case .showSet4: newPen.penSet = .set4
+                                case .showAll: ()
+                                }
                                 switch self.insertNewPenOrder {
                                 case .back: runtimeModel.pens.append(newPen)
                                 case .front:
