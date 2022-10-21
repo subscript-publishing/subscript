@@ -15,48 +15,38 @@
 		F4991C8F2900ACFB0042E1DC /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C792900ACFA0042E1DC /* Main.swift */; };
 		F4991CAD2900AD060042E1DC /* SwiftUIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C922900AD060042E1DC /* SwiftUIUtils.swift */; };
 		F4991CAE2900AD060042E1DC /* SwiftUIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C922900AD060042E1DC /* SwiftUIUtils.swift */; };
-		F4991CAF2900AD060042E1DC /* LinearAlgebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C932900AD060042E1DC /* LinearAlgebra.swift */; };
-		F4991CB02900AD060042E1DC /* LinearAlgebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C932900AD060042E1DC /* LinearAlgebra.swift */; };
-		F4991CB12900AD060042E1DC /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C952900AD060042E1DC /* Array.swift */; };
-		F4991CB22900AD060042E1DC /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C952900AD060042E1DC /* Array.swift */; };
-		F4991CB32900AD060042E1DC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C962900AD060042E1DC /* UIColor.swift */; };
-		F4991CB42900AD060042E1DC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C962900AD060042E1DC /* UIColor.swift */; };
-		F4991CB52900AD060042E1DC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C972900AD060042E1DC /* Result.swift */; };
-		F4991CB62900AD060042E1DC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C972900AD060042E1DC /* Result.swift */; };
-		F4991CB72900AD060042E1DC /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C982900AD060042E1DC /* Int.swift */; };
-		F4991CB82900AD060042E1DC /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C982900AD060042E1DC /* Int.swift */; };
-		F4991CB92900AD060042E1DC /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C992900AD060042E1DC /* URL.swift */; };
-		F4991CBA2900AD060042E1DC /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C992900AD060042E1DC /* URL.swift */; };
-		F4991CBB2900AD060042E1DC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9A2900AD060042E1DC /* String.swift */; };
-		F4991CBC2900AD060042E1DC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9A2900AD060042E1DC /* String.swift */; };
-		F4991CBD2900AD060042E1DC /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9B2900AD060042E1DC /* CGPoint.swift */; };
-		F4991CBE2900AD060042E1DC /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9B2900AD060042E1DC /* CGPoint.swift */; };
-		F4991CBF2900AD060042E1DC /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9C2900AD060042E1DC /* CGFloat.swift */; };
-		F4991CC02900AD060042E1DC /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9C2900AD060042E1DC /* CGFloat.swift */; };
-		F4991CC12900AD060042E1DC /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9D2900AD060042E1DC /* UIFont.swift */; };
-		F4991CC22900AD060042E1DC /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9D2900AD060042E1DC /* UIFont.swift */; };
-		F4991CC32900AD060042E1DC /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9E2900AD060042E1DC /* Optional.swift */; };
-		F4991CC42900AD060042E1DC /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9E2900AD060042E1DC /* Optional.swift */; };
-		F4991CC52900AD060042E1DC /* UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9F2900AD060042E1DC /* UITextView.swift */; };
-		F4991CC62900AD060042E1DC /* UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9F2900AD060042E1DC /* UITextView.swift */; };
-		F4991CC72900AD060042E1DC /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA12900AD060042E1DC /* ColorScheme.swift */; };
-		F4991CC82900AD060042E1DC /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA12900AD060042E1DC /* ColorScheme.swift */; };
+		F4991CAF2900AD060042E1DC /* LinearAlgebraExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C932900AD060042E1DC /* LinearAlgebraExts.swift */; };
+		F4991CB02900AD060042E1DC /* LinearAlgebraExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C932900AD060042E1DC /* LinearAlgebraExts.swift */; };
+		F4991CB12900AD060042E1DC /* ArrayExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C952900AD060042E1DC /* ArrayExts.swift */; };
+		F4991CB22900AD060042E1DC /* ArrayExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C952900AD060042E1DC /* ArrayExts.swift */; };
+		F4991CB52900AD060042E1DC /* ResultExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C972900AD060042E1DC /* ResultExts.swift */; };
+		F4991CB62900AD060042E1DC /* ResultExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C972900AD060042E1DC /* ResultExts.swift */; };
+		F4991CB72900AD060042E1DC /* IntExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C982900AD060042E1DC /* IntExts.swift */; };
+		F4991CB82900AD060042E1DC /* IntExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C982900AD060042E1DC /* IntExts.swift */; };
+		F4991CB92900AD060042E1DC /* URLExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C992900AD060042E1DC /* URLExts.swift */; };
+		F4991CBA2900AD060042E1DC /* URLExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C992900AD060042E1DC /* URLExts.swift */; };
+		F4991CBB2900AD060042E1DC /* StringExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9A2900AD060042E1DC /* StringExts.swift */; };
+		F4991CBC2900AD060042E1DC /* StringExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9A2900AD060042E1DC /* StringExts.swift */; };
+		F4991CBD2900AD060042E1DC /* CGPointExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9B2900AD060042E1DC /* CGPointExts.swift */; };
+		F4991CBE2900AD060042E1DC /* CGPointExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9B2900AD060042E1DC /* CGPointExts.swift */; };
+		F4991CBF2900AD060042E1DC /* CGFloatExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9C2900AD060042E1DC /* CGFloatExts.swift */; };
+		F4991CC02900AD060042E1DC /* CGFloatExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9C2900AD060042E1DC /* CGFloatExts.swift */; };
+		F4991CC12900AD060042E1DC /* UIFontExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9D2900AD060042E1DC /* UIFontExts.swift */; };
+		F4991CC22900AD060042E1DC /* UIFontExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9D2900AD060042E1DC /* UIFontExts.swift */; };
+		F4991CC32900AD060042E1DC /* OptionalExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9E2900AD060042E1DC /* OptionalExts.swift */; };
+		F4991CC42900AD060042E1DC /* OptionalExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C9E2900AD060042E1DC /* OptionalExts.swift */; };
 		F4991CC92900AD060042E1DC /* CustomScroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA22900AD060042E1DC /* CustomScroller.swift */; };
 		F4991CCA2900AD060042E1DC /* CustomScroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA22900AD060042E1DC /* CustomScroller.swift */; };
-		F4991CCB2900AD060042E1DC /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA32900AD060042E1DC /* Bindings.swift */; };
-		F4991CCC2900AD060042E1DC /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA32900AD060042E1DC /* Bindings.swift */; };
-		F4991CCD2900AD060042E1DC /* Basics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA42900AD060042E1DC /* Basics.swift */; };
-		F4991CCE2900AD060042E1DC /* Basics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA42900AD060042E1DC /* Basics.swift */; };
+		F4991CCB2900AD060042E1DC /* BindingExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA32900AD060042E1DC /* BindingExts.swift */; };
+		F4991CCC2900AD060042E1DC /* BindingExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA32900AD060042E1DC /* BindingExts.swift */; };
 		F4991CCF2900AD060042E1DC /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA52900AD060042E1DC /* Border.swift */; };
 		F4991CD02900AD060042E1DC /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA52900AD060042E1DC /* Border.swift */; };
 		F4991CD12900AD060042E1DC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA62900AD060042E1DC /* Theme.swift */; };
 		F4991CD22900AD060042E1DC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA62900AD060042E1DC /* Theme.swift */; };
-		F4991CD32900AD060042E1DC /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA72900AD060042E1DC /* Shapes.swift */; };
-		F4991CD42900AD060042E1DC /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA72900AD060042E1DC /* Shapes.swift */; };
+		F4991CD32900AD060042E1DC /* ShapeExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA72900AD060042E1DC /* ShapeExts.swift */; };
+		F4991CD42900AD060042E1DC /* ShapeExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA72900AD060042E1DC /* ShapeExts.swift */; };
 		F4991CD52900AD060042E1DC /* SwiftUIWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA82900AD060042E1DC /* SwiftUIWrapper.swift */; };
 		F4991CD62900AD060042E1DC /* SwiftUIWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CA82900AD060042E1DC /* SwiftUIWrapper.swift */; };
-		F4991CD72900AD060042E1DC /* RefBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CAA2900AD060042E1DC /* RefBox.swift */; };
-		F4991CD82900AD060042E1DC /* RefBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CAA2900AD060042E1DC /* RefBox.swift */; };
 		F4991CD92900AD060042E1DC /* MathUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CAB2900AD060042E1DC /* MathUtil.swift */; };
 		F4991CDA2900AD060042E1DC /* MathUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CAB2900AD060042E1DC /* MathUtil.swift */; };
 		F4991CDB2900AD060042E1DC /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CAC2900AD060042E1DC /* CodableColor.swift */; };
@@ -79,8 +69,18 @@
 		F4991D16290115640042E1DC /* Pen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D14290115640042E1DC /* Pen.swift */; };
 		F4991D18290124DA0042E1DC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D17290124DA0042E1DC /* Settings.swift */; };
 		F4991D19290124DA0042E1DC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D17290124DA0042E1DC /* Settings.swift */; };
-		F4991D1B290128970042E1DC /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D1A290128970042E1DC /* Shape.swift */; };
-		F4991D1C290128970042E1DC /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D1A290128970042E1DC /* Shape.swift */; };
+		F4991D232901C6B90042E1DC /* ViewExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D222901C6B90042E1DC /* ViewExts.swift */; };
+		F4991D242901C6B90042E1DC /* ViewExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D222901C6B90042E1DC /* ViewExts.swift */; };
+		F4991D272901C89E0042E1DC /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D262901C89E0042E1DC /* Buttons.swift */; };
+		F4991D282901C89E0042E1DC /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D262901C89E0042E1DC /* Buttons.swift */; };
+		F4991D2A2901D1F20042E1DC /* UI+ColorMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D292901D1F20042E1DC /* UI+ColorMode.swift */; };
+		F4991D2B2901D1F20042E1DC /* UI+ColorMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D292901D1F20042E1DC /* UI+ColorMode.swift */; };
+		F4991D2D2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */; };
+		F4991D2E2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */; };
+		F4991D302901E41F0042E1DC /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2F2901E41F0042E1DC /* Page.swift */; };
+		F4991D312901E41F0042E1DC /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2F2901E41F0042E1DC /* Page.swift */; };
+		F4991D332901EDFF0042E1DC /* PageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D322901EDFF0042E1DC /* PageEntry.swift */; };
+		F4991D342901EDFF0042E1DC /* PageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D322901EDFF0042E1DC /* PageEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,27 +93,22 @@
 		F4991C592900ABC40042E1DC /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		F4991C792900ACFA0042E1DC /* Main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		F4991C922900AD060042E1DC /* SwiftUIUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIUtils.swift; sourceTree = "<group>"; };
-		F4991C932900AD060042E1DC /* LinearAlgebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearAlgebra.swift; sourceTree = "<group>"; };
-		F4991C952900AD060042E1DC /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
-		F4991C962900AD060042E1DC /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
-		F4991C972900AD060042E1DC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
-		F4991C982900AD060042E1DC /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
-		F4991C992900AD060042E1DC /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
-		F4991C9A2900AD060042E1DC /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		F4991C9B2900AD060042E1DC /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
-		F4991C9C2900AD060042E1DC /* CGFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloat.swift; sourceTree = "<group>"; };
-		F4991C9D2900AD060042E1DC /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
-		F4991C9E2900AD060042E1DC /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
-		F4991C9F2900AD060042E1DC /* UITextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextView.swift; sourceTree = "<group>"; };
-		F4991CA12900AD060042E1DC /* ColorScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
+		F4991C932900AD060042E1DC /* LinearAlgebraExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearAlgebraExts.swift; sourceTree = "<group>"; };
+		F4991C952900AD060042E1DC /* ArrayExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExts.swift; sourceTree = "<group>"; };
+		F4991C972900AD060042E1DC /* ResultExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultExts.swift; sourceTree = "<group>"; };
+		F4991C982900AD060042E1DC /* IntExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntExts.swift; sourceTree = "<group>"; };
+		F4991C992900AD060042E1DC /* URLExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLExts.swift; sourceTree = "<group>"; };
+		F4991C9A2900AD060042E1DC /* StringExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExts.swift; sourceTree = "<group>"; };
+		F4991C9B2900AD060042E1DC /* CGPointExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointExts.swift; sourceTree = "<group>"; };
+		F4991C9C2900AD060042E1DC /* CGFloatExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloatExts.swift; sourceTree = "<group>"; };
+		F4991C9D2900AD060042E1DC /* UIFontExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExts.swift; sourceTree = "<group>"; };
+		F4991C9E2900AD060042E1DC /* OptionalExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExts.swift; sourceTree = "<group>"; };
 		F4991CA22900AD060042E1DC /* CustomScroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomScroller.swift; sourceTree = "<group>"; };
-		F4991CA32900AD060042E1DC /* Bindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
-		F4991CA42900AD060042E1DC /* Basics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Basics.swift; sourceTree = "<group>"; };
+		F4991CA32900AD060042E1DC /* BindingExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BindingExts.swift; sourceTree = "<group>"; };
 		F4991CA52900AD060042E1DC /* Border.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
 		F4991CA62900AD060042E1DC /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		F4991CA72900AD060042E1DC /* Shapes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
+		F4991CA72900AD060042E1DC /* ShapeExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeExts.swift; sourceTree = "<group>"; };
 		F4991CA82900AD060042E1DC /* SwiftUIWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIWrapper.swift; sourceTree = "<group>"; };
-		F4991CAA2900AD060042E1DC /* RefBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefBox.swift; sourceTree = "<group>"; };
 		F4991CAB2900AD060042E1DC /* MathUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathUtil.swift; sourceTree = "<group>"; };
 		F4991CAC2900AD060042E1DC /* CodableColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableColor.swift; sourceTree = "<group>"; };
 		F4991CDE2900AEC30042E1DC /* SS1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SS1.swift; sourceTree = "<group>"; };
@@ -128,7 +123,12 @@
 		F4991D11290115320042E1DC /* Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toolbar.swift; sourceTree = "<group>"; };
 		F4991D14290115640042E1DC /* Pen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pen.swift; sourceTree = "<group>"; };
 		F4991D17290124DA0042E1DC /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		F4991D1A290128970042E1DC /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
+		F4991D222901C6B90042E1DC /* ViewExts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExts.swift; sourceTree = "<group>"; };
+		F4991D262901C89E0042E1DC /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		F4991D292901D1F20042E1DC /* UI+ColorMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+ColorMode.swift"; sourceTree = "<group>"; };
+		F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+DefaultColors.swift"; sourceTree = "<group>"; };
+		F4991D2F2901E41F0042E1DC /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		F4991D322901EDFF0042E1DC /* PageEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,54 +214,27 @@
 		F4991C902900AD060042E1DC /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				F4991D1E2901C5A60042E1DC /* Foundation */,
 				F4991D0D2900E48B0042E1DC /* UICompatibility */,
-				F4991C912900AD060042E1DC /* Utils */,
-				F4991C942900AD060042E1DC /* Extensions */,
+				F4991D212901C5D10042E1DC /* AppKit */,
+				F4991D202901C5C90042E1DC /* UIKit */,
+				F4991D1F2901C5AD0042E1DC /* CoreGraphics */,
+				F4991CA02900AD060042E1DC /* SwiftUI */,
 				F4991CA92900AD060042E1DC /* Data */,
 			);
 			path = Lib;
 			sourceTree = "<group>";
 		};
-		F4991C912900AD060042E1DC /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				F4991CA22900AD060042E1DC /* CustomScroller.swift */,
-				F4991C922900AD060042E1DC /* SwiftUIUtils.swift */,
-				F4991C932900AD060042E1DC /* LinearAlgebra.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		F4991C942900AD060042E1DC /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				F4991C952900AD060042E1DC /* Array.swift */,
-				F4991C962900AD060042E1DC /* UIColor.swift */,
-				F4991C972900AD060042E1DC /* Result.swift */,
-				F4991C982900AD060042E1DC /* Int.swift */,
-				F4991C992900AD060042E1DC /* URL.swift */,
-				F4991C9A2900AD060042E1DC /* String.swift */,
-				F4991C9B2900AD060042E1DC /* CGPoint.swift */,
-				F4991C9C2900AD060042E1DC /* CGFloat.swift */,
-				F4991C9D2900AD060042E1DC /* UIFont.swift */,
-				F4991C9E2900AD060042E1DC /* Optional.swift */,
-				F4991C9F2900AD060042E1DC /* UITextView.swift */,
-				F4991CF32900C7E70042E1DC /* NSEvent.swift */,
-				F4991CA02900AD060042E1DC /* SwiftUI */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		F4991CA02900AD060042E1DC /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				F4991CA12900AD060042E1DC /* ColorScheme.swift */,
-				F4991CA32900AD060042E1DC /* Bindings.swift */,
-				F4991CA42900AD060042E1DC /* Basics.swift */,
-				F4991CA52900AD060042E1DC /* Border.swift */,
-				F4991CA62900AD060042E1DC /* Theme.swift */,
-				F4991CA72900AD060042E1DC /* Shapes.swift */,
-				F4991D1A290128970042E1DC /* Shape.swift */,
+				F4991D252901C75F0042E1DC /* ViewExts */,
+				F4991D222901C6B90042E1DC /* ViewExts.swift */,
+				F4991CA22900AD060042E1DC /* CustomScroller.swift */,
+				F4991C922900AD060042E1DC /* SwiftUIUtils.swift */,
+				F4991CA32900AD060042E1DC /* BindingExts.swift */,
+				F4991CA72900AD060042E1DC /* ShapeExts.swift */,
+				F4991D262901C89E0042E1DC /* Buttons.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -269,9 +242,10 @@
 		F4991CA92900AD060042E1DC /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				F4991CAA2900AD060042E1DC /* RefBox.swift */,
 				F4991CAB2900AD060042E1DC /* MathUtil.swift */,
 				F4991CAC2900AD060042E1DC /* CodableColor.swift */,
+				F4991D292901D1F20042E1DC /* UI+ColorMode.swift */,
+				F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -283,6 +257,8 @@
 				F4991D11290115320042E1DC /* Toolbar.swift */,
 				F4991D14290115640042E1DC /* Pen.swift */,
 				F4991D17290124DA0042E1DC /* Settings.swift */,
+				F4991D2F2901E41F0042E1DC /* Page.swift */,
+				F4991D322901EDFF0042E1DC /* PageEntry.swift */,
 			);
 			path = SS1;
 			sourceTree = "<group>";
@@ -312,6 +288,54 @@
 				F4991CA82900AD060042E1DC /* SwiftUIWrapper.swift */,
 			);
 			path = UICompatibility;
+			sourceTree = "<group>";
+		};
+		F4991D1E2901C5A60042E1DC /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				F4991C932900AD060042E1DC /* LinearAlgebraExts.swift */,
+				F4991C9E2900AD060042E1DC /* OptionalExts.swift */,
+				F4991C9A2900AD060042E1DC /* StringExts.swift */,
+				F4991C992900AD060042E1DC /* URLExts.swift */,
+				F4991C982900AD060042E1DC /* IntExts.swift */,
+				F4991C972900AD060042E1DC /* ResultExts.swift */,
+				F4991C952900AD060042E1DC /* ArrayExts.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		F4991D1F2901C5AD0042E1DC /* CoreGraphics */ = {
+			isa = PBXGroup;
+			children = (
+				F4991C9C2900AD060042E1DC /* CGFloatExts.swift */,
+				F4991C9B2900AD060042E1DC /* CGPointExts.swift */,
+			);
+			path = CoreGraphics;
+			sourceTree = "<group>";
+		};
+		F4991D202901C5C90042E1DC /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				F4991C9D2900AD060042E1DC /* UIFontExts.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		F4991D212901C5D10042E1DC /* AppKit */ = {
+			isa = PBXGroup;
+			children = (
+				F4991CF32900C7E70042E1DC /* NSEvent.swift */,
+			);
+			path = AppKit;
+			sourceTree = "<group>";
+		};
+		F4991D252901C75F0042E1DC /* ViewExts */ = {
+			isa = PBXGroup;
+			children = (
+				F4991CA62900AD060042E1DC /* Theme.swift */,
+				F4991CA52900AD060042E1DC /* Border.swift */,
+			);
+			path = ViewExts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -413,40 +437,40 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4991D15290115640042E1DC /* Pen.swift in Sources */,
-				F4991CBD2900AD060042E1DC /* CGPoint.swift in Sources */,
-				F4991CB52900AD060042E1DC /* Result.swift in Sources */,
-				F4991CB72900AD060042E1DC /* Int.swift in Sources */,
+				F4991CBD2900AD060042E1DC /* CGPointExts.swift in Sources */,
+				F4991CB52900AD060042E1DC /* ResultExts.swift in Sources */,
+				F4991D2D2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */,
+				F4991CB72900AD060042E1DC /* IntExts.swift in Sources */,
 				F4991C5C2900ABC40042E1DC /* SubScriptDocument.swift in Sources */,
 				F4991CD52900AD060042E1DC /* SwiftUIWrapper.swift in Sources */,
-				F4991CD72900AD060042E1DC /* RefBox.swift in Sources */,
 				F4991CDF2900AEC30042E1DC /* SS1.swift in Sources */,
 				F4991CE22900B1390042E1DC /* Canvas.swift in Sources */,
-				F4991CAF2900AD060042E1DC /* LinearAlgebra.swift in Sources */,
-				F4991D1B290128970042E1DC /* Shape.swift in Sources */,
-				F4991CD32900AD060042E1DC /* Shapes.swift in Sources */,
-				F4991CB12900AD060042E1DC /* Array.swift in Sources */,
-				F4991CB32900AD060042E1DC /* UIColor.swift in Sources */,
+				F4991CAF2900AD060042E1DC /* LinearAlgebraExts.swift in Sources */,
+				F4991CD32900AD060042E1DC /* ShapeExts.swift in Sources */,
+				F4991CB12900AD060042E1DC /* ArrayExts.swift in Sources */,
 				F4991C8E2900ACFB0042E1DC /* Main.swift in Sources */,
 				F4991CCF2900AD060042E1DC /* Border.swift in Sources */,
-				F4991CC32900AD060042E1DC /* Optional.swift in Sources */,
+				F4991CC32900AD060042E1DC /* OptionalExts.swift in Sources */,
 				F4991CF42900C7E70042E1DC /* NSEvent.swift in Sources */,
-				F4991CCD2900AD060042E1DC /* Basics.swift in Sources */,
 				F4991CAD2900AD060042E1DC /* SwiftUIUtils.swift in Sources */,
+				F4991D332901EDFF0042E1DC /* PageEntry.swift in Sources */,
 				F4991D0F2900E4980042E1DC /* UI.swift in Sources */,
 				F4991D18290124DA0042E1DC /* Settings.swift in Sources */,
-				F4991CBF2900AD060042E1DC /* CGFloat.swift in Sources */,
+				F4991CBF2900AD060042E1DC /* CGFloatExts.swift in Sources */,
 				F4991CC92900AD060042E1DC /* CustomScroller.swift in Sources */,
-				F4991CCB2900AD060042E1DC /* Bindings.swift in Sources */,
-				F4991CB92900AD060042E1DC /* URL.swift in Sources */,
-				F4991CC72900AD060042E1DC /* ColorScheme.swift in Sources */,
+				F4991CCB2900AD060042E1DC /* BindingExts.swift in Sources */,
+				F4991D302901E41F0042E1DC /* Page.swift in Sources */,
+				F4991D232901C6B90042E1DC /* ViewExts.swift in Sources */,
+				F4991CB92900AD060042E1DC /* URLExts.swift in Sources */,
+				F4991D272901C89E0042E1DC /* Buttons.swift in Sources */,
 				F4991D012900CA6B0042E1DC /* FFI.swift in Sources */,
-				F4991CC52900AD060042E1DC /* UITextView.swift in Sources */,
 				F4991CD12900AD060042E1DC /* Theme.swift in Sources */,
 				F4991D12290115320042E1DC /* Toolbar.swift in Sources */,
 				F4991CDB2900AD060042E1DC /* CodableColor.swift in Sources */,
 				F4991CD92900AD060042E1DC /* MathUtil.swift in Sources */,
-				F4991CC12900AD060042E1DC /* UIFont.swift in Sources */,
-				F4991CBB2900AD060042E1DC /* String.swift in Sources */,
+				F4991CC12900AD060042E1DC /* UIFontExts.swift in Sources */,
+				F4991CBB2900AD060042E1DC /* StringExts.swift in Sources */,
+				F4991D2A2901D1F20042E1DC /* UI+ColorMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,40 +479,40 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4991D16290115640042E1DC /* Pen.swift in Sources */,
-				F4991CBE2900AD060042E1DC /* CGPoint.swift in Sources */,
-				F4991CB62900AD060042E1DC /* Result.swift in Sources */,
-				F4991CB82900AD060042E1DC /* Int.swift in Sources */,
+				F4991CBE2900AD060042E1DC /* CGPointExts.swift in Sources */,
+				F4991CB62900AD060042E1DC /* ResultExts.swift in Sources */,
+				F4991D2E2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */,
+				F4991CB82900AD060042E1DC /* IntExts.swift in Sources */,
 				F4991C5D2900ABC40042E1DC /* SubScriptDocument.swift in Sources */,
 				F4991CD62900AD060042E1DC /* SwiftUIWrapper.swift in Sources */,
-				F4991CD82900AD060042E1DC /* RefBox.swift in Sources */,
 				F4991CE02900AEC30042E1DC /* SS1.swift in Sources */,
 				F4991CE32900B1390042E1DC /* Canvas.swift in Sources */,
-				F4991CB02900AD060042E1DC /* LinearAlgebra.swift in Sources */,
-				F4991D1C290128970042E1DC /* Shape.swift in Sources */,
-				F4991CD42900AD060042E1DC /* Shapes.swift in Sources */,
-				F4991CB22900AD060042E1DC /* Array.swift in Sources */,
-				F4991CB42900AD060042E1DC /* UIColor.swift in Sources */,
+				F4991CB02900AD060042E1DC /* LinearAlgebraExts.swift in Sources */,
+				F4991CD42900AD060042E1DC /* ShapeExts.swift in Sources */,
+				F4991CB22900AD060042E1DC /* ArrayExts.swift in Sources */,
 				F4991C8F2900ACFB0042E1DC /* Main.swift in Sources */,
 				F4991CD02900AD060042E1DC /* Border.swift in Sources */,
-				F4991CC42900AD060042E1DC /* Optional.swift in Sources */,
+				F4991CC42900AD060042E1DC /* OptionalExts.swift in Sources */,
 				F4991CF52900C7E70042E1DC /* NSEvent.swift in Sources */,
-				F4991CCE2900AD060042E1DC /* Basics.swift in Sources */,
 				F4991CAE2900AD060042E1DC /* SwiftUIUtils.swift in Sources */,
+				F4991D342901EDFF0042E1DC /* PageEntry.swift in Sources */,
 				F4991D102900E4980042E1DC /* UI.swift in Sources */,
 				F4991D19290124DA0042E1DC /* Settings.swift in Sources */,
-				F4991CC02900AD060042E1DC /* CGFloat.swift in Sources */,
+				F4991CC02900AD060042E1DC /* CGFloatExts.swift in Sources */,
 				F4991CCA2900AD060042E1DC /* CustomScroller.swift in Sources */,
-				F4991CCC2900AD060042E1DC /* Bindings.swift in Sources */,
-				F4991CBA2900AD060042E1DC /* URL.swift in Sources */,
-				F4991CC82900AD060042E1DC /* ColorScheme.swift in Sources */,
+				F4991CCC2900AD060042E1DC /* BindingExts.swift in Sources */,
+				F4991D312901E41F0042E1DC /* Page.swift in Sources */,
+				F4991D242901C6B90042E1DC /* ViewExts.swift in Sources */,
+				F4991CBA2900AD060042E1DC /* URLExts.swift in Sources */,
+				F4991D282901C89E0042E1DC /* Buttons.swift in Sources */,
 				F4991D022900CA6B0042E1DC /* FFI.swift in Sources */,
-				F4991CC62900AD060042E1DC /* UITextView.swift in Sources */,
 				F4991CD22900AD060042E1DC /* Theme.swift in Sources */,
 				F4991D13290115320042E1DC /* Toolbar.swift in Sources */,
 				F4991CDC2900AD060042E1DC /* CodableColor.swift in Sources */,
 				F4991CDA2900AD060042E1DC /* MathUtil.swift in Sources */,
-				F4991CC22900AD060042E1DC /* UIFont.swift in Sources */,
-				F4991CBC2900AD060042E1DC /* String.swift in Sources */,
+				F4991CC22900AD060042E1DC /* UIFontExts.swift in Sources */,
+				F4991CBC2900AD060042E1DC /* StringExts.swift in Sources */,
+				F4991D2B2901D1F20042E1DC /* UI+ColorMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

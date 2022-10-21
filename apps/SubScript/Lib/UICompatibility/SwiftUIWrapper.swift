@@ -25,29 +25,29 @@ struct WrapView<Wrapped: UI.View>: UI.ViewRepresentable {
 #endif
     typealias Updater = (Wrapped, Context) -> Void
     
-    fileprivate var makeView: () -> Wrapped
+    fileprivate var makeView: (Context) -> Wrapped
     fileprivate var update: (Wrapped, Context) -> ()
 
-    init(_ setup: @escaping () -> Wrapped) {
+    init(_ setup: @escaping (Context) -> Wrapped) {
         self.makeView = setup
         self.update = {(_, _) in ()}
     }
 
-    init(setup: @escaping () -> Wrapped, update: @escaping (Wrapped) -> ()) {
+    init(setup: @escaping (Context) -> Wrapped, update: @escaping (Wrapped) -> ()) {
         self.makeView = setup
         self.update = {(wrapper, _) in update(wrapper)}
     }
     
 #if os(iOS)
     func makeUIView(context: Context) -> Wrapped {
-        makeView()
+        return makeView(context)
     }
     func updateUIView(_ view: Wrapped, context: Context) {
         update(view, context)
     }
 #elseif os(macOS)
     func makeNSView(context: Context) -> Wrapped {
-        makeView()
+        return makeView(context)
     }
     func updateNSView(_ view: Wrapped, context: Context) {
         update(view, context)
@@ -68,32 +68,32 @@ struct WrapViewController<Wrapped: UI.ViewController>: UI.ViewControllerRepresen
     typealias NSViewControllerType = Wrapped
 #endif
     typealias Updater = (Wrapped, Context) -> Void
-    fileprivate var makeView: () -> Wrapped
+    fileprivate var makeViewCtl: (Context) -> Wrapped
     fileprivate var update: (Wrapped, Context) -> ()
-    init(_ setup: @escaping () -> Wrapped) {
-        self.makeView = setup
+    init(_ setup: @escaping (Context) -> Wrapped) {
+        self.makeViewCtl = setup
         self.update = { _, _ in }
     }
     init(
-        setup: @escaping () -> Wrapped,
-        update: @escaping (Wrapped, Context) -> ()
+        onUpdate: @escaping (Wrapped, Context) -> (),
+        setup: @escaping (Context) -> Wrapped
     ) {
-        self.makeView = setup
-        self.update = update
+        self.makeViewCtl = setup
+        self.update = onUpdate
     }
-    
 #if os(iOS)
-    func makeUIViewController(context: Self.Context) -> Self.UIViewControllerType {
-        makeView()
+    func makeUIViewController(context: Self.Context) -> Wrapped {
+        makeViewCtl(context)
     }
-    func updateUIViewController(_ ctl: Self.UIViewControllerType, context: Self.Context) {
+    func updateUIViewController(_ ctl: Wrapped, context: Self.Context) {
         update(ctl, context)
     }
 #elseif os(macOS)
-    func makeNSViewController(context: Self.Context) -> Self.NSViewControllerType {
-        makeView()
+    func makeNSViewController(context: Self.Context) -> Wrapped {
+        let ctl = makeViewCtl(context)
+        return ctl
     }
-    func updateNSViewController(_ ctl: Self.NSViewControllerType, context: Self.Context) {
+    func updateNSViewController(_ ctl: Wrapped, context: Self.Context) {
         update(ctl, context)
     }
 #endif

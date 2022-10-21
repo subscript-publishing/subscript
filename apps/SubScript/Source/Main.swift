@@ -11,34 +11,8 @@ import UniformTypeIdentifiers
 
 
 struct AppView: View {
-    @StateObject private var canvasModel = SS1.CanvasModel()
     var body: some View {
-//        SSV1.CanvasView(
-//            canvasModel: canvasModel,
-//            updateLayouts: {
-//
-//            }
-//        )
-        VStack(alignment: .center, spacing: 0) {
-            SS1.CanvasView(
-                canvasModel: canvasModel,
-                updateLayouts: {
-                    
-                },
-                isFirstChild: true,
-                isLastChild: true,
-                deleteMe: {
-                    
-                },
-                insertNewEntry: {
-                    
-                },
-                toggleVisibility: {
-                    
-                }
-            )
-            Spacer()
-        }
+        SS1.PageView()
     }
 }
 

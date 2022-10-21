@@ -21,7 +21,11 @@ struct CodableColor: Codable, Equatable, Hashable {
             self.color.cgColor
         }
         set(new) {
+#if os(iOS)
+            self.color = UI.Color(cgColor: new)
+#elseif os(macOS)
             self.color = UI.Color(cgColor: new)!
+#endif
         }
     }
     

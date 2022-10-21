@@ -216,7 +216,7 @@ pub extern "C" fn ssv1_canvas_runtime_begin_stroke(ptr: SSV1CanvasRuntimePtr) {
         cell.borrow().clone()
     });
     ptr.with_value(|canvas_runtime: &mut SSV1CanvasRuntime| {
-        assert!(canvas_runtime.active.points.is_empty());
+        canvas_runtime.active.clear();
         canvas_runtime.active.color = canvas::ColorModes::from_c(current_pen.color);
     })
 }

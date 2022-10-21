@@ -263,6 +263,10 @@ extension SS1 {
         let toggleVisibility: () -> ()
         
         @Environment(\.colorScheme) private var colorScheme
+        @State private var showBottomMenu: Bool = false
+        private var canvasHeight: CGFloat {
+            return max(200, self.canvasModel.height)
+        }
         private func incDrawingHeight() {
             canvasModel.height = max(0, canvasModel.height + 50)
             updateLayouts()
@@ -279,7 +283,7 @@ extension SS1 {
             canvasModel.height = max(0, canvasModel.height - 250)
             updateLayouts()
         }
-        @ViewBuilder private var gutter: some View {
+        @ViewBuilder private var topGutter: some View {
             HStack(alignment: .center, spacing: 0) {Spacer()}
                 .background(Rectangle().foregroundColor(
                     colorScheme == .dark
@@ -290,102 +294,99 @@ extension SS1 {
                 .border(edges: [.top, .bottom])
         }
         @ViewBuilder private var header: some View {
-            gutter
+            topGutter
         }
         @ViewBuilder private var bottomMenu: some View {
             HStack(alignment: .center, spacing: 0) {
                 let spacing: CGFloat = 12
-                let width: CGFloat = canvasModel.visible ? 40 : 35
-                let height: CGFloat = canvasModel.visible ? 40 : 35
-                let fontSizeScale: CGFloat = canvasModel.visible ? 0.75 : 0.5
+                let width: CGFloat = canvasModel.visible ? 35 : 35
+                let height: CGFloat = canvasModel.visible ? 35 : 35
+                let fontSizeScale: CGFloat = canvasModel.visible ? 0.65 : 0.5
+                let bigWidth: CGFloat = 50
+                let bigHeight: CGFloat = 50
                 HStack(alignment: .center, spacing: spacing) {
                     Button(action: self.decDrawingHeight, label: {
-                        let color = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
-                        let background = Circle()
-                            .foregroundColor(Color(color))
                         Image(systemName: "minus")
                             .font(.system(size: 30 * fontSizeScale))
-                            .frame(width: width, height: height, alignment: .center)
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                            .background(background)
                     })
-                    .hidden(!canvasModel.visible)
+                        .buttonStyle(CircleButton(width: width, height: height))
+                        .hidden(!canvasModel.visible)
                     Button(action: self.bigDecDrawingHeight, label: {
-                        let color = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
-                        let background = Circle()
-                            .foregroundColor(Color(color))
                         Image(systemName: "minus")
                             .font(.system(size: 30 * fontSizeScale))
-                            .frame(width: width + 15, height: height + 15, alignment: .center)
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                            .background(background)
                     })
-                    .hidden(!canvasModel.visible)
+                        .hidden(!canvasModel.visible)
+                        .buttonStyle(CircleButton(width: bigWidth, height: bigHeight))
                     Button(action: self.bigIncDrawingHeight, label: {
-                        let bgColor = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
-                        let background = Circle()
-                            .foregroundColor(Color(bgColor))
                         Image(systemName: "plus")
                             .font(.system(size: 24 * fontSizeScale))
-                            .frame(width: width + 15, height: height + 15, alignment: .center)
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                            .background(background)
                     })
-                    .hidden(!canvasModel.visible)
+                        .buttonStyle(CircleButton(width: bigWidth, height: bigHeight))
+                        .hidden(!canvasModel.visible)
                     Button(action: self.incDrawingHeight, label: {
-                        let bgColor = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
-                        let background = Circle()
-                            .foregroundColor(Color(bgColor))
-                        Image(systemName: "plus")
-                            .font(.system(size: 24 * fontSizeScale))
-                            .frame(width: width, height: height, alignment: .center)
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                            .background(background)
+                        Image(systemName: "plus").font(.system(size: 24 * fontSizeScale))
                     })
-                    .hidden(!canvasModel.visible)
+                        .buttonStyle(CircleButton(width: width, height: height))
+                        .hidden(!canvasModel.visible)
                     Spacer()
                 }
                 .frame(width: 100, alignment: .leading)
                 Spacer()
                 HStack(alignment: .center, spacing: spacing) {
-                    Button(
-                        action: {
-                            withAnimation {
-                                canvasModel.visible.toggle()
+                    Group {
+                        Button(
+                            action: {
+                                withAnimation {
+                                    canvasModel.visible.toggle()
+                                }
+                            },
+                            label: {
+                                let showIcon = "eye"
+                                let hiddenIcon = "eye.slash"
+                                Image(systemName: canvasModel.visible ? showIcon : hiddenIcon)
+                                    .font(.system(size: 20 * fontSizeScale))
                             }
-                        },
-                        label: {
-                            let showIcon = "eye"
-                            let hiddenIcon = "eye.slash"
-                            let bgColor = #colorLiteral(red: 0.8545565443, green: 0.8545565443, blue: 0.8545565443, alpha: 1)
-                            let background = Circle()
-                                .foregroundColor(Color(bgColor))
-                            Image(systemName: canvasModel.visible ? showIcon : hiddenIcon)
-                                .font(.system(size: 20 * fontSizeScale))
-                                .frame(width: width, height: height, alignment: .center)
-                                .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                                .background(background)
-                        }
-                    )
-                    Button(action: insertNewEntry, label: {
+                        )
+                            .buttonStyle(CircleButton(width: width, height: height))
+                    }
+                    Group {
                         let bgColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
-                        let background = Circle()
-                            .foregroundColor(Color(bgColor))
-                        Image(systemName: "plus.square")
-                            .font(.system(size: 24 * fontSizeScale))
-                            .frame(width: width, height: height, alignment: .center)
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                            .background(background)
-                    })
-                    Button(action: deleteMe, label: {
+                        Button(action: insertNewEntry, label: {
+                            Image(systemName: "plus.square")
+                                .font(.system(size: 24 * fontSizeScale))
+                        })
+                            .buttonStyle(CircleButton(
+                                width: width,
+                                height: height,
+                                bgColor: UI.ColorMode(
+                                    lightUIMode: bgColor,
+                                    darkUIMode: bgColor
+                                ),
+                                fgColor: UI.ColorMode(
+                                    lightUIMode: nil,
+                                    darkUIMode: UI.Color.black
+                                )
+                            ))
+                    }
+                    Group {
                         let bgColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
-                        let background = Circle().foregroundColor(Color(bgColor))
-                        Image(systemName: "trash")
-                            .font(.system(size: 20 * fontSizeScale))
-                            .frame(width: width, height: height, alignment: .center)
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-//                            .background(background)
-                    })
+                        Button(action: deleteMe, label: {
+                            Image(systemName: "trash")
+                                .font(.system(size: 20 * fontSizeScale))
+                        })
+                            .buttonStyle(CircleButton(
+                                width: width,
+                                height: height,
+                                bgColor: UI.ColorMode(
+                                    lightUIMode: bgColor,
+                                    darkUIMode: bgColor
+                                ),
+                                fgColor: UI.ColorMode(
+                                    lightUIMode: nil,
+                                    darkUIMode: UI.Color.black
+                                )
+                            ))
+                    }
                 }
                 .frame(width: 100, alignment: .center)
                 
@@ -407,12 +408,12 @@ extension SS1 {
             let lastShadowColor = colorScheme == .dark ? darkLastShadowColor : lightLastShadowColor
             let mainShadowColor = colorScheme == .dark ? darkMainShadowColor : lightMainShadowColor
             
-            WrapView {
+            WrapView { ctx in
                 let view: CanvasRendererView = CanvasRendererView()
                 view.setup()
                 return view
             }
-            .frame(height: max(200, canvasModel.height))
+            .frame(height: canvasHeight)
             .mask(mask)
             .shadow(
                 color: isLastChild ? lastShadowColor : mainShadowColor,
@@ -425,12 +426,18 @@ extension SS1 {
             VStack(alignment: .center, spacing: 0) {
                 header
                 if canvasModel.visible {
-                    canvas
-                        .hidden(!canvasModel.visible)
+                    ZStack(alignment: .top) {
+                        canvas.hidden(!canvasModel.visible)
+                        VStack(alignment: .center, spacing: 0) {
+                            Spacer()
+                            bottomMenu
+                        }
+                        .frame(height: canvasHeight + 80)
+                    }
+                } else {
+                    bottomMenu
                 }
-                bottomMenu
             }
-            .background(Color.clear)
         }
         fileprivate struct MaskView: Shape {
             static let offsetY: CGFloat = 20

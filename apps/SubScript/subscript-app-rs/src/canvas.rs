@@ -112,6 +112,9 @@ pub struct Stroke {
 }
 
 impl Stroke {
+    pub fn clear(&mut self) {
+        self.points.clear()
+    }
     pub fn draw(&self, config: &UIConfig, context: &mut CGContext) {
         if self.points.is_empty() {
             return ()
