@@ -1,13 +1,14 @@
 [workspace]
 members = [
-    "ss-str-fmt",
-    "html-to-subscript",
+    "subscript-compiler",
+    "apps/SubScript/subscript-app-rs",
+    "ss-notebook-format",
+    "ss-notebook-format-c-api",
     "ss-language-server",
     "ss-freeform-format",
-    "subscript-compiler",
+    "html-to-subscript",
+    "ss-str-fmt",
     "ss-database",
-    "subscript-graphics",
-    "apps/SubScript/subscript-app-rs",
 ]
 
 exclude = [

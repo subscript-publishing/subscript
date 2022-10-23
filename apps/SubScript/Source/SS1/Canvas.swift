@@ -9,28 +9,39 @@ import Foundation
 
 import SwiftUI
 import Combine
+import Metal
+import MetalKit
 
-fileprivate let CANAVS_PAPER_DARK_BG_COLOR: UI.Color = #colorLiteral(red: 0.1447366774, green: 0.1447366774, blue: 0.1447366774, alpha: 1)
-fileprivate let CANAVS_PAPER_LIGHT_BG_COLOR: UI.Color = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-fileprivate let DARK_LINE_COLOR: UI.Color = #colorLiteral(red: 0.2846999907, green: 0.2846999907, blue: 0.2846999907, alpha: 1)
-fileprivate let LIGHT_LINE_COLOR: UI.Color = #colorLiteral(red: 0.7919328, green: 0.7919328, blue: 0.7919328, alpha: 1)
+fileprivate let CANAVS_PAPER = UI.LL.ColorMap(
+    lightUI: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1),
+    darkUI: #colorLiteral(red: 0.1447366774, green: 0.1447366774, blue: 0.1447366774, alpha: 1)
+)
+fileprivate let LINE_COLOR: UI.LL.ColorMap = UI.LL.ColorMap(
+    lightUI: #colorLiteral(red: 0.7919328, green: 0.7919328, blue: 0.7919328, alpha: 1),
+    darkUI: #colorLiteral(red: 0.2846999907, green: 0.2846999907, blue: 0.2846999907, alpha: 1)
+)
 
 #if os(iOS)
 #elseif os(macOS)
 #endif
 
 
-fileprivate class CanvasGestureRecognizer: UI.GestureRecognizer {
+fileprivate class CanvasGestureRecognizer: UI.LL.GestureRecognizer {
     weak var canvasRuntime: SS1.CanvasRuntime!
 #if os(iOS)
     @inline(__always) private func addSample(touch: UITouch) {
-        #if !targetEnvironment(macCatalyst)
+#if !targetEnvironment(macCatalyst)
         if touch.type != UITouch.TouchType.pencil {return}
-        #endif
+#endif
         let point = touch.location(in: self.view)
         let width = self.view!.frame.width
         let height = self.view!.frame.height
-        self.canvasRuntime.recordStrokePoint(width: width, height: height, x: point.x, y: point.y)
+        let force = touch.force
+        let sample = SS1.CanvasModel.SamplePoint(
+            point: point,
+            force: force
+        )
+        self.canvasRuntime.recordStrokePoint(width: width, height: height, sample: sample)
     }
     @inline(__always) private func addSample(touch: UITouch, event: UIEvent) {
         for x in event.coalescedTouches(for: touch) ?? [touch] {
@@ -66,7 +77,11 @@ fileprivate class CanvasGestureRecognizer: UI.GestureRecognizer {
             let point = self.view!.convert(event.locationInWindow, from: nil)
             let width = self.view!.frame.width
             let height = self.view!.frame.height
-            self.canvasRuntime.recordStrokePoint(width: width, height: height, x: point.x, y: point.y)
+            let sample = SS1.CanvasModel.SamplePoint(
+                point: CGPoint(x: point.x, y: point.y),
+                force: nil
+            )
+            self.canvasRuntime.recordStrokePoint(width: width, height: height, sample: sample)
         }
     }
     override func mouseDown(with event: NSEvent) {
@@ -83,6 +98,7 @@ fileprivate class CanvasGestureRecognizer: UI.GestureRecognizer {
     }
     override func mouseUp(with event: NSEvent) {
         super.mouseUp(with: event)
+        self.addSample(event: event)
         self.dragging = false
         self.canvasRuntime.endStroke()
         self.view!.setNeedsDisplay(self.view!.frame)
@@ -90,86 +106,103 @@ fileprivate class CanvasGestureRecognizer: UI.GestureRecognizer {
 #endif
 }
 
-fileprivate class CanvasRendererView: UI.View {
+
+
+//fileprivate class MTKViewWrapper: MTKView {
+//    override var isOpaque: Bool {
+//        return false
+//    }
+//}
+
+fileprivate class MetalRenderer: UI.LL.View, MTKViewDelegate {
     private var canvasRuntime = SS1.CanvasRuntime()
     private var canvasGestureRecognizer = CanvasGestureRecognizer()
     private var backgroundPattern: BackgroundPattern = BackgroundPattern()
-    private var drawingRenderer: DrawingRenderer = DrawingRenderer()
+    
+    private var metalViewContextPtr: SS1_CAPI_MetalViewContextPtr!
+//    private var canvasSurface: OpaquePointer!
+    private var metalQueue: MTLCommandQueue!
+    private var mtkView: MTKView!
+    private var metalDevice: MTLDevice!
 #if os(macOS)
     override var isFlipped: Bool {true}
 #endif
-    func setupIOS() {
-#if os(iOS)
-        self.backgroundColor = UIColor.clear
-#endif
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        view.layer?.isOpaque = true
     }
-    func setup() {
-        self.setupIOS()
-        self.canvasGestureRecognizer.canvasRuntime = self.canvasRuntime
-#if os(iOS)
-        self.canvasGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.pencil.rawValue)]
-#endif
-        self.addGestureRecognizer(canvasGestureRecognizer)
-        let newPen = SS1.Pen(
-            color: SS1.ColorMode(
-                lightUIColorMode: CodableColor(withColor: UI.Color.red),
-                darkUIColorMode: CodableColor(withColor: UI.Color.red)
-            )
+    func draw(in view: MTKView) {
+        // RUST SKIA
+        mtkViewToCanvasSurface(view, self.metalViewContextPtr);
+        view.layer?.isOpaque = false
+        let width = self.frame.width;
+        let height = self.frame.height;
+        // METAL - PRESENT & COMMIT
+        let commandBuffer: MTLCommandBuffer = self.metalQueue.makeCommandBuffer()!
+        let rpd = view.currentRenderPassDescriptor!
+        rpd.colorAttachments[0].loadAction = .clear
+        rpd.colorAttachments[0].clearColor = MTLClearColorMake(1, 0, 0, 0.5)
+        canvasRuntime.drawFlushAndSubmit(
+            width: width,
+            height: height,
+            colorScheme: self.colorScheme,
+            metalViewContextPtr: self.metalViewContextPtr
         )
-        newPen.setToCurrentPen()
-        self.backgroundPattern.setup(parent: self)
-        self.drawingRenderer.setup(parent: self)
+        let drawable = view.currentDrawable!
+        commandBuffer.present(drawable)
+        commandBuffer.commit()
     }
+    
 #if os(iOS)
     override func setNeedsDisplay() {
         super.setNeedsDisplay()
         self.backgroundPattern.setNeedsDisplay()
-        self.drawingRenderer.setNeedsDisplay()
+        self.mtkView.setNeedsDisplay()
+//        self.drawingRenderer.setNeedsDisplay()
     }
 #elseif os(macOS)
     override func setNeedsDisplay(_ rect: NSRect) {
         super.setNeedsDisplay(rect)
         self.backgroundPattern.setNeedsDisplay(rect)
-        self.drawingRenderer.setNeedsDisplay(rect)
+        self.mtkView.setNeedsDisplay(rect)
+//        self.drawingRenderer.setNeedsDisplay(rect)
     }
 #endif
     
-    fileprivate class DrawingRenderer: UI.View {
-        weak var canvasRuntime: SS1.CanvasRuntime!
-#if os(macOS)
-        override var isFlipped: Bool {true}
+    func setup() {
+        self.canvasGestureRecognizer.canvasRuntime = self.canvasRuntime
+#if os(iOS) && !targetEnvironment(macCatalyst)
+        self.canvasGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.pencil.rawValue)]
 #endif
-        fileprivate func setup(parent: CanvasRendererView) {
-            self.canvasRuntime = parent.canvasRuntime
-            self.translatesAutoresizingMaskIntoConstraints = false
-            parent.addSubview(self)
-            NSLayoutConstraint.activate([
-                self.leftAnchor.constraint(equalTo: parent.leftAnchor),
-                self.rightAnchor.constraint(equalTo: parent.rightAnchor),
-                self.topAnchor.constraint(equalTo: parent.topAnchor),
-                self.bottomAnchor.constraint(equalTo: parent.bottomAnchor),
-            ])
-#if os(iOS)
-            self.contentMode = .redraw
-            self.backgroundColor = UI.Color.clear
-#elseif os(macOS)
-#endif
-        }
-        
-        override func draw(_ rect: CGRect) {
-            super.draw(rect)
-            let context = self.getCGContext()!
-            let width = self.frame.width;
-            let height = self.frame.height;
-            canvasRuntime.setColorScheme(colorScheme: self.colorScheme)
-            canvasRuntime.draw(width: width, height: height, context: context)
-        }
+        self.addGestureRecognizer(canvasGestureRecognizer)
+        self.backgroundPattern.setup(parent: self)
+        self.metalDevice = MTLCreateSystemDefaultDevice()
+        self.metalQueue = self.metalDevice.makeCommandQueue()
+        self.mtkView = MTKView()
+        self.mtkView.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+//        self.mtkView.clea
+        self.mtkView.translatesAutoresizingMaskIntoConstraints = false
+        self.mtkView.device = self.metalDevice
+        self.mtkView.enableSetNeedsDisplay = true
+        self.addSubview(self.mtkView)
+        NSLayoutConstraint.activate([
+            self.mtkView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.mtkView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.mtkView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            self.mtkView.rightAnchor.constraint(equalTo: self.rightAnchor),
+        ])
+        self.mtkView.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
+        self.mtkView.colorPixelFormat = .bgra8Unorm
+        self.mtkView.sampleCount = 1
+        self.metalViewContextPtr = metalDeviceToRustContext(self.mtkView, self.metalDevice, self.metalQueue)
+        self.mtkView.delegate = self
     }
-    fileprivate class BackgroundPattern: UI.View {
+    
+    
+    fileprivate class BackgroundPattern: UI.LL.View {
 #if os(macOS)
         override var isFlipped: Bool {true}
 #endif
-        fileprivate func setup(parent: CanvasRendererView) {
+        fileprivate func setup(parent: MetalRenderer) {
             self.translatesAutoresizingMaskIntoConstraints = false
             parent.addSubview(self)
             NSLayoutConstraint.activate([
@@ -180,7 +213,7 @@ fileprivate class CanvasRendererView: UI.View {
             ])
 #if os(iOS)
             self.contentMode = .redraw
-            self.backgroundColor = UI.Color.clear
+            self.backgroundColor = UI.LL.Color.clear
 #elseif os(macOS)
 #endif
         }
@@ -189,11 +222,11 @@ fileprivate class CanvasRendererView: UI.View {
             let context = self.getCGContext()!
             // BACKGROUND
             context.saveGState()
-            let backgroundColor = self.colorScheme == .dark ? CANAVS_PAPER_DARK_BG_COLOR : CANAVS_PAPER_LIGHT_BG_COLOR
+            let backgroundColor = CANAVS_PAPER.get(for: self.colorScheme)
             context.setFillColor(backgroundColor.cgColor)
             context.fill(rect)
             // DRAW GRID LINES
-            let lineColor = self.colorScheme == .dark ? DARK_LINE_COLOR : LIGHT_LINE_COLOR
+            let lineColor = LINE_COLOR.get(for: self.colorScheme)
             let marginLineColor = #colorLiteral(red: 0.7126647534, green: 0.3747633605, blue: 0.5037802704, alpha: 1)
             context.setStrokeColor(lineColor.cgColor)
             var row: CGFloat = 0.0
@@ -221,7 +254,7 @@ fileprivate class CanvasRendererView: UI.View {
 
 
 extension SS1 {
-    class CanvasModel: ObservableObject, Codable {
+    class CanvasModel: ObservableObject, Codable, Identifiable {
         var id = UUID.init()
         /// Drawn strokes
 //        var foregroundStrokes: Array<Stroke> = []
@@ -254,6 +287,7 @@ extension SS1 {
         }
     }
     struct CanvasView: View {
+        let index: Int?
         @ObservedObject var canvasModel: CanvasModel
         let updateLayouts: () -> ()
         let isFirstChild: Bool
@@ -291,7 +325,7 @@ extension SS1 {
                         : SS1.StaticSettings.LightMode.Canvas.BG2
                 ))
                 .padding([.top, .bottom], 4)
-                .border(edges: [.top, .bottom])
+                .border(edges: [.bottom, .top])
         }
         @ViewBuilder private var header: some View {
             topGutter
@@ -359,12 +393,12 @@ extension SS1 {
                                 width: width,
                                 height: height,
                                 bgColor: UI.ColorMode(
-                                    lightUIMode: bgColor,
-                                    darkUIMode: bgColor
+                                    lightUI: bgColor,
+                                    darkUI: bgColor
                                 ),
                                 fgColor: UI.ColorMode(
-                                    lightUIMode: nil,
-                                    darkUIMode: UI.Color.black
+                                    lightUI: nil,
+                                    darkUI: UI.LL.Color.black
                                 )
                             ))
                     }
@@ -378,12 +412,12 @@ extension SS1 {
                                 width: width,
                                 height: height,
                                 bgColor: UI.ColorMode(
-                                    lightUIMode: bgColor,
-                                    darkUIMode: bgColor
+                                    lightUI: bgColor,
+                                    darkUI: bgColor
                                 ),
                                 fgColor: UI.ColorMode(
-                                    lightUIMode: nil,
-                                    darkUIMode: UI.Color.black
+                                    lightUI: nil,
+                                    darkUI: UI.LL.Color.black
                                 )
                             ))
                     }
@@ -399,17 +433,17 @@ extension SS1 {
             let mask = MaskView()
                 .fill()
                 .foregroundColor(Color.black)
-            let darkMainShadowColor = Color(#colorLiteral(red: 0.0795307681, green: 0.0795307681, blue: 0.0795307681, alpha: 1))
+            let darkMainShadowColor = Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
             let darkLastShadowColor = Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
             
-            let lightMainShadowColor = Color(#colorLiteral(red: 0.0795307681, green: 0.0795307681, blue: 0.0795307681, alpha: 0.3999450262))
+            let lightMainShadowColor = Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5857864591))
             let lightLastShadowColor = Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5857864591))
             
             let lastShadowColor = colorScheme == .dark ? darkLastShadowColor : lightLastShadowColor
             let mainShadowColor = colorScheme == .dark ? darkMainShadowColor : lightMainShadowColor
             
             WrapView { ctx in
-                let view: CanvasRendererView = CanvasRendererView()
+                let view: MetalRenderer = MetalRenderer()
                 view.setup()
                 return view
             }
@@ -423,8 +457,12 @@ extension SS1 {
             )
         }
         var body: some View {
-            VStack(alignment: .center, spacing: 0) {
-                header
+            let view = VStack(alignment: .center, spacing: 0) {
+                if colorScheme == .light {
+                    header
+                } else {
+                    header.background(Color(UI.DefaultColors.DARK_BG_COLOR_LIGHTER))
+                }
                 if canvasModel.visible {
                     ZStack(alignment: .top) {
                         canvas.hidden(!canvasModel.visible)
@@ -437,6 +475,11 @@ extension SS1 {
                 } else {
                     bottomMenu
                 }
+            }
+            if isLastChild || colorScheme == .light {
+                view
+            } else {
+                view.background(Color(UI.DefaultColors.DARK_BG_COLOR_LIGHTER))
             }
         }
         fileprivate struct MaskView: Shape {
@@ -477,26 +520,6 @@ extension SS1 {
                 return path
             }
 #endif
-        }
-        
-        
-        fileprivate struct MaskView2: Shape {
-            static let offsetY: CGFloat = 20
-            func path(in rect: CGRect) -> Path {
-                let centerY = rect.height - MaskView.offsetY
-                let steps = 545
-                let stepX = rect.width / CGFloat(steps)
-                var path = Path()
-                path.move(to: CGPoint(x: 0, y: 0))
-                for i in 0...steps {
-                    let x = CGFloat(i) * stepX
-                    let y = abs((cos(Double(i) * 0.15) * 10) + Double(centerY))
-                    path.addLine(to: CGPoint(x: x, y: CGFloat(y)))
-                }
-                path.addLine(to: CGPoint(x: rect.width, y: 0.0))
-                path.closeSubpath()
-                return path
-            }
         }
     }
 }

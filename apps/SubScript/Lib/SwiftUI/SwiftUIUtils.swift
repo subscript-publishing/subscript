@@ -86,7 +86,11 @@ struct RoundedLabel<V: View>: View {
     let altColor: Bool
     @Environment(\.colorScheme) private var colorScheme
     
-    init(inactive: Bool = false, altColor: Bool = false, @ViewBuilder label: @escaping () -> V) {
+    init(
+        inactive: Bool = false,
+        altColor: Bool = false,
+        @ViewBuilder label: @escaping () -> V
+    ) {
         self.label = label
         self.inactive = inactive
         self.altColor = altColor

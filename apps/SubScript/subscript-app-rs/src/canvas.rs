@@ -9,6 +9,7 @@ pub struct Point {
 pub enum ToolType {
     Pen,
     Eraser,
+    Lasso,
 }
 
 #[derive(Debug, Clone)]
@@ -52,22 +53,35 @@ pub struct UIConfig {
 }
 
 #[derive(Debug, Clone, Default)]
+/// Because I didn’t want to figure out how to convert HSBA to RGB using
+/// Apple’s color ranges.
 pub struct Color {
+    hue: f64,
+    saturation: f64,
+    brightness: f64,
     red: f64,
-    blue: f64,
     green: f64,
+    blue: f64,
     alpha: f64,
 }
 
 impl Color {
-    pub fn from_c(value: crate::SSV1RGBAColor) -> Self {
-        Color { red: value.red, blue: value.blue, green: value.green, alpha: value.alpha }
+    pub fn from_c(value: crate::SSV1Color) -> Self {
+        Color {
+            hue: value.hue,
+            saturation: value.saturation,
+            brightness: value.brightness,
+            red: value.red,
+            green: value.green,
+            blue: value.blue,
+            alpha: value.alpha,
+        }
     }
     pub fn white() -> Self {
-        Color { red: 1.0, blue: 1.0, green: 1.0, alpha: 1.0 }
+        Color::from_c(crate::SSV1Color::white())
     }
     pub fn black() -> Self {
-        Color { red: 0.0, blue: 0.0, green: 0.0, alpha: 0.0 }
+        Color::from_c(crate::SSV1Color::black())
     }
 }
 
@@ -87,10 +101,10 @@ impl ColorModes {
     pub fn set_cg_context_color(&self, config: &UIConfig, context: &mut CGContext) {
         match config.color_scheme {
             ColorScheme::Dark => {
-                context.set_rgb_stroke_color(self.dark.red, self.dark.green, self.dark.blue, self.dark.alpha)
+                // context.set_rgb_stroke_color(self.dark.red, self.dark.green, self.dark.blue, self.dark.alpha)
             }
             ColorScheme::Light => {
-                context.set_rgb_stroke_color(self.light.red, self.light.green, self.light.blue, self.light.alpha)
+                // context.set_rgb_stroke_color(self.light.red, self.light.green, self.light.blue, self.light.alpha)
             }
         }
     }

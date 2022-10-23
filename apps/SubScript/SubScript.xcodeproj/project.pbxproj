@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F42422CD29052212003FE378 /* SwiftDev.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42422CC29052212003FE378 /* SwiftDev.swift */; };
+		F42422CE29052212003FE378 /* SwiftDev.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42422CC29052212003FE378 /* SwiftDev.swift */; };
+		F49884B22904DB7F00E99E55 /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884B12904DB7F00E99E55 /* libss_notebook_format_c_api.a */; };
+		F49884B42904DB9000E99E55 /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884B32904DB9000E99E55 /* libss_notebook_format_c_api.a */; platformFilter = ios; };
+		F49884B72904E98900E99E55 /* ToolTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49884B62904E98900E99E55 /* ToolTypes.swift */; };
+		F49884B82904E98900E99E55 /* ToolTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49884B62904E98900E99E55 /* ToolTypes.swift */; };
+		F49884BB2904FC2A00E99E55 /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884BA2904FC2A00E99E55 /* libss_notebook_format_c_api.a */; platformFilter = maccatalyst; };
 		F4991C5C2900ABC40042E1DC /* SubScriptDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C472900ABBF0042E1DC /* SubScriptDocument.swift */; };
 		F4991C5D2900ABC40042E1DC /* SubScriptDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C472900ABBF0042E1DC /* SubScriptDocument.swift */; };
 		F4991C602900ABC40042E1DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4991C492900ABC40042E1DC /* Assets.xcassets */; };
@@ -55,8 +62,6 @@
 		F4991CE02900AEC30042E1DC /* SS1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CDE2900AEC30042E1DC /* SS1.swift */; };
 		F4991CE22900B1390042E1DC /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CE12900B1390042E1DC /* Canvas.swift */; };
 		F4991CE32900B1390042E1DC /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CE12900B1390042E1DC /* Canvas.swift */; };
-		F4991CEF2900BF7B0042E1DC /* libsubscript_app_rs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4991CEB2900BC940042E1DC /* libsubscript_app_rs.a */; };
-		F4991CF02900BF8A0042E1DC /* libsubscript_app_rs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4991CED2900BCA20042E1DC /* libsubscript_app_rs.a */; };
 		F4991CF42900C7E70042E1DC /* NSEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CF32900C7E70042E1DC /* NSEvent.swift */; };
 		F4991CF52900C7E70042E1DC /* NSEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991CF32900C7E70042E1DC /* NSEvent.swift */; };
 		F4991D012900CA6B0042E1DC /* FFI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D002900CA6B0042E1DC /* FFI.swift */; };
@@ -73,17 +78,38 @@
 		F4991D242901C6B90042E1DC /* ViewExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D222901C6B90042E1DC /* ViewExts.swift */; };
 		F4991D272901C89E0042E1DC /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D262901C89E0042E1DC /* Buttons.swift */; };
 		F4991D282901C89E0042E1DC /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D262901C89E0042E1DC /* Buttons.swift */; };
-		F4991D2A2901D1F20042E1DC /* UI+ColorMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D292901D1F20042E1DC /* UI+ColorMode.swift */; };
-		F4991D2B2901D1F20042E1DC /* UI+ColorMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D292901D1F20042E1DC /* UI+ColorMode.swift */; };
 		F4991D2D2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */; };
 		F4991D2E2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */; };
 		F4991D302901E41F0042E1DC /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2F2901E41F0042E1DC /* Page.swift */; };
 		F4991D312901E41F0042E1DC /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2F2901E41F0042E1DC /* Page.swift */; };
 		F4991D332901EDFF0042E1DC /* PageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D322901EDFF0042E1DC /* PageEntry.swift */; };
 		F4991D342901EDFF0042E1DC /* PageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D322901EDFF0042E1DC /* PageEntry.swift */; };
+		F4991D372902513C0042E1DC /* Heading.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D362902513B0042E1DC /* Heading.swift */; };
+		F4991D382902513C0042E1DC /* Heading.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D362902513B0042E1DC /* Heading.swift */; };
+		F4AE2F4D29032D5C00F897D7 /* PenListEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F4C29032D5C00F897D7 /* PenListEditor.swift */; };
+		F4AE2F4E29032D5C00F897D7 /* PenListEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F4C29032D5C00F897D7 /* PenListEditor.swift */; };
+		F4AE2F53290343B000F897D7 /* UI+Hacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F52290343B000F897D7 /* UI+Hacks.swift */; };
+		F4AE2F54290343B000F897D7 /* UI+Hacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F52290343B000F897D7 /* UI+Hacks.swift */; };
+		F4AE2F56290381D500F897D7 /* SwiftUITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */; };
+		F4AE2F57290381D500F897D7 /* SwiftUITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */; };
+		F4AE2F592903C77C00F897D7 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F582903C77C00F897D7 /* ColorEditor.swift */; };
+		F4AE2F5A2903C77C00F897D7 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F582903C77C00F897D7 /* ColorEditor.swift */; };
+		F4FCB7342904744E00D50CE4 /* UI+LL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB7332904744E00D50CE4 /* UI+LL.swift */; };
+		F4FCB7352904744E00D50CE4 /* UI+LL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB7332904744E00D50CE4 /* UI+LL.swift */; };
+		F4FCB73D290478D000D50CE4 /* UI+ColorTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB73C290478D000D50CE4 /* UI+ColorTypes.swift */; };
+		F4FCB73E290478D000D50CE4 /* UI+ColorTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB73C290478D000D50CE4 /* UI+ColorTypes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F42422C629051CD9003FE378 /* FFI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFI.h; sourceTree = "<group>"; };
+		F42422C729051CE9003FE378 /* FFI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFI.h; sourceTree = "<group>"; };
+		F42422CC29052212003FE378 /* SwiftDev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDev.swift; sourceTree = "<group>"; };
+		F49884B12904DB7F00E99E55 /* libss_notebook_format_c_api.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libss_notebook_format_c_api.a; path = "../../target/x86_64-apple-darwin/release/libss_notebook_format_c_api.a"; sourceTree = "<group>"; };
+		F49884B32904DB9000E99E55 /* libss_notebook_format_c_api.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libss_notebook_format_c_api.a; path = "../../target/aarch64-apple-ios/release/libss_notebook_format_c_api.a"; sourceTree = "<group>"; };
+		F49884B52904DC9000E99E55 /* ss-notebook-format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ss-notebook-format.h"; path = "../../../../ss-notebook-format-c-api/ffi/include/ss-notebook-format.h"; sourceTree = "<group>"; };
+		F49884B62904E98900E99E55 /* ToolTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTypes.swift; sourceTree = "<group>"; };
+		F49884B92904FC0500E99E55 /* SubScript (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SubScript (iOS).entitlements"; sourceTree = "<group>"; };
+		F49884BA2904FC2A00E99E55 /* libss_notebook_format_c_api.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libss_notebook_format_c_api.a; path = "../../target/x86_64-apple-ios-macabi/release/libss_notebook_format_c_api.a"; sourceTree = "<group>"; };
 		F4991C472900ABBF0042E1DC /* SubScriptDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubScriptDocument.swift; sourceTree = "<group>"; };
 		F4991C492900ABC40042E1DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4991C4E2900ABC40042E1DC /* SubScript.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubScript.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,18 +143,22 @@
 		F4991CED2900BCA20042E1DC /* libsubscript_app_rs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsubscript_app_rs.a; path = "../../target/x86_64-apple-darwin/release/libsubscript_app_rs.a"; sourceTree = "<group>"; };
 		F4991CF32900C7E70042E1DC /* NSEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEvent.swift; sourceTree = "<group>"; };
 		F4991D002900CA6B0042E1DC /* FFI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFI.swift; sourceTree = "<group>"; };
-		F4991D042900DBF60042E1DC /* ffi-interface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ffi-interface.h"; sourceTree = "<group>"; };
-		F4991D052900DD9E0042E1DC /* ffi-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ffi-bridge.h"; path = "ffi/include/ffi-bridge.h"; sourceTree = SOURCE_ROOT; };
 		F4991D0E2900E4980042E1DC /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		F4991D11290115320042E1DC /* Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toolbar.swift; sourceTree = "<group>"; };
 		F4991D14290115640042E1DC /* Pen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pen.swift; sourceTree = "<group>"; };
 		F4991D17290124DA0042E1DC /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F4991D222901C6B90042E1DC /* ViewExts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExts.swift; sourceTree = "<group>"; };
 		F4991D262901C89E0042E1DC /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		F4991D292901D1F20042E1DC /* UI+ColorMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+ColorMode.swift"; sourceTree = "<group>"; };
 		F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+DefaultColors.swift"; sourceTree = "<group>"; };
 		F4991D2F2901E41F0042E1DC /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		F4991D322901EDFF0042E1DC /* PageEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageEntry.swift; sourceTree = "<group>"; };
+		F4991D362902513B0042E1DC /* Heading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Heading.swift; sourceTree = "<group>"; };
+		F4AE2F4C29032D5C00F897D7 /* PenListEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenListEditor.swift; sourceTree = "<group>"; };
+		F4AE2F52290343B000F897D7 /* UI+Hacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+Hacks.swift"; sourceTree = "<group>"; };
+		F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUITheme.swift; sourceTree = "<group>"; };
+		F4AE2F582903C77C00F897D7 /* ColorEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorEditor.swift; sourceTree = "<group>"; };
+		F4FCB7332904744E00D50CE4 /* UI+LL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+LL.swift"; sourceTree = "<group>"; };
+		F4FCB73C290478D000D50CE4 /* UI+ColorTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+ColorTypes.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,7 +166,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4991CEF2900BF7B0042E1DC /* libsubscript_app_rs.a in Frameworks */,
+				F49884BB2904FC2A00E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
+				F49884B42904DB9000E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,13 +175,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4991CF02900BF8A0042E1DC /* libsubscript_app_rs.a in Frameworks */,
+				F49884B22904DB7F00E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F42422C429051CB5003FE378 /* IOS */ = {
+			isa = PBXGroup;
+			children = (
+				F42422C729051CE9003FE378 /* FFI.h */,
+				F42422CC29052212003FE378 /* SwiftDev.swift */,
+			);
+			path = IOS;
+			sourceTree = "<group>";
+		};
+		F42422C529051CBA003FE378 /* MacOS */ = {
+			isa = PBXGroup;
+			children = (
+				F42422C629051CD9003FE378 /* FFI.h */,
+			);
+			path = MacOS;
+			sourceTree = "<group>";
+		};
 		F4991C402900ABBF0042E1DC = {
 			isa = PBXGroup;
 			children = (
@@ -185,6 +233,7 @@
 		F4991C502900ABC40042E1DC /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				F49884B92904FC0500E99E55 /* SubScript (iOS).entitlements */,
 				F4991C512900ABC40042E1DC /* Info.plist */,
 			);
 			path = iOS;
@@ -206,7 +255,6 @@
 				F4991CDD2900AEB10042E1DC /* SS1 */,
 				F4991CDE2900AEC30042E1DC /* SS1.swift */,
 				F4991C792900ACFA0042E1DC /* Main.swift */,
-				F4991D002900CA6B0042E1DC /* FFI.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -215,7 +263,7 @@
 			isa = PBXGroup;
 			children = (
 				F4991D1E2901C5A60042E1DC /* Foundation */,
-				F4991D0D2900E48B0042E1DC /* UICompatibility */,
+				F4991D0D2900E48B0042E1DC /* UI */,
 				F4991D212901C5D10042E1DC /* AppKit */,
 				F4991D202901C5C90042E1DC /* UIKit */,
 				F4991D1F2901C5AD0042E1DC /* CoreGraphics */,
@@ -242,10 +290,9 @@
 		F4991CA92900AD060042E1DC /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */,
 				F4991CAB2900AD060042E1DC /* MathUtil.swift */,
 				F4991CAC2900AD060042E1DC /* CodableColor.swift */,
-				F4991D292901D1F20042E1DC /* UI+ColorMode.swift */,
-				F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -253,12 +300,15 @@
 		F4991CDD2900AEB10042E1DC /* SS1 */ = {
 			isa = PBXGroup;
 			children = (
+				F4AE2F462903277B00F897D7 /* Toolbar */,
+				F4991D352902512E0042E1DC /* PageEntry */,
 				F4991CE12900B1390042E1DC /* Canvas.swift */,
 				F4991D11290115320042E1DC /* Toolbar.swift */,
 				F4991D14290115640042E1DC /* Pen.swift */,
 				F4991D17290124DA0042E1DC /* Settings.swift */,
 				F4991D2F2901E41F0042E1DC /* Page.swift */,
 				F4991D322901EDFF0042E1DC /* PageEntry.swift */,
+				F49884B62904E98900E99E55 /* ToolTypes.swift */,
 			);
 			path = SS1;
 			sourceTree = "<group>";
@@ -266,6 +316,9 @@
 		F4991CEA2900BC940042E1DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F49884B12904DB7F00E99E55 /* libss_notebook_format_c_api.a */,
+				F49884B32904DB9000E99E55 /* libss_notebook_format_c_api.a */,
+				F49884BA2904FC2A00E99E55 /* libss_notebook_format_c_api.a */,
 				F4991CED2900BCA20042E1DC /* libsubscript_app_rs.a */,
 				F4991CEB2900BC940042E1DC /* libsubscript_app_rs.a */,
 			);
@@ -275,19 +328,25 @@
 		F4991D032900DBE00042E1DC /* FFI */ = {
 			isa = PBXGroup;
 			children = (
-				F4991D052900DD9E0042E1DC /* ffi-bridge.h */,
-				F4991D042900DBF60042E1DC /* ffi-interface.h */,
+				F42422C529051CBA003FE378 /* MacOS */,
+				F42422C429051CB5003FE378 /* IOS */,
+				F4991D002900CA6B0042E1DC /* FFI.swift */,
+				F49884B52904DC9000E99E55 /* ss-notebook-format.h */,
 			);
 			path = FFI;
 			sourceTree = "<group>";
 		};
-		F4991D0D2900E48B0042E1DC /* UICompatibility */ = {
+		F4991D0D2900E48B0042E1DC /* UI */ = {
 			isa = PBXGroup;
 			children = (
 				F4991D0E2900E4980042E1DC /* UI.swift */,
+				F4FCB7332904744E00D50CE4 /* UI+LL.swift */,
+				F4AE2F52290343B000F897D7 /* UI+Hacks.swift */,
+				F4FCB73C290478D000D50CE4 /* UI+ColorTypes.swift */,
 				F4991CA82900AD060042E1DC /* SwiftUIWrapper.swift */,
+				F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */,
 			);
-			path = UICompatibility;
+			path = UI;
 			sourceTree = "<group>";
 		};
 		F4991D1E2901C5A60042E1DC /* Foundation */ = {
@@ -336,6 +395,23 @@
 				F4991CA52900AD060042E1DC /* Border.swift */,
 			);
 			path = ViewExts;
+			sourceTree = "<group>";
+		};
+		F4991D352902512E0042E1DC /* PageEntry */ = {
+			isa = PBXGroup;
+			children = (
+				F4991D362902513B0042E1DC /* Heading.swift */,
+			);
+			path = PageEntry;
+			sourceTree = "<group>";
+		};
+		F4AE2F462903277B00F897D7 /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+				F4AE2F4C29032D5C00F897D7 /* PenListEditor.swift */,
+				F4AE2F582903C77C00F897D7 /* ColorEditor.swift */,
+			);
+			path = Toolbar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -436,8 +512,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4991D372902513C0042E1DC /* Heading.swift in Sources */,
 				F4991D15290115640042E1DC /* Pen.swift in Sources */,
 				F4991CBD2900AD060042E1DC /* CGPointExts.swift in Sources */,
+				F49884B72904E98900E99E55 /* ToolTypes.swift in Sources */,
+				F4AE2F53290343B000F897D7 /* UI+Hacks.swift in Sources */,
 				F4991CB52900AD060042E1DC /* ResultExts.swift in Sources */,
 				F4991D2D2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */,
 				F4991CB72900AD060042E1DC /* IntExts.swift in Sources */,
@@ -455,22 +534,27 @@
 				F4991CAD2900AD060042E1DC /* SwiftUIUtils.swift in Sources */,
 				F4991D332901EDFF0042E1DC /* PageEntry.swift in Sources */,
 				F4991D0F2900E4980042E1DC /* UI.swift in Sources */,
+				F4FCB7342904744E00D50CE4 /* UI+LL.swift in Sources */,
 				F4991D18290124DA0042E1DC /* Settings.swift in Sources */,
 				F4991CBF2900AD060042E1DC /* CGFloatExts.swift in Sources */,
 				F4991CC92900AD060042E1DC /* CustomScroller.swift in Sources */,
 				F4991CCB2900AD060042E1DC /* BindingExts.swift in Sources */,
 				F4991D302901E41F0042E1DC /* Page.swift in Sources */,
 				F4991D232901C6B90042E1DC /* ViewExts.swift in Sources */,
+				F4AE2F56290381D500F897D7 /* SwiftUITheme.swift in Sources */,
 				F4991CB92900AD060042E1DC /* URLExts.swift in Sources */,
 				F4991D272901C89E0042E1DC /* Buttons.swift in Sources */,
+				F42422CD29052212003FE378 /* SwiftDev.swift in Sources */,
 				F4991D012900CA6B0042E1DC /* FFI.swift in Sources */,
 				F4991CD12900AD060042E1DC /* Theme.swift in Sources */,
+				F4AE2F4D29032D5C00F897D7 /* PenListEditor.swift in Sources */,
+				F4FCB73D290478D000D50CE4 /* UI+ColorTypes.swift in Sources */,
 				F4991D12290115320042E1DC /* Toolbar.swift in Sources */,
+				F4AE2F592903C77C00F897D7 /* ColorEditor.swift in Sources */,
 				F4991CDB2900AD060042E1DC /* CodableColor.swift in Sources */,
 				F4991CD92900AD060042E1DC /* MathUtil.swift in Sources */,
 				F4991CC12900AD060042E1DC /* UIFontExts.swift in Sources */,
 				F4991CBB2900AD060042E1DC /* StringExts.swift in Sources */,
-				F4991D2A2901D1F20042E1DC /* UI+ColorMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,8 +562,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4991D382902513C0042E1DC /* Heading.swift in Sources */,
 				F4991D16290115640042E1DC /* Pen.swift in Sources */,
 				F4991CBE2900AD060042E1DC /* CGPointExts.swift in Sources */,
+				F49884B82904E98900E99E55 /* ToolTypes.swift in Sources */,
+				F4AE2F54290343B000F897D7 /* UI+Hacks.swift in Sources */,
 				F4991CB62900AD060042E1DC /* ResultExts.swift in Sources */,
 				F4991D2E2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */,
 				F4991CB82900AD060042E1DC /* IntExts.swift in Sources */,
@@ -497,22 +584,27 @@
 				F4991CAE2900AD060042E1DC /* SwiftUIUtils.swift in Sources */,
 				F4991D342901EDFF0042E1DC /* PageEntry.swift in Sources */,
 				F4991D102900E4980042E1DC /* UI.swift in Sources */,
+				F4FCB7352904744E00D50CE4 /* UI+LL.swift in Sources */,
 				F4991D19290124DA0042E1DC /* Settings.swift in Sources */,
 				F4991CC02900AD060042E1DC /* CGFloatExts.swift in Sources */,
 				F4991CCA2900AD060042E1DC /* CustomScroller.swift in Sources */,
 				F4991CCC2900AD060042E1DC /* BindingExts.swift in Sources */,
 				F4991D312901E41F0042E1DC /* Page.swift in Sources */,
 				F4991D242901C6B90042E1DC /* ViewExts.swift in Sources */,
+				F4AE2F57290381D500F897D7 /* SwiftUITheme.swift in Sources */,
 				F4991CBA2900AD060042E1DC /* URLExts.swift in Sources */,
 				F4991D282901C89E0042E1DC /* Buttons.swift in Sources */,
+				F42422CE29052212003FE378 /* SwiftDev.swift in Sources */,
 				F4991D022900CA6B0042E1DC /* FFI.swift in Sources */,
 				F4991CD22900AD060042E1DC /* Theme.swift in Sources */,
+				F4AE2F4E29032D5C00F897D7 /* PenListEditor.swift in Sources */,
+				F4FCB73E290478D000D50CE4 /* UI+ColorTypes.swift in Sources */,
 				F4991D13290115320042E1DC /* Toolbar.swift in Sources */,
+				F4AE2F5A2903C77C00F897D7 /* ColorEditor.swift in Sources */,
 				F4991CDC2900AD060042E1DC /* CodableColor.swift in Sources */,
 				F4991CDA2900AD060042E1DC /* MathUtil.swift in Sources */,
 				F4991CC22900AD060042E1DC /* UIFontExts.swift in Sources */,
 				F4991CBC2900AD060042E1DC /* StringExts.swift in Sources */,
-				F4991D2B2901D1F20042E1DC /* UI+ColorMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,9 +727,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "iOS/SubScript (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CV5FXG5P92;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/ffi";
@@ -654,13 +748,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/IOS/lib";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/IOS//lib";
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = app.dev.subscript.SubScript;
 				PRODUCT_NAME = SubScript;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/ffi-interface.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/IOS/FFI.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -671,9 +767,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "iOS/SubScript (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CV5FXG5P92;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/ffi";
@@ -690,13 +788,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/IOS/lib";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/IOS//lib";
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = app.dev.subscript.SubScript;
 				PRODUCT_NAME = SubScript;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/ffi-interface.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/IOS/FFI.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -727,11 +828,12 @@
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/MacOS/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = app.subscript.SubScript;
 				PRODUCT_NAME = SubScript;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/ffi-interface.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/MacOS/FFI.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -748,6 +850,7 @@
 				DEVELOPMENT_TEAM = CV5FXG5P92;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/ffi";
 				INFOPLIST_FILE = macOS/Info.plist;
@@ -759,11 +862,13 @@
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/MacOS/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = app.subscript.SubScript;
 				PRODUCT_NAME = SubScript;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/ffi-interface.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/MacOS/FFI.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

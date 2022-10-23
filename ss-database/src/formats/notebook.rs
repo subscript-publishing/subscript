@@ -230,17 +230,3 @@ impl Title {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum HeadingType {H1, H2, H3, H4, H5, H6}
 
-
-pub fn dev() {
-    // let file_path = "/Users/colbyn/Library/Containers/com.colbyn.SubscriptTablet/Data/Documents/data.json";
-    // let contents = std::fs::read_to_string(file_path).unwrap();
-    // let contents = serde_json::from_str::<CanvasDataModel>(&contents).unwrap();
-    // let html = contents.to_html();
-    // let html = format!("<!DOCTYPE html><html><head></head><body>{}</body></html>", html);
-    // std::fs::write("test.html", html).unwrap();
-    // println!("{:#?}", contents);
-    // let res = serde_json::to_string(&stroke::Easing::Linear);
-    // println!("{:?}", res);
-    // let res = serde_json::from_str::<stroke::Easing>(&res.unwrap());
-    // println!("{:?}", res);
-}

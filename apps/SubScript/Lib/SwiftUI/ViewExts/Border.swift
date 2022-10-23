@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BorderColors {
     static let defaultLightColor = Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
-    static let defaultDarkColor = Color(#colorLiteral(red: 0.4110215306, green: 0.4110215306, blue: 0.4110215306, alpha: 1))
+    static let defaultDarkColor = Color(#colorLiteral(red: 0.2016740251, green: 0.2016740251, blue: 0.2016740251, alpha: 1))
 }
 
 private struct ThemeBorderModifier: ViewModifier {
@@ -21,7 +21,6 @@ private struct ThemeBorderModifier: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
-//        let border = EdgeBorderShape(width: width, edges: edges).foregroundColor(color ?? defaultColor)
         let borderColor = colorScheme == .dark
             ? BorderColors.defaultDarkColor
             : BorderColors.defaultLightColor
@@ -91,10 +90,10 @@ private struct ThemeBorderModifier: ViewModifier {
 
 
 extension View {
-    func border(width: CGFloat = 1.0, edges: Edge.Set, color: Color? = nil, show: Bool = true) -> some View {
+    func border(width: CGFloat = 0.5, edges: Edge.Set, color: Color? = nil, show: Bool = true) -> some View {
         modifier(ThemeBorderModifier(width: width, edges: edges, color: color, show: show))
     }
     func border(edges: Edge.Set) -> some View {
-        modifier(ThemeBorderModifier(width: 1.0, edges: edges, show: true))
+        modifier(ThemeBorderModifier(width: 0.5, edges: edges, show: true))
     }
 }

@@ -12,10 +12,18 @@ extension SS1 {
         @Published
         var id: UUID = UUID()
         @Published
-        var pageTitle: String = ""
-        @Published
-        var entries: Array<PageEntryModel> = []
-        
+        var entries: Array<PageEntryModel> = [
+            PageEntryModel.init(h1: "Hello World"),
+            PageEntryModel.init(h2: "Sub-Title"),
+            PageEntryModel.init(h3: "Some Drawing"),
+            PageEntryModel.init(drawings: [
+                CanvasModel()
+            ]),
+        ]
+        init() {}
+        init(entries: Array<PageEntryModel>) {
+            self.entries = entries
+        }
         enum CodingKeys: CodingKey {
             case pageTitle, entries
         }
@@ -31,33 +39,89 @@ extension SS1 {
         }
     }
     struct PageView: View {
-        @StateObject private var canvasModel = SS1.CanvasModel()
+        @ObservedObject var pageModel: PageModel
+        
+        @StateObject private var toolbarModel: ToolBarModel = SS1.ToolBarModel()
+        
+        @Environment(\.colorScheme) private var colorScheme
+        
+        @ViewBuilder private var gutterBorder: some View {
+            HStack(alignment: .center, spacing: 0) {Spacer()}
+                .background(Rectangle().foregroundColor(
+                    colorScheme == .dark
+                        ? SS1.StaticSettings.DarkMode.Canvas.BG2
+                        : SS1.StaticSettings.LightMode.Canvas.BG2
+                ))
+                .padding([.top, .bottom], 4)
+                .border(edges: [.bottom, .top])
+        }
+        @State private var showPenListEditor: Bool = false
         var body: some View {
             VStack(alignment: .center, spacing: 0) {
+//                gutterBorder
+                ToolBarView(
+                    toolbarModel: toolbarModel,
+                    toggleColorScheme: {
+                        
+                    },
+                    goBack: {
+                        
+                    },
+                    onSave: {
+                        
+                    },
+                    showPenListEditor: $showPenListEditor
+                )
+                    .frame(height: 40)
                 CustomScroller { customScrollerCoordinator in
-                    VStack(alignment: .center, spacing: 0) {
-                        SS1.CanvasView(
-                            canvasModel: canvasModel,
-                            updateLayouts: {
-                                customScrollerCoordinator.refresh()
-                            },
-                            isFirstChild: true,
-                            isLastChild: true,
-                            deleteMe: {
-                                customScrollerCoordinator.refresh()
-                            },
-                            insertNewEntry: {
-                                customScrollerCoordinator.refresh()
-                            },
-                            toggleVisibility: {
-                                customScrollerCoordinator.refresh()
-                            }
-                        )
-                        Spacer()
+                    let view = VStack(alignment: .center, spacing: 0) {
+                        gutterBorder
+                        PageEntryView.Gutter(entryIndex: nil, pageDataModel: pageModel)
+                            .border(edges: .top)
+                        ForEach(Array(pageModel.entries.enumerated()), id: \.1.id) { (ix, entry) in
+                            PageEntryView(index: ix, pageDataModel: pageModel, pageEntryModel: entry)
+                                .border(edges: .bottom)
+                        }
                     }
-                    .background(Color.yellow)
+                    if colorScheme == .dark {
+                        view.background(Color(UI.DefaultColors.DARK_BG_COLOR))
+                    } else {
+                        view
+                    }
                 }
             }
+            .sheet(isPresented: $showPenListEditor, content: {
+                SS1.ToolBarView.PenListEditorView(toolbarModel: toolbarModel)
+            })
         }
     }
+//    struct PageView: View {
+//        @StateObject private var canvasModel = SS1.CanvasModel()
+//        var body: some View {
+//            VStack(alignment: .center, spacing: 0) {
+//                CustomScroller { customScrollerCoordinator in
+//                    VStack(alignment: .center, spacing: 0) {
+//                        SS1.CanvasView(
+//                            canvasModel: canvasModel,
+//                            updateLayouts: {
+//                                customScrollerCoordinator.refresh()
+//                            },
+//                            isFirstChild: true,
+//                            isLastChild: true,
+//                            deleteMe: {
+//                                customScrollerCoordinator.refresh()
+//                            },
+//                            insertNewEntry: {
+//                                customScrollerCoordinator.refresh()
+//                            },
+//                            toggleVisibility: {
+//                                customScrollerCoordinator.refresh()
+//                            }
+//                        )
+//                        Spacer()
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

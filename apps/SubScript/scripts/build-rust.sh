@@ -1,5 +1,7 @@
 set -e
 
+# TODO
+
 #―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 # BASICS
 #―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -22,3 +24,7 @@ SUBSCRIPT_APP_RS="$SUBSCRIPT_APP_RS/scripts/build.sh"
 $SS_IOS_RUNTIME_RS
 $SS_MACOS_RUNTIME_RS
 $SUBSCRIPT_APP_RS
+
+# TODO - CALL OTHER SCRIPTS
+echo "TODO - CALL OTHER SCRIPTS"
+exit(1)

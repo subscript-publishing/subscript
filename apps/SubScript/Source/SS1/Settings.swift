@@ -14,7 +14,6 @@ extension SS1 {
         struct Canvas {
             static let ignoreSafeAreas: Bool = true
         }
-        
         struct DarkMode {
             struct Page {
                 static let BG = Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))

@@ -137,32 +137,105 @@ impl Default for SSColorScheme {
 
 #[repr(C)]
 #[derive(Clone, Copy)]
-pub struct SSV1RGBAColor {
-    pub red: f64,
-    pub green: f64,
-    pub blue: f64,
-    pub alpha: f64,
+/// Because I didn’t want to figure out how to convert HSBA to RGB using
+/// Apple’s color ranges.
+pub struct SSV1Color {
+    hue: CGFloat,
+    saturation: CGFloat,
+    brightness: CGFloat,
+
+    red: CGFloat,
+    green: CGFloat,
+    blue: CGFloat,
+    alpha: CGFloat,
 }
 
-#[repr(C)]
-#[derive(Clone, Copy)]
-pub struct SSV1ColorModes {
-    pub light: SSV1RGBAColor,
-    pub dark: SSV1RGBAColor,
-}
-impl Default for SSV1ColorModes {
-    fn default() -> Self {
-        SSV1ColorModes {
-            light: SSV1RGBAColor{red: 0.0, blue: 0.0, green: 0.0, alpha: 0.0},
-            dark: SSV1RGBAColor{red: 0.0, blue: 0.0, green: 0.0, alpha: 0.0},
+impl SSV1Color {
+    pub fn white() -> SSV1Color {
+        SSV1Color {
+            hue: 0.0,
+            saturation: 0.0,
+            brightness: 1.0,
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+        }
+    }
+    pub fn black() -> SSV1Color {
+        SSV1Color {
+            hue: 0.0,
+            saturation: 0.0,
+            brightness: 0.0,
+            red: 0.0,
+            green: 0.0,
+            blue: 0.0,
+            alpha: 1.0,
         }
     }
 }
 
 #[repr(C)]
 #[derive(Clone, Copy)]
+pub struct SSV1ColorModes {
+    pub light: SSV1Color,
+    pub dark: SSV1Color,
+}
+impl Default for SSV1ColorModes {
+    fn default() -> Self {
+        SSV1ColorModes {
+            light: SSV1Color::black(),
+            dark: SSV1Color::white(),
+        }
+    }
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// SSV1-PEN - TYPES
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct SSV1PenStrokeSettingsStartCap {
+    pub cap: u8,
+    pub taper: f64,
+    pub easing: u8,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct SSV1PenStrokeSettingsEndCap {
+    pub cap: u8,
+    pub taper: f64,
+    pub easing: u8,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct SSV1PenStrokeSettings {
+    pub color: SSV1ColorModes,
+    pub layer: u8,
+    pub size: f64,
+    pub thinning: f64,
+    pub smoothing: f64,
+    pub streamline: f64,
+    pub easing: u8,
+    pub simulate_pressure: u8,
+    pub start: SSV1PenStrokeSettingsStartCap,
+    pub end: SSV1PenStrokeSettingsEndCap,
+}
+
+// impl SSV1PenStrokeSettings {
+//     fn default() {
+
+//     }
+// }
+
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub struct SSV1Pen {
     pub color: SSV1ColorModes,
+    // pub stroke_settings: SSV1PenStrokeSettings,
 }
 
 thread_local! {
