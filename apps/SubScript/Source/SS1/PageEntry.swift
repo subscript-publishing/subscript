@@ -28,7 +28,7 @@ fileprivate struct SegmentedViewWrapper<L: View, C: View, R: View>: View {
 }
 
 extension SS1 {
-    class PageEntryModel: ObservableObject, Codable, Identifiable {
+    final class PageEntryModel: ObservableObject, Codable, Identifiable {
         @Published var id: UUID = UUID()
         @Published var type: EntryType = EntryType.drawing
         @Published var heading: Heading = Heading()

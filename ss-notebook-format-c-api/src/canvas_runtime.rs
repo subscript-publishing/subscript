@@ -24,13 +24,14 @@ use crate::toolbar_runtime::{ToolTypeCmd, ToolKind};
 use super::c_helpers::*;
 use super::toolbar_runtime::GLOBAL_TOOLBAR_CONTEXT;
 use crate::utils::new_linear_scale;
+use super::skia_engine::DrawResult;
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // SKIA HELPERS
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 fn get_skia_color(
-    view_state: &ViewState,
+    view_state: &ViewInfo,
     canvas: &mut skia_safe::Canvas,
     color: &DualColors
 ) -> skia_safe::Paint {
@@ -42,10 +43,6 @@ fn get_skia_color(
             color.light_ui.clone()
         }
     };
-    let color_scale = new_linear_scale(
-        (0.0, 1.0),
-        (0.0, 255.0),
-    );
     let rgba = color.rgba();
     let mut paint = skia_safe::Paint::default();
     paint.set_anti_alias(true);
@@ -59,7 +56,7 @@ fn get_skia_color(
     return paint
 }
 fn get_skia_color_for_edit_tool(
-    view_state: &ViewState,
+    view_state: &ViewInfo,
     canvas: &mut skia_safe::Canvas,
 ) -> skia_safe::Paint {
     let (red, green, blue) = match view_state.color_scheme {
@@ -76,7 +73,7 @@ fn get_skia_color_for_edit_tool(
     paint.set_anti_alias(true);
     return paint
 }
-fn get_skia_path(view_state: &ViewState, canvas: &mut skia_safe::Canvas, points: &[[f64; 2]]) -> skia_safe::Path {
+fn get_skia_path(view_state: &ViewInfo, canvas: &mut skia_safe::Canvas, points: &[[f64; 2]]) -> skia_safe::Path {
     let points = points
         .into_iter()
         .map(|[x, y]| {
@@ -106,17 +103,20 @@ pub enum DrawCmdOp {
 }
 
 impl DrawCmd {
-    fn skia_draw(&mut self, view_state: &ViewState, canvas: &mut skia_safe::Canvas) {
+    fn skia_draw(&mut self, view_state: &ViewInfo, canvas: &mut skia_safe::Canvas) {
         match &mut self.op {
             DrawCmdOp::Stroke(stroke) => {
-                stroke.compute_outline_if_missing();
-                let outline = stroke.computed_outline.as_ref().unwrap();
-                if outline.points.len() < 2 {
-                    return ()
+                if !self.drawn.borrow().clone() {
+                    stroke.compute_outline_if_missing();
+                    let outline = stroke.computed_outline.as_ref().unwrap();
+                    if outline.points.len() < 2 {
+                        return ()
+                    }
+                    let paint = get_skia_color(view_state, canvas, &outline.color);
+                    let path = get_skia_path(view_state, canvas, &outline.points);
+                    canvas.draw_path(&path, &paint);
+                    self.drawn.replace(true);
                 }
-                let paint = get_skia_color(view_state, canvas, &outline.color);
-                let path = get_skia_path(view_state, canvas, &outline.points);
-                canvas.draw_path(&path, &paint);
             }
             DrawCmdOp::Fill(fill) => {
                 let points = fill.device_input.0
@@ -135,7 +135,7 @@ impl DrawCmd {
 
 #[derive(Debug, Clone, PartialEq)]
 #[repr(C)]
-pub struct ViewState {
+pub struct ViewInfo {
     width: f64,
     height: f64,
     color_scheme: ColorScheme,
@@ -147,16 +147,23 @@ pub struct ViewState {
 
 
 #[derive(Default)]
-struct ActiveViewState {
-    device_input: SamplePoints,
-    active_tool: ToolTypeCmd,
-    view_state: Option<ViewState>,
-    redraw_all: RefCell<bool>,
+pub struct ActiveViewState {
+    pub device_input: SamplePoints,
+    pub active_tool: ToolTypeCmd,
+    pub view_state: Option<ViewInfo>,
+    pub redraw_all: RefCell<bool>,
 }
 
 impl ActiveViewState {
-    pub fn draw_via_skia(&self, view_state: &ViewState, canvas: &mut skia_safe::Canvas) {
+    pub fn is_background(&self) -> bool {
+        self.active_tool.is_background()
+    }
+    pub fn is_foreground(&self) -> bool {
+        self.active_tool.is_foreground()
+    }
+    pub fn draw_via_skia(&self, canvas: &mut skia_safe::Canvas) -> Option<DrawResult> {
         use ss_notebook_format::graphics::tools::perfect_freehand::vector_outline_points;
+        let view_state = self.view_state.as_ref()?;
         match &self.active_tool {
             ToolTypeCmd::Stroke(stroke_style) => {
                 let outline_points = vector_outline_points(
@@ -164,32 +171,34 @@ impl ActiveViewState {
                     &stroke_style
                 );
                 if outline_points.len() < 2 {
-                    return
+                    return None
                 }
-                let paint = get_skia_color(view_state, canvas, &stroke_style.color);
-                let path = get_skia_path(view_state, canvas, &outline_points);
+                let paint = get_skia_color(&view_state, canvas, &stroke_style.color);
+                let path = get_skia_path(&view_state, canvas, &outline_points);
                 canvas.draw_path(&path, &paint);
+                Some(DrawResult::SSMetalDrawResultSuccess)
             },
             ToolTypeCmd::Fill(fill_style) => {
                 if self.device_input.0.len() < 2 {
-                    return
+                    return None
                 }
                 let points = self.device_input.0.iter().map(|x| x.point).collect_vec();
                 unimplemented!();
             },
             ToolTypeCmd::Erase => {
-                let mut stroke_style = StrokeStyle::default();
-                stroke_style.size = 5.0;
-                let outline_points = vector_outline_points(
-                    &self.device_input,
-                    &stroke_style
-                );
-                if outline_points.len() < 2 {
-                    return
-                }
-                let paint = get_skia_color_for_edit_tool(view_state, canvas);
-                let path = get_skia_path(view_state, canvas, &outline_points);
-                canvas.draw_path(&path, &paint);
+                unimplemented!();
+                // let mut stroke_style = StrokeStyle::default();
+                // stroke_style.size = 5.0;
+                // let outline_points = vector_outline_points(
+                //     &self.device_input,
+                //     &stroke_style
+                // );
+                // if outline_points.len() < 2 {
+                //     return
+                // }
+                // let paint = get_skia_color_for_edit_tool(view_state, canvas);
+                // let path = get_skia_path(view_state, canvas, &outline_points);
+                // canvas.draw_path(&path, &paint);
             },
             ToolTypeCmd::Transform => unimplemented!(),
         }
@@ -205,9 +214,11 @@ pub type CanvasRuntimeContextPtr = Pointer<CanvasRuntimeContext>;
 
 #[derive(Default)]
 pub struct CanvasRuntimeContext {
-    active: ActiveViewState,
-    foreground: Vec<DrawCmd>,
-    background: Vec<DrawCmd>,
+    pub active: ActiveViewState,
+    pub background: Vec<DrawCmd>,
+    pub background_view_state: Option<ViewInfo>,
+    pub foreground: Vec<DrawCmd>,
+    pub foreground_view_state: Option<ViewInfo>,
 }
 
 impl CanvasRuntimeContext {
@@ -232,7 +243,7 @@ impl CanvasRuntimeContext {
     pub fn record_stroke_sample(&mut self, sample: SamplePoint) {
         self.active.device_input.0.push(sample);
     }
-    pub fn update_view_state(&mut self, new_state: ViewState) {
+    pub fn update_view_info(&mut self, new_state: ViewInfo) {
         if Some(&new_state) != self.active.view_state.as_ref() {
             self.active.view_state = Some(new_state);
             self.redraw_all();
@@ -277,21 +288,47 @@ impl CanvasRuntimeContext {
             ToolTypeCmd::Transform => unimplemented!(),
         }
     }
-    pub fn skia_draw(&mut self, canvas: &mut skia_safe::Canvas) -> Option<()> {
-        let view_state = self.active.view_state.as_ref()?;
+    // pub fn skia_draw(&mut self, canvas: &mut skia_safe::Canvas) -> Option<()> {
+    //     let view_state = self.active.view_state.as_ref()?;
+    //     for cmd in self.background.iter_mut() {
+    //         cmd.skia_draw(&view_state, canvas);
+    //     }
+    //     if self.active.active_tool.is_background() {
+    //         self.active.draw_via_skia(view_state, canvas);
+    //     }
+    //     for cmd in self.foreground.iter_mut() {
+    //         cmd.skia_draw(&view_state, canvas);
+    //     }
+    //     if self.active.active_tool.is_foreground() {
+    //         self.active.draw_via_skia(view_state, canvas);
+    //     }
+    //     Some(())
+    // }
+    pub fn skia_draw_background(&mut self, canvas: &mut skia_safe::Canvas) -> Option<DrawResult> {
+        let view_state = self.background_view_state.as_ref()?;
         for cmd in self.background.iter_mut() {
             cmd.skia_draw(&view_state, canvas);
         }
+        Some(DrawResult::SSMetalDrawResultSuccess)
+    }
+    pub fn skia_draw_background_active(&mut self, canvas: &mut skia_safe::Canvas) -> Option<DrawResult> {
         if self.active.active_tool.is_background() {
-            self.active.draw_via_skia(view_state, canvas);
+            return self.active.draw_via_skia(canvas);
         }
+        Some(DrawResult::SSMetalDrawResultNoOP)
+    }
+    pub fn skia_draw_foreground(&mut self, canvas: &mut skia_safe::Canvas) -> Option<DrawResult> {
+        let view_state = self.foreground_view_state.as_ref()?;
         for cmd in self.foreground.iter_mut() {
             cmd.skia_draw(&view_state, canvas);
         }
+        Some(DrawResult::SSMetalDrawResultSuccess)
+    }
+    pub fn skia_draw_foreground_active(&mut self, canvas: &mut skia_safe::Canvas) -> Option<DrawResult> {
         if self.active.active_tool.is_foreground() {
-            self.active.draw_via_skia(view_state, canvas);
+            return self.active.draw_via_skia(canvas);
         }
-        Some(())
+        Some(DrawResult::SSMetalDrawResultNoOP)
     }
 }
 
@@ -337,12 +374,12 @@ pub extern "C" fn ss1_canvas_runtime_context_end_stroke(ptr: CanvasRuntimeContex
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 #[no_mangle]
-pub extern "C" fn ss1_canvas_runtime_context_set_view_state(
+pub extern "C" fn ss1_canvas_runtime_context_update_view_info(
     ptr: CanvasRuntimeContextPtr,
-    view_state: ViewState,
+    view_state: ViewInfo,
 ) {
     ptr.map_mut(|ctx| {
-        ctx.update_view_state(view_state);
+        ctx.update_view_info(view_state);
     })
 }
 

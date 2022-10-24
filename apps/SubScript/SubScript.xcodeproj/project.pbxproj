@@ -94,6 +94,7 @@
 		F4AE2F57290381D500F897D7 /* SwiftUITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */; };
 		F4AE2F592903C77C00F897D7 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F582903C77C00F897D7 /* ColorEditor.swift */; };
 		F4AE2F5A2903C77C00F897D7 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F582903C77C00F897D7 /* ColorEditor.swift */; };
+		F4BF121929063C9B00C2E661 /* Atomics in Frameworks */ = {isa = PBXBuildFile; productRef = F4BF121829063C9B00C2E661 /* Atomics */; };
 		F4FCB7342904744E00D50CE4 /* UI+LL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB7332904744E00D50CE4 /* UI+LL.swift */; };
 		F4FCB7352904744E00D50CE4 /* UI+LL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB7332904744E00D50CE4 /* UI+LL.swift */; };
 		F4FCB73D290478D000D50CE4 /* UI+ColorTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB73C290478D000D50CE4 /* UI+ColorTypes.swift */; };
@@ -176,6 +177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F49884B22904DB7F00E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
+				F4BF121929063C9B00C2E661 /* Atomics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +449,9 @@
 			dependencies = (
 			);
 			name = "SubScript (macOS)";
+			packageProductDependencies = (
+				F4BF121829063C9B00C2E661 /* Atomics */,
+			);
 			productName = "SubScript (macOS)";
 			productReference = F4991C562900ABC40042E1DC /* SubScript.app */;
 			productType = "com.apple.product-type.application";
@@ -478,6 +483,9 @@
 				Base,
 			);
 			mainGroup = F4991C402900ABBF0042E1DC;
+			packageReferences = (
+				F4BF121729063C9B00C2E661 /* XCRemoteSwiftPackageReference "swift-atomics" */,
+			);
 			productRefGroup = F4991C4F2900ABC40042E1DC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -904,6 +912,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F4BF121729063C9B00C2E661 /* XCRemoteSwiftPackageReference "swift-atomics" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-atomics.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F4BF121829063C9B00C2E661 /* Atomics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4BF121729063C9B00C2E661 /* XCRemoteSwiftPackageReference "swift-atomics" */;
+			productName = Atomics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F4991C412900ABBF0042E1DC /* Project object */;
 }

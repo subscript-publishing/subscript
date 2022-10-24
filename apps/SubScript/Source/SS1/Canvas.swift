@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import SwiftUI
 import Combine
 import Metal
@@ -26,7 +25,7 @@ fileprivate let LINE_COLOR: UI.LL.ColorMap = UI.LL.ColorMap(
 #endif
 
 
-fileprivate class CanvasGestureRecognizer: UI.LL.GestureRecognizer {
+fileprivate final class CanvasGestureRecognizer: UI.LL.GestureRecognizer {
     weak var canvasRuntime: SS1.CanvasRuntime!
 #if os(iOS)
     @inline(__always) private func addSample(touch: UITouch) {
@@ -114,87 +113,450 @@ fileprivate class CanvasGestureRecognizer: UI.LL.GestureRecognizer {
 //    }
 //}
 
-fileprivate class MetalRenderer: UI.LL.View, MTKViewDelegate {
+//fileprivate final class MetalRendererViewLayer: MTKView {
+//    weak var canvasRuntime: SS1.CanvasRuntime!
+//    private var metalViewContextPtr: SS1_CAPI_MetalViewContextPtr!
+//    private var metalQueue: MTLCommandQueue!
+////    private var metalDevice: MTLDevice!
+//
+//    private var metalLayerViewDelegate: MetalLayerViewDelegate = MetalLayerViewDelegate()
+//#if os(macOS)
+//    override var isFlipped: Bool {true}
+//#endif
+//    func setup(parent: UI.LL.View) {
+//        self.device = MTLCreateSystemDefaultDevice()
+//        self.metalQueue = self.device!.makeCommandQueue()
+//        self.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+//        self.translatesAutoresizingMaskIntoConstraints = false
+////        self.device = self.metalDevice
+//        self.enableSetNeedsDisplay = true
+//        parent.addSubview(self)
+//        NSLayoutConstraint.activate([
+//            self.topAnchor.constraint(equalTo: self.topAnchor),
+//            self.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+//            self.leftAnchor.constraint(equalTo: self.leftAnchor),
+//            self.rightAnchor.constraint(equalTo: self.rightAnchor),
+//        ])
+//        self.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
+//        self.colorPixelFormat = .bgra8Unorm
+//        self.sampleCount = 1
+//        self.metalViewContextPtr = metalDeviceToRustContext(self, self.device!, self.metalQueue!)
+//        self.metalLayerViewDelegate.canvasRuntime = self.canvasRuntime!
+//        self.metalLayerViewDelegate.metalViewContextPtr = self.metalViewContextPtr!
+//        self.metalLayerViewDelegate.metalQueue = self.metalQueue!
+////        self.metalLayerViewDelegate.metalDevice = self.device!
+//        self.delegate = self.metalLayerViewDelegate
+//    }
+//    private final class MetalLayerViewDelegate: NSObject, MTKViewDelegate {
+//        weak var canvasRuntime: SS1.CanvasRuntime!
+//        var metalViewContextPtr: SS1_CAPI_MetalViewContextPtr!
+//        weak var metalQueue: MTLCommandQueue!
+////        weak var metalDevice: MTLDevice!
+//        func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+//            view.layer?.isOpaque = true
+//        }
+//        func draw(in view: MTKView) {
+//            // RUST SKIA
+//            mtkViewToCanvasSurface(view, self.metalViewContextPtr);
+//            view.layer?.isOpaque = false
+//            let width = view.frame.width;
+//            let height = view.frame.height;
+//            // METAL - PRESENT & COMMIT
+//            let commandBuffer: MTLCommandBuffer = self.metalQueue.makeCommandBuffer()!
+//            let rpd = view.currentRenderPassDescriptor!
+//            rpd.colorAttachments[0].loadAction = .clear
+//            rpd.colorAttachments[0].clearColor = MTLClearColorMake(1, 0, 0, 0.5)
+//            canvasRuntime.drawFlushAndSubmit(
+//                width: width,
+//                height: height,
+//                colorScheme: view.colorScheme,
+//                metalViewContextPtr: self.metalViewContextPtr
+//            )
+//            let drawable = view.currentDrawable!
+//            commandBuffer.present(drawable)
+//            commandBuffer.commit()
+//        }
+//    }
+//}
+
+//fileprivate final class MetalRendererLayer: UI.LL.View, MTKViewDelegate {
+//    weak var canvasRuntime: SS1.CanvasRuntime!
+//    private var metalViewContextPtr: SS1_CAPI_MetalViewContextPtr!
+//    private var canvasSurface: OpaquePointer!
+//    private var metalQueue: MTLCommandQueue!
+//    private var mtkView: MTKView!
+//    private var metalDevice: MTLDevice!
+//#if os(macOS)
+//    override var isFlipped: Bool {true}
+//#endif
+//    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+//        view.layer?.isOpaque = true
+//    }
+//    func draw(in view: MTKView) {
+//        // RUST SKIA
+//        mtkViewToCanvasSurface(view, self.metalViewContextPtr);
+//        view.layer?.isOpaque = false
+//        let width = self.frame.width;
+//        let height = self.frame.height;
+//        // METAL - PRESENT & COMMIT
+//        let commandBuffer: MTLCommandBuffer = self.metalQueue.makeCommandBuffer()!
+//        let rpd = view.currentRenderPassDescriptor!
+//        rpd.colorAttachments[0].loadAction = .clear
+//        rpd.colorAttachments[0].clearColor = MTLClearColorMake(1, 0, 0, 0.5)
+//        canvasRuntime.drawFlushAndSubmit(
+//            width: width,
+//            height: height,
+//            colorScheme: self.colorScheme,
+//            metalViewContextPtr: self.metalViewContextPtr
+//        )
+//        let drawable = view.currentDrawable!
+//        commandBuffer.present(drawable)
+//        commandBuffer.commit()
+//    }
+//
+//#if os(iOS)
+//    override func setNeedsDisplay() {
+//        super.setNeedsDisplay()
+//        self.metalRendererViewLayer.setNeedsDisplay()
+//    }
+//#elseif os(macOS)
+//    override func setNeedsDisplay(_ rect: NSRect) {
+//        super.setNeedsDisplay(rect)
+//        self.mtkView.setNeedsDisplay(rect)
+//    }
+//#endif
+//
+//    func setup() {
+//        self.metalDevice = MTLCreateSystemDefaultDevice()
+//        self.metalQueue = self.metalDevice.makeCommandQueue()
+//        self.mtkView = MTKView()
+//        self.mtkView.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+//        self.mtkView.translatesAutoresizingMaskIntoConstraints = false
+//        self.mtkView.device = self.metalDevice
+//        self.mtkView.enableSetNeedsDisplay = true
+//        self.addSubview(self.mtkView)
+//        NSLayoutConstraint.activate([
+//            self.mtkView.topAnchor.constraint(equalTo: self.topAnchor),
+//            self.mtkView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+//            self.mtkView.leftAnchor.constraint(equalTo: self.leftAnchor),
+//            self.mtkView.rightAnchor.constraint(equalTo: self.rightAnchor),
+//        ])
+//        self.mtkView.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
+//        self.mtkView.colorPixelFormat = .bgra8Unorm
+//        self.mtkView.sampleCount = 1
+//        self.metalViewContextPtr = metalDeviceToRustContext(self.mtkView, self.metalDevice, self.metalQueue)
+//        self.mtkView.delegate = self
+//    }
+//}
+
+//fileprivate final class MetalLayerView: NSObject, MTKViewDelegate {
+//    private weak var canvasRuntime: SS1.CanvasRuntime!
+//    private var metalDevice: MTLDevice!
+//    private var metalQueue: MTLCommandQueue!
+//    private var metalViewContextPtr: SS1_CAPI_MetalBackendContextPtr!
+//    private var metalViewLayersPtr: SS1_CAPI_MetalViewLayersPtr!
+//    private var mtkView = MTKView()
+//
+//    func setup(parent: UI.LL.View, canvasRuntime: SS1.CanvasRuntime) {
+//        self.canvasRuntime = canvasRuntime
+//        self.metalDevice = MTLCreateSystemDefaultDevice()
+//        self.metalQueue = self.metalDevice.makeCommandQueue()
+//        self.mtkView.layer?.isOpaque = true
+//        self.mtkView.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+//        self.mtkView.translatesAutoresizingMaskIntoConstraints = false
+//        self.mtkView.device = self.metalDevice
+//        self.mtkView.enableSetNeedsDisplay = true
+//        parent.addSubview(self.mtkView)
+//        NSLayoutConstraint.activate([
+//            self.mtkView.topAnchor.constraint(equalTo: parent.topAnchor),
+//            self.mtkView.bottomAnchor.constraint(equalTo: parent.bottomAnchor),
+//            self.mtkView.leftAnchor.constraint(equalTo: parent.leftAnchor),
+//            self.mtkView.rightAnchor.constraint(equalTo: parent.rightAnchor),
+//        ])
+//        self.mtkView.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
+//        self.mtkView.colorPixelFormat = .bgra8Unorm
+//        self.mtkView.sampleCount = 1
+//        self.metalViewContextPtr = metalDeviceToRustContext(self.mtkView, self.metalDevice, self.metalQueue)
+//        self.mtkView.delegate = self
+//    }
+//
+//    func update() {
+//        self.mtkView.setNeedsDisplay()
+//    }
+//
+//    func mtkView(_ _: MTKView, drawableSizeWillChange size: CGSize) {}
+//    func draw(in _: MTKView) {
+//        // RUST SKIA
+//        mtkViewToCanvasSurface(self.mtkView, self.metalViewContextPtr);
+//        self.mtkView.layer?.isOpaque = false
+//        let width = self.mtkView.frame.width;
+//        let height = self.mtkView.frame.height;
+//        // METAL - PRESENT & COMMIT
+//        let commandBuffer: MTLCommandBuffer = metalQueue.makeCommandBuffer()!
+//        let rpd = self.mtkView.currentRenderPassDescriptor!
+//        rpd.colorAttachments[0].loadAction = .clear
+//        rpd.colorAttachments[0].clearColor = MTLClearColorMake(1, 0, 0, 0.5)
+//        canvasRuntime.drawFlushAndSubmit(
+//            width: width,
+//            height: height,
+//            colorScheme: self.mtkView.colorScheme,
+//            metalViewContextPtr: self.metalViewContextPtr
+//        )
+//        let drawable = self.mtkView.currentDrawable!
+//        commandBuffer.present(drawable)
+//        commandBuffer.commit()
+//    }
+//}
+
+
+
+final class LabeledMTKView: MTKView {
+    var ssLayerType: SSLayerType = SSLayerType.unknown
+    enum SSLayerType {
+        case background
+        case backgroundActive
+        case foreground
+        case foregroundActive
+        case unknown
+    }
+    fileprivate static func new(layerType: SSLayerType) -> LabeledMTKView {
+        let view = LabeledMTKView()
+        view.ssLayerType = layerType
+        return view
+    }
+}
+
+fileprivate final class MetalRendererLayers: NSObject, MTKViewDelegate {
+    private weak var canvasRuntime: SS1.CanvasRuntime!
+    private var metalDevice: MTLDevice!
+    private var metalQueue: MTLCommandQueue!
+    private var metalBackendContextPtr: SS1_CAPI_MetalBackendContextPtr!
+    private var metalViewLayersPtr: SS1_CAPI_MetalViewLayersPtr!
+    
+    private var background = LabeledMTKView.new(layerType: .background)
+    private var backgroundActive = LabeledMTKView.new(layerType: .backgroundActive)
+    private var foreground = LabeledMTKView.new(layerType: .foreground)
+    private var foregroundActive = LabeledMTKView.new(layerType: .foregroundActive)
+    
+    func setup(parent: UI.LL.View, canvasRuntime: SS1.CanvasRuntime) {
+        self.canvasRuntime = canvasRuntime
+        self.metalDevice = MTLCreateSystemDefaultDevice()
+        self.metalQueue = self.metalDevice.makeCommandQueue()
+        self.metalBackendContextPtr = metalDeviceToRustContext(self.metalDevice, self.metalQueue)
+        self.metalViewLayersPtr = ss1_metal_view_layers_init()
+        for mtkView in [background, backgroundActive, foreground, foregroundActive] {
+            mtkView.layer?.isOpaque = false
+            mtkView.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+            mtkView.translatesAutoresizingMaskIntoConstraints = false
+            mtkView.device = self.metalDevice
+            mtkView.autoResizeDrawable = true
+            mtkView.autoresizingMask = [.width, .height]
+            mtkView.autoresizesSubviews = true
+            mtkView.enableSetNeedsDisplay = true
+//            mtkView.presentsWithTransaction = false
+//            mtkView.presentsWithTransaction = true
+            parent.addSubview(mtkView)
+            NSLayoutConstraint.activate([
+                mtkView.topAnchor.constraint(equalTo: parent.topAnchor),
+                mtkView.bottomAnchor.constraint(equalTo: parent.bottomAnchor),
+                mtkView.leftAnchor.constraint(equalTo: parent.leftAnchor),
+                mtkView.rightAnchor.constraint(equalTo: parent.rightAnchor),
+            ])
+            mtkView.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
+            mtkView.colorPixelFormat = .bgra8Unorm
+            mtkView.sampleCount = 1
+            mtkView.delegate = self
+        }
+    }
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+//        let view = view as! LabeledMTKView
+//        switch view.ssLayerType {
+//        case .background: mtkMetalViewLayerToCanvasSurface(
+//            metalBackendContextPtr,
+//            metalViewLayersPtr,
+//            view,
+//            MetalViewIsBackground)
+//        case .backgroundActive: mtkMetalViewLayerToCanvasSurface(
+//            metalBackendContextPtr,
+//            metalViewLayersPtr,
+//            view,
+//            MetalViewIsBackgroundActive)
+//        case .foreground: mtkMetalViewLayerToCanvasSurface(
+//            metalBackendContextPtr,
+//            metalViewLayersPtr,
+//            view,
+//            MetalViewIsForeground)
+//        case .foregroundActive: mtkMetalViewLayerToCanvasSurface(
+//            metalBackendContextPtr,
+//            metalViewLayersPtr,
+//            view,
+//            MetalViewIsForegroundActive)
+//        case .unknown: fatalError("What layer am I?")
+//        }
+    }
+    func draw(in view: MTKView) {
+        let view = view as! LabeledMTKView
+        let result = canvasRuntime.drawFlushAndSubmitForLayer(
+            metalViewContextPtr: metalBackendContextPtr,
+            metalViewLayersPtr: metalViewLayersPtr,
+            view: view
+        )
+        if result != SSMetalDrawResultSuccess {
+            return
+        }
+        let commandBuffer: MTLCommandBuffer = metalQueue.makeCommandBuffer()!
+        let drawable = view.currentDrawable!
+        commandBuffer.present(drawable)
+        commandBuffer.addCompletedHandler(self.onCommitComplete)
+        commandBuffer.commit()
+    }
+    func onCommitComplete(commandBuffer: MTLCommandBuffer) {
+        
+    }
+    func setNeedsDisplay(_ rect: CGRect) {
+        self.foreground.setNeedsDisplay(rect)
+        self.background.setNeedsDisplay(rect)
+        self.foregroundActive.setNeedsDisplay(rect)
+        self.backgroundActive.setNeedsDisplay(rect)
+    }
+//    func render(
+//        width: CGFloat,
+//        height: CGFloat,
+//        colorSpace: ColorScheme
+//    ) {
+//        self.renderImpl(width: width, height: height, colorSpace: colorSpace)
+//    }
+//    private func renderImpl(
+//        width: CGFloat,
+//        height: CGFloat,
+//        colorSpace: ColorScheme,
+//    ) {
+//        autoreleasepool {
+//            var all_valid = true
+//            for mtkView in [background, backgroundActive, foreground, foregroundActive] {
+//                var valid = false
+//                if let drawable = mtkView.currentDrawable {
+//                    if let rpd = mtkView.currentRenderPassDescriptor {
+//                        print("START", drawable.texture.height, "SIZE \(mtkView.drawableSize.height)", rpd.renderTargetHeight, mtkView.frame.height, mtkView.bounds.height)
+//                        valid = true
+//                    }
+//                }
+//                if !valid {
+//                    all_valid = false
+//                }
+//            }
+//            if !all_valid {
+//                return
+//            }
+//            mtkViewsToCanvasSurfaces(
+//                metalBackendContextPtr,
+//                metalViewLayersPtr,
+//                background,
+//                backgroundActive,
+//                foreground,
+//                foregroundActive
+//            );
+//            let layerHeights = LayerHeights(
+//                background: CGFloat(self.background.currentDrawable!.texture.height),
+//                backgroundActive: CGFloat(self.backgroundActive.currentDrawable!.texture.height),
+//                foreground: CGFloat(self.foreground.currentDrawable!.texture.height),
+//                foregroundActive: CGFloat(self.foregroundActive.currentDrawable!.texture.height)
+//            )
+//            self.canvasRuntime.drawFlushAndSubmit(
+//                width: width,
+//                height: height,
+//                colorScheme: colorSpace,
+//                metalViewContextPtr: metalBackendContextPtr,
+//                metalViewLayersPtr: metalViewLayersPtr,
+//                layerHeights: layerHeights
+//            )
+//            let commandBuffer: MTLCommandBuffer = metalQueue.makeCommandBuffer()!
+//            for mtkView in [foreground] {
+//                if let drawable = mtkView.currentDrawable {
+//                    if let rpd = mtkView.currentRenderPassDescriptor {
+//                        print("END", drawable.texture.height, rpd.renderTargetHeight, mtkView.frame.height, mtkView.bounds.height)
+//                    }
+//                    commandBuffer.present(drawable)
+//                }
+//            }
+//            commandBuffer.addCompletedHandler(self.onCommitComplete)
+//            commandBuffer.commit()
+//        }
+//    }
+}
+
+
+fileprivate final class RootMetalRenderer: UI.LL.View {
     private var canvasRuntime = SS1.CanvasRuntime()
     private var canvasGestureRecognizer = CanvasGestureRecognizer()
     private var backgroundPattern: BackgroundPattern = BackgroundPattern()
+    private var metalRendererLayers: MetalRendererLayers = MetalRendererLayers()
     
-    private var metalViewContextPtr: SS1_CAPI_MetalViewContextPtr!
-//    private var canvasSurface: OpaquePointer!
-    private var metalQueue: MTLCommandQueue!
-    private var mtkView: MTKView!
-    private var metalDevice: MTLDevice!
-#if os(macOS)
-    override var isFlipped: Bool {true}
-#endif
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        view.layer?.isOpaque = true
-    }
-    func draw(in view: MTKView) {
-        // RUST SKIA
-        mtkViewToCanvasSurface(view, self.metalViewContextPtr);
-        view.layer?.isOpaque = false
-        let width = self.frame.width;
-        let height = self.frame.height;
-        // METAL - PRESENT & COMMIT
-        let commandBuffer: MTLCommandBuffer = self.metalQueue.makeCommandBuffer()!
-        let rpd = view.currentRenderPassDescriptor!
-        rpd.colorAttachments[0].loadAction = .clear
-        rpd.colorAttachments[0].clearColor = MTLClearColorMake(1, 0, 0, 0.5)
-        canvasRuntime.drawFlushAndSubmit(
-            width: width,
-            height: height,
-            colorScheme: self.colorScheme,
-            metalViewContextPtr: self.metalViewContextPtr
-        )
-        let drawable = view.currentDrawable!
-        commandBuffer.present(drawable)
-        commandBuffer.commit()
-    }
+//    private var background_layer: MetalLayerView = MetalLayerView()
+//    private var background_layer_active: MetalLayerView = MetalLayerView()
     
 #if os(iOS)
     override func setNeedsDisplay() {
         super.setNeedsDisplay()
         self.backgroundPattern.setNeedsDisplay()
-        self.mtkView.setNeedsDisplay()
-//        self.drawingRenderer.setNeedsDisplay()
+        self.metalRendererLayers.setNeedsDisplay()
     }
 #elseif os(macOS)
+    override var isFlipped: Bool {true}
     override func setNeedsDisplay(_ rect: NSRect) {
         super.setNeedsDisplay(rect)
         self.backgroundPattern.setNeedsDisplay(rect)
-        self.mtkView.setNeedsDisplay(rect)
-//        self.drawingRenderer.setNeedsDisplay(rect)
+        self.metalRendererLayers.setNeedsDisplay(rect)
+//        self.metalLayerView.mtkView.setNeedsDisplay(rect)
+//        self.metalLayerView.setNeedsDisplay(rect)
+//        self.mtkView.setNeedsDisplay(rect)
     }
 #endif
     
+//    override func draw(_ dirtyRect: NSRect) {
+//        self.metalRendererLayers.setNeedsDisplay(dirtyRect)
+//        self.metalRendererLayers.render(
+//            width: self.frame.width,
+//            height: self.frame.height,
+//            colorSpace: self.colorScheme
+//        )
+//    }
+    
     func setup() {
+        self.autoresizingMask = [.width, .height]
+        self.autoresizesSubviews = true
+        self.layerContentsRedrawPolicy = NSView.LayerContentsRedrawPolicy.beforeViewResize
         self.canvasGestureRecognizer.canvasRuntime = self.canvasRuntime
 #if os(iOS) && !targetEnvironment(macCatalyst)
         self.canvasGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.pencil.rawValue)]
 #endif
         self.addGestureRecognizer(canvasGestureRecognizer)
         self.backgroundPattern.setup(parent: self)
-        self.metalDevice = MTLCreateSystemDefaultDevice()
-        self.metalQueue = self.metalDevice.makeCommandQueue()
-        self.mtkView = MTKView()
-        self.mtkView.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
-//        self.mtkView.clea
-        self.mtkView.translatesAutoresizingMaskIntoConstraints = false
-        self.mtkView.device = self.metalDevice
-        self.mtkView.enableSetNeedsDisplay = true
-        self.addSubview(self.mtkView)
-        NSLayoutConstraint.activate([
-            self.mtkView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.mtkView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.mtkView.leftAnchor.constraint(equalTo: self.leftAnchor),
-            self.mtkView.rightAnchor.constraint(equalTo: self.rightAnchor),
-        ])
-        self.mtkView.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
-        self.mtkView.colorPixelFormat = .bgra8Unorm
-        self.mtkView.sampleCount = 1
-        self.metalViewContextPtr = metalDeviceToRustContext(self.mtkView, self.metalDevice, self.metalQueue)
-        self.mtkView.delegate = self
+        self.metalRendererLayers.setup(parent: self, canvasRuntime: canvasRuntime)
+//        self.metalLayerView.canvasRuntime = self.canvasRuntime
+//        self.metalLayerView.setup(parent: self)
+//        self.metalDevice = MTLCreateSystemDefaultDevice()
+//        self.metalQueue = self.metalDevice.makeCommandQueue()
+//        self.mtkView.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+//        self.mtkView.translatesAutoresizingMaskIntoConstraints = false
+//        self.mtkView.device = self.metalDevice
+//        self.mtkView.enableSetNeedsDisplay = true
+//        self.addSubview(self.mtkView)
+//        NSLayoutConstraint.activate([
+//            self.mtkView.topAnchor.constraint(equalTo: self.topAnchor),
+//            self.mtkView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+//            self.mtkView.leftAnchor.constraint(equalTo: self.leftAnchor),
+//            self.mtkView.rightAnchor.constraint(equalTo: self.rightAnchor),
+//        ])
+//        self.mtkView.depthStencilPixelFormat = .depth32Float_stencil8 // MTLPixelFormatDepth32Float_Stencil8
+//        self.mtkView.colorPixelFormat = .bgra8Unorm
+//        self.mtkView.sampleCount = 1
+//        self.metalViewContextPtr = metalDeviceToRustContext(self.mtkView, self.metalDevice, self.metalQueue)
+////        self.metalLayerViewDelegate = MetalLayerViewDelegate()
+//        self.metalLayerViewDelegate.canvasRuntime = self.canvasRuntime
+//        self.metalLayerViewDelegate.metalQueue = self.metalQueue
+//        self.metalLayerViewDelegate.metalViewContextPtr = self.metalViewContextPtr
+//        self.mtkView.delegate = self.metalLayerViewDelegate
     }
     
     
@@ -202,7 +564,7 @@ fileprivate class MetalRenderer: UI.LL.View, MTKViewDelegate {
 #if os(macOS)
         override var isFlipped: Bool {true}
 #endif
-        fileprivate func setup(parent: MetalRenderer) {
+        fileprivate func setup(parent: RootMetalRenderer) {
             self.translatesAutoresizingMaskIntoConstraints = false
             parent.addSubview(self)
             NSLayoutConstraint.activate([
@@ -254,7 +616,7 @@ fileprivate class MetalRenderer: UI.LL.View, MTKViewDelegate {
 
 
 extension SS1 {
-    class CanvasModel: ObservableObject, Codable, Identifiable {
+    final class CanvasModel: ObservableObject, Codable, Identifiable {
         var id = UUID.init()
         /// Drawn strokes
 //        var foregroundStrokes: Array<Stroke> = []
@@ -443,7 +805,7 @@ extension SS1 {
             let mainShadowColor = colorScheme == .dark ? darkMainShadowColor : lightMainShadowColor
             
             WrapView { ctx in
-                let view: MetalRenderer = MetalRenderer()
+                let view: RootMetalRenderer = RootMetalRenderer()
                 view.setup()
                 return view
             }

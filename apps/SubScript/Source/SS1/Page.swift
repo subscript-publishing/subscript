@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension SS1 {
-    class PageModel: ObservableObject, Codable {
+    final class PageModel: ObservableObject, Codable {
         @Published
         var id: UUID = UUID()
         @Published

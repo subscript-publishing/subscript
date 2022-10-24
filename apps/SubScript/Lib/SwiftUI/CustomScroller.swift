@@ -16,7 +16,7 @@ final class FlippedClipView: NSClipView {
 }
 #endif
 
-fileprivate class CustomScrollerViewController<Wrapped: View>: UI.LL.ViewController {
+fileprivate final class CustomScrollerViewController<Wrapped: View>: UI.LL.ViewController {
     fileprivate var subView: Wrapped!
     fileprivate var scrollView = UI.LL.ScrollView()
     fileprivate var contentView = UI.LL.StackView()

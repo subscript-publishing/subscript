@@ -118,3 +118,11 @@ extension UI.LL.Color {
     }
 }
 
+
+#if os(macOS)
+extension NSView {
+    func setNeedsDisplay() {
+        self.setNeedsDisplay(self.frame)
+    }
+}
+#endif

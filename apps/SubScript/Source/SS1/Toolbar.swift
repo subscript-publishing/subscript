@@ -763,7 +763,7 @@ fileprivate struct PenView: View {
 }
 
 extension SS1 {
-    class ToolBarModel: ObservableObject, Codable {
+    final class ToolBarModel: ObservableObject, Codable {
         @Published var currentToolType: CurrentToolType = CurrentToolType.pen
         @Published var invertPenColors: Bool = false
         @Published var templatePen: Pen = Pen()
