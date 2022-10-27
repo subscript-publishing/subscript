@@ -4,7 +4,7 @@ use core_graphics::base::CGFloat;
 use core_graphics::context::CGContext;
 use core_graphics::sys::CGContextRef;
 
-use ss_notebook_format::graphics::basics::ColorScheme;
+use ss_notebook_format::drawing::basics::ColorScheme;
 use super::c_helpers::*;
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――

@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F4116BBE29072098004E39AC /* PenSettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4116BBD29072098004E39AC /* PenSettingsUI.swift */; };
+		F4116BBF29072098004E39AC /* PenSettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4116BBD29072098004E39AC /* PenSettingsUI.swift */; };
+		F4116BC129074A26004E39AC /* PenDocsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4116BC029074A26004E39AC /* PenDocsUI.swift */; };
+		F4116BC229074A26004E39AC /* PenDocsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4116BC029074A26004E39AC /* PenDocsUI.swift */; };
+		F4116BC5290A2E51004E39AC /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884B12904DB7F00E99E55 /* libss_notebook_format_c_api.a */; };
+		F4116BC9290A36BB004E39AC /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884B32904DB9000E99E55 /* libss_notebook_format_c_api.a */; platformFilter = ios; };
 		F42422CD29052212003FE378 /* SwiftDev.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42422CC29052212003FE378 /* SwiftDev.swift */; };
 		F42422CE29052212003FE378 /* SwiftDev.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42422CC29052212003FE378 /* SwiftDev.swift */; };
-		F49884B22904DB7F00E99E55 /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884B12904DB7F00E99E55 /* libss_notebook_format_c_api.a */; };
-		F49884B42904DB9000E99E55 /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884B32904DB9000E99E55 /* libss_notebook_format_c_api.a */; platformFilter = ios; };
 		F49884B72904E98900E99E55 /* ToolTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49884B62904E98900E99E55 /* ToolTypes.swift */; };
 		F49884B82904E98900E99E55 /* ToolTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49884B62904E98900E99E55 /* ToolTypes.swift */; };
-		F49884BB2904FC2A00E99E55 /* libss_notebook_format_c_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F49884BA2904FC2A00E99E55 /* libss_notebook_format_c_api.a */; platformFilter = maccatalyst; };
 		F4991C5C2900ABC40042E1DC /* SubScriptDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C472900ABBF0042E1DC /* SubScriptDocument.swift */; };
 		F4991C5D2900ABC40042E1DC /* SubScriptDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991C472900ABBF0042E1DC /* SubScriptDocument.swift */; };
 		F4991C602900ABC40042E1DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4991C492900ABC40042E1DC /* Assets.xcassets */; };
@@ -94,7 +97,6 @@
 		F4AE2F57290381D500F897D7 /* SwiftUITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */; };
 		F4AE2F592903C77C00F897D7 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F582903C77C00F897D7 /* ColorEditor.swift */; };
 		F4AE2F5A2903C77C00F897D7 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F582903C77C00F897D7 /* ColorEditor.swift */; };
-		F4BF121929063C9B00C2E661 /* Atomics in Frameworks */ = {isa = PBXBuildFile; productRef = F4BF121829063C9B00C2E661 /* Atomics */; };
 		F4FCB7342904744E00D50CE4 /* UI+LL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB7332904744E00D50CE4 /* UI+LL.swift */; };
 		F4FCB7352904744E00D50CE4 /* UI+LL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB7332904744E00D50CE4 /* UI+LL.swift */; };
 		F4FCB73D290478D000D50CE4 /* UI+ColorTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FCB73C290478D000D50CE4 /* UI+ColorTypes.swift */; };
@@ -102,6 +104,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F4116BBD29072098004E39AC /* PenSettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenSettingsUI.swift; sourceTree = "<group>"; };
+		F4116BC029074A26004E39AC /* PenDocsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenDocsUI.swift; sourceTree = "<group>"; };
 		F42422C629051CD9003FE378 /* FFI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFI.h; sourceTree = "<group>"; };
 		F42422C729051CE9003FE378 /* FFI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFI.h; sourceTree = "<group>"; };
 		F42422CC29052212003FE378 /* SwiftDev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDev.swift; sourceTree = "<group>"; };
@@ -167,8 +171,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F49884BB2904FC2A00E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
-				F49884B42904DB9000E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
+				F4116BC9290A36BB004E39AC /* libss_notebook_format_c_api.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,8 +179,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F49884B22904DB7F00E99E55 /* libss_notebook_format_c_api.a in Frameworks */,
-				F4BF121929063C9B00C2E661 /* Atomics in Frameworks */,
+				F4116BC5290A2E51004E39AC /* libss_notebook_format_c_api.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +414,8 @@
 			children = (
 				F4AE2F4C29032D5C00F897D7 /* PenListEditor.swift */,
 				F4AE2F582903C77C00F897D7 /* ColorEditor.swift */,
+				F4116BBD29072098004E39AC /* PenSettingsUI.swift */,
+				F4116BC029074A26004E39AC /* PenDocsUI.swift */,
 			);
 			path = Toolbar;
 			sourceTree = "<group>";
@@ -450,7 +454,6 @@
 			);
 			name = "SubScript (macOS)";
 			packageProductDependencies = (
-				F4BF121829063C9B00C2E661 /* Atomics */,
 			);
 			productName = "SubScript (macOS)";
 			productReference = F4991C562900ABC40042E1DC /* SubScript.app */;
@@ -484,7 +487,6 @@
 			);
 			mainGroup = F4991C402900ABBF0042E1DC;
 			packageReferences = (
-				F4BF121729063C9B00C2E661 /* XCRemoteSwiftPackageReference "swift-atomics" */,
 			);
 			productRefGroup = F4991C4F2900ABC40042E1DC /* Products */;
 			projectDirPath = "";
@@ -520,8 +522,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4116BBE29072098004E39AC /* PenSettingsUI.swift in Sources */,
 				F4991D372902513C0042E1DC /* Heading.swift in Sources */,
 				F4991D15290115640042E1DC /* Pen.swift in Sources */,
+				F4116BC129074A26004E39AC /* PenDocsUI.swift in Sources */,
 				F4991CBD2900AD060042E1DC /* CGPointExts.swift in Sources */,
 				F49884B72904E98900E99E55 /* ToolTypes.swift in Sources */,
 				F4AE2F53290343B000F897D7 /* UI+Hacks.swift in Sources */,
@@ -570,8 +574,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4116BBF29072098004E39AC /* PenSettingsUI.swift in Sources */,
 				F4991D382902513C0042E1DC /* Heading.swift in Sources */,
 				F4991D16290115640042E1DC /* Pen.swift in Sources */,
+				F4116BC229074A26004E39AC /* PenDocsUI.swift in Sources */,
 				F4991CBE2900AD060042E1DC /* CGPointExts.swift in Sources */,
 				F49884B82904E98900E99E55 /* ToolTypes.swift in Sources */,
 				F4AE2F54290343B000F897D7 /* UI+Hacks.swift in Sources */,
@@ -757,12 +763,15 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/IOS//lib";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = app.dev.subscript.SubScript;
 				PRODUCT_NAME = SubScript;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/IOS/FFI.h";
 				SWIFT_VERSION = 5.0;
@@ -797,6 +806,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/IOS//lib";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lc++";
@@ -804,6 +814,7 @@
 				PRODUCT_NAME = SubScript;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Source/FFI/IOS/FFI.h";
 				SWIFT_VERSION = 5.0;
@@ -833,7 +844,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/MacOS/lib";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/MacOs/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-lc++";
@@ -867,7 +878,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/MacOS/lib";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/ffi/MacOs/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -912,25 +923,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		F4BF121729063C9B00C2E661 /* XCRemoteSwiftPackageReference "swift-atomics" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-atomics.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		F4BF121829063C9B00C2E661 /* Atomics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F4BF121729063C9B00C2E661 /* XCRemoteSwiftPackageReference "swift-atomics" */;
-			productName = Atomics;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F4991C412900ABBF0042E1DC /* Project object */;
 }

@@ -11,3 +11,5 @@ pub fn new_linear_scale(
         return (max_range - min_range) * (value - min_domain) / (max_domain - min_domain) + min_range
     }
 }
+
+

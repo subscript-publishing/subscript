@@ -5,18 +5,17 @@ use core_graphics::context::CGContext;
 use core_graphics::sys::CGContextRef;
 use serde::{Serialize, Deserialize};
 
-use ss_notebook_format::graphics::basics::DualColors;
-use ss_notebook_format::graphics::tools::FillStyle;
-use ss_notebook_format::graphics::basics::{SamplePoints, SamplePoint, Layer};
-use ss_notebook_format::graphics::tools::pen_style::{Easing, StartCap, EndCap};
-use ss_notebook_format::graphics::tools::ComputedPenOutline;
-use ss_notebook_format::graphics::tools::StrokeCmd;
-use ss_notebook_format::graphics::tools::StrokeStyle;
-use ss_notebook_format::graphics::basics::ColorModes;
-use ss_notebook_format::graphics::basics::ColorScheme;
-use ss_notebook_format::graphics::basics::Color;
-use ss_notebook_format::graphics::basics::HSBA;
-use ss_notebook_format::graphics::basics::RGBA;
+use ss_notebook_format::drawing::basics::DualColors;
+use ss_notebook_format::drawing::cmds::FillStyle;
+use ss_notebook_format::drawing::basics::{SamplePoint, Layer};
+use ss_notebook_format::drawing::cmds::pen_style::{Easing, StartCap, EndCap};
+use ss_notebook_format::drawing::cmds::StrokeCmd;
+use ss_notebook_format::drawing::cmds::StrokeStyle;
+use ss_notebook_format::drawing::basics::ColorModes;
+use ss_notebook_format::drawing::basics::ColorScheme;
+use ss_notebook_format::drawing::basics::Color;
+use ss_notebook_format::drawing::basics::HSBA;
+use ss_notebook_format::drawing::basics::RGBA;
 use super::c_helpers::*;
 
 

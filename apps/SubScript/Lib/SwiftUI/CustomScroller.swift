@@ -19,7 +19,6 @@ final class FlippedClipView: NSClipView {
 fileprivate final class CustomScrollerViewController<Wrapped: View>: UI.LL.ViewController {
     fileprivate var subView: Wrapped!
     fileprivate var scrollView = UI.LL.ScrollView()
-    fileprivate var contentView = UI.LL.StackView()
     fileprivate var embeddedViewCtl: UI.LL.HostingController<Wrapped>!
 #if os(iOS)
     private func initViews() {
@@ -161,44 +160,18 @@ fileprivate final class CustomScrollerViewController<Wrapped: View>: UI.LL.ViewC
 }
 
 struct CustomScroller<V: View>: View {
-    private var subview: (CustomScrollerCoordinator) -> V
-    init(@ViewBuilder _ view: @escaping (CustomScrollerCoordinator) -> V) {
+    private var subview: () -> V
+    init(@ViewBuilder _ view: @escaping () -> V) {
         self.subview = view
     }
-#if os(iOS)
     var body: some View {
-        WrapViewController { ctx in
+        WrapViewController(onUpdate: { wrapped, ctx in
+            let scroller = wrapped as! CustomScrollerViewController<V>
+            scroller.embeddedViewCtl.rootView = self.subview()
+        }){ ctx in
             let scroller: CustomScrollerViewController<V> = CustomScrollerViewController()
-            let customScrollerCoordinator = CustomScrollerCoordinator(
-                refresh: {
-                    scroller.view.setNeedsDisplay()
-                    scroller.embeddedViewCtl.view.setNeedsUpdateConstraints()
-                }
-            )
-            scroller.subView = self.subview(customScrollerCoordinator)
+            scroller.subView = self.subview()
             return scroller
-        }
-    }
-#elseif os(macOS)
-    var body: some View {
-        WrapViewController{ ctx in
-            let scroller: CustomScrollerViewController<V> = CustomScrollerViewController()
-            let customScrollerCoordinator = CustomScrollerCoordinator(
-                refresh: {
-                    scroller.view.setNeedsDisplay(scroller.view.frame)
-                    scroller.embeddedViewCtl.view.needsUpdateConstraints = true
-                    scroller.embeddedViewCtl.view.updateConstraints()
-                }
-            )
-            scroller.subView = self.subview(customScrollerCoordinator)
-            return scroller
-        }
-    }
-#endif
-    class CustomScrollerCoordinator: ObservableObject {
-        var refresh: () -> ()
-        init(refresh: @escaping () -> ()) {
-            self.refresh = refresh
         }
     }
 }

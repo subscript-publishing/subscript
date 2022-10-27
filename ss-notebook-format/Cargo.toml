@@ -11,6 +11,13 @@ serde_json = "1"
 itertools = "0.10.0"
 either = "1.8.0"
 rand = "0.7.3"
+geo = "0.23.0"
+parry2d = "0.10.0"
+num-traits = "0.2.15"
+# skia-safe = "0.55.0"
+
+skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
+skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
 
 [dependencies.uuid]
 version = "1.2.1"
@@ -20,3 +27,7 @@ features = [
     "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
     "serde",
 ]
+
+# [patch.crates-io]
+# skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
+# skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}

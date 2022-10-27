@@ -805,6 +805,7 @@ fn getStrokePoints(points: Array<SamplePoint>, options: &GetStrokeOptions) -> Ar
 
 
 
+
 /// Compute a radius based on the pressure.
 fn getStrokeRadius(
     size: CGFloat,
@@ -816,33 +817,15 @@ fn getStrokeRadius(
 }
 
 
-// extension SS.Stroke {
-//     func vectorOutlinePoints() -> Array<CGPoint> {
-//         if samples.len() < 3 {
-//             return Vec::new()
-//         }
-//         let points = samples.map({sample in
-//             SamplePoint(point: sample.point, pressure: sample.pressure)
-//         })
-//         let options = GetStrokeOptions(fromStroke: self)
-//         let outlinePoints = getStroke(points, options)
-//         return outlinePoints
-//     }
-// }
-
-pub fn vector_outline_points_for_stroke(stroke: &super::StrokeCmd) -> Array<[f64; 2]> {
-    vector_outline_points(&stroke.device_input, &stroke.stroke_style)
-}
-
-
 pub fn vector_outline_points(
-    sample_points: &super::SamplePoints,
+    sample_points: impl AsRef<[super::SamplePoint]>,
     stroke_style: &super::StrokeStyle
 ) -> Array<[f64; 2]> {
-    if sample_points.0.len() < 3 {
+    if sample_points.as_ref().len() < 3 {
         return Vec::new()
     }
-    let points = sample_points.0
+    let points = sample_points
+        .as_ref()
         .iter()
         .map(|sample| {
             SamplePoint {

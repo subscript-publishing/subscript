@@ -12,9 +12,10 @@ extension SS1 {
         var id: UUID = UUID()
         var style: PenStyle = PenStyle()
         var templateColor: UI.ColorType.HSBA = UI.ColorType.HSBA(from: #colorLiteral(red: 0.5723067522, green: 0.5723067522, blue: 0.5723067522, alpha: 1))
+        var useTemplateColor: Bool = true
         var active: Bool = false
         var penSet: PenSet = PenSet.set1
-        enum PenSet: String, Equatable, Codable {
+        enum PenSet: String, Equatable, Codable, CaseIterable {
             case set1
             case set2
             case set3
@@ -60,19 +61,24 @@ extension SS1 {
             static let defaultThinning: CGFloat = 0.5
             static let defaultSmoothing: CGFloat = 0.5
             static let defaultStreamline: CGFloat = 0.5
-            static let defaultEasing: CGFloat = 0.5
-            
-            static let maxSize: CGFloat = 60.0
-            static let maxThinning: CGFloat = 1.0
-            static let maxSmoothing: CGFloat = 1.0
-            static let maxStreamline: CGFloat = 1.0
+            static let defaultEasing: Easing = Easing.linear
             
             static let minSize: CGFloat = 1.0
             static let minThinning: CGFloat = -1.0
             static let minSmoothing: CGFloat = 0.0
             static let minStreamline: CGFloat = 0.0
             
-            enum Layer: String, Codable {
+            static let maxSize: CGFloat = 60.0
+            static let maxThinning: CGFloat = 1.0
+            static let maxSmoothing: CGFloat = 1.0
+            static let maxStreamline: CGFloat = 1.0
+            
+            static let sizeRange: ClosedRange<CGFloat> = minSize...maxSize
+            static let thinningRange: ClosedRange<CGFloat> = minThinning...maxThinning
+            static let smoothingRange: ClosedRange<CGFloat> = minSmoothing...maxSmoothing
+            static let streamlineRange: ClosedRange<CGFloat> = minStreamline...maxStreamline
+            
+            enum Layer: String, Codable, CaseIterable {
                 case foreground
                 case background
             }
@@ -98,7 +104,7 @@ extension SS1 {
 //                    return self.get(for: colorScheme)
 //                }
 //            }
-            enum Easing: String, Equatable, Hashable, Codable {
+            enum Easing: String, Equatable, Hashable, Codable, CaseIterable {
                 case linear
                 case easeInQuad
                 case easeOutQuad

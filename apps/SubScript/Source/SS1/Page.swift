@@ -37,14 +37,27 @@ extension SS1 {
 //            pageTitle = try container.decode(String.self, forKey: .pageTitle)
 //            entries = try container.decode(Array.self, forKey: .entries)
         }
+        func insert(entry: PageEntryModel, after: Int?) {
+            if let after = after {
+                let nextIndex = after + 1
+                if nextIndex <= self.entries.count {
+                    self.entries.insert(entry, at: nextIndex)
+                } else {
+                    self.entries.append(entry)
+                }
+            } else {
+                self.entries.append(entry)
+            }
+        }
+    }
+    fileprivate class XToggleHack: ObservableObject {
+        @Published var toggle: Bool = false
     }
     struct PageView: View {
         @ObservedObject var pageModel: PageModel
-        
         @StateObject private var toolbarModel: ToolBarModel = SS1.ToolBarModel()
-        
         @Environment(\.colorScheme) private var colorScheme
-        
+        @StateObject private var xToggleHack: XToggleHack = XToggleHack()
         @ViewBuilder private var gutterBorder: some View {
             HStack(alignment: .center, spacing: 0) {Spacer()}
                 .background(Rectangle().foregroundColor(
@@ -73,13 +86,20 @@ extension SS1 {
                     showPenListEditor: $showPenListEditor
                 )
                     .frame(height: 40)
-                CustomScroller { customScrollerCoordinator in
+                CustomScroller {
                     let view = VStack(alignment: .center, spacing: 0) {
                         gutterBorder
-                        PageEntryView.Gutter(entryIndex: nil, pageDataModel: pageModel)
+                        PageEntryView.Gutter(
+                            entryIndex: nil,
+                            pageDataModel: pageModel
+                        )
                             .border(edges: .top)
-                        ForEach(Array(pageModel.entries.enumerated()), id: \.1.id) { (ix, entry) in
-                            PageEntryView(index: ix, pageDataModel: pageModel, pageEntryModel: entry)
+                        ForEach(Array(pageModel.entries.enumerated()), id: \.1.id) { (ix, _) in
+                            PageEntryView(
+                                index: ix,
+                                pageDataModel: pageModel,
+                                pageEntryModel: pageModel.entries[ix]
+                            )
                                 .border(edges: .bottom)
                         }
                     }
@@ -95,33 +115,4 @@ extension SS1 {
             })
         }
     }
-//    struct PageView: View {
-//        @StateObject private var canvasModel = SS1.CanvasModel()
-//        var body: some View {
-//            VStack(alignment: .center, spacing: 0) {
-//                CustomScroller { customScrollerCoordinator in
-//                    VStack(alignment: .center, spacing: 0) {
-//                        SS1.CanvasView(
-//                            canvasModel: canvasModel,
-//                            updateLayouts: {
-//                                customScrollerCoordinator.refresh()
-//                            },
-//                            isFirstChild: true,
-//                            isLastChild: true,
-//                            deleteMe: {
-//                                customScrollerCoordinator.refresh()
-//                            },
-//                            insertNewEntry: {
-//                                customScrollerCoordinator.refresh()
-//                            },
-//                            toggleVisibility: {
-//                                customScrollerCoordinator.refresh()
-//                            }
-//                        )
-//                        Spacer()
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

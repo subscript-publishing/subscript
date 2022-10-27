@@ -27,6 +27,10 @@ extension String {
         }
         return false
     }
+    func stripPrefix(_ prefix: String) -> String {
+        guard self.hasPrefix(prefix) else { return self }
+        return String(self.dropFirst(prefix.count))
+    }
 }
 
 extension String {

@@ -62,6 +62,20 @@ extension UI.Hacks {
                 }
             )
         }
+        static func defaultNavBar<V: View>(
+            title: String? = nil,
+            withBackBtn: Bool = true,
+            @ViewBuilder trailing: @escaping () -> V
+        ) -> NavBar {
+            NavBar(
+                title: title,
+                withBackBtn: withBackBtn,
+                leading: {
+                    EmptyView()
+                },
+                trailing: trailing
+            )
+        }
     }
     struct NavigationStackViewLink<L: View, D: View>: View {
         let destination: () -> D
@@ -155,7 +169,7 @@ extension UI.Hacks {
                     let _ = self.childViewStack.stack.popLast()
                 }
             })
-            .background(Color(bgColor.get(for: colorScheme)))
+            .background(bgColor.get(for: colorScheme).asColor)
         }
     }
     

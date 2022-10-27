@@ -110,7 +110,6 @@ extension SS1 {
         }
         @ViewBuilder private var gutterMenu: some View {
             SegmentedViewWrapper(
-//                height: 50,
                 left: {
                     Spacer()
                 },
@@ -127,7 +126,7 @@ extension SS1 {
                 HeadingView(
                     title: $pageEntryModel.heading,
                     deleteMe: {
-                        
+                        pageDataModel.entries.remove(at: index)
                     }
                 )
                 Gutter(
@@ -137,24 +136,18 @@ extension SS1 {
             }
             if pageEntryModel.type.isDrawing {
                 VStack(alignment: .center, spacing: 0) {
-//                    let topGutter = gutterBorder
-//                    if colorScheme == .dark {
-//                        topGutter.background(Color(UI.DefaultColors.DARK_BG_COLOR_LIGHTER))
-//                    } else {
-//                        topGutter
-//                    }
                     ForEach(Array(pageEntryModel.drawings.enumerated()), id: \.1.id) { (ix, canvas) in
                         VStack(alignment: .center, spacing: 0) {
                             SS1.CanvasView(
                                 index: ix,
                                 canvasModel: canvas,
-                                updateLayouts: {
-                                    
-                                },
                                 isFirstChild: ix == 0,
                                 isLastChild: ix + 1 == pageEntryModel.drawings.count,
                                 deleteMe: {
-                                    if ix > 0 {
+                                    if ix == 0 {
+                                        pageDataModel.entries.remove(at: index)
+                                        print("Removed", pageDataModel.entries)
+                                    } else {
                                         pageEntryModel.drawings.remove(at: ix)
                                     }
                                 },
@@ -183,6 +176,7 @@ extension SS1 {
         struct Gutter: View {
             let entryIndex: Int?
             @ObservedObject var pageDataModel: SS1.PageModel
+            
             @State private var showOptions: Bool = false
             @ViewBuilder func options() -> some View {
                 VStack(alignment: .leading, spacing: 8) {
@@ -191,13 +185,10 @@ extension SS1 {
 
                     Divider()
                     Button(action: {
-        //                let newEntry = SS1.PageEntry.newTitleEntry(type: .h1, text: "New Title")
+                        let newEntry = SS1.PageEntryModel(h1: "")
                         showOptions = false
-//                        if let entryIndex = entryIndex {
-//        //                    pageDataModel.addEntryWithAutoType(newEntry: newEntry, index: entryIndex + 1)
-//                        } else {
-//        //                    pageDataModel.addEntryWithAutoType(newEntry: newEntry, index: 0)
-//                        }
+                        pageDataModel.insert(entry: newEntry, after: entryIndex)
+                        print("inserted", pageDataModel)
                     }, label: {
                         Text("Title Entry")
                             .btnLabelTheme()
@@ -206,13 +197,11 @@ extension SS1 {
                         .padding(8)
                         .border(edges: .all)
                     Button(action: {
-        //                let newEntry = SS1.PageEntry.newDrawingEntry(type: .h1, text: "")
-                        showOptions = false
-//                        if let entryIndex = entryIndex {
-//        //                    pageDataModel.addEntryWithAutoType(newEntry: newEntry, index: entryIndex + 1)
-//                        } else {
-//        //                    pageDataModel.addEntryWithAutoType(newEntry: newEntry, index: 0)
-//                        }
+                        let newEntry = SS1.PageEntryModel.init(drawings: [
+                            CanvasModel()
+                        ])
+                        pageDataModel.insert(entry: newEntry, after: entryIndex)
+                        print("inserted", pageDataModel)
                     }, label: {
                         Text("Drawing Entry")
                             .btnLabelTheme()

@@ -18,10 +18,15 @@ either = "1.8.0"
 rand = "0.7.3"
 lazy_static = "1.4.0"
 rayon = "1.5.3"
-skia-bindings = {version = "0.55.0", features = ['metal']}
-skia-safe = {version = "0.55.0", features = ['metal']}
-
+geo = "0.23.0"
+parry2d = "0.10.0"
+num-traits = "0.2.15"
+# structopt = "0.3.26"
 ss-notebook-format = {path = "../ss-notebook-format"}
+# skia-bindings = {version = "0.55.0", features = ['metal']}
+# skia-safe = {version = "0.55.0", features = ['metal']}
+skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
+skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
 
 [dependencies.uuid]
 version = "1.2.1"
@@ -31,3 +36,6 @@ features = [
     "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
     "serde",
 ]
+# [patch.crates-io]
+# skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
+# skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}

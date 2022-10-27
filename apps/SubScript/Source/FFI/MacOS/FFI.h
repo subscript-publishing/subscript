@@ -17,31 +17,24 @@ SS1_CAPI_MetalBackendContextPtr metalDeviceToRustContext(id<MTLDevice> device, i
     return ss1_metal_backend_context_init((__bridge void*)device, (__bridge void*)queue);
 }
 
-void mtkMetalViewLayerToCanvasSurfaceX(SS1_CAPI_MetalBackendContextPtr metal_backend_context_ptr,
-                                 SS1_CAPI_MetalViewLayersPtr metal_view_layers_ptr,
-                                 MTKView* layer_view,
-                                 SS1_CAPI_MetalViewLayerType layer_type) {
-    return ss1_metal_view_layers_provision_for_layer(metal_backend_context_ptr,
-                                           metal_view_layers_ptr,
-                                           (__bridge const void*)layer_view,
-                                           layer_type);
+SS1_CAPI_DrawResult ss1MetalViewDrawFlushAndSubmit(SS1_CAPI_MetalBackendContextPtr metalBackendContextPtr,
+                                                   SS1_CAPI_CanvasRuntimeContextPtr canvasRuntimeContextPtr,
+                                                   MTKView* view,
+                                                   SS1_CAPI_ViewInfo viewInfo) {
+    
+    return ss1_metal_view_draw_flush_and_submit(metalBackendContextPtr,
+                                                canvasRuntimeContextPtr,
+                                                (__bridge const void*)view,
+                                                viewInfo);
 }
 
 
-
-void mtkViewsToCanvasSurfaces(SS1_CAPI_MetalBackendContextPtr metal_backend_context_ptr,
-                              SS1_CAPI_MetalViewLayersPtr metal_view_layers_ptr,
-                                                       MTKView* background_view,
-                                                       MTKView* background_active_view,
-                                                       MTKView* foreground_view,
-                                                       MTKView* foreground_active_view) {
-    return ss1_metal_view_layers_provision(metal_backend_context_ptr,
-                                           metal_view_layers_ptr,
-                                           (__bridge const void*)background_view,
-                                           (__bridge const void*)background_active_view,
-                                           (__bridge const void*)foreground_view,
-                                           (__bridge const void*)foreground_active_view);
+void ss1MetalBackendContextProvisionView(SS1_CAPI_MetalBackendContextPtr metalBackendContextPtr, MTKView* view) {
+    
+    ss1_metal_backend_context_provision_view(metalBackendContextPtr, (__bridge const void*)view);
 }
+
+
 
 
 #endif /* MacOSFFI_h */

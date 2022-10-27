@@ -650,14 +650,13 @@ fileprivate struct PenView: View {
     @State private var showPopUp: Bool = false
     
     @ViewBuilder private func penPopup() -> some View {
-        SS1.ToolBarView.PenSettingsPanel(
-            onDelete: nil,
-            onSave: {
-                
-            },
-            toolbarModel: toolbarModel,
-            pen: $pen
-        )
+        ScrollView {
+            SS1.ToolBarView.PenSettingsFormInline(
+                toolbarModel: toolbarModel,
+                pen: $pen
+            )
+                .padding([.top, .bottom], 20)
+        }
     }
     var body: some View {
         Button(action: onClick, label: self.label)
@@ -768,53 +767,7 @@ extension SS1 {
         @Published var invertPenColors: Bool = false
         @Published var templatePen: Pen = Pen()
         @Published var pens: Array<Pen> = DEFAULT_PENS
-//        @Published var pens: Array<Pen> = [
-//            SS1.Pen(
-//                strokeSettings: SS1.Pen.StrokeSettings(
-//                    color: SS1.Pen.StrokeSettings.ColorMode(
-//                        lightUIColorMode: CodableColor(withColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)),
-//                        darkUIColorMode: CodableColor(withColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
-//                    ),
-//                    size: 5
-//                ),
-//                active: true,
-////                layer: SS1.CanvasLayer.foreground,
-//                penSet: SS1.Pen.PenSet.set1
-//            ),
-//            SS1.Pen(
-//                strokeSettings: SS1.Pen.StrokeSettings(
-//                    color: SS1.Pen.StrokeSettings.ColorMode(
-//                        lightUIColorMode: CodableColor(withColor: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)),
-//                        darkUIColorMode: CodableColor(withColor: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
-//                    ),
-//                    size: 5
-//                ),
-////                layer: SS1.CanvasLayer.foreground,
-//                penSet: SS1.Pen.PenSet.set1
-//            ),
-//            SS1.Pen(
-//                strokeSettings: SS1.Pen.StrokeSettings(
-//                    color: SS1.Pen.StrokeSettings.ColorMode(
-//                        lightUIColorMode: CodableColor(withColor: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)),
-//                        darkUIColorMode: CodableColor(withColor: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1))
-//                    ),
-//                    size: 5
-//                ),
-////                layer: SS1.CanvasLayer.foreground,
-//                penSet: SS1.Pen.PenSet.set1
-//            ),
-//            SS1.Pen(
-//                strokeSettings: SS1.Pen.StrokeSettings(
-//                    color: SS1.Pen.StrokeSettings.ColorMode(
-//                        lightUIColorMode: CodableColor(withColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.9031519736)),
-//                        darkUIColorMode: CodableColor(withColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.9031519736))
-//                    ),
-//                    size: 5
-//                ),
-////                layer: SS1.CanvasLayer.foreground,
-//                penSet: SS1.Pen.PenSet.set1
-//            ),
-//        ]
+        @Published var showHSLAColorPicker: Bool = false
         enum CodingKeys: CodingKey {
             case pens, templatePen
         }
@@ -885,15 +838,13 @@ extension SS1 {
     }
     struct ToolBarView: View {
         @ObservedObject var toolbarModel: ToolBarModel
-//        @ObservedObject var canvasModel: SS1.CanvasDataModel
-//        @Binding var displayStyle: ColorScheme
         let toggleColorScheme: () -> ()
-//        let openSettings: () -> ()
-//        let setToPen: (SS1.Pen) -> ()
-//        let setToEraser: () -> ()
-//        let setToSelection: () -> ()
         let goBack: () -> ()
         let onSave: () -> ()
+        @Environment(\.colorScheme) private var colorScheme
+        @State private var layerViewToggle: LayerViewToggle = .both
+        @State private var penSetViewToggle = SS1.Pen.PenSet.set1
+        @Binding var showPenListEditor: Bool
         
         private func activatePen(penID: UUID) {
             self.toolbarModel.currentToolType = ToolBarModel.CurrentToolType.pen
@@ -908,47 +859,40 @@ extension SS1 {
             }
         }
         private func activateEraserTool() {
-            usingEraserTool.toggle()
-            if usingEraserTool {
-                usingSelectionTool = false
-                toolbarModel.currentToolType = ToolBarModel.CurrentToolType.eraser
-                for (ix, _) in toolbarModel.pens.enumerated() {
-                    if toolbarModel.pens[ix].active {
-                        toolbarModel.pens[ix].active = false
-                    }
+            print("activateEraserTool")
+            toolbarModel.currentToolType = ToolBarModel.CurrentToolType.eraser
+            for (ix, _) in toolbarModel.pens.enumerated() {
+                if toolbarModel.pens[ix].active {
+                    toolbarModel.pens[ix].active = false
                 }
-                ss1_toolbar_runtime_set_active_tool_to_eraser()
             }
+            ss1_toolbar_runtime_set_active_tool_to_eraser()
         }
         private func activateSelectionTool() {
-            usingSelectionTool.toggle()
-            if usingSelectionTool {
-                usingEraserTool = false
-                self.toolbarModel.currentToolType = ToolBarModel.CurrentToolType.selection
-                for (ix, _) in self.toolbarModel.pens.enumerated() {
-                    if toolbarModel.pens[ix].active {
-                        toolbarModel.pens[ix].active = false
-                    }
+            print("activateSelectionTool")
+            self.toolbarModel.currentToolType = ToolBarModel.CurrentToolType.selection
+            for (ix, _) in self.toolbarModel.pens.enumerated() {
+                if toolbarModel.pens[ix].active {
+                    toolbarModel.pens[ix].active = false
                 }
             }
+            ss1_toolbar_runtime_set_active_tool_to_transform()
         }
-        
-        @State private var usingEraserTool: Bool = false
-        @State private var usingSelectionTool: Bool = false
-        @Environment(\.colorScheme) private var colorScheme
-        @State private var layerViewToggle: LayerViewToggle = .both
-        @State private var penSetViewToggle = SS1.Pen.PenSet.set1
-        
-        @Binding var showPenListEditor: Bool
         
         var body: some View {
             HStack(alignment: .center, spacing: 10) {
                 Group {
                     Button(action: goBack, label: {Image(systemName: "chevron.left")})
                         .buttonStyle(RoundedButtonStyle())
-                    SelectionTool(active: usingSelectionTool, onClick: self.activateSelectionTool)
+                    SelectionTool(
+                        active: self.toolbarModel.currentToolType.isSelection,
+                        onClick: self.activateSelectionTool
+                    )
                         .frame(width: 30, alignment: .center)
-                    EraserTool(active: usingEraserTool, onClick: self.activateEraserTool)
+                    EraserTool(
+                        active: self.toolbarModel.currentToolType.isEraser,
+                        onClick: self.activateEraserTool
+                    )
                         .frame(width: 30, alignment: .center)
                     Button(
                         action: {

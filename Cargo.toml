@@ -17,3 +17,6 @@ exclude = [
     "local-dev/cavalier_contours_ffi",
 ]
 
+[patch.crates-io]
+skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
+skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}

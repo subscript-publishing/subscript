@@ -15,19 +15,33 @@ pub mod perfect_freehand;
 pub struct StrokeCmd {
     pub uid: Uuid,
     pub stroke_style: StrokeStyle,
-    pub device_input: SamplePoints,
-    pub computed_outline: Option<ComputedPenOutline>,
+    pub device_input: DeviceInput,
+    pub computed_outline: ColoredShape,
 }
 
+
+
 impl StrokeCmd {
-    pub fn compute_outline_if_missing(&mut self) {
-        if self.computed_outline.is_none() {
-            let points = perfect_freehand::vector_outline_points_for_stroke(self);
-            self.computed_outline = Some(ComputedPenOutline {
-                color: self.stroke_style.color.clone(),
-                points,
-            })
+    pub fn new(
+        device_input: DeviceInput,
+        pen_style: &StrokeStyle,
+    ) -> Self {
+        let outline_points = perfect_freehand::vector_outline_points(
+            &device_input.sample_points,
+            pen_style
+        );
+        StrokeCmd {
+            uid: Uuid::new_v4(),
+            computed_outline: ColoredShape {
+                color: pen_style.color.clone(),
+                points: outline_points,
+            },
+            stroke_style: pen_style.clone(),
+            device_input,
         }
+    }
+    pub fn geo_convex_hull(&self) -> geo::Polygon {
+        self.computed_outline.as_points_ref().geo_convex_hull()
     }
 }
 
@@ -39,7 +53,28 @@ impl StrokeCmd {
 pub struct FillCmd {
     pub uid: Uuid,
     pub fill_style: FillStyle,
-    pub device_input: SamplePoints,
+    pub device_input: DeviceInput,
+    pub outline_points: ColoredShape,
+}
+
+impl FillCmd {
+    pub fn new(
+        device_input: DeviceInput,
+        fill_style: &FillStyle,
+    ) -> Self {
+        FillCmd {
+            uid: Uuid::new_v4(),
+            fill_style: fill_style.clone(),
+            outline_points: ColoredShape {
+                color: fill_style.color.clone(),
+                points: device_input.sample_points
+                    .iter()
+                    .map(|sample| sample.point)
+                    .collect_vec(),
+            },
+            device_input,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -65,15 +100,6 @@ impl FillStyle {
 }
 
 
-//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-// COMPUTED PEN OUTLINE POINTS
-//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ComputedPenOutline {
-    pub color: DualColors,
-    pub points: Vec<[f64; 2]>,
-}
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // PEN SETTINGS

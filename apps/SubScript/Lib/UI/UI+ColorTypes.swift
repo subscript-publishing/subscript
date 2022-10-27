@@ -89,6 +89,9 @@ extension UI {
             init<T>(from color: T) where T: AsColorType {
                 self = color.asXColor.hsba
             }
+            init(fromLL color: UI.LL.Color) {
+                self = color.hsba
+            }
             var asCGColor: CGColor {
                 get {
                     self.asXColor.cgColor

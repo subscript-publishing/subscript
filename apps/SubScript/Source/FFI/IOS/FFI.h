@@ -13,14 +13,25 @@
 #import <MetalKit/MetalKit.h>
 #include "ss-notebook-format.h"
 
-static SS1_CAPI_CanvasContext* metalDeviceToRustContext(MTKView* mtkView, id<MTLDevice> device, id<MTLCommandQueue> queue) {
-    return metal_device_to_rust_context((__bridge const void*)mtkView, (__bridge void*)device, (__bridge void*)queue);
+SS1_CAPI_MetalBackendContextPtr metalDeviceToRustContext(id<MTLDevice> device, id<MTLCommandQueue> queue) {
+    return ss1_metal_backend_context_init((__bridge void*)device, (__bridge void*)queue);
 }
 
-static SS1_CAPI_CanvasSurface* mtkViewToCanvasSurface(MTKView* mtkView, SS1_CAPI_CanvasContext* context)
-{
-    return app_logic_init_canvas_surface((__bridge const void*)mtkView, context);
+SS1_CAPI_DrawResult ss1MetalViewDrawFlushAndSubmit(SS1_CAPI_MetalBackendContextPtr metalBackendContextPtr,
+                                                   SS1_CAPI_CanvasRuntimeContextPtr canvasRuntimeContextPtr,
+                                                   MTKView* view,
+                                                   SS1_CAPI_ViewInfo viewInfo) {
+    
+    return ss1_metal_view_draw_flush_and_submit(metalBackendContextPtr,
+                                                canvasRuntimeContextPtr,
+                                                (__bridge const void*)view,
+                                                viewInfo);
 }
 
+
+void ss1MetalBackendContextProvisionView(SS1_CAPI_MetalBackendContextPtr metalBackendContextPtr, MTKView* view) {
+    
+    ss1_metal_backend_context_provision_view(metalBackendContextPtr, (__bridge const void*)view);
+}
 
 #endif /* IOSFFI_h */

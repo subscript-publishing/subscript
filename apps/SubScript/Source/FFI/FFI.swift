@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension ColorScheme {
-    fileprivate var asCDataType: SS1_CAPI_ColorScheme {
+    var asCDataType: SS1_CAPI_ColorScheme {
         switch self {
         case .light: return Light
         case .dark: return Dark
@@ -19,7 +19,7 @@ extension ColorScheme {
 }
 
 extension UI.LL.Color {
-    fileprivate var asCDataType: SS1_CAPI_Color {
+    var asCDataType: SS1_CAPI_Color {
         let (r,g,b,a) = self.rgba;
         let hsba = self.hsba;
         return SS1_CAPI_Color(
@@ -40,7 +40,7 @@ extension UI.LL.Color {
 }
 
 extension SS1.Pen.PenStyle.DualColor {
-    fileprivate var asCDataType: SS1_CAPI_DualColors {
+    var asCDataType: SS1_CAPI_DualColors {
         SS1_CAPI_DualColors(
             dark_ui: self.darkUI.asXColor.asCDataType,
             light_ui: self.lightUI.asXColor.asCDataType
@@ -49,7 +49,7 @@ extension SS1.Pen.PenStyle.DualColor {
 }
 
 extension SS1.Pen.PenStyle.Easing {
-    fileprivate var asCDataType: SS1_CAPI_Easing {
+    var asCDataType: SS1_CAPI_Easing {
         switch self {
         case .linear: return Linear
         case .easeInQuad: return EaseInQuad
@@ -74,7 +74,7 @@ extension SS1.Pen.PenStyle.Easing {
 }
 
 extension SS1.Pen.PenStyle.Layer {
-    fileprivate var asCDataType: SS1_CAPI_Layer {
+    var asCDataType: SS1_CAPI_Layer {
         switch self {
         case .foreground: return Foreground
         case .background: return Background
@@ -83,18 +83,18 @@ extension SS1.Pen.PenStyle.Layer {
 }
 
 extension SS1.Pen.PenStyle.StartCap {
-    fileprivate var asCDataType: SS1_CAPI_StartCap {
+    var asCDataType: SS1_CAPI_StartCap {
         SS1_CAPI_StartCap(cap: self.cap, taper: self.taper, easing: self.easing.asCDataType)
     }
 }
 extension SS1.Pen.PenStyle.EndCap {
-    fileprivate var asCDataType: SS1_CAPI_EndCap {
+    var asCDataType: SS1_CAPI_EndCap {
         SS1_CAPI_EndCap(cap: self.cap, taper: self.taper, easing: self.easing.asCDataType)
     }
 }
 
 extension SS1.Pen.PenStyle {
-    fileprivate var asCDataType: SS1_CAPI_StrokeStyle {
+    var asCDataType: SS1_CAPI_StrokeStyle {
         return SS1_CAPI_StrokeStyle(
             color: self.color.asCDataType,
             layer: self.layer.asCDataType,
@@ -111,7 +111,7 @@ extension SS1.Pen.PenStyle {
 }
 
 extension SS1.CanvasModel.SamplePoint {
-    fileprivate var asCDataType: SS1_CAPI_SamplePoint {
+    var asCDataType: SS1_CAPI_SamplePoint {
         SS1_CAPI_SamplePoint(
             point: (self.point.x, self.point.y),
             force: self.force ?? 0.0,
@@ -142,14 +142,15 @@ extension SS1.Pen {
 //    }
 //}
 
-extension SS1 {
+
+extension SS1.FFI {
     class CanvasRuntime {
-        private var canvas_runtime_ptr: SS1_CAPI_CanvasRuntimeContextPtr
-//        private var metal_view_context_ptr: SS1_CAPI_MetalViewContextPtr!
+        var canvas_runtime_ptr: SS1_CAPI_CanvasRuntimeContextPtr
         
         init() {
             self.canvas_runtime_ptr = ss1_canvas_runtime_context_new()
         }
+        
         func beginStroke() {
             ss1_canvas_runtime_context_begin_stroke(self.canvas_runtime_ptr)
         }
@@ -162,117 +163,6 @@ extension SS1 {
         }
         func endStroke() {
             ss1_canvas_runtime_context_end_stroke(self.canvas_runtime_ptr)
-        }
-//        func drawFlushAndSubmit(
-//            width: CGFloat,
-//            height: CGFloat,
-//            colorScheme: ColorScheme,
-//            metalViewContextPtr: SS1_CAPI_MetalBackendContextPtr,
-//            metalViewLayersPtr: SS1_CAPI_MetalViewLayersPtr,
-//            layerHeights: LayerHeights
-//        ) {
-//            self.setViewState(width: width, height: height, colorScheme: colorScheme)
-//            ss1_metal_view_layers_flush_and_submit(
-//                metalViewContextPtr,
-//                metalViewLayersPtr,
-//                self.canvas_runtime_ptr,
-//                layerHeights.asCDataType
-//            );
-//        }
-        func drawFlushAndSubmitForLayer(
-            metalViewContextPtr: SS1_CAPI_MetalBackendContextPtr,
-            metalViewLayersPtr: SS1_CAPI_MetalViewLayersPtr,
-            view: LabeledMTKView
-        ) -> SS1_CAPI_DrawResult? {
-            let viewInfo = SS1_CAPI_ViewInfo(
-                width: view.frame.width,
-                height: view.frame.height,
-                color_scheme: view.colorScheme.asCDataType
-            )
-            let textureInfo = SS1_CAPI_MetalTextureInfo(
-                width: view.currentDrawable!.texture.width,
-                height: view.currentDrawable!.texture.height
-            )
-            switch view.ssLayerType {
-            case .background:
-                let layerType = MetalViewIsBackground
-//                var mtkView = view as MTKView
-//                ss1_metal_view_layers_flush_and_submit_for_layer(
-//                    metalViewContextPtr,
-//                    metalViewLayersPtr,
-//                    self.canvas_runtime_ptr,
-//                    layerType,
-//                    &mtkView,
-//                    viewInfo,
-//                    textureInfo
-//                )
-                ()
-            case .backgroundActive:
-                let layerType = MetalViewIsBackgroundActive
-//                ss1_metal_view_layers_flush_and_submit_for_layer(
-//                    metalViewContextPtr,
-//                    metalViewLayersPtr,
-//                    self.canvas_runtime_ptr,
-//                    CGFloat(view.currentDrawable!.texture.height)
-//                )
-                ()
-            case .foreground:
-                let layerType = MetalViewIsForeground
-                var mtkView = view as MTKView
-                mtkMetalViewLayerToCanvasSurfaceX(
-                    metalViewContextPtr,
-                    metalViewLayersPtr,
-                    view as MTKView,
-                    layerType
-                )
-                let result = ss1_metal_view_layers_flush_and_submit_for_layer(
-                    metalViewContextPtr,
-                    metalViewLayersPtr,
-                    self.canvas_runtime_ptr,
-                    layerType,
-                    &mtkView,
-                    viewInfo,
-                    textureInfo
-                )
-                return result
-            case .foregroundActive:
-                let layerType = MetalViewIsForegroundActive
-                var mtkView = view as MTKView
-//                ss1_metal_view_layers_provision_for_layer(
-//                    metalViewContextPtr,
-//                    metalViewLayersPtr,
-//                    &mtkView,
-//                    layerType
-//                )
-                mtkMetalViewLayerToCanvasSurfaceX(
-                    metalViewContextPtr,
-                    metalViewLayersPtr,
-                    view as MTKView,
-                    layerType
-                )
-                let result = ss1_metal_view_layers_flush_and_submit_for_layer(
-                    metalViewContextPtr,
-                    metalViewLayersPtr,
-                    self.canvas_runtime_ptr,
-                    layerType,
-                    &mtkView,
-                    viewInfo,
-                    textureInfo
-                )
-                return result
-            case .unknown: fatalError("What layer am I?")
-            }
-            return nil
-        }
-        func setViewState(width: CGFloat, height: CGFloat, colorScheme: ColorScheme) {
-            ss1_canvas_runtime_context_update_view_info(
-                self.canvas_runtime_ptr,
-                SS1_CAPI_ViewInfo(
-                    width: width,
-                    height: height,
-                    color_scheme: colorScheme.asCDataType
-                )
-            )
         }
     }
 }
