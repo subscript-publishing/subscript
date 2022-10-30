@@ -25,54 +25,186 @@ fileprivate enum LayerViewToggle {
     case both
 }
 
+@ViewBuilder fileprivate func enumPicker<T>(
+    title: String,
+    value: Binding<T>
+) -> some View where T: CaseIterable, T: Hashable {
+    let allCases = Array(T.allCases)
+    let pickerView = Picker(
+        selection: value,
+        content: {
+            ForEach(Array(allCases.enumerated()), id: \.1.hashValue, content: { (ix, t) in
+                let typeName = String(reflecting: t)
+                    .stripPrefix(String(reflecting: T.self))
+                    .stripPrefix(".")
+                    .capitalized
+                Text(typeName).tag(t)
+            })
+        },
+        label: {
+            Text(title)
+        }
+    )
+    if allCases.count < 5 {
+        pickerView.pickerStyle(SegmentedPickerStyle())
+    } else {
+        pickerView
+    }
+}
+
+@ViewBuilder fileprivate func sliderControl(
+    title: String,
+    value: Binding<CGFloat>,
+    range: ClosedRange<CGFloat>,
+    onChange: @escaping (Bool) -> ()
+) -> some View {
+    Slider(
+        value: value,
+        in: range,
+        label: {
+            Text(title)
+        },
+        onEditingChanged: onChange
+    )
+    VStack(alignment: .center, spacing: 0) {
+        Text("\(value.wrappedValue)")
+    }
+}
+@ViewBuilder fileprivate func toggleControl(
+    title: String,
+    value: Binding<Bool>
+) -> some View {
+    HStack(alignment: .center, spacing: 10) {
+        Toggle(title, isOn: value)
+    }
+}
+
+struct EditToolSettingView: View {
+    @Binding var settingsModel: SS1.ToolBarModel.EditToolSettings
+    let onSync: () -> ()
+    var body: some View {
+        VStack(alignment: .center, spacing: 10) {
+            Form {
+                enumPicker(title: "Selection Type", value: $settingsModel.selectionType)
+                sliderControl(
+                    title: "Strike Through Pen Size",
+                    value: $settingsModel.strikeThroughPenSize,
+                    range: SS1.Pen.PenStyle.sizeRange,
+                    onChange: { sliding in
+                        let done = !sliding
+                        if done {
+                            onSync()
+                        }
+                    }
+                )
+                enumPicker(title: "Hit Testing", value: $settingsModel.hitTesting)
+                enumPicker(title: "Active Layer", value: $settingsModel.selectionLayer)
+            }
+            .onChange(of: settingsModel.selectionType, perform: {_ in
+                onSync()
+            })
+            .onChange(of: settingsModel.hitTesting, perform: {_ in
+                onSync()
+            })
+        }
+        .frame(minWidth: 400)
+        .padding(20)
+    }
+}
 
 
 fileprivate struct EraserTool: View {
-    let active: Bool
-    let onClick: () -> ()
+    @ObservedObject var toolbarModel: SS1.ToolBarModel
+    
+    @State private var showPopup: Bool = false
+    
+    private var isActive: Bool {
+        self.toolbarModel.currentToolType.isEraser
+    }
+    
+    private func activateEraserTool() {
+        toolbarModel.currentToolType = SS1.ToolBarModel.CurrentToolType.eraser
+        for (ix, _) in toolbarModel.pens.enumerated() {
+            if toolbarModel.pens[ix].active {
+                toolbarModel.pens[ix].active = false
+            }
+        }
+//        ss1_toolbar_runtime_set_active_tool_to_eraser(
+//            self.toolbarModel.eraserSettings.asCDataType
+//        )
+    }
+    
+    private func onClick() {
+        if self.isActive {
+            self.showPopup = true
+        } else {
+            self.activateEraserTool()
+        }
+    }
+    
+    @ViewBuilder private func popupView() -> some View {
+        VStack(alignment: .center, spacing: 10) {
+            EditToolSettingView(
+                settingsModel: $toolbarModel.eraserSettings,
+                onSync: {
+//                    ss1_toolbar_runtime_set_active_tool_to_eraser(
+//                        self.toolbarModel.eraserSettings.asCDataType
+//                    )
+                }
+            )
+        }
+    }
+    @ViewBuilder private var label: some View {
+        let fg = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        ZStack(alignment: Alignment.top) {
+            BackgroundGraphic(active: isActive)
+                .scale(1.0)
+                .foregroundColor(Color(fg))
+            TopGraphic(active: isActive)
+                .scale(0.95)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [
+                                Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)),
+                                Color(#colorLiteral(red: 0.370555222, green: 0.3705646992, blue: 0.3705595732, alpha: 1)),
+                            ]
+                        ),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+            BottomGraphic(active: isActive)
+                .scale(0.95)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [
+                                Color(#colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1)),
+                                Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
+                            ]
+                        ),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+        }
+        .offset(x: 0, y: self.isActive ? 10 : 0)
+        .foregroundColor(Color.clear)
+    }
     
     var body: some View {
         Button(
-            action: onClick,
+            action: self.onClick,
             label: {
-                let fg = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                ZStack(alignment: Alignment.top) {
-                    BackgroundGraphic(active: active)
-                        .scale(1.0)
-                        .foregroundColor(Color(fg))
-                    TopGraphic(active: active)
-                        .scale(0.95)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)),
-                                        Color(#colorLiteral(red: 0.370555222, green: 0.3705646992, blue: 0.3705595732, alpha: 1)),
-                                    ]
-                                ),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                    BottomGraphic(active: active)
-                        .scale(0.95)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color(#colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1)),
-                                        Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
-                                    ]
-                                ),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
+                if toolbarModel.eraserSettings.selectionLayer == .background {
+                    label.rotationEffect(Angle.degrees(180))
+                } else {
+                    label
                 }
-                .offset(x: 0, y: self.active ? 10 : 0)
-                .foregroundColor(Color.clear)
             }
         )
+            .popover(isPresented: $showPopup, content: popupView)
     }
     private struct BackgroundGraphic: Shape {
         let active: Bool
@@ -112,50 +244,96 @@ fileprivate struct EraserTool: View {
     }
 }
 fileprivate struct SelectionTool: View {
-    let active: Bool
-    let onClick: () -> ()
+    @ObservedObject var toolbarModel: SS1.ToolBarModel
+    @State private var showPopup: Bool = false
+    
+    private var isActive: Bool {
+        self.toolbarModel.currentToolType.isSelection
+    }
+    
+    private func activateSelectionTool() {
+        self.toolbarModel.currentToolType = SS1.ToolBarModel.CurrentToolType.selection
+        for (ix, _) in self.toolbarModel.pens.enumerated() {
+            if toolbarModel.pens[ix].active {
+                toolbarModel.pens[ix].active = false
+            }
+        }
+//        ss1_toolbar_runtime_set_active_tool_to_transform(
+//            self.toolbarModel.lassoSettings.asCDataType
+//        )
+    }
+    
+    private func onClick() {
+        if self.isActive {
+            self.showPopup = true
+        } else {
+            self.activateSelectionTool()
+        }
+    }
+    
+    @ViewBuilder private func popupView() -> some View {
+        VStack(alignment: .center, spacing: 10) {
+            EditToolSettingView(
+                settingsModel: $toolbarModel.lassoSettings,
+                onSync: {
+//                    ss1_toolbar_runtime_set_active_tool_to_transform(
+//                        self.toolbarModel.lassoSettings.asCDataType
+//                    )
+                }
+            )
+        }
+    }
+    
+    @ViewBuilder private var label: some View {
+        ZStack(alignment: Alignment.top) {
+            BackgroundGraphic(active: isActive)
+                .scale(1.0)
+                .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+            TopGraphic(active: isActive)
+                .scale(0.95)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [
+                                Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)),
+                                Color(#colorLiteral(red: 0.370555222, green: 0.3705646992, blue: 0.3705595732, alpha: 1)),
+                            ]
+                        ),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+            BottomGraphic(active: isActive)
+                .scale(0.95)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [
+                                Color(#colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1)),
+                                Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
+                            ]
+                        ),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+        }
+        .offset(x: 0, y: self.isActive ? 8 : 0)
+        .foregroundColor(Color.clear)
+    }
     
     var body: some View {
         Button(
-            action: onClick,
+            action: self.onClick,
             label: {
-                ZStack(alignment: Alignment.top) {
-                    BackgroundGraphic(active: active)
-                        .scale(1.0)
-                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
-                    TopGraphic(active: active)
-                        .scale(0.95)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)),
-                                        Color(#colorLiteral(red: 0.370555222, green: 0.3705646992, blue: 0.3705595732, alpha: 1)),
-                                    ]
-                                ),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                    BottomGraphic(active: active)
-                        .scale(0.95)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color(#colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1)),
-                                        Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
-                                    ]
-                                ),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
+                if toolbarModel.lassoSettings.selectionLayer == .background {
+                    label.rotationEffect(Angle.degrees(180))
+                } else {
+                    label
                 }
-                .offset(x: 0, y: self.active ? 8 : 0)
-                .foregroundColor(Color.clear)
             }
         )
+            .popover(isPresented: $showPopup, content: popupView)
     }
     private struct BackgroundGraphic: Shape {
         let active: Bool
@@ -768,6 +946,8 @@ extension SS1 {
         @Published var templatePen: Pen = Pen()
         @Published var pens: Array<Pen> = DEFAULT_PENS
         @Published var showHSLAColorPicker: Bool = false
+        @Published var eraserSettings = EditToolSettings()
+        @Published var lassoSettings = EditToolSettings()
         enum CodingKeys: CodingKey {
             case pens, templatePen
         }
@@ -835,16 +1015,52 @@ extension SS1 {
                 }
             }
         }
+        struct EditToolSettings: Equatable {
+            var selectionType: SelectionType = SelectionType.strikeThrough
+            var selectionLayer: ActiveLayer = ActiveLayer.both
+            var strikeThroughPenSize: CGFloat = 5.0
+            var hitTesting: HitTesting = HitTesting.convexHull
+//            var asCDataType: SS1_CAPI_EditToolSettings {
+//                switch self.selectionType {
+//                case .area:
+//                    return SS1_CAPI_EditToolSettings(
+//                        selection_type: SSEditToolAreaSelection,
+//                        strike_through_pen_size: self.strikeThroughPenSize
+//                    )
+//                case .strikeThrough:
+//                    return SS1_CAPI_EditToolSettings(
+//                        selection_type: SSEditToolStrikeThroughSelection,
+//                        strike_through_pen_size: self.strikeThroughPenSize
+//                    )
+//                }
+//            }
+            enum SelectionType: String, Codable, CaseIterable, Hashable, Equatable {
+                case area
+                case strikeThrough
+            }
+            enum HitTesting: String, Codable, CaseIterable, Hashable, Equatable {
+                case boundingBox
+                case convexHull
+                case exact
+            }
+            enum ActiveLayer: String, Codable, CaseIterable, Hashable, Equatable {
+                case both
+                case foreground
+                case background
+            }
+        }
     }
     struct ToolBarView: View {
         @ObservedObject var toolbarModel: ToolBarModel
+        @Binding var showPenListEditor: Bool
         let toggleColorScheme: () -> ()
         let goBack: () -> ()
         let onSave: () -> ()
+        
+        
         @Environment(\.colorScheme) private var colorScheme
         @State private var layerViewToggle: LayerViewToggle = .both
         @State private var penSetViewToggle = SS1.Pen.PenSet.set1
-        @Binding var showPenListEditor: Bool
         
         private func activatePen(penID: UUID) {
             self.toolbarModel.currentToolType = ToolBarModel.CurrentToolType.pen
@@ -854,29 +1070,9 @@ extension SS1 {
                 }
                 if self.toolbarModel.pens[ix].id == penID {
                     self.toolbarModel.pens[ix].active = true
-                    self.toolbarModel.pens[ix].setToCurrentPen()
+//                    self.toolbarModel.pens[ix].setToCurrentPen()
                 }
             }
-        }
-        private func activateEraserTool() {
-            print("activateEraserTool")
-            toolbarModel.currentToolType = ToolBarModel.CurrentToolType.eraser
-            for (ix, _) in toolbarModel.pens.enumerated() {
-                if toolbarModel.pens[ix].active {
-                    toolbarModel.pens[ix].active = false
-                }
-            }
-            ss1_toolbar_runtime_set_active_tool_to_eraser()
-        }
-        private func activateSelectionTool() {
-            print("activateSelectionTool")
-            self.toolbarModel.currentToolType = ToolBarModel.CurrentToolType.selection
-            for (ix, _) in self.toolbarModel.pens.enumerated() {
-                if toolbarModel.pens[ix].active {
-                    toolbarModel.pens[ix].active = false
-                }
-            }
-            ss1_toolbar_runtime_set_active_tool_to_transform()
         }
         
         var body: some View {
@@ -884,15 +1080,9 @@ extension SS1 {
                 Group {
                     Button(action: goBack, label: {Image(systemName: "chevron.left")})
                         .buttonStyle(RoundedButtonStyle())
-                    SelectionTool(
-                        active: self.toolbarModel.currentToolType.isSelection,
-                        onClick: self.activateSelectionTool
-                    )
+                    SelectionTool(toolbarModel: self.toolbarModel)
                         .frame(width: 30, alignment: .center)
-                    EraserTool(
-                        active: self.toolbarModel.currentToolType.isEraser,
-                        onClick: self.activateEraserTool
-                    )
+                    EraserTool(toolbarModel: self.toolbarModel)
                         .frame(width: 30, alignment: .center)
                     Button(
                         action: {
@@ -972,15 +1162,6 @@ extension SS1 {
                         }
                     )
                         .buttonStyle(RoundedButtonStyle())
-                    UI.Hacks.NavigationStackViewLink(
-                        navBar: UI.Hacks.NavBar.defaultNavBar(),
-                        destination: {
-                            SS1.ColorEditor()
-                        },
-                        label: {
-                            Image(systemName: "paintpalette")
-                        }
-                    )
                 }
             }
             .padding([.leading, .trailing], 10)

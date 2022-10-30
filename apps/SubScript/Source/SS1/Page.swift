@@ -74,6 +74,7 @@ extension SS1 {
 //                gutterBorder
                 ToolBarView(
                     toolbarModel: toolbarModel,
+                    showPenListEditor: $showPenListEditor,
                     toggleColorScheme: {
                         
                     },
@@ -82,8 +83,7 @@ extension SS1 {
                     },
                     onSave: {
                         
-                    },
-                    showPenListEditor: $showPenListEditor
+                    }
                 )
                     .frame(height: 40)
                 CustomScroller {

@@ -114,7 +114,7 @@ fileprivate final class RootMetalRenderer: UI.LL.View, MTKViewDelegate {
     private var backgroundPattern: BackgroundPattern = BackgroundPattern()
     
     private var canvasRuntimeContext = SS1.FFI.CanvasRuntime()
-    private var metalBackendContextPtr: SS1_CAPI_MetalBackendContextPtr!
+    private var metalBackendContextPtr: SSMetalBackendContextPointer!
     
     private var metalDevice: MTLDevice!
     private var metalQueue: MTLCommandQueue!
@@ -149,11 +149,11 @@ fileprivate final class RootMetalRenderer: UI.LL.View, MTKViewDelegate {
         self.backgroundPattern.setup(parent: self)
         self.metalDevice = MTLCreateSystemDefaultDevice()
         self.metalQueue = self.metalDevice.makeCommandQueue()
-        self.metalBackendContextPtr = metalDeviceToRustContext(self.metalDevice, self.metalQueue)
+        self.metalBackendContextPtr = metalBackendContextInit(self.metalDevice, self.metalQueue)
 #if os(iOS)
         mtkView.backgroundColor = UIColor.clear
         mtkView.contentMode = .redraw
-#elseif os(macOS) 
+#elseif os(macOS)
         mtkView.layer?.isOpaque = false
         mtkView.autoResizeDrawable = true
         mtkView.autoresizingMask = [.width, .height]
@@ -177,34 +177,27 @@ fileprivate final class RootMetalRenderer: UI.LL.View, MTKViewDelegate {
     }
     
     func mtkView(_ _: MTKView, drawableSizeWillChange size: CGSize) {
-        ss1MetalBackendContextProvisionView(metalBackendContextPtr, mtkView)
+        metalBackendContextReloadViewSurface(metalBackendContextPtr, mtkView)
     }
     func draw(in _: MTKView) {
-        ss1MetalBackendContextProvisionView(metalBackendContextPtr, mtkView)
-        let viewInfo = SS1_CAPI_ViewInfo(
-            width: mtkView.frame.width,
-            height: mtkView.frame.height,
-            color_scheme: self.colorScheme.asCDataType
+        metalBackendContextReloadViewSurface(metalBackendContextPtr, mtkView)
+        let viewInfo = SSViewInfo(
+            size: SSFrameSize(
+                width: Float(mtkView.frame.width),
+                height: Float(mtkView.frame.height)
+            ),
+            preferred_color_scheme: self.colorScheme.asCDataType
         )
-//        let textureInfo = SS1_CAPI_MetalTextureInfo(
-//            width: mtkView.currentDrawable!.texture.width,
-//            height: mtkView.currentDrawable!.texture.height
-//        )
         let _ = ss1MetalViewDrawFlushAndSubmit(
             metalBackendContextPtr,
-            canvasRuntimeContext.canvas_runtime_ptr,
+            canvasRuntimeContext.rootScenePointer,
             mtkView,
             viewInfo
         )
-//        if result != SSMetalDrawResultSuccess {
-//            return
-//        }
-        if let currentDrawable = mtkView.currentDrawable {
-            let commandBuffer: MTLCommandBuffer = metalQueue.makeCommandBuffer()!
-            let drawable = mtkView.currentDrawable!
-            commandBuffer.present(drawable)
-            commandBuffer.commit()
-        }
+        let commandBuffer: MTLCommandBuffer = metalQueue.makeCommandBuffer()!
+        let drawable = mtkView.currentDrawable!
+        commandBuffer.present(drawable)
+        commandBuffer.commit()
     }
     
     

@@ -2,13 +2,16 @@
 members = [
     "subscript-compiler",
     "apps/SubScript/subscript-app-rs",
-    "ss-notebook-format",
-    "ss-notebook-format-c-api",
+    "ss-app-engine",
+    "ss-app-engine-c-api",
     "ss-language-server",
     "ss-freeform-format",
     "html-to-subscript",
     "ss-str-fmt",
     "ss-database",
+    "vectorizable",
+    "c-ffi-utils",
+    "vectorizable/vectorizable-demo-rs",
 ]
 
 exclude = [
