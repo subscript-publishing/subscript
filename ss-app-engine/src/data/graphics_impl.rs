@@ -1,6 +1,8 @@
 use itertools::Itertools;
 use geo::{ConcaveHull, ConvexHull, Scale, BoundingRect, Intersects, Contains, EuclideanLength, Within};
-use super::graphics::*;
+use parry2d::query::PointQuery;
+
+use super::{graphics::*, edit_tool, stroke_style};
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // GEOMETRY PRIMITIVES
@@ -83,6 +85,20 @@ impl Rect {
             size
         )
     }
+    pub fn contains_point(&self, point: impl Into<Point>) -> bool {
+        let min = self.min.into_point2();
+        let max = self.max.into_point2();
+        let point = point.into().into_point2();
+        min <= point && point <= max
+    }
+    pub fn intersects(&self, other: Rect) -> bool {
+        let min = self.min.into_point2().coords.sup(&other.min.into_point2().coords);
+        let max = self.max.into_point2().coords.inf(&other.max.into_point2().coords);
+        if min.x > max.x || min.y > max.y {
+            return false;
+        }
+        true
+    }
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -90,6 +106,9 @@ impl Rect {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 impl PointVec {
+    pub fn from_normal_vec(points: Vec<Point>) -> Self {
+        PointVec {points}
+    }
     pub fn from_iter<T: Into<Point>>(points: impl IntoIterator<Item=T>) -> Self {
         PointVec { points: points.into_iter().map(|x| x.into()).collect_vec() }
     }
@@ -99,13 +118,21 @@ impl PointVec {
     pub fn push_points(&mut self, other: PointVec) {
         self.points.extend(other.points);
     }
-}
-
-impl PointVecOps for PointVec {
-    fn points(&self) -> &[Point] {&self.points}
-}
-impl<'a> PointVecOps for PointVecRef<'a> {
-    fn points(&self) -> &[Point] {self.points}
+    pub fn from_nested_iter(xs: impl IntoIterator<Item=PointVec>) -> Self {
+        let points = xs
+            .into_iter()
+            .flat_map(|x| x.points)
+            .collect_vec();
+        PointVec{points}
+    }
+    pub fn is_empty(&self) -> bool {
+        self.points.is_empty()
+    }
+    pub fn map_mut(&mut self, f: impl Fn(&mut Point)) {
+        self.points
+            .iter_mut()
+            .for_each(f)
+    }
 }
 
 pub trait PointVecOps {
@@ -142,6 +169,17 @@ pub trait PointVecOps {
     }
     fn convex_hull(&self) -> geo::Polygon {
         self.into_geo_line_string().convex_hull()
+    }
+    fn convex_hull_exterior(&self) -> PointVec {
+        let points = self
+            .into_geo_line_string();
+        let points = points
+            .convex_hull();
+        let points = points
+            .exterior()
+            .points()
+            .map(|a| Point{x: a.x() as f32, y: a.y() as f32});
+        PointVec::from_iter(points)
     }
     fn into_sk_polygon(&self) -> skia_safe::Path {
         let points = self.into_skia_points();
@@ -189,13 +227,12 @@ pub trait PointVecOps {
             .filter(|a| a.is_finite())
             .max_by(|a, b| a.total_cmp(&b))
     }
-    fn overlaps<T: PointVecOps>(&self, other: &T) -> bool {
-        if self.points().as_ref().len() < 2 {
-            return false
-        }
-        if other.points().len() < 2 {
-            return false
-        }
+    fn center_point(&self) -> Point {
+        let bounds = self.convex_hull_exterior().into_parry2d_polyline();
+        let bounds = bounds.local_aabb();
+        bounds.center().to_owned().into()
+    }
+    fn aabb_any_point_overlap<T: PointVecOps>(&self, other: &T) -> bool {
         let a = self.into_parry2d_polyline();
         let a = a.local_aabb();
         other
@@ -205,13 +242,15 @@ pub trait PointVecOps {
                 a.contains_local_point(&x)
             })
     }
-    fn intersects<T: PointVecOps>(&self, other: &T) -> bool {
-        if self.points().len() < 2 {
-            return false
-        }
-        if other.points().len() < 2 {
-            return false
-        }
+    fn aabb_contains_point(&self, other: Point) -> bool  {
+        let bounds = self.convex_hull_exterior().into_parry2d_polyline();
+        let bounds = bounds.local_aabb();
+        bounds.contains_local_point(&other.into_point2())
+    }
+    fn intersects<T: PointVecOps>(
+        &self,
+        other: &T,
+    ) -> bool {
         use geo::algorithm::closest_point::ClosestPoint;
         use geo::EuclideanDistance;
         let a = self.convex_hull();
@@ -227,6 +266,13 @@ pub trait PointVecOps {
     }
 }
 
+impl PointVecOps for PointVec {
+    fn points(&self) -> &[Point] {&self.points}
+}
+impl PointVecOps for PointVecRef<'_> {
+    fn points(&self) -> &[Point] {self.points}
+}
+
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // VISUAL EFFECT PRIMITIVES
@@ -238,15 +284,80 @@ impl Default for CanvasPlacement {
     }
 }
 
+impl CanvasPlacement {
+    pub fn is_valid(&self) -> bool {
+        self == &CanvasPlacement::Foreground ||
+        self == &CanvasPlacement::Background
+    }
+}
+
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // COLOR SCHEME PRIMITIVES
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+impl ColorSchemeType {
+    pub fn is_valid(&self) -> bool {
+        self == &ColorSchemeType::Dark ||
+        self == &ColorSchemeType::Light
+    }
+}
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // COLOR PRIMITIVES
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
+impl RGBA {
+    pub fn to_paint(&self) -> skia_safe::Paint {
+        let mut paint = skia_safe::Paint::default();
+        paint.set_anti_alias(true);
+        let color = skia_safe::Color4f::new(
+            self.red as f32,
+            self.green as f32,
+            self.blue as f32,
+            self.alpha as f32
+        );
+        paint.set_color4f(color, None);
+        return paint
+    }
+}
+
 impl DualColors {
+    pub fn to_paint(&self, for_color_scheme: ColorSchemeType) -> skia_safe::Paint {
+        match for_color_scheme {
+            ColorSchemeType::Dark => {
+                self.dark_ui.to_paint()
+            }
+            ColorSchemeType::Light => {
+                self.light_ui.to_paint()
+            }
+        }
+    }
+    pub fn is_valid(&self) -> bool {
+        let result = {
+            self.dark_ui.rgba.red.is_finite() &&
+            self.dark_ui.rgba.green.is_finite() &&
+            self.dark_ui.rgba.blue.is_finite() &&
+            self.dark_ui.rgba.alpha.is_finite() &&
+            self.dark_ui.hsba.hue.is_finite() &&
+            self.dark_ui.hsba.saturation.is_finite() &&
+            self.dark_ui.hsba.brightness.is_finite() &&
+            self.dark_ui.hsba.alpha.is_finite()
+        };
+        if !result {
+            println!("self.dark_ui.rgba.red.is_finite(): {:?}", self.dark_ui.rgba.red.is_finite());
+            println!("self.dark_ui.rgba.green.is_finite(): {:?}", self.dark_ui.rgba.green.is_finite());
+            println!("self.dark_ui.rgba.blue.is_finite(): {:?}", self.dark_ui.rgba.blue.is_finite());
+            println!("self.dark_ui.rgba.alpha.is_finite(): {:?}", self.dark_ui.rgba.alpha.is_finite());
+            println!("self.dark_ui.hsba.hue.is_finite(): {:?}", self.dark_ui.hsba.hue.is_finite());
+            println!("self.dark_ui.hsba.saturation.is_finite(): {:?}", self.dark_ui.hsba.saturation.is_finite());
+            println!("self.dark_ui.hsba.brightness.is_finite(): {:?}", self.dark_ui.hsba.brightness.is_finite());
+            println!("self.dark_ui.hsba.alpha.is_finite(): {:?}", self.dark_ui.hsba.alpha.is_finite());
+        }
+        result
+    }
+}
+
+impl RgbaDualColors {
     pub fn to_paint(&self, for_color_scheme: ColorSchemeType) -> skia_safe::Paint {
         match for_color_scheme {
             ColorSchemeType::Dark => {
@@ -310,6 +421,37 @@ impl Default for DualColors {
     }
 }
 
+impl stroke_style::Easing {
+    pub fn is_valid(&self) -> bool {
+        self == &stroke_style::Easing::Linear ||
+        self == &stroke_style::Easing::EaseInQuad ||
+        self == &stroke_style::Easing::EaseOutQuad ||
+        self == &stroke_style::Easing::EaseInOutQuad ||
+        self == &stroke_style::Easing::EaseInCubic ||
+        self == &stroke_style::Easing::EaseOutCubic ||
+        self == &stroke_style::Easing::EaseInOutCubic ||
+        self == &stroke_style::Easing::EaseInQuart ||
+        self == &stroke_style::Easing::EaseOutQuart ||
+        self == &stroke_style::Easing::EaseInOutQuart ||
+        self == &stroke_style::Easing::EaseInQuint ||
+        self == &stroke_style::Easing::EaseOutQuint ||
+        self == &stroke_style::Easing::EaseInOutQuint ||
+        self == &stroke_style::Easing::EaseInSine ||
+        self == &stroke_style::Easing::EaseOutSine ||
+        self == &stroke_style::Easing::EaseInOutSine ||
+        self == &stroke_style::Easing::EaseInExpo ||
+        self == &stroke_style::Easing::EaseOutExpo
+    }
+}
+
+impl stroke_style::StrokeCap {
+    pub fn is_valid(&self) -> bool {
+        (self.cap == true || self.cap == false) &&
+        self.easing.is_valid() &&
+        self.taper.is_finite()
+    }
+}
+
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // TOOL TYPE INFO
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -321,6 +463,11 @@ impl Default for DualColors {
 impl SamplePoint {
     pub fn force(&self) -> Option<f32> {
         (!self.force.ignore).then(|| self.force.value)
+    }
+    pub fn is_valid(&self) -> bool {
+        self.point.x.is_finite() &&
+        self.point.y.is_finite() &&
+        self.force.value.is_finite()
     }
 }
 
@@ -336,13 +483,22 @@ impl RecordedStroke {
             sample_points: sink.sample_points.drain(..).collect_vec()
         }
     }
+    pub fn copy_from(sink: &RecordedStroke) -> Self {
+        RecordedStroke {
+            sample_points: sink.sample_points.clone()
+        }
+    }
     pub fn into_ref<'a>(&'a self) -> RecordedStrokeRef<'a> {
         RecordedStrokeRef {
             sample_points: &self.sample_points
         }
     }
-    pub fn test_outline_points(&self) {
-        
+    pub fn into_points(&self) -> PointVec {
+        let points = self.sample_points
+            .iter()
+            .map(|x| (*x).into())
+            .collect_vec();
+        PointVec {points}
     }
 }
 
@@ -372,6 +528,17 @@ impl ViewInfo {
             ColorSchemeType::Dark => dual_colors.dark_ui,
             ColorSchemeType::Light => dual_colors.light_ui,
         }
+    }
+    pub fn get_preferred_color_rgba(&self, dual_colors: RgbaDualColors) -> RGBA {
+        match self.preferred_color_scheme {
+            ColorSchemeType::Dark => dual_colors.dark_ui,
+            ColorSchemeType::Light => dual_colors.light_ui,
+        }
+    }
+    pub fn is_valid(&self) -> bool {
+        self.size.width.is_finite() && self.size.width.is_normal() &&
+        self.size.height.is_normal() && self.size.height.is_finite() &&
+        self.preferred_color_scheme.is_valid()
     }
 }
 

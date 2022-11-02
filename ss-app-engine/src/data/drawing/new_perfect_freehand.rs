@@ -2,7 +2,7 @@
 
 // import { getStrokeRadius } from './getStrokeRadius'
 // import type { StrokeOptions, StrokePoint } from './types'
-use crate::data::{graphics::Point};
+use crate::data::graphics::Point;
 
 /// Iterator type for floating-point range iterator
 struct FRange {
@@ -14,13 +14,14 @@ struct FRange {
 /// generates an iterator between `x1` and `x2`, step `skip`
 /// over floating point numbers.
 /// Similar to `linspace` in the **itertools-num** crate
+#[inline(always)]
 fn range(x1: f32, x2: f32, skip: f32) -> FRange {
     FRange {val: x1, end: x2, incr: skip}
 }
 
 impl Iterator for FRange {
     type Item = f32;
-
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let res = self.val;
         if res >= self.end {
@@ -81,6 +82,7 @@ impl GetStrokeOptions {
     }
 }
 
+#[inline(always)]
 fn is_truthy(x: f32) -> bool {
   x.is_finite() && !x.is_sign_negative() && x > 0.0
 }
@@ -116,6 +118,7 @@ impl StrokePoint {
 struct Math {}
 
 impl Math {
+  #[inline(always)]
   fn max<T: PartialOrd>(a: T, b: T) -> T {
     if a > b {
       a
@@ -123,6 +126,7 @@ impl Math {
       b
     }
   }
+  #[inline(always)]
   fn min<T: PartialOrd>(a: T, b: T) -> T {
     if a < b {
       a
@@ -130,9 +134,11 @@ impl Math {
       b
     }
   }
+  #[inline(always)]
   fn hypot(a: f32, b: f32) -> f32 {
     a.hypot(b)
   }
+  #[inline(always)]
   fn pow(a: f32, b: f32) -> f32 {
     a.powf(b)
   }
@@ -158,6 +164,7 @@ impl Math {
  * @param A
  * @internal
  */
+#[inline(always)]
 fn neg(A: Point) -> Point {
   return [-A.x, -A.y].into()
 }
@@ -168,6 +175,7 @@ fn neg(A: Point) -> Point {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn add(A: Point, B: Point) -> Point {
   return [A.x + B.x, A.y + B.y].into()
 }
@@ -178,6 +186,7 @@ fn add(A: Point, B: Point) -> Point {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn sub(A: Point, B: Point) -> Point {
     return [A.x - B.x, A.y - B.y].into()
 }
@@ -188,6 +197,7 @@ fn sub(A: Point, B: Point) -> Point {
  * @param n
  * @internal
  */
+#[inline(always)]
 fn mul(A: Point, n: f32) -> Point {
   return [A.x * n, A.y * n].into()
 }
@@ -198,6 +208,7 @@ fn mul(A: Point, n: f32) -> Point {
  * @param n
  * @internal
  */
+#[inline(always)]
 fn div(A: Point, n: f32) -> Point {
   return [A.x / n, A.y / n].into()
 }
@@ -207,6 +218,7 @@ fn div(A: Point, n: f32) -> Point {
  * @param A
  * @internal
  */
+#[inline(always)]
 fn per(A: Point) -> Point {
   return [A.y, -A.x].into()
 }
@@ -217,6 +229,7 @@ fn per(A: Point) -> Point {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn dpr(A: Point, B: Point) -> f32 {
   return A.x * B.x + A.y * B.y
 }
@@ -227,6 +240,7 @@ fn dpr(A: Point, B: Point) -> f32 {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn isEqual(A: Point, B: Point) -> bool {
   return A.x == B.x && A.y == B.y
 }
@@ -236,6 +250,7 @@ fn isEqual(A: Point, B: Point) -> bool {
  * @param A
  * @internal
  */
+#[inline(always)]
 fn len(A: Point) -> f32 {
     return Math::hypot(A.x, A.y)
 }
@@ -245,6 +260,7 @@ fn len(A: Point) -> f32 {
  * @param A
  * @internal
  */
+#[inline(always)]
 fn len2(A: Point) -> f32 {
   return A.x * A.x + A.y * A.y
 }
@@ -255,6 +271,7 @@ fn len2(A: Point) -> f32 {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn dist2(A: Point, B: Point) -> f32 {
   return len2(sub(A, B))
 }
@@ -264,6 +281,7 @@ fn dist2(A: Point, B: Point) -> f32 {
  * @param A
  * @internal
  */
+#[inline(always)]
 fn uni(A: Point) -> Point {
     return div(A, len(A))
 }
@@ -274,6 +292,7 @@ fn uni(A: Point) -> Point {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn dist(A: Point, B: Point) -> f32 {
     return Math::hypot(A.y - B.y, A.x - B.x)
 }
@@ -284,6 +303,7 @@ fn dist(A: Point, B: Point) -> f32 {
  * @param B
  * @internal
  */
+#[inline(always)]
 fn med(A: Point, B: Point) -> Point {
     return mul(add(A, B), 0.5)
 }
@@ -295,6 +315,7 @@ fn med(A: Point, B: Point) -> Point {
  * @param r rotation in radians
  * @internal
  */
+#[inline(always)]
 fn rotAround(A: Point, C: Point, r: f32) -> Point {
     let s = f32::sin(r);
     let c = f32::cos(r);
@@ -315,6 +336,7 @@ fn rotAround(A: Point, C: Point, r: f32) -> Point {
  * @param t scalar
  * @internal
  */
+#[inline(always)]
 fn lrp(A: Point, B: Point, t: f32) -> Point {
     return add(A, mul(sub(B, A), t))
 }
@@ -326,6 +348,7 @@ fn lrp(A: Point, B: Point, t: f32) -> Point {
  * @param c
  * @internal
  */
+#[inline(always)]
 fn prj(A: Point, B: Point, c: f32) -> Point {
     return add(A, mul(B, c))
 }
@@ -338,6 +361,7 @@ fn prj(A: Point, B: Point, c: f32) -> Point {
  * @param easing
  * @internal
  */
+#[inline(always)]
 fn getStrokeRadius(
     size: f32,
     thinning: f32,
@@ -355,7 +379,7 @@ const RATE_OF_PRESSURE_CHANGE: f32 = 0.275;
 
 // Browser strokes seem to be off if PI is regular, a tiny offset seems to fix it
 // const FIXED_PI: f32 = PI + 0.0001;
-const FIXED_PI: f32 = std::f32::consts::PI + 0.0001;
+const FIXED_PI: f32 = std::f32::consts::PI;
 
 fn getStrokePoints(points: Vec<StrokePoint>, options: GetStrokeOptions) -> Vec<StrokePoint> {
   // const { streamline = 0.5, size = 16, last: isComplete = false } = options;
@@ -536,7 +560,7 @@ fn getStrokePoints(points: Vec<StrokePoint>, options: GetStrokeOptions) -> Vec<S
   // Set the vector of the first point to be the same as the second point.
   
   // strokePoints[0].vector = strokePoints[1]?.vector || [0, 0];
-  strokePoints[0].vector = strokePoints[1].vector;
+  strokePoints[0].vector = strokePoints.get(1).map(|x| x.vector).unwrap_or([0.0, 0.0].into());
 
   return strokePoints
 }
@@ -634,8 +658,8 @@ fn getStrokeOutlinePoints(
   let minDistance = Math::pow(size * smoothing, 2.0);
 
   // Our collected left and right points
-  let mut leftPts: Vec<Point> = Vec::new();
-  let mut rightPts: Vec<Point> = Vec::new();
+  let mut leftPts: Vec<Point> = Vec::with_capacity(points.len());
+  let mut rightPts: Vec<Point> = Vec::with_capacity(points.len());
 
   // Previous pressure (start with average of first five pressures,
   // in order to prevent fat starts for every line. Drawn lines
@@ -880,9 +904,9 @@ fn getStrokeOutlinePoints(
     if points.len() > 1 {points[points.len() - 1].point} else {add(points[0].point, [1.0, 1.0].into())}
   };
 
-  let mut startCap: Vec<Point> = Vec::new();
+  let mut startCap: Vec<Point> = Vec::with_capacity(20);
 
-  let mut endCap: Vec<Point> = Vec::new();
+  let mut endCap: Vec<Point> = Vec::with_capacity(20);
 
   /* 
     Draw a dot for very short or completed strokes
@@ -1002,7 +1026,7 @@ fn getStrokeOutlinePoints(
 
 
 impl super::RecordedStroke {
-    pub fn vector_outline_points_new(&self, stroke_style: super::StrokeStyle) -> Option<crate::data::drawing::PointVec> {
+    pub fn vector_outline_points_new(&self, stroke_style: super::DynamicStrokeStyle) -> Option<crate::data::drawing::PointVec> {
         if self.sample_points.len() < 3 {
             return None
         }
@@ -1040,7 +1064,7 @@ impl super::RecordedStroke {
 }
 
 impl<'a> super::PointVecRef<'a> {
-    pub fn vector_outline_points_new(&self, stroke_style: super::StrokeStyle) -> Option<crate::data::drawing::PointVec> {
+    pub fn vector_outline_points_new(&self, stroke_style: super::DynamicStrokeStyle) -> Option<crate::data::drawing::PointVec> {
         if self.points.len() < 3 {
             return None
         }

@@ -6,11 +6,46 @@
 #include <stdlib.h>
 #include <CoreGraphics/CoreGraphics.h>
 
+typedef enum SSCanvasPlacement
+{
+  SSCanvasPlacement_Foreground,
+  SSCanvasPlacement_Background,
+} SSCanvasPlacement;
+
 typedef enum SSColorSchemeType
 {
   SSColorSchemeType_Dark,
   SSColorSchemeType_Light,
 } SSColorSchemeType;
+
+typedef enum SSEasing
+{
+  SSEasing_Linear,
+  SSEasing_EaseInQuad,
+  SSEasing_EaseOutQuad,
+  SSEasing_EaseInOutQuad,
+  SSEasing_EaseInCubic,
+  SSEasing_EaseOutCubic,
+  SSEasing_EaseInOutCubic,
+  SSEasing_EaseInQuart,
+  SSEasing_EaseOutQuart,
+  SSEasing_EaseInOutQuart,
+  SSEasing_EaseInQuint,
+  SSEasing_EaseOutQuint,
+  SSEasing_EaseInOutQuint,
+  SSEasing_EaseInSine,
+  SSEasing_EaseOutSine,
+  SSEasing_EaseInOutSine,
+  SSEasing_EaseInExpo,
+  SSEasing_EaseOutExpo,
+} SSEasing;
+
+typedef enum SSSelectionLayer
+{
+  SSSelectionLayer_Both,
+  SSSelectionLayer_Foreground,
+  SSSelectionLayer_Background,
+} SSSelectionLayer;
 
 typedef struct SSMetalBackendContext SSMetalBackendContext;
 
@@ -44,6 +79,140 @@ typedef struct SSSamplePoint
   struct SSForce force;
 } SSSamplePoint;
 
+typedef struct SSHSBA
+{
+  double hue;
+  double saturation;
+  double brightness;
+  double alpha;
+} SSHSBA;
+
+typedef struct SSRGBA
+{
+  double red;
+  double green;
+  double blue;
+  double alpha;
+} SSRGBA;
+
+/**
+ * Ultimately, I’m aware that we redundantly record the same color twice (in
+ * two different formats), perhaps over time I’ll move to only using one of
+ * the two, and convert the other on-the-spot when it’s needed, but for now
+ * this is easier (and I suppose this entails less runtime computation during
+ * rendering).
+ *
+ * Anyway, **HSL(A) should be the default**:
+ * - It’s much easier to use from the perspective of **generating light/dark UI
+ * color variants**, because you can keep the hue the same and only tweak
+ * brightness and saturation.
+ *    * At the time of this writing, on IOS the default SwiftUI color picker
+ * doesn’t support HSL(A), but theres a WIP hand made alternative, and over
+ * time I’d like to support a high quality HSLA color pickers since as
+ * previously mentioned, it’s much easier to use for creating light/dark
+ * color variants.
+ * - We also record RGB(A) values as well which we use for places that only
+ * support RGB(A) input. Also, maybe I’m just being paranoid here, but it
+ * seems best if the RGB(A) values are always be derived from the original
+ * HSL(A) color, not the other way around (unless we know that the algorithm
+ * is lossless or where the loss is insignificant when compounded a multitude of times).
+ */
+typedef struct SSFatColor
+{
+  struct SSHSBA hsba;
+  struct SSRGBA rgba;
+} SSFatColor;
+
+/**
+ * All colors in SubScript are parameterized over the environment’s color scheme
+ * preference, and these settings define the color of a given object for a given
+ * light or dark color scheme preference.
+ */
+typedef struct SSDualColors
+{
+  struct SSFatColor dark_ui;
+  struct SSFatColor light_ui;
+} SSDualColors;
+
+typedef struct SSStrokeCap
+{
+  bool cap;
+  float taper;
+  enum SSEasing easing;
+} SSStrokeCap;
+
+typedef struct SSDynamicStrokeStyle
+{
+  /**
+   * All colors in SubScript are parameterized over the environment’s color
+   * scheme preference, and these settings define the color of a given
+   * stroke for a given light or dark color scheme preference.
+   */
+  struct SSDualColors color;
+  /**
+   * The motivation for this feature is to be able to highlight and underline
+   * strokes and have such strokes render ‘underneath’ foreground strokes, it
+   * just looks nicer. More generally, each stroke can be rendered to the
+   * foreground or background layer depending on the given pen’s ‘Layer’
+   * property. ‘Foreground’ should be the default, when you want to create a
+   * highlighter pen, set this property to ‘Background’.
+   */
+  enum SSCanvasPlacement canvas_placement;
+  /**
+   * The diameter (i.e. size) of the rendered stroke.
+   */
+  double size;
+  /**
+   * The effect of pressure on the stroke's size. The thinning option takes
+   * a number between ‘-1’ and ‘1’. At ‘0’, pressure will have no effect on
+   * the width of the line. When positive, pressure will have a positive
+   * effect on the width of the line; and when negative, pressure will have
+   * a negative effect on the width of the line.
+   */
+  double thinning;
+  /**
+   * How much to soften the stroke's edges.
+   */
+  double smoothing;
+  /**
+   * How much to streamline the stroke. Often the input points recorded for
+   * a line are 'noisy', or full of irregularities. To fix this, the shaping
+   * algorithm applies a “low pass” filter that moves the points closer to a
+   * perfect curve. We can control the strength of this filter through the
+   * streamline option.
+   */
+  double streamline;
+  /**
+   * An easing function to apply to each point's pressure. For even finer
+   * control over the effect of thinning, we can pass an easing function
+   * that will adjust the pressure along a curve.
+   */
+  enum SSEasing easing;
+  /**
+   * Whether to simulate pressure based on velocity.
+   */
+  bool simulate_pressure;
+  /**
+   * Cap, taper and easing for the start of the line.
+   */
+  struct SSStrokeCap start;
+  /**
+   * Cap, taper and easing for the end of the line.
+   */
+  struct SSStrokeCap end;
+} SSDynamicStrokeStyle;
+
+typedef struct SSFillStyle
+{
+  struct SSDualColors color;
+  enum SSCanvasPlacement canvas_placement;
+} SSFillStyle;
+
+typedef struct SSEditToolSettings
+{
+  enum SSSelectionLayer selection_layer;
+} SSEditToolSettings;
+
 /**
  * A simple pain-free pointer to wrap your types in for FFI export.
  */
@@ -66,22 +235,40 @@ typedef struct SSViewInfo
   enum SSColorSchemeType preferred_color_scheme;
 } SSViewInfo;
 
+typedef struct SSByteArrayPointer
+{
+  const uint8_t *head;
+  uintptr_t len;
+} SSByteArrayPointer;
+
 SSRootScenePointer root_scene_new(void);
 
 void root_scene_free(SSRootScenePointer ptr);
 
-void root_scene_begin_stroke(SSRootScenePointer ptr);
+void root_scene_begin_stroke(SSRootScenePointer ptr, struct SSSamplePoint start_point);
 
 void root_scene_record_stroke_sample(SSRootScenePointer ptr, struct SSSamplePoint sample);
 
 void root_scene_end_stroke(SSRootScenePointer ptr);
+
+void root_scene_clear_any_highlights(SSRootScenePointer ptr);
+
+void toolbar_set_current_tool_to_dynamic_stroke(struct SSDynamicStrokeStyle style);
+
+void toolbar_set_current_tool_to_fill(struct SSFillStyle style);
+
+void toolbar_set_current_tool_to_transform(struct SSEditToolSettings settings);
+
+void toolbar_set_current_tool_to_eraser(struct SSEditToolSettings settings);
 
 SSMetalBackendContextPointer metal_backend_context_init(void *device, void *queue);
 
 void metal_backend_context_reload_view_surface(SSMetalBackendContextPointer metal_backend_context_ptr,
                                                const void *view);
 
-void draw_flush_and_submit_background(SSMetalBackendContextPointer metal_backend_context_ptr,
-                                      SSRootScenePointer root_scene_ptr,
-                                      const void *view,
-                                      struct SSViewInfo view_info);
+void draw_flush_and_submit_view(SSMetalBackendContextPointer metal_backend_context_ptr,
+                                SSRootScenePointer root_scene_ptr,
+                                const void *view,
+                                struct SSViewInfo view_info);
+
+void app_data_model_save_state(struct SSByteArrayPointer byte_array_pointer);

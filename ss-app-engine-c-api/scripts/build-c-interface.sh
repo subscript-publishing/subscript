@@ -76,17 +76,17 @@ canonicalize_file_path () {
 
 build_macos () {
 	echo "Building MacOS"
-   cargo build --release --target x86_64-apple-darwin
+	cargo build --release --target x86_64-apple-darwin
 }
 
 build_ios () {
 	echo "Building IOS"
-   cargo build --release --target aarch64-apple-ios
+	cargo build --release --target aarch64-apple-ios
 }
 
 build_catalyst () {
 	echo "Building CATALYST: SKIPPED!"
-#    cargo +nightly build -Z build-std --release --lib --target x86_64-apple-ios-macabi
+	# cargo +nightly build -Z build-std --release --lib --target x86_64-apple-ios-macabi
 }
 
 build_c_header () {

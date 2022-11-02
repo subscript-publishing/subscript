@@ -70,6 +70,12 @@ extension UI.LL.Color: AsColorType {
 
 extension UI {
     struct ColorType {
+        struct RGBA: Codable, Equatable, Hashable {
+            var red: CGFloat
+            var green: CGFloat
+            var blue: CGFloat
+            var alpha: CGFloat
+        }
         struct HSBA: Codable, Equatable, Hashable, AsColorType {
             var hue: CGFloat
             var saturation: CGFloat

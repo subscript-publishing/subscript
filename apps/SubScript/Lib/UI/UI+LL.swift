@@ -72,20 +72,20 @@ extension UI.LL.View {
 
 
 extension UI.LL.Color {
-    var rgba: (CGFloat, CGFloat, CGFloat, CGFloat) {
+    var rgba: UI.ColorType.RGBA {
 #if os(iOS)
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        return (red, green, blue, alpha)
+        return UI.ColorType.RGBA.init(red: red, green: green, blue: blue, alpha: alpha)
 #elseif os(macOS)
         let red = self.redComponent;
         let green = self.greenComponent;
         let blue = self.blueComponent;
         let alpha = self.alphaComponent;
-        return (red, green, blue, alpha)
+        return UI.ColorType.RGBA.init(red: red, green: green, blue: blue, alpha: alpha)
 #endif
     }
     var hsba: UI.ColorType.HSBA {

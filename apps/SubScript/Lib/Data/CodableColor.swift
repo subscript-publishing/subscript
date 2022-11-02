@@ -60,8 +60,8 @@ struct CodableColor: Codable, Equatable, Hashable {
         )
     }
     public func encode(to encoder: Encoder) throws {
-        let (r, g, b, a) = self.color.rgba
-        let colorStorageModel = ColorStorageModel(red: r, green: g, blue: b, alpha: a)
+        let rgba = self.color.rgba
+        let colorStorageModel = ColorStorageModel(red: rgba.red, green: rgba.green, blue: rgba.blue, alpha: rgba.alpha)
         try colorStorageModel.encode(to: encoder)
     }
     private struct ColorStorageModel: Codable {

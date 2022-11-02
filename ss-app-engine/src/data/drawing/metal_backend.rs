@@ -1,5 +1,5 @@
 use std::ffi::c_void;
-use c_ffi_utils::Pointer;
+use crate::data::c_ffi_utils::Pointer;
 use crate::data::ViewInfo;
 
 use super::skia_backend::SkiaDrawable;
@@ -48,7 +48,7 @@ impl MetalBackendContext {
         };
         surface.canvas().clear(skia_safe::colors::TRANSPARENT);
         self.surface = Some(surface);
-        println!("MetalBackendContext::refresh_view")
+        // println!("MetalBackendContext::refresh_view")
     }
     pub fn draw<T: SkiaDrawable>(&mut self, view_info: ViewInfo, drawable: &T) {
         let surface = self.surface.as_mut().unwrap();

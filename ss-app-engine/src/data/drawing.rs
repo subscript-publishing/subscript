@@ -43,67 +43,86 @@ pub enum DrawStatus {
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct EditToolSettings {
-    pub selection_type: edit_tool::SelectionType,
     pub selection_layer: edit_tool::SelectionLayer,
-    pub strike_through_pen_size: f64,
-    pub hit_testing: edit_tool::HitTesting,
 }
-
 
 pub mod edit_tool {
     //! Edit Tool Related Types
     use serde::{Serializer, Deserializer, Serialize, Deserialize};
-
-    #[repr(C)]
-    #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
-    pub enum HitTesting {
-        BoundingBox,
-        ConvexHull,
-        Exact,
-    }
-
     #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
     #[repr(C)]
-    pub enum SelectionType {
-        Area,
-        StrikeThrough,
-    }
-
-    #[repr(C)]
-    #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
     pub enum SelectionLayer {
         Both,
         Foreground,
         Background,
     }
 
-    #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
-    #[repr(C)]
-    pub enum SelectionCriteria {
-        BoundingBox,
-        ConvexHull,
-        Exact,
+    #[derive(Debug, Clone, Copy, PartialEq)]
+    pub enum EditToolKind {
+        Eraser,
+        Lasso,
     }
 }
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-// STROKE TYPES
+// FIXED STROKE TYPES
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct StrokeObject {
+pub struct StaticStrokeObject {
     pub uid: Uuid,
-    pub style: StrokeStyle,
+    pub style: StaticStrokeStyle,
     pub input: RecordedStroke,
     pub output: PointVec,
 }
 
 
 #[derive(Debug, Clone)]
-pub struct StrokeObjectRef<'a> {
+pub struct StaticStrokeObjectRef<'a> {
     pub uid: Uuid,
-    pub style: StrokeStyle,
+    pub style: StaticStrokeStyle,
+    pub input: RecordedStrokeRef<'a>,
+    pub output: PointVecRef<'a>,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[repr(C)]
+pub struct StaticStrokeStyle {
+    /// All colors in SubScript are parameterized over the environment’s color
+    /// scheme preference, and these settings define the color of a given
+    /// stroke for a given light or dark color scheme preference.
+    pub color: DualColors,
+    /// The motivation for this feature is to be able to highlight and underline
+    /// strokes and have such strokes render ‘underneath’ foreground strokes, it
+    /// just looks nicer. More generally, each stroke can be rendered to the
+    /// foreground or background layer depending on the given pen’s ‘Layer’
+    /// property. ‘Foreground’ should be the default, when you want to create a
+    /// highlighter pen, set this property to ‘Background’.
+    pub canvas_placement: CanvasPlacement,
+    /// The diameter (i.e. size) of the rendered stroke.
+    pub size: f64,
+}
+
+
+
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+// DYNAMIC STROKE TYPES
+//―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DynamicStrokeObject {
+    pub uid: Uuid,
+    pub style: DynamicStrokeStyle,
+    pub input: RecordedStroke,
+    pub output: PointVec,
+}
+
+
+#[derive(Debug, Clone)]
+pub struct DynamicStrokeObjectRef<'a> {
+    pub uid: Uuid,
+    pub style: DynamicStrokeStyle,
     pub input: RecordedStrokeRef<'a>,
     pub output: PointVecRef<'a>,
 }
@@ -111,7 +130,7 @@ pub struct StrokeObjectRef<'a> {
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[repr(C)]
-pub struct StrokeStyle {
+pub struct DynamicStrokeStyle {
     /// All colors in SubScript are parameterized over the environment’s color
     /// scheme preference, and these settings define the color of a given
     /// stroke for a given light or dark color scheme preference.
@@ -255,6 +274,7 @@ pub struct FillObject {
     pub uid: Uuid,
     pub style: FillStyle,
     pub input: RecordedStroke,
+    pub output: PointVec,
 }
 
 pub struct FillObjectRef<'a> {
@@ -265,6 +285,7 @@ pub struct FillObjectRef<'a> {
 
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[repr(C)]
 pub struct FillStyle {
     pub color: DualColors,
     pub canvas_placement: CanvasPlacement,
@@ -276,7 +297,7 @@ pub struct FillStyle {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Tool {
-    Stroke(StrokeStyle),
+    DynamicStroke(DynamicStrokeStyle),
     Fill(FillStyle),
     Transform(EditToolSettings),
     Erase(EditToolSettings),
@@ -285,7 +306,7 @@ pub enum Tool {
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[repr(C)]
 pub enum ToolKind {
-    Stroke,
+    DynamicStroke,
     Fill,
     Transform,
     Erase,
@@ -297,14 +318,30 @@ pub enum ToolKind {
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum Object {
-    Stroke(StrokeObject),
+pub struct SceneObject {
+    pub payload: ObjectPayload,
+    pub is_highlighted: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SceneObjectArchive {
+    pub payload: ObjectPayload,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ObjectPayload {
+    Stroke(DynamicStrokeObject),
     Fill(FillObject),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SceneStack {
-    pub objects: HighCapacityVec<Object>
+    pub objects: HighCapacityVec<SceneObject>
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SceneStackArchive {
+    pub objects: Vec<SceneObjectArchive>
 }
 
 
@@ -322,10 +359,23 @@ impl LayerIndex {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RootScene {
-    pub using_layer: LayerIndex,
     pub device: DeviceInputBuffer,
+    pub metadata: RootSceneRuntimeMetadata,
     pub background: [SceneStack; LayerIndex::layer_size()],
     pub foreground: [SceneStack; LayerIndex::layer_size()],
+}
+
+/// Runtime metadata and whatnot.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RootSceneRuntimeMetadata {
+    pub has_highlights: bool,
+    pub using_layer: LayerIndex,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RootSceneArchive {
+    pub background: Vec<SceneStackArchive>,
+    pub foreground: Vec<SceneStackArchive>,
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
@@ -335,6 +385,7 @@ pub struct RootScene {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct DeviceInputBuffer {
     pub stroke: RecordedStroke,
+    pub drag_pan_mode: bool,
 }
 
 #[derive(Debug, Clone)]

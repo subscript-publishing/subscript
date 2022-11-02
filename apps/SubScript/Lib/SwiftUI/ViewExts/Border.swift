@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BorderColors {
     static let defaultLightColor = Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
-    static let defaultDarkColor = Color(#colorLiteral(red: 0.2016740251, green: 0.2016740251, blue: 0.2016740251, alpha: 1))
+    static let defaultDarkColor = Color(#colorLiteral(red: 0.2595916603, green: 0.2595916603, blue: 0.2595916603, alpha: 1))
 }
 
 private struct ThemeBorderModifier: ViewModifier {

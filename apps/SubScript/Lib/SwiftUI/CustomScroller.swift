@@ -160,19 +160,35 @@ fileprivate final class CustomScrollerViewController<Wrapped: View>: UI.LL.ViewC
 }
 
 struct CustomScroller<V: View>: View {
-    private var subview: () -> V
-    init(@ViewBuilder _ view: @escaping () -> V) {
+    private var subview: (Actions) -> V
+    init(@ViewBuilder _ view: @escaping (Actions) -> V) {
         self.subview = view
+    }
+    private func initActions(ctl: CustomScrollerViewController<V>) -> Actions {
+        let actions = Actions(updateLayout: {
+//            ctl.embeddedViewCtl.view.setNeedsDisplay()
+//            ctl.embeddedViewCtl.view.setNeedsLayout()
+#if os(iOS)
+            ctl.embeddedViewCtl.view.setNeedsUpdateConstraints()
+#elseif os(macOS)
+#endif
+        })
+        return actions
     }
     var body: some View {
         WrapViewController(onUpdate: { wrapped, ctx in
             let scroller = wrapped as! CustomScrollerViewController<V>
-            scroller.embeddedViewCtl.rootView = self.subview()
+            let actions = self.initActions(ctl: scroller)
+            scroller.embeddedViewCtl.rootView = self.subview(actions)
         }){ ctx in
             let scroller: CustomScrollerViewController<V> = CustomScrollerViewController()
-            scroller.subView = self.subview()
+            let actions = self.initActions(ctl: scroller)
+            scroller.subView = self.subview(actions)
             return scroller
         }
+    }
+    struct Actions {
+        let updateLayout: () -> ()
     }
 }
 

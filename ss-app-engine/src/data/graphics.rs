@@ -78,6 +78,14 @@ pub struct DualColors {
 }
 
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[repr(C)]
+pub struct RgbaDualColors {
+    pub dark_ui: RGBA,
+    pub light_ui: RGBA,
+}
+
+
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 // COLOR PRIMITIVES
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――

@@ -77,9 +77,23 @@ impl<T> HighCapacityVec<T> {
         self.data.push(value);
     }
 }
+impl<T> HighCapacityVec<T> where T: Clone + Send {
+    pub fn par_filter(&mut self, f: impl Fn(&T) -> bool + Sync + Send) {
+        self.data = self.data
+            .clone()
+            .into_par_iter()
+            .filter(f)
+            .collect::<Vec<_>>();
+    }
+}
 impl<T> AsRef<[T]> for HighCapacityVec<T> {
     fn as_ref(&self) -> &[T] {
         self.data.as_ref()
+    }
+}
+impl<T> HighCapacityVec<T> where T: Send + Sync {
+    pub fn par_iter(&self) -> rayon::slice::Iter<T> {
+        self.data.par_iter()
     }
 }
 impl<T> HighCapacityVec<T> where T: Send {

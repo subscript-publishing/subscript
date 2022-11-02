@@ -9,9 +9,6 @@ members = [
     "html-to-subscript",
     "ss-str-fmt",
     "ss-database",
-    "vectorizable",
-    "c-ffi-utils",
-    "vectorizable/vectorizable-demo-rs",
 ]
 
 exclude = [

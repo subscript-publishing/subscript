@@ -819,7 +819,7 @@ fn getStrokeRadius(
 }
 
 impl super::RecordedStroke {
-    pub fn vector_outline_points(&self, stroke_style: super::StrokeStyle) -> Option<PointVec> {
+    pub fn vector_outline_points(&self, stroke_style: super::DynamicStrokeStyle) -> Option<PointVec> {
         if self.sample_points.len() < 3 {
             return None
         }
@@ -856,7 +856,7 @@ impl super::RecordedStroke {
 }
 
 impl<'a> super::PointVecRef<'a> {
-    pub fn vector_outline_points(&self, stroke_style: super::StrokeStyle) -> Option<PointVec> {
+    pub fn vector_outline_points(&self, stroke_style: super::DynamicStrokeStyle) -> Option<PointVec> {
         if self.points.len() < 3 {
             return None
         }

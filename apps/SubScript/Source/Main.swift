@@ -12,9 +12,8 @@ import UniformTypeIdentifiers
 
 
 struct AppView: View {
-//    @StateObject private var pageEntryModel = SS1.PageEntryModel(h1: "Hello Drawing", drawings: [SS1.CanvasModel()])
     @StateObject private var pageModel = SS1.PageModel()
-    @State private var penSet = SS1.Pen.PenSet.set1
+    @State private var penSet = SS1.PenModel.PenSet.set1
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         UI.Hacks.NavigationStackView {
@@ -23,26 +22,6 @@ struct AppView: View {
     }
 }
 
-//typealias X = MetalCanvasViewController
-
-
-//@main
-//struct RustSkiaCanvasApp: App {
-//    var body: some Scene {
-//        WindowGroup {
-////            Text("TODO")
-////            WrapView { _ in
-////                let view = DevMetalView()
-////                view.setup()
-////                return view
-////            }
-////            WrapViewController { _ in
-////                let ctl = DevMetalView()
-////                return ctl
-////            }
-//        }
-//    }
-//}
 
 @main
 struct SubscriptDrawApp: App {

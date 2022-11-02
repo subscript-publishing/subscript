@@ -29,6 +29,9 @@
 
 pub mod collections;
 pub mod runtime;
+pub mod notebook;
+pub mod c_ffi_utils;
+pub mod git_db;
 
 pub mod drawing;
 pub mod drawing_impl;
