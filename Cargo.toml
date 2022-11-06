@@ -6,9 +6,6 @@ members = [
     "ss-app-engine-c-api",
     "ss-language-server",
     "ss-freeform-format",
-    "html-to-subscript",
-    "ss-str-fmt",
-    "ss-database",
 ]
 
 exclude = [

@@ -1870,21 +1870,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "html-to-subscript"
-version = "0.1.0"
-dependencies = [
- "either",
- "itertools",
- "lazy_static",
- "serde",
- "serde_json",
- "structopt",
- "subscript-compiler",
- "toml",
- "wax",
-]
-
-[[package]]
 name = "html5ever"
 version = "0.25.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3904,18 +3889,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ss-database"
-version = "0.1.0"
-dependencies = [
- "either",
- "itertools",
- "rand 0.7.3",
- "serde",
- "serde_json",
- "uuid",
-]
-
-[[package]]
 name = "ss-language-server"
 version = "0.1.0"
 
@@ -3981,10 +3954,6 @@ dependencies = [
  "svg2pdf",
  "uuid",
 ]
-
-[[package]]
-name = "ss_str_fmt"
-version = "0.1.0"
 
 [[package]]
 name = "stable_deref_trait"
