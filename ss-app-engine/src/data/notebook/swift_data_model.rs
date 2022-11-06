@@ -38,7 +38,7 @@ impl PageEntryModel {
                     .into_iter()
                     .map(CanvasModel::to_rust_data_model)
                     .collect_vec();
-                super::PageEntryPayload::Drawings(drawings)
+                super::PageEntryPayload::Freeform(drawings)
             },
         };
         super::PageEntry {id: self.id, payload}
@@ -103,8 +103,8 @@ struct CanvasModel {
 }
 
 impl CanvasModel {
-    fn to_rust_data_model(self) -> super::Drawing {
-        super::Drawing {
+    fn to_rust_data_model(self) -> super::FreeformCanvas {
+        super::FreeformCanvas {
             id: self.id,
             height: self.height,
             visible: self.visible,

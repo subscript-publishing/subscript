@@ -334,13 +334,29 @@ pub enum ObjectPayload {
     Fill(FillObject),
 }
 
+
+/// ObjectStack(s) are layered collections of objects in a visual/graphical
+/// context, don’t think of it as a queue or anything like it.
+
+/// TODO:
+/// * Maybe rename this to something like `ObjectLayer` or `SceneLayer`?
+/// * Although,
+///     - I honestly kinda prefer `ObjectStack` because I may want to reserve
+///       e.g. `ObjectLayer` or `SceneLayer` or whatnot for type that is a
+///       collection of ObjectStack(s). 
+///     - For context, I want to implement layers in such a way that ‘background’
+///       strokes are always rendered underneath ‘foreground’ strokes, regardless
+///       of the layer such strokes are stored in, therefore I may end up with a
+///       tree like data model, where an `ObjectStack` is the lowest leaf type in
+///       the layer tree, therefore `ObjectStack` but feels better because it’s
+///       just a semantically stacked collection of objects. 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SceneStack {
+pub struct ObjectStack {
     pub objects: HighCapacityVec<SceneObject>
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SceneStackArchive {
+pub struct ObjectStackArchive {
     pub objects: Vec<SceneObjectArchive>
 }
 
@@ -357,12 +373,23 @@ impl LayerIndex {
     pub const fn layer_size() -> usize {1}
 }
 
+
+/// TODO:
+/// * I want to implement layers in such a way that ‘background’ strokes are
+///   always rendered underneath ‘foreground’ strokes, regardless of the layer
+///   such strokes are stored in, therefore I may end up with a tree like data
+///   model, where an `ObjectStack` is the lowest leaf type in the layer tree.
+///   Currently I’m just using fixed arrays for each layer, for each
+///   canvas-placement type, since I feel like the number of layers will always
+///   be hardcoded. 
+/// * Currently I’m just using an array of length 1, which is just a stub for a
+///   TODO layer implementation. 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RootScene {
     pub device: DeviceInputBuffer,
     pub metadata: RootSceneRuntimeMetadata,
-    pub background: [SceneStack; LayerIndex::layer_size()],
-    pub foreground: [SceneStack; LayerIndex::layer_size()],
+    pub background: [ObjectStack; LayerIndex::layer_size()],
+    pub foreground: [ObjectStack; LayerIndex::layer_size()],
 }
 
 /// Runtime metadata and whatnot.
@@ -372,10 +399,10 @@ pub struct RootSceneRuntimeMetadata {
     pub using_layer: LayerIndex,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RootSceneArchive {
-    pub background: Vec<SceneStackArchive>,
-    pub foreground: Vec<SceneStackArchive>,
+    pub background: Vec<ObjectStackArchive>,
+    pub foreground: Vec<ObjectStackArchive>,
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――

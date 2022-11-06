@@ -344,12 +344,12 @@ impl From<FillObject> for ObjectPayload {
     fn from(x: FillObject) -> Self {ObjectPayload::Fill(x)}
 }
 
-impl SceneStack {
+impl ObjectStack {
     pub fn new(
         initial_capacity: usize,
         reallocation_capacity_chunk_size: usize,
     ) -> Self {
-        SceneStack {objects: HighCapacityVec::new(initial_capacity, reallocation_capacity_chunk_size)}
+        ObjectStack {objects: HighCapacityVec::new(initial_capacity, reallocation_capacity_chunk_size)}
     }
     pub fn push(&mut self, object: impl Into<ObjectPayload>) {
         self.objects.push(SceneObject {
@@ -373,12 +373,12 @@ impl SceneStack {
             });
         DrawStatus::from_iter(results)
     }
-    pub fn into_scene_stack_archive(self) -> SceneStackArchive {
+    pub fn into_scene_stack_archive(self) -> ObjectStackArchive {
         let objects = self.objects
             .into_iter()
             .map(SceneObject::into_scene_object_archive)
             .collect_vec();
-        SceneStackArchive {objects}
+        ObjectStackArchive {objects}
     }
 }
 
@@ -609,11 +609,11 @@ impl RootScene {
     pub fn into_root_scene_archive(self) -> RootSceneArchive {
         let foreground = self.foreground
             .into_iter()
-            .map(SceneStack::into_scene_stack_archive)
+            .map(ObjectStack::into_scene_stack_archive)
             .collect_vec();
         let background = self.background
             .into_iter()
-            .map(SceneStack::into_scene_stack_archive)
+            .map(ObjectStack::into_scene_stack_archive)
             .collect_vec();
         RootSceneArchive {foreground, background}
     }
@@ -664,9 +664,9 @@ impl Default for LayerIndex {
         LayerIndex::Later1
     }
 }
-impl Default for SceneStack {
+impl Default for ObjectStack {
     fn default() -> Self {
-        SceneStack {
+        ObjectStack {
             objects: HighCapacityVec::new(500_000, 100_000)
         }
     }
@@ -680,10 +680,10 @@ impl Default for RootScene {
                 has_highlights: false,
             },
             background: [
-                SceneStack::new(500_000, 100_000),
+                ObjectStack::new(500_000, 100_000),
             ],
             foreground: [
-                SceneStack::new(500_000, 100_000),
+                ObjectStack::new(500_000, 100_000),
             ],
         }
     }

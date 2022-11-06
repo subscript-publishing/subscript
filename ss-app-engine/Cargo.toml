@@ -5,6 +5,15 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[dependencies.uuid]
+version = "1.2.1"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+    "serde",
+]
+
 [dependencies]
 serde = {version = "1.0", features = ["derive"]}
 serde_json = "1"
@@ -17,24 +26,18 @@ geo = "0.23.0"
 parry2d = "0.10.0"
 num-traits = "0.2.15"
 rayon = "1.5.3"
-# skia-safe = "0.55.0"
-skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
-skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
+skia-safe = {version = "0.55.0", features = ['metal']}
+# skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
+# skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
 simplify-rs = "0.1.3"
 octocrab = "0.17.0"
 git2 = {version = "0.15.0", features = ['vendored-libgit2', 'vendored-openssl']}
 directories-next = "2.0.0"
-# git-repository = "0.24.0"
+wax = "0.5.0"
+bson = "2.4.0"
+ss_github_auth = {path = "../ss-github-auth"}
 
-[dependencies.uuid]
-version = "1.2.1"
-features = [
-    "v4",                # Lets you generate random UUIDs
-    "fast-rng",          # Use a faster (but still sufficiently random) RNG
-    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
-    "serde",
-]
+libz-sys = "1.1.8" # For some reason this dependency needs to be explicitly defined to build for aarch64-apple-ios
+git-repository = { version = "^0.25.0", features = ["blocking-network-client"] }
+git-transport-for-configuration-only = { version = "^0.21.0", package = "git-transport", features = ["http-client-reqwest"] }
 
-# [patch.crates-io]
-# skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
-# skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}

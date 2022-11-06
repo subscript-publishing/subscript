@@ -49,6 +49,18 @@ typedef enum SSSelectionLayer
 
 typedef struct SSMetalBackendContext SSMetalBackendContext;
 
+/**
+ * TODO:
+ * * I want to implement layers in such a way that ‘background’ strokes are
+ *   always rendered underneath ‘foreground’ strokes, regardless of the layer
+ *   such strokes are stored in, therefore I may end up with a tree like data
+ *   model, where an `ObjectStack` is the lowest leaf type in the layer tree.
+ *   Currently I’m just using fixed arrays for each layer, for each
+ *   canvas-placement type, since I feel like the number of layers will always
+ *   be hardcoded.
+ * * Currently I’m just using an array of length 1, which is just a stub for a
+ *   TODO layer implementation.
+ */
 typedef struct SSRootScene SSRootScene;
 
 /**

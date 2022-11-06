@@ -169,8 +169,7 @@ pub extern "C" fn app_data_model_save_state(byte_array_pointer: ByteArrayPointer
     assert!(!byte_array_pointer.is_null());
     let byte_array_pointer = byte_array_pointer.into_vec_copy();
     let reuslt = ss_app_engine::data::notebook::from_serialized_swift_data_model(&byte_array_pointer);
-    let mut git_database = ss_app_engine::data::git_db::GitDatabase::new();
-    git_database.clone_remote("git@github.com:colbyn/notebook-db-alpha.git", "notebook-db-alpha");
+    // ss_app_engine::data::git_client::dev();
     // println!("reuslt {reuslt:#?}");
 }
 

@@ -5,5 +5,7 @@ fn main() {
     // println!("size: {}", size);
     // let size = std::mem::size_of::<usize>();
     // println!("size: {}", size);
-    ss_app_engine::data::c_ffi_utils::dev();
+    // ss_app_engine::data::git_db::dev();
+    // ss_app_engine::data::archive::dev();
+    ss_app_engine::data::git_client::dev();
 }
