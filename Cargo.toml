@@ -9,7 +9,6 @@ members = [
     "html-to-subscript",
     "ss-str-fmt",
     "ss-database",
-    "ss-github-auth",
 ]
 
 exclude = [

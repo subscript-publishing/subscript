@@ -35,7 +35,6 @@ git2 = {version = "0.15.0", features = ['vendored-libgit2', 'vendored-openssl']}
 directories-next = "2.0.0"
 wax = "0.5.0"
 bson = "2.4.0"
-ss_github_auth = {path = "../ss-github-auth"}
 
 libz-sys = "1.1.8" # For some reason this dependency needs to be explicitly defined to build for aarch64-apple-ios
 git-repository = { version = "^0.25.0", features = ["blocking-network-client"] }
