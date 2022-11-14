@@ -27,6 +27,7 @@ ss_app_engine = {path = "../ss-app-engine"}
 skia-safe = {version = "0.55.0", features = ['metal']}
 # skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
 # skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi", features = ['metal']}
+ss-git-client = {path = "../ss-git-client"}
 
 [dependencies.uuid]
 version = "1.2.1"

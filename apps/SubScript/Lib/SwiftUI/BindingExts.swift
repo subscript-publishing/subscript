@@ -14,7 +14,7 @@ public extension Binding {
             set: { source.wrappedValue = $0 }
         )
     }
-
+    
     static func forceProxy(_ source: Binding<Value?>) -> Binding<Value> {
         self.init(
             get: {
@@ -26,6 +26,17 @@ public extension Binding {
             }
         )
     }
+    
+//    static func optionalProxy(defaultValue: Value, _ source: Binding<Value?>) -> Binding<Value> {
+//        self.init(
+//            get: {
+//                return (source.wrappedValue ?? defaultValue)
+//            },
+//            set: {
+//                source.wrappedValue = $0
+//            }
+//        )
+//    }
     
     static func observedProxy(
         _ source: Binding<Value>,

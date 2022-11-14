@@ -6,6 +6,7 @@ members = [
     "ss-app-engine-c-api",
     "ss-language-server",
     "ss-freeform-format",
+    "ss-git-client",
 ]
 
 exclude = [
@@ -18,3 +19,56 @@ exclude = [
 # [patch.crates-io]
 # skia-safe = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
 # skia-bindings = {git = "https://github.com/colbyn/rust-skia-x86_64-apple-ios-macabi"}
+
+# [patch.crates-io]
+# uuid = { path = "../path/to/uuid" }
+
+# # "git-actor",
+# # "git-url",
+# # "git-hash",
+# # "git-validate",
+# # "git-ref",
+# # "git-command",
+# # "git-config",
+# # "git-config-value",
+# # "git-discover",
+# # "git-features",
+# # "git-commitgraph",
+# # "git-chunk",
+# # "git-quote",
+# # "git-object",
+# # "git-glob",
+# # "git-diff",
+# # "git-date",
+# # "git-traverse",
+# # "git-index",
+# # "git-bitmap",
+# # "git-worktree",
+# # "git-revision",
+# # "git-packetline",
+# # "git-mailmap",
+# # "git-note",
+# # "git-fetchhead",
+# # "git-prompt",
+# # "git-filter",
+# # "git-sec",
+# # "git-lfs",
+# # "git-rebase",
+# # "git-sequencer",
+# # "git-submodule",
+# # "git-transport",
+# # "git-credentials",
+# # "git-protocol",
+# # "git-pack",
+# # "git-odb",
+# # "git-tempfile",
+# # "git-lock",
+# # "git-attributes",
+# # "git-pathspec",
+# # "git-refspec",
+# # "git-path",
+# # "git-repository",
+# # "gitoxide-core",
+# # "git-tui",
+# # "git-tix",
+

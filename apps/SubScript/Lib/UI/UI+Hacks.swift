@@ -17,7 +17,8 @@ extension UI.Hacks {
         init() {}
         @State private var childNavCmd: ChildNavCmd = ChildNavCmd(op: ChildNavCmd.Op.noOp)
         @Environment(\.colorScheme) private var colorScheme
-        var backgroundColor = UI.LL.ColorMap(
+        @EnvironmentObject private var childViewStack: ChildViewStack
+        private var backgroundColor = UI.LL.ColorMap(
             lightUI: UI.LL.Color(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.01),
             darkUI: UI.LL.Color(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.01)
         )
@@ -29,6 +30,7 @@ extension UI.Hacks {
                 Image(systemName: "chevron.left")
             }
             .preference(key: ChildNavCmdPreferenceKey.self, value: childNavCmd)
+            .hidden(childViewStack.stack.isEmpty)
         }
     }
     struct NavBar {
@@ -147,14 +149,14 @@ extension UI.Hacks {
             let bgColor = bgColor ?? UI.DEFAULT_BG_COLOR
             Group {
                 if let last = childViewStack.stack.last {
-                    VStack(alignment: .center, spacing: 10) {
+                    VStack(alignment: .center, spacing: 0) {
                         if let navBar = last.navBar {
                             navBarView(navBar: navBar)
                         }
                         last.view()
                     }
                 } else {
-                    VStack(alignment: .center, spacing: 10) {
+                    VStack(alignment: .center, spacing: 0) {
                         if let navBar = self.navBar {
                             navBarView(navBar: navBar)
                         }
@@ -170,6 +172,7 @@ extension UI.Hacks {
                 }
             })
             .background(bgColor.get(for: colorScheme).asColor)
+            .ignoresSafeArea(.all, edges: .bottom)
         }
     }
     

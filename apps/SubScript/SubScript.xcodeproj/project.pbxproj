@@ -89,6 +89,12 @@
 		F4991D312901E41F0042E1DC /* PageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D2F2901E41F0042E1DC /* PageUI.swift */; };
 		F4991D332901EDFF0042E1DC /* PageEntryUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D322901EDFF0042E1DC /* PageEntryUI.swift */; };
 		F4991D342901EDFF0042E1DC /* PageEntryUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4991D322901EDFF0042E1DC /* PageEntryUI.swift */; };
+		F4A5D5F5291A1DED002304AA /* FileTreeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5D5F4291A1DED002304AA /* FileTreeUI.swift */; };
+		F4A5D5F6291A1DED002304AA /* FileTreeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5D5F4291A1DED002304AA /* FileTreeUI.swift */; };
+		F4A5D5F8291A1E31002304AA /* ArchiveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5D5F7291A1E31002304AA /* ArchiveModel.swift */; };
+		F4A5D5F9291A1E31002304AA /* ArchiveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5D5F7291A1E31002304AA /* ArchiveModel.swift */; };
+		F4A5D5FB291B13C2002304AA /* FileTreeUI_New.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5D5FA291B13C2002304AA /* FileTreeUI_New.swift */; };
+		F4A5D5FC291B13C2002304AA /* FileTreeUI_New.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5D5FA291B13C2002304AA /* FileTreeUI_New.swift */; };
 		F4AE2F4D29032D5C00F897D7 /* PenListEditorUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F4C29032D5C00F897D7 /* PenListEditorUI.swift */; };
 		F4AE2F4E29032D5C00F897D7 /* PenListEditorUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F4C29032D5C00F897D7 /* PenListEditorUI.swift */; };
 		F4AE2F53290343B000F897D7 /* UI+Hacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE2F52290343B000F897D7 /* UI+Hacks.swift */; };
@@ -159,6 +165,9 @@
 		F4991D2C2901D7BD0042E1DC /* UI+DefaultColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+DefaultColors.swift"; sourceTree = "<group>"; };
 		F4991D2F2901E41F0042E1DC /* PageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageUI.swift; sourceTree = "<group>"; };
 		F4991D322901EDFF0042E1DC /* PageEntryUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageEntryUI.swift; sourceTree = "<group>"; };
+		F4A5D5F4291A1DED002304AA /* FileTreeUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTreeUI.swift; sourceTree = "<group>"; };
+		F4A5D5F7291A1E31002304AA /* ArchiveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveModel.swift; sourceTree = "<group>"; };
+		F4A5D5FA291B13C2002304AA /* FileTreeUI_New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTreeUI_New.swift; sourceTree = "<group>"; };
 		F4AE2F4C29032D5C00F897D7 /* PenListEditorUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenListEditorUI.swift; sourceTree = "<group>"; };
 		F4AE2F52290343B000F897D7 /* UI+Hacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+Hacks.swift"; sourceTree = "<group>"; };
 		F4AE2F55290381D500F897D7 /* SwiftUITheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUITheme.swift; sourceTree = "<group>"; };
@@ -193,6 +202,7 @@
 				F41D24662910602F0055796C /* NotebookModel.swift */,
 				F41D246C29108AFA0055796C /* CanvasModel.swift */,
 				F41D2469291060400055796C /* ToolbarModel.swift */,
+				F4A5D5F7291A1E31002304AA /* ArchiveModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -305,6 +315,8 @@
 				F4991D17290124DA0042E1DC /* StaticSettings.swift */,
 				F4991D2F2901E41F0042E1DC /* PageUI.swift */,
 				F4991D322901EDFF0042E1DC /* PageEntryUI.swift */,
+				F4A5D5F4291A1DED002304AA /* FileTreeUI.swift */,
+				F4A5D5FA291B13C2002304AA /* FileTreeUI_New.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -515,11 +527,13 @@
 				F4991CBD2900AD060042E1DC /* CGPointExts.swift in Sources */,
 				F4AE2F53290343B000F897D7 /* UI+Hacks.swift in Sources */,
 				F4991CB52900AD060042E1DC /* ResultExts.swift in Sources */,
+				F4A5D5F5291A1DED002304AA /* FileTreeUI.swift in Sources */,
 				F4991D2D2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */,
 				F4991CB72900AD060042E1DC /* IntExts.swift in Sources */,
 				F4991C5C2900ABC40042E1DC /* SubScriptDocument.swift in Sources */,
 				F4116BD1290A4B84004E39AC /* SwiftUIForms.swift in Sources */,
 				F4991CD52900AD060042E1DC /* SwiftUIWrapper.swift in Sources */,
+				F4A5D5F8291A1E31002304AA /* ArchiveModel.swift in Sources */,
 				F4991CDF2900AEC30042E1DC /* SS1.swift in Sources */,
 				F4991CE22900B1390042E1DC /* CanvasUI.swift in Sources */,
 				F4991CAF2900AD060042E1DC /* LinearAlgebraExts.swift in Sources */,
@@ -544,6 +558,7 @@
 				F4991CB92900AD060042E1DC /* URLExts.swift in Sources */,
 				F4991D272901C89E0042E1DC /* Buttons.swift in Sources */,
 				F4991D012900CA6B0042E1DC /* FFI.swift in Sources */,
+				F4A5D5FB291B13C2002304AA /* FileTreeUI_New.swift in Sources */,
 				F4991CD12900AD060042E1DC /* Theme.swift in Sources */,
 				F4AE2F4D29032D5C00F897D7 /* PenListEditorUI.swift in Sources */,
 				F4FCB73D290478D000D50CE4 /* UI+ColorTypes.swift in Sources */,
@@ -567,11 +582,13 @@
 				F4991CBE2900AD060042E1DC /* CGPointExts.swift in Sources */,
 				F4AE2F54290343B000F897D7 /* UI+Hacks.swift in Sources */,
 				F4991CB62900AD060042E1DC /* ResultExts.swift in Sources */,
+				F4A5D5F6291A1DED002304AA /* FileTreeUI.swift in Sources */,
 				F4991D2E2901D7BD0042E1DC /* UI+DefaultColors.swift in Sources */,
 				F4991CB82900AD060042E1DC /* IntExts.swift in Sources */,
 				F4991C5D2900ABC40042E1DC /* SubScriptDocument.swift in Sources */,
 				F4116BD2290A4B85004E39AC /* SwiftUIForms.swift in Sources */,
 				F4991CD62900AD060042E1DC /* SwiftUIWrapper.swift in Sources */,
+				F4A5D5F9291A1E31002304AA /* ArchiveModel.swift in Sources */,
 				F4991CE02900AEC30042E1DC /* SS1.swift in Sources */,
 				F4991CE32900B1390042E1DC /* CanvasUI.swift in Sources */,
 				F4991CB02900AD060042E1DC /* LinearAlgebraExts.swift in Sources */,
@@ -596,6 +613,7 @@
 				F4991CBA2900AD060042E1DC /* URLExts.swift in Sources */,
 				F4991D282901C89E0042E1DC /* Buttons.swift in Sources */,
 				F4991D022900CA6B0042E1DC /* FFI.swift in Sources */,
+				F4A5D5FC291B13C2002304AA /* FileTreeUI_New.swift in Sources */,
 				F4991CD22900AD060042E1DC /* Theme.swift in Sources */,
 				F4AE2F4E29032D5C00F897D7 /* PenListEditorUI.swift in Sources */,
 				F4FCB73E290478D000D50CE4 /* UI+ColorTypes.swift in Sources */,

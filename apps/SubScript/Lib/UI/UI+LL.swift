@@ -13,6 +13,21 @@ import UIKit
 import AppKit
 #endif
 
+#if os(iOS)
+//extension UITextField {
+//    open override var focusRingType: UIFocusRingType {
+//        get { .none }
+//        set { }
+//    }
+//}
+#elseif os(macOS)
+extension NSTextField {
+    open override var focusRingType: NSFocusRingType {
+        get { .none }
+        set { }
+    }
+}
+#endif
 
 #if os(iOS)
 extension UI {

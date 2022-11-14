@@ -1,0 +1,28 @@
+[package]
+name = "ss-git-client"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+itertools = "0.10.0"
+rayon = "1.5.3"
+serde = {version = "1.0", features = ["derive"]}
+git2 = {version = "0.15.0", features = ['vendored-libgit2', 'vendored-openssl']}
+directories-next = "2.0.0"
+libz-sys = "1.1.8" # For some reason this dependency needs to be explicitly defined to build for aarch64-apple-ios
+git-repository = { version = "0.26.0", features = ["blocking-network-client"] }
+git-object = "0.22.1"
+git-odb = "0.35.0"
+git-config = "0.10.0"
+git-credentials = "0.6.1"
+git-actor = "0.13.0"
+git-hash = "0.9.11"
+git-index = "0.7.0"
+git-lock = "2.1.1"
+git-pack = "0.25.0"
+git-path = "0.5.0"
+git-ref = "0.18.0"
+git-refspec = "0.3.1"
+git-transport-for-configuration-only = { version = "^0.21.0", package = "git-transport", features = ["http-client-reqwest"] }

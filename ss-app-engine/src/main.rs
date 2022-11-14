@@ -7,5 +7,5 @@ fn main() {
     // println!("size: {}", size);
     // ss_app_engine::data::git_db::dev();
     // ss_app_engine::data::archive::dev();
-    ss_app_engine::data::git_client_new::dev();
+    // ss_app_engine::data::git_client_new::dev();
 }

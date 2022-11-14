@@ -31,8 +31,6 @@ pub mod collections;
 pub mod runtime;
 pub mod notebook;
 pub mod c_ffi_utils;
-pub mod git_client;
-pub mod git_client_new;
 pub mod archive;
 
 pub mod drawing;

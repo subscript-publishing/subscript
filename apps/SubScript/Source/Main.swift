@@ -19,6 +19,7 @@ struct AppView: View {
         UI.Hacks.NavigationStackView {
             SS1.PageView(pageModel: pageModel)
         }
+//        SS1.FileTreeView()
     }
 }
 
