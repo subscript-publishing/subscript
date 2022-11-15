@@ -1,16 +1,16 @@
 //
-//  XI.swift
+//  LL.swift
 //  SubScriptNotebook
 //
 //  Created by Colbyn Wadman on 11/8/22.
 //
-//  The XI namespace (for ‘X’ interface) is for lower-level platform specific type aliases (mostly UI stuff).
+//  The LL namespace (for ‘Low-Level’ interface) is for lower-level platform specific type aliases (mostly UI stuff).
 //  I wanted something short since I refer to the platform specific color type and whatnot quite frequently.
 //
 
 import SwiftUI
 
-struct XI {}
+struct LL {}
 
 #if os(iOS)
 import UIKit
@@ -21,7 +21,7 @@ import AppKit
 // MARK: - CORE TYPES - IOS -
 
 #if os(iOS)
-extension XI {
+extension LL {
     typealias Color = UIColor
     typealias View = UIView;
     typealias StackView = UIStackView
@@ -37,7 +37,7 @@ extension XI {
 // MARK: - CORE TYPES - MacOS -
 
 #if os(macOS)
-extension XI {
+extension LL {
     typealias Color = NSColor
     typealias View = NSView;
     typealias StackView = NSStackView
@@ -50,6 +50,7 @@ extension XI {
 }
 #endif
 
+typealias XColor = LL.Color
 
 // MARK: - MacOS Miscellaneous -
 

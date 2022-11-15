@@ -9,10 +9,10 @@ import SwiftUI
 
 extension UX {
     struct ColorMap {
-        var lightMode: XI.Color
-        var darkMode: XI.Color
+        var lightMode: LL.Color
+        var darkMode: LL.Color
         
-        func get(for colorScheme: ColorScheme) -> XI.Color {
+        func get(for colorScheme: ColorScheme) -> LL.Color {
             switch colorScheme {
             case .light: return self.lightMode
             case .dark: return self.darkMode
@@ -26,7 +26,7 @@ protocol AsColor {
     var asColor: Color {get}
 }
 
-extension XI.Color: AsColor {
+extension LL.Color: AsColor {
     var asColor: Color {
         Color(self)
     }
