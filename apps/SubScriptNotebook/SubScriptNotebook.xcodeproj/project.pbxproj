@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		F44A207929243C9C0091636C /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A207829243C9C0091636C /* Page.swift */; };
 		F44A207A29243C9C0091636C /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A207829243C9C0091636C /* Page.swift */; };
+		F44A207C2924480E0091636C /* Page-UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A207B2924480E0091636C /* Page-UI.swift */; };
+		F44A207D2924480E0091636C /* Page-UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A207B2924480E0091636C /* Page-UI.swift */; };
 		F485CF0E2922F46F00A4F2B3 /* FS-UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CF0D2922F46F00A4F2B3 /* FS-UI.swift */; };
 		F485CF0F2922F46F00A4F2B3 /* FS-UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CF0D2922F46F00A4F2B3 /* FS-UI.swift */; };
 		F485CF1129232A9A00A4F2B3 /* ColorSchemeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CF1029232A9A00A4F2B3 /* ColorSchemeExtensions.swift */; };
@@ -55,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		F44A207829243C9C0091636C /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		F44A207B2924480E0091636C /* Page-UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Page-UI.swift"; sourceTree = "<group>"; };
 		F485CF0D2922F46F00A4F2B3 /* FS-UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FS-UI.swift"; sourceTree = "<group>"; };
 		F485CF1029232A9A00A4F2B3 /* ColorSchemeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSchemeExtensions.swift; sourceTree = "<group>"; };
 		F4A5D603291B40D6002304AA /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
@@ -200,6 +203,7 @@
 				F4B6FB8A29203B2E000D8A5C /* FS.swift */,
 				F485CF0D2922F46F00A4F2B3 /* FS-UI.swift */,
 				F44A207829243C9C0091636C /* Page.swift */,
+				F44A207B2924480E0091636C /* Page-UI.swift */,
 			);
 			path = S1;
 			sourceTree = "<group>";
@@ -340,6 +344,7 @@
 				F485CF1129232A9A00A4F2B3 /* ColorSchemeExtensions.swift in Sources */,
 				F4B6FB9429204DBB000D8A5C /* UX+FormUtils.swift in Sources */,
 				F4A5D642291B4818002304AA /* UX+ColorMap.swift in Sources */,
+				F44A207C2924480E0091636C /* Page-UI.swift in Sources */,
 				F4B6FBA72921CB00000D8A5C /* BindingExtensions.swift in Sources */,
 				F4A5D654291C7972002304AA /* S1.swift in Sources */,
 				F4A5D63F291B47CC002304AA /* UX+Env.swift in Sources */,
@@ -368,6 +373,7 @@
 				F485CF1229232A9A00A4F2B3 /* ColorSchemeExtensions.swift in Sources */,
 				F4B6FB9529204DBB000D8A5C /* UX+FormUtils.swift in Sources */,
 				F4A5D643291B4818002304AA /* UX+ColorMap.swift in Sources */,
+				F44A207D2924480E0091636C /* Page-UI.swift in Sources */,
 				F4B6FBA82921CB00000D8A5C /* BindingExtensions.swift in Sources */,
 				F4A5D655291C7973002304AA /* S1.swift in Sources */,
 				F4A5D640291B47CC002304AA /* UX+Env.swift in Sources */,

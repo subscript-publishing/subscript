@@ -59,6 +59,12 @@ extension S1.FS.File {
     }
 }
 
+extension S1.FS {
+    struct FilePath {
+        var parts: Array<String>
+    }
+}
+
 
 // MARK: - INITIALIZER HELPERS -
 
