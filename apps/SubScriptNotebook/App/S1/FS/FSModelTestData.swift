@@ -7,13 +7,13 @@
 
 import Foundation
 
-extension SS1.FS.File {
-    static func sampleData() -> Array<SS1.FS.File> {
-        func file(name: String) -> SS1.FS.File {
-            return SS1.FS.File.newFile(name: name)
+extension S1.FS.File {
+    static func sampleData() -> Array<S1.FS.File> {
+        func file(name: String) -> S1.FS.File {
+            return S1.FS.File.newFile(name: name)
         }
-        func folder(name: String, children: Array<SS1.FS.File>) -> SS1.FS.File {
-            return SS1.FS.File.newFolder(name: name, children: children)
+        func folder(name: String, children: Array<S1.FS.File>) -> S1.FS.File {
+            return S1.FS.File.newFolder(name: name, children: children)
         }
         let random = folder(name: "Random", children: [
             folder(name: "Red", children: [

@@ -13,10 +13,10 @@ struct SubScriptNotebookApp: App {
         var id: UUID
         var value: Int
     }
-    @State private var testFiles: Array<SS1.FS.File> = SS1.FS.File.sampleData()
+    @State private var testFiles: Array<S1.FS.File> = S1.FS.File.sampleData()
     let rootID = UUID()
     @ViewBuilder private var main: some View {
-        SS1.FS.RootDirectoryViewNew(files: $testFiles)
+        S1.FS.RootDirectoryViewNew(files: $testFiles)
     }
     var body: some Scene {
 //        DocumentGroup(newDocument: SubScriptNotebookDocument()) { file in

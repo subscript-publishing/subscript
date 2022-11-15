@@ -57,7 +57,7 @@ fileprivate struct FileNameField: View {
     let renameMode: Bool
     let lsDir: () -> Array<String>
     let onSubmit: (String) -> ()
-    @Binding var fileType: SS1.FS.FileType
+    @Binding var fileType: S1.FS.File.FileType
     @State var nameField: String
     @Environment(\.colorScheme) private var colorScheme
     
@@ -120,7 +120,7 @@ fileprivate struct FileNameField: View {
 
 fileprivate struct DirectoryEditorView: View {
     let currentFolderID: UUID
-    @Binding var files: Array<SS1.FS.File>
+    @Binding var files: Array<S1.FS.File>
     @Binding var showDirectoryEditor: Bool
     var onDeleteSet: (Set<UUID>) -> ()
     var onDeleteOffsets: (IndexSet) -> ()
@@ -134,8 +134,8 @@ fileprivate struct DirectoryEditorView: View {
     @EnvironmentObject              private var rootDirectoryEnv: RootDirectoryEnv
     @State                          private var sizeAccumulator: CGSize? = nil
     @State                          private var selectedFiles: Set<UUID> = []
-    @State                          private var lastSelectedFile: SS1.FS.File? = nil
-    @ViewBuilder private func fileEntryLabel(file: SS1.FS.File) -> some View {
+    @State                          private var lastSelectedFile: S1.FS.File? = nil
+    @ViewBuilder private func fileEntryLabel(file: S1.FS.File) -> some View {
         let icon = file.type == .folder ? "folder" : "doc.richtext"
         HStack(alignment: .center, spacing: 10) {
             Image(systemName: icon)
@@ -151,7 +151,7 @@ fileprivate struct DirectoryEditorView: View {
         .font(FS_FONT)
     }
     var body: some View {
-        let onClick: (SS1.FS.File) -> () -> () = { file in
+        let onClick: (S1.FS.File) -> () -> () = { file in
             return {
                 if selectedFiles.contains(file.id) {
                     selectedFiles.remove(file.id)
@@ -308,7 +308,7 @@ fileprivate struct DirectoryEditorView: View {
 
 fileprivate struct SelectFolderTree: View {
 //    @EnvironmentObject private var rootDirectoryEnv: RootDirectoryEnv
-    let fileTree: Array<SS1.FS.File>
+    let fileTree: Array<S1.FS.File>
     @Binding
     var showSelectFolderTree: Bool
     let currentFolderID: UUID
@@ -479,7 +479,7 @@ fileprivate struct SelectFolderTree: View {
             self.path = path
             self.children = children
         }
-        init?(parent: Array<String>, fromFSFile file: SS1.FS.File) {
+        init?(parent: Array<String>, fromFSFile file: S1.FS.File) {
             if file.isFolder {
                 self.id = file.id
                 self.name = file.name
@@ -493,9 +493,6 @@ fileprivate struct SelectFolderTree: View {
                     }
                 }
                 self.children = xs
-//                if !xs.isEmpty {
-//                    self.children = xs
-//                }
             } else {
                 return nil
             }
@@ -521,7 +518,7 @@ fileprivate struct SelectFolderTree: View {
 
 fileprivate struct DirectoryView: View {
     let currentFolderID: UUID
-    @Binding var files: Array<SS1.FS.File>
+    @Binding var files: Array<S1.FS.File>
     @ObservedObject                 private var nextValueRef: NextValueRef = NextValueRef()
     @Environment(\.colorScheme)     private var colorScheme
     @Environment(\.fgColorMap)      private var fgColorMap
@@ -531,12 +528,12 @@ fileprivate struct DirectoryView: View {
     @State                          private var sizeAccumulator: CGSize? = nil
     @State                          private var showDirectoryEditor: Bool = false
     @State                          private var selectedFiles: Set<UUID> = []
-    @State                          private var newFileType: SS1.FS.FileType = SS1.FS.FileType.folder
-    private func processDeletedFiles(removed: Array<SS1.FS.File>) {
+    @State                          private var newFileType: S1.FS.File.FileType = S1.FS.File.FileType.folder
+    private func processDeletedFiles(removed: Array<S1.FS.File>) {
         print("Removed", removed.map({$0.name}))
     }
     private func deleteSelectedFiles() {
-        var removed: Array<SS1.FS.File> = []
+        var removed: Array<S1.FS.File> = []
         for (ix, file) in files.enumerated().reversed() {
             if selectedFiles.contains(file.id) {
                 removed.append(files.remove(at: ix))
@@ -545,7 +542,7 @@ fileprivate struct DirectoryView: View {
         processDeletedFiles(removed: removed)
     }
     private func onDelete(at offsets: IndexSet) {
-        var removed: Array<SS1.FS.File> = []
+        var removed: Array<S1.FS.File> = []
         for ix in offsets.reversed() {
             let file = self.files.remove(at: ix)
             if nextValueRef.next?.file.id == file.id {
@@ -555,7 +552,7 @@ fileprivate struct DirectoryView: View {
         }
         processDeletedFiles(removed: removed)
     }
-    private func onFileClick(file: SS1.FS.File) -> () {
+    private func onFileClick(file: S1.FS.File) -> () {
         if self.nextValueRef.next.isNone {
             self.nextValueRef.next = FileView(file: file, onAppear: {
                 rootDirectoryEnv.scrollToID(file.id)
@@ -592,7 +589,7 @@ fileprivate struct DirectoryView: View {
         return self.minWidth
     }
     @ViewBuilder private func fileEntryLabel(
-        file: SS1.FS.File,
+        file: S1.FS.File,
         editMode: Bool = false
     ) -> some View {
         let icon = file.type == .folder ? "folder" : "doc.richtext"
@@ -607,7 +604,7 @@ fileprivate struct DirectoryView: View {
         .padding(EdgeInsets(top: 15, leading: 20, bottom: 15, trailing: 10))
         .font(FS_FONT)
     }
-    @ViewBuilder private func fileEntryView(file: SS1.FS.File) -> some View {
+    @ViewBuilder private func fileEntryView(file: S1.FS.File) -> some View {
         let backgroundColor = UX.DefaultButtonStyle.UNNOTICEABLE_BG.get(for: colorScheme).asColor
         let isActive = self.nextValueRef.id == file.id
         let targetFgColorMap = isActive ? ACTIVE_FG_COLOR_MAP : fgColorMap
@@ -652,11 +649,11 @@ fileprivate struct DirectoryView: View {
                             },
                             onSubmit: { newName in
                                 switch self.newFileType {
-                                case .file:
-                                    let newFile = SS1.FS.File.newFile(name: newName)
+                                case .page:
+                                    let newFile = S1.FS.File.newFile(name: newName)
                                     self.files.append(newFile)
                                 case .folder:
-                                    let newFolder = SS1.FS.File.newFolder(name: newName, children: [])
+                                    let newFolder = S1.FS.File.newFolder(name: newName, children: [])
                                     self.files.append(newFolder)
                                 }
                                 toggle.wrappedValue = false
@@ -697,7 +694,7 @@ fileprivate struct DirectoryView: View {
                 for id in fileIDs {
                     self.nextValueRef.clear(ifMatches: id)
                 }
-                var removedFiles: Array<SS1.FS.File> = []
+                var removedFiles: Array<S1.FS.File> = []
                 for (ix, file) in self.files.enumerated().reversed() {
                     if fileIDs.contains(file.id) {
                         let popedFile = self.files.remove(at: ix)
@@ -754,7 +751,7 @@ fileprivate struct DirectoryView: View {
 }
 
 fileprivate struct FileView: View {
-    @ObservedObject var file: SS1.FS.File
+    @ObservedObject var file: S1.FS.File
     @State var onAppear: (() -> ())? = nil
     var body: some View {
         Group {
@@ -778,15 +775,15 @@ fileprivate struct FileView: View {
 
 fileprivate class RootDirectoryEnv: ObservableObject {
     var scrollToID: (UUID) -> () = {_ in ()}
-    var rootFileTree: Array<SS1.FS.File> = []
-    var moveFiles: (Array<SS1.FS.File>, FilePathParts) -> () = {(_, _) in ()}
+    var rootFileTree: Array<S1.FS.File> = []
+    var moveFiles: (Array<S1.FS.File>, FilePathParts) -> () = {(_, _) in ()}
     typealias FilePathParts = Array<String>
 }
 
-extension SS1.FS {
+extension S1.FS {
     struct RootDirectoryViewNew: View {
         @StateObject private var rootDirectoryEnv = RootDirectoryEnv()
-        @Binding var files: Array<SS1.FS.File>
+        @Binding var files: Array<S1.FS.File>
         @State private var rootID: UUID = UUID()
         @State private var showDirEditor: Bool = false
         @State private var deleteSet: Set<UUID> = []

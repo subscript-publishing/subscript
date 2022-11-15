@@ -14,7 +14,7 @@ extension UTType {
     }
 }
 
-extension SS1 {
+extension S1 {
     struct NotebookPackageDocument: FileDocument {
         var text: String
         init(text: String = "Hello, world!") {
