@@ -293,6 +293,12 @@ extension SS1.FS.File {
             ]),
         ])
         return [
+            file(name: "index"),
+            folder(name: "SomeReallyLongFileNameAAAAAAAAAAAAAAAAAAA", children: [
+                file(name: "File1"),
+                file(name: "File2"),
+                file(name: "File3"),
+            ]),
             folder(name: "Physics", children: [
                 file(name: "Physics-A"),
                 file(name: "Physics-B"),

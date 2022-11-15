@@ -97,13 +97,13 @@ struct SubScriptNotebookApp: App {
         var id: UUID
         var value: Int
     }
-    @State private var xs: Array<TestValue> = {
-        var xs: [TestValue] = []
-        for i in (0...50) {
-            xs.append(TestValue(id: UUID(), value: i))
-        }
-        return xs
-    }()
+//    @State private var xs: Array<TestValue> = {
+//        var xs: [TestValue] = []
+//        for i in (0...50) {
+//            xs.append(TestValue(id: UUID(), value: i))
+//        }
+//        return xs
+//    }()
     @State private var testFiles: Array<SS1.FS.File> = SS1.FS.File.sampleData()
 //    @ViewBuilder private var content: some View {
 //        SS1.FS.RootDirectoryView(files: $testFiles)
@@ -113,6 +113,13 @@ struct SubScriptNotebookApp: App {
     @ViewBuilder private func main() -> some View {
         
     }
+    @State private var xs: Array<NavDev.Entry> = {
+        var xs: Array<NavDev.Entry> = []
+        for i in 0...10 {
+            xs.append(NavDev.Entry(id: UUID(), value: i))
+        }
+        return xs
+    }()
     @ViewBuilder private var root: some View {
 //        let rootPage = UX.Nav.PageBuilder()
 //            .withTitle(title: "Child View")
@@ -122,7 +129,9 @@ struct SubScriptNotebookApp: App {
 //                MainTestViewDestination()
 //            })
 //        UX.Nav.RootView(page: rootPage)
-        SS1.FS.RootDirectoryView(files: $testFiles)
+//        SS1.FS.RootDirectoryView(files: $testFiles)
+//        NavDev(data: $xs)
+        SS1.FS.RootDirectoryViewNew(files: $testFiles)
     }
     var body: some Scene {
 //        DocumentGroup(newDocument: SubScriptNotebookDocument()) { file in

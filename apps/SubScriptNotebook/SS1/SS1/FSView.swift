@@ -15,7 +15,7 @@ fileprivate let BACKGROUND_COLOR_MAP = UX.ColorMap(
 )
 
 fileprivate struct FolderTrailingToolbar: View {
-    @Binding var editMode: Bool
+    @Binding var showDirEditor: Bool
     let clearNav: () -> ()
     let onNewFile: (String) -> ()
     let onNewFolder: (String) -> ()
@@ -98,18 +98,74 @@ fileprivate struct FolderTrailingToolbar: View {
     }
     var body: some View {
         UX.RoundPopoverBtn(icon: "doc.fill.badge.plus", popover: popupView)
-            .isHidden(columnEnv.index > 4)
-        let editIcon = editMode ? "lock.open" : "lock"
-        UX.RoundBtn(icon: editIcon, action: {
-            editMode.toggle()
-            clearNav()
+        UX.RoundBtn(icon: "gear", action: {
+            showDirEditor = !showDirEditor
         })
+    }
+}
+
+fileprivate struct DirectoryViewEditor: View {
+    @Binding var showDirEditor: Bool
+    @Binding var children: Array<SS1.FS.File>
+    @Binding var deleteSet: Set<UUID>
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.fgColorMap) private var fgColorMap
+    func onDelete(at offsets: IndexSet) {
+        for ix in offsets {
+            let item = self.children[ix]
+            self.deleteSet.insert(item.id)
+        }
+    }
+    @ViewBuilder private func entry(file: SS1.FS.File) -> some View {
+        let targetFgColorMap = (file.selected) ? UX.Nav.ColumnEnv.ACTIVE_FG_COLOR_MAP : fgColorMap
+        let onClick = {
+            if file.selected {
+                file.selected = false
+            } else {
+                file.selected = true
+            }
+        }
+        UX.Btn(action: onClick) {
+            let icon = file.type == .folder ? "folder" : "doc.richtext"
+            let backgroundColor = UX.DefaultButtonStyle.UNNOTICEABLE_BG.get(for: colorScheme).asColor
+            HStack(alignment: .center, spacing: 10) {
+                Image(systemName: icon)
+                Text(file.name)
+                Spacer()
+            }
+            .font(FS_FONT)
+            .background(backgroundColor)
+        }
+        .environment(\.fgColorMap, targetFgColorMap)
+    }
+    var body: some View {
+        let bgColor = BACKGROUND_COLOR_MAP.get(for: colorScheme).asColor
+        VStack(alignment: .center, spacing: 0) {
+            HStack(alignment: .center, spacing: 10) {
+                UX.RoundBtn(text: "Close", action: {
+                    showDirEditor = false
+                })
+                Spacer()
+            }
+            .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+            .withBorder(edges: .bottom)
+            List {
+                ForEach(Binding.proxy($children)) { child in
+                    if !self.deleteSet.contains(child.wrappedValue.id) {
+                        self.entry(file: child.wrappedValue)
+                    }
+                }
+                .onDelete(perform: onDelete)
+                .listRowBackground(bgColor)
+            }
+            .listStyle(.plain)
+            .frame(minWidth: 400)
+        }
     }
 }
 
 fileprivate struct DirectoryView: View {
     @Binding var children: Array<SS1.FS.File>
-    @Binding var editMode: Bool
     @Environment(\.colorScheme) private var colorScheme
     @State private var selection = Set<UUID>()
     @EnvironmentObject private var columnEnv: UX.Nav.ColumnEnv
@@ -119,20 +175,28 @@ fileprivate struct DirectoryView: View {
     var body: some View {
         let bgColor = BACKGROUND_COLOR_MAP.get(for: colorScheme).asColor
         List {
-            ForEach($children) { child in
-                FileListEntry(file: child.wrappedValue, editMode: $editMode)
+            ForEach(Binding.proxy($children)) { child in
+                FileListEntry(file: child.wrappedValue)
             }
             .onDelete(perform: onDelete)
             .listRowBackground(bgColor)
         }
         .listStyle(.plain)
         .frame(minWidth: 400)
+//        ScrollView {
+//            VStack(alignment: .leading, spacing: 0) {
+//                ForEach(Array(self.children)) { (ix, child) in
+//                    FileListEntry(file: child)
+//                }
+//            }
+//        }
     }
     fileprivate struct FileListEntry: View {
         @ObservedObject var file: SS1.FS.File
-        @Binding var editMode: Bool
         @State private var active: Bool = false
         @State private var childEditMode: Bool = false
+        @State private var showDirEditor: Bool = false
+        @State private var deleteSet: Set<UUID> = []
         @Environment(\.colorScheme) private var colorScheme
         @Environment(\.fgColorMap) private var fgColorMap
         private var page: UX.Nav.Page {
@@ -142,7 +206,7 @@ fileprivate struct DirectoryView: View {
                 .withTitleOpt(title: file.name)
                 .withTrailing { columnEnv in
                     FolderTrailingToolbar(
-                        editMode: $childEditMode,
+                        showDirEditor: $showDirEditor,
                         clearNav: {
                             columnEnv.clear()
                         },
@@ -160,51 +224,36 @@ fileprivate struct DirectoryView: View {
                     )
                         .isHidden(file.isFile)
                 }
-                .onPop {
-                    self.childEditMode = false
-                }
                 .build(id: file.id, destination: { _ in
-                    FileView(file: file, editMode: $childEditMode)
+                    FileView(file: file)
+                        .sheet(
+                            isPresented: $showDirEditor,
+                            onDismiss: {
+                                
+                            },
+                            content: {
+                                DirectoryViewEditor(
+                                    showDirEditor: $showDirEditor,
+                                    children: Binding.proxy($file.children),
+                                    deleteSet: $deleteSet
+                                )
+                                    .frame(minWidth: 400, minHeight: 400)
+                            }
+                        )
                 })
         }
-        fileprivate var icon: String {
-            file.type == .folder ? "folder" : "doc.richtext"
-        }
-        @ViewBuilder private var contentView: some View {
-            let backgroundColor = UX.DefaultButtonStyle.UNNOTICEABLE_BG.get(for: colorScheme).asColor
-            HStack(alignment: .center, spacing: 10) {
-                Image(systemName: self.icon)
-                Text(file.name)
-                Spacer()
-                Image(systemName: "chevron.forward").isHidden(editMode)
-            }
-            .font(FS_FONT)
-            .background(backgroundColor)
-        }
-        @ViewBuilder private func linkView() -> some View {
-            UX.Nav.Link(page: page) {
-                contentView
-            }
-        }
-        @ViewBuilder private func editView() -> some View {
-            let targetFgColorMap = (file.selected) ? UX.Nav.ColumnEnv.ACTIVE_FG_COLOR_MAP : fgColorMap
-            let onClick = {
-                if file.selected {
-                    file.selected = false
-                } else {
-                    file.selected = true
-                }
-            }
-            UX.Btn(action: onClick) {
-                contentView
-            }
-            .environment(\.fgColorMap, targetFgColorMap)
-        }
         var body: some View {
-            if editMode {
-                editView()
-            } else {
-                linkView()
+            UX.Nav.Link(page: page) {
+                let icon = file.type == .folder ? "folder" : "doc.richtext"
+                let backgroundColor = UX.DefaultButtonStyle.UNNOTICEABLE_BG.get(for: colorScheme).asColor
+                HStack(alignment: .center, spacing: 10) {
+                    Image(systemName: icon)
+                    Text(file.name)
+                    Spacer()
+                    Image(systemName: "chevron.forward")
+                }
+                .font(FS_FONT)
+                .background(backgroundColor)
             }
         }
     }
@@ -212,28 +261,45 @@ fileprivate struct DirectoryView: View {
 
 fileprivate struct FileView: View {
     @ObservedObject var file: SS1.FS.File
-    @Binding var editMode: Bool
     var body: some View {
         switch file.type {
         case .file:
             Text("TODO")
         case .folder:
-            DirectoryView(children: $file.children, editMode: $editMode)
+            DirectoryView(children: Binding.proxy($file.children))
         }
+    }
+}
+
+fileprivate func removeFiles(
+    deleteSet: Set<UUID>,
+    files: inout Array<SS1.FS.File>
+) {
+    var removed: Array<SS1.FS.File> = []
+    if !deleteSet.isEmpty {
+        let poped = files.removeFirst()
+        removed.append(poped)
+//        for (ix, file) in files.enumerated().reversed() {
+//            if deleteSet.contains(file.id) {
+//                let file = files.remove(at: ix)
+//                removed.append(file)
+//            }
+//        }
     }
 }
 
 extension SS1.FS {
     struct RootDirectoryView: View {
         @Binding var files: Array<SS1.FS.File>
-        @State private var editMode: Bool = false
         private let rootID: UUID = UUID()
+        @State private var showDirEditor: Bool = false
+        @State private var deleteSet: Set<UUID> = []
         @Environment(\.colorScheme) private var colorScheme
         var rootPage: UX.Nav.Page {
             UX.Nav.PageBuilder()
                 .withTrailing { columnEnv in
                     FolderTrailingToolbar(
-                        editMode: $editMode,
+                        showDirEditor: $showDirEditor,
                         clearNav: {
                             columnEnv.clear()
                         },
@@ -251,10 +317,26 @@ extension SS1.FS {
                     )
                 }
                 .onPop {
-                    self.editMode = false
+                    
                 }
-                .build(id: self.rootID, destination: { _ in
-                    DirectoryView(children: $files, editMode: $editMode)
+                .build(id: self.rootID, destination: { columnEnv in
+                    DirectoryView(children: Binding.proxy($files))
+                        .sheet(
+                            isPresented: $showDirEditor,
+                            onDismiss: {
+                                columnEnv.clear()
+                                let _ = self.files.remove(at: 1)
+//                                removeFiles(deleteSet: self.deleteSet, files: &self.files)
+                            },
+                            content: {
+                                DirectoryViewEditor(
+                                    showDirEditor: $showDirEditor,
+                                    children: Binding.proxy($files),
+                                    deleteSet: $deleteSet
+                                )
+                                    .frame(minWidth: 400, minHeight: 400)
+                            }
+                        )
                 })
         }
         var body: some View {

@@ -7,20 +7,17 @@
 
 import SwiftUI
 
-fileprivate let DEFAULT_DISABLED_FG_COLOR = UX.ColorMap(
-    lightMode: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1),
-    darkMode: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-)
 
 fileprivate struct ViewBorderModifier: ViewModifier {
     let edges: Edge.Set
-    @Environment(\.fgColorMap) private var fgColorMap
+    @Environment(\.borderColorMap) private var borderColorMap
+    @Environment(\.borderLineWidth) private var borderLineWidth
     @Environment(\.colorScheme) private var colorScheme
     private var targetColorMap: UX.ColorMap {
-        return fgColorMap ?? UX.Divider.DEFAULT_BORDER_COLOR_MAP
+        return borderColorMap ?? UX.Divider.DEFAULT_BORDER_COLOR_MAP
     }
     func body(content: Content) -> some View {
-        let size = UX.Divider.DEFAULT_LINE_WIDTH
+        let size = borderLineWidth
         let color = targetColorMap.get(for: colorScheme).asColor
         let border = EdgeBorderShape(width: size, edges: edges).foregroundColor(color)
         if !edges.isEmpty {
@@ -80,30 +77,12 @@ fileprivate struct ViewBorderModifier: ViewModifier {
     }
 }
 
-
-//fileprivate struct ViewButtonModifier: ViewModifier {
-//    let action: () -> ()
-//    init(action: @escaping () -> ()) {
-//        self.action = action
-//    }
-//    @Environment(\.colorScheme) private var colorScheme
-//    @Environment(\.fgColorMap) private var fgColorMap
-//    @Environment(\.isEnabled) private var isEnabled
-//    private var targetColorMap: UI.ColorMap {
-//        return fgColorMap ?? UI.Divider.DEFAULT_BORDER_COLOR_MAP
-//    }
-//    func body(content: Content) -> some View {
-//        Button(action: self.action, label: {
-//            content
-//        })
-//            .buttonStyle(NoDefaultButtonStyle())
-//    }
-//}
-
-
 extension View {
     func withBorder(edges: Edge.Set) -> some View {
         modifier(ViewBorderModifier(edges: edges))
+    }
+    func withBorder(show: Bool, edges: Edge.Set) -> some View {
+        modifier(ViewBorderModifier(edges: show ? edges : []))
     }
 }
 

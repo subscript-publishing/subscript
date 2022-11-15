@@ -31,20 +31,6 @@ fileprivate struct PageViewModifier: ViewModifier {
     }
 }
 
-//extension View {
-//    func uxNavShowBackBtn(_ show: Bool = true) -> some View {
-////        return self.environment(\.fgColorMap, color)
-////        return self.environmentObject()
-//        return modifier(PageViewModifier(
-//            showBackBtn: show
-////            showToolbar: <#T##Bool?#>,
-////            title: <#T##String?#>,
-////            leading: <#T##(() -> AnyView)?##(() -> AnyView)?##() -> AnyView#>,
-////            trailing: <#T##(() -> AnyView)?##(() -> AnyView)?##() -> AnyView#>
-//        ))
-//    }
-//}
-
 fileprivate struct NavBarTrailingPreference: Equatable {
     var id: UUID
     var view: AnyView
@@ -189,15 +175,6 @@ fileprivate struct ColumnView: View {
                 .preference(key: NavCmdPreferenceKey.self, value: NavCmd.noOp)
                 .withBorder(edges: .leading)
                 .transition(.move(edge: .trailing))
-                .onAppear(perform: {
-//                    if next.next.isNone {
-//                        print("rootViewEnv.scrollToIndex(next.index)")
-//                    }
-//                    rootViewEnv.scrollToEnd()
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                        rootViewEnv.scrollToEnd()
-//                    }
-                })
         } else {
             EmptyView()
         }
@@ -210,10 +187,9 @@ fileprivate struct ColumnView: View {
                 Spacer()
             }
             .environmentObject(self.columnEnv)
-            .id(self.columnEnv.id)
-            .id(self.columnEnv.index)
+//            .id(self.columnEnv.id)
         }
-        nextView
+//        nextView
     }
 }
 
@@ -271,9 +247,9 @@ extension UX.Nav {
     }
     fileprivate class RootViewEnv: ObservableObject {
         var rootID: UUID = UUID()
-        var scrollToID: ((UUID) -> ())!
-        var scrollToIndex: ((Int) -> ())!
-        var scrollToEnd: (() -> ())!
+        var scrollToID: ((UUID) -> ()) = {_ in ()}
+        var scrollToIndex: ((Int) -> ()) = {_ in ()}
+        var scrollToEnd: (() -> ()) = {()}
     }
     struct RootView: View {
         @StateObject private var rootColumnEnv: ColumnEnv
@@ -288,31 +264,33 @@ extension UX.Nav {
 //            let page = Page(id: id, view)
 //            self._rootColumnEnv = StateObject(wrappedValue: ColumnEnv(rootPage: page))
 //        }
-        var body: some View {
-            ScrollViewReader { scroller in
-                ScrollView(.horizontal) {
-                    HStack(alignment: .top, spacing: 0) {
-                        ColumnView(columnEnv: self.rootColumnEnv)
-                    }
-                    .id(rootViewEnv.rootID)
-                    .frame(maxWidth: .infinity)
-                    .withBorder(edges: [.leading, .trailing])
-                }
-                .environmentObject(rootViewEnv)
-                .onAppear(perform: {
-                    rootViewEnv.scrollToID = { id in
-                        print("rootViewEnv.scrollToID")
-                        scroller.scrollTo(id, anchor: UnitPoint.topTrailing)
-                    }
-                    rootViewEnv.scrollToIndex = { ix in
-                        print("rootViewEnv.scrollToIndex")
-                        scroller.scrollTo(ix, anchor: UnitPoint.topTrailing)
-                    }
-                    rootViewEnv.scrollToEnd = {
-                        scroller.scrollTo(rootViewEnv.rootID, anchor: UnitPoint.topTrailing)
-                    }
-                })
+        @ViewBuilder private var contents: some View {
+            HStack(alignment: .top, spacing: 0) {
+                ColumnView(columnEnv: self.rootColumnEnv)
             }
+            .id(rootViewEnv.rootID)
+            .frame(maxWidth: .infinity)
+            .withBorder(edges: [.leading, .trailing])
+            .environmentObject(rootViewEnv)
+        }
+        var body: some View {
+            contents
+//            ScrollViewReader { scroller in
+//                ScrollView(.horizontal) {
+//                    contents
+//                }
+//                .onAppear(perform: {
+//                    rootViewEnv.scrollToID = { id in
+//                        scroller.scrollTo(id, anchor: UnitPoint.topTrailing)
+//                    }
+//                    rootViewEnv.scrollToIndex = { ix in
+//                        scroller.scrollTo(ix, anchor: UnitPoint.topTrailing)
+//                    }
+//                    rootViewEnv.scrollToEnd = {
+//                        scroller.scrollTo(rootViewEnv.rootID, anchor: UnitPoint.topTrailing)
+//                    }
+//                })
+//            }
         }
     }
     struct Link<V: View>: View {
@@ -326,14 +304,6 @@ extension UX.Nav {
             self.page = page
             self.label = label
         }
-//        init<D: View>(
-//            id: UUID,
-//            @ViewBuilder label: @escaping () -> V,
-//            @ViewBuilder destination: @escaping (ColumnEnv) -> D
-//        ) {
-//            self.label = label
-//            self.page = UX.Nav.Page(id: id, destination)
-//        }
         private func onClickImpl() {
             columnEnv.push(newPage: self.page)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -578,30 +548,5 @@ extension UX.Nav {
             self.destination = rawDestination
             self.onPop = onPop
         }
-//        init<L: View, T: View, D: View>(
-//            id: UUID,
-//            @ViewBuilder leading: @escaping (ColumnEnv) -> L,
-//            @ViewBuilder trailing: @escaping (ColumnEnv) -> T,
-//            @ViewBuilder destination: @escaping (ColumnEnv) -> D
-//        ) {
-//            self.id = id
-//            self.leading = {
-//                AnyView(leading($0))
-//            }
-//            self.trailing = {
-//                AnyView(trailing($0))
-//            }
-//            self.destination = {
-//                AnyView(destination($0))
-//            }
-//        }
-//        init<D: View>(id: UUID, @ViewBuilder _ destination: @escaping (ColumnEnv) -> D) {
-//            self.id = id
-//            self.leading = nil
-//            self.trailing = nil
-//            self.destination = {
-//                AnyView(destination($0))
-//            }
-//        }
     }
 }
